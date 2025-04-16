@@ -1,3 +1,3 @@
 export default defineAppConfig({
-    title: 'jojo-blog',
+    baseUrl: 'jojo-blog',
 })
