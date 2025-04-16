@@ -15,19 +15,20 @@ const meta: Meta[] = [
 ]
 
 export default defineNuxtConfig({
+  pages: true,
   typescript: {
     strict: true
   },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate'],
+  modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt'],
 
   // app配置
   app: {
     head: {
       title: 'jojo-blog',
       meta,
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/my.ico' }]
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }]
     }
   },
 

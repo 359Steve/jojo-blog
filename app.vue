@@ -1,6 +1,27 @@
+<script lang='ts' setup>
+const scrollY = ref<number>(0)
+const handleScroll = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop
+    scrollTop > scrollY.value && scrollTop > useJojoHeader().getHeaderHeight() ? 
+    useJojoHeader().setScroll(true) : useJojoHeader().setScroll(false)
+    scrollY.value = scrollTop
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+    <NuxtLayout name="jojomain">
+        <template #page>
+            <NuxtPage />
+        </template>
+    </NuxtLayout>
 </template>
+
+<style lang='scss' scoped></style>
