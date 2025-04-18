@@ -36,14 +36,18 @@ export default defineNuxtConfig({
   css: ['~/assets/css/index.scss'],
 
   // 定义公共样式
-  // vite: {
-  //   css: {
-  //     preprocessorOptions: {
-  //       scss: {
-  //         additionalData: '@use "~/assets/css/index.scss" as *;'
-  //       }
-  //     }
-  //   }
-  // }
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/css/element-variables.scss" as element;'
+        }
+      }
+    }
+  },
+
+  elementPlus: {
+    importStyle: 'scss'
+  }
 
 })
