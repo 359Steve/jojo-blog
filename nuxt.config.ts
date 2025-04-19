@@ -21,8 +21,14 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt'],
+  modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt', '@nuxtjs/color-mode'],
 
+  colorMode: {
+    classSuffix: '',
+    storageKey: 'nuxt-color-mode',
+    preference: 'system',
+    fallback: 'light',
+  },
   // app配置
   app: {
     head: {

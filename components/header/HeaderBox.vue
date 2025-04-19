@@ -5,12 +5,17 @@ import lightImg from '~/assets/image/light.png'
 const { drawer } = storeToRefs(useJojoHeader())
 const selectTheme = ref<boolean>(true)
 const headerEl = ref<HTMLElement | null>(null)
+const darkMode = useColorMode()
 
 onMounted(() =>{
     nextTick(() => {
         const height: number = headerEl.value!.getBoundingClientRect().height
         useJojoHeader().setHeaderHeight(height)
     })
+})
+
+watch(selectTheme, () => {
+    darkMode.preference = selectTheme.value ? 'light' : 'dark'
 })
 </script>
 
