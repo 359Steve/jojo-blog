@@ -1,5 +1,6 @@
 <script lang='ts' setup>
 const scrollY = ref<number>(0)
+
 const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop
     scrollTop > scrollY.value && scrollTop > useJojoHeader().getHeaderHeight() ? 

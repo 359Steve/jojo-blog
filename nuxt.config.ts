@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   },
 
   // 初始化样式
-  css: ['~/assets/css/index.scss'],
+  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss'],
 
   // 定义公共样式
   vite: {

@@ -3,7 +3,8 @@
 </script>
 
 <template>
-    <div>首页</div>
+    <div>日记</div>
+    <NuxtPage />
 </template>
 
 <style lang='scss' scoped>

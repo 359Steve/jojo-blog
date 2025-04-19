@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div>首页</div>
+    <div>404</div>
 </template>
 
 <style lang='scss' scoped>

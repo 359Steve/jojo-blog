@@ -44,7 +44,7 @@ const step = (b: BranchLine, deep = 0) => {
     drawBranch(b)
 
     // 左边的枝
-    if (deep < 6 || Math.random() < 0.4) {
+    if (deep < 3 || Math.random() < 0.5) {
         // 调用计算结束点方法
         pendingTasks.value.push(() => step({
             start: end,
@@ -54,7 +54,7 @@ const step = (b: BranchLine, deep = 0) => {
     }
 
     // 右边的枝
-    if (deep < 6 || Math.random() < 0.4) {
+    if (deep < 3 || Math.random() < 0.5) {
         // 调用计算结束点方法
         pendingTasks.value.push(() => step({
             start: end,
@@ -65,7 +65,7 @@ const step = (b: BranchLine, deep = 0) => {
 }
 
 const init = () => {
-    ctx.value.strokeStyle = 'rgb(238, 238, 238)'
+    ctx.value.strokeStyle = '#dbdbdb'
 
     // 左边界起点
     const leftPoint: Point = {
@@ -90,9 +90,9 @@ const init = () => {
 
     // 构建三条起始分支
     const branches: BranchLine[] = [
-        { start: leftPoint, lenght: 3, theta: leftTheta },
-        { start: rightPoint, lenght: 3, theta: rightTheta },
-        { start: bottomPoint, lenght: 3, theta: bottomTheta }
+        { start: leftPoint, lenght: 2, theta: leftTheta },
+        { start: rightPoint, lenght: 2, theta: rightTheta },
+        { start: bottomPoint, lenght: 2, theta: bottomTheta }
     ]
 
     // 对每条起始分支执行 step()
@@ -134,9 +134,9 @@ onMounted(() => {
 
 <template>
     <div class="relative w-full h-full">
-        <div class="fixed top-0 w-full h-[100vh] z-[-1] bg-[white]">
+        <!-- <div class="fixed top-0 w-full h-[100vh] z-[-1] min-w-[1280px]">
             <canvas ref="canvasEl" class="w-full h-full"></canvas>
-        </div>
+        </div> -->
         <div class="w-full h-full">
             <!-- 导航栏 -->
             <HeaderBox></HeaderBox>

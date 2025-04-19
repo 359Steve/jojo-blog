@@ -3,7 +3,11 @@
 export default {
     content: ["./src/**/*.{vue,js,ts,jsx,tsx}"],
     theme: {
-        extend: {},
+        extend: {
+            borderRadius: {
+                'base': '6px',
+            }
+        },
     },
     plugins: ["prettier-plugin-tailwindcss"],
 }

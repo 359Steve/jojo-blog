@@ -3,7 +3,8 @@
 </script>
 
 <template>
-    <div>首页</div>
+    <div>博客</div>
+    <NuxtPage />
 </template>
 
 <style lang='scss' scoped>

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div>首页</div>
+    <div>blog的子页面</div>
 </template>
 
 <style lang='scss' scoped>
