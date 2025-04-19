@@ -9,8 +9,8 @@ const toPath = (item: typeof menuList.value[number]) => {
 </script>
 
 <template>
-    <div class="w-full h-full">
-        <ul class="w-full h-full sm:flex justify-center items-center sm:gap-x-12">
+    <div class="w-full">
+        <ul class="w-full sm:flex justify-center items-center sm:gap-x-12">
             <li v-for="item in menuList" 
                 :key="item.id" 
                 :class="[
