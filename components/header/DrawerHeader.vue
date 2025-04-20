@@ -1,6 +1,10 @@
 <script lang='ts' setup>
 import { CloseBold } from '@element-plus/icons-vue'
+import darkLogo from '~/assets/image/dark_logo.png'
+import lightLogo from '~/assets/image/light_logo.png'
+
 const { drawer } = storeToRefs(useJojoHeader())
+const { darkMode } = storeToRefs(useJojoColorMode())
 </script>
 
 <template>
@@ -14,7 +18,7 @@ const { drawer } = storeToRefs(useJojoHeader())
                     <ul>
                         <li class="p-4 w-full h-16">
                             <div class="w-full h-full flex justify-center items-center">
-                                <img class="h-full" src="~/assets/image/logo.png" alt="">
+                                <img class="h-full" :src="darkMode.preference === 'dark' ? lightLogo : darkLogo" alt="">
                                 <span class="text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">·Josef Joestar</span>
                             </div>
                         </li>

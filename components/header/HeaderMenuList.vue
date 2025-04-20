@@ -21,11 +21,11 @@ const toPath = (item: typeof menuList.value[number]) => {
                     shadow-sm sm:shadow-none  
                     rounded-base sm:rounded-none 
                     hover:cursor-pointer`,
-                    menuId === item.id ? 'shadow-none bg-black sm:bg-inherit' : 'hover:bg-[#DBDBDB] sm:hover:bg-transparent'
+                    menuId === item.id ? 'shadow-none bg-black sm:bg-inherit dark:bg-[white] sm:dark:bg-inherit' : 'hover:bg-[#DBDBDB] sm:hover:bg-transparent hover:text-black sm:dark:text-white'
                 ]"
                 @click="toPath(item)"
             >
-                <span :class="[menuId === item.id ? 'font-bold text-white sm:text-black ' : '']">{{ item.title }}</span>
+                <span :class="[menuId === item.id ? 'font-bold text-white sm:text-black dark:text-black sm:dark:text-white' : '']">{{ item.title }}</span>
             </li>
         </ul>
     </div>
