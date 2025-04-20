@@ -1,13 +1,10 @@
 <script lang='ts' setup>
 import darkImg from '~/assets/image/dark.png'
 import lightImg from '~/assets/image/light.png'
-import darkLogo from '~/assets/image/dark_logo.png'
-import lightLogo from '~/assets/image/light_logo.png'
 
 const { drawer } = storeToRefs(useJojoHeader())
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference === 'dark' ? false : true)
 const headerEl = ref<HTMLElement | null>(null)
-const { darkMode } = storeToRefs(useJojoColorMode())
 
 onMounted(() =>{
     nextTick(() => {
@@ -17,7 +14,7 @@ onMounted(() =>{
 })
 
 watch(selectTheme, () => {
-    darkMode.value.preference = selectTheme.value ? 'light' : 'dark'
+    useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark')
 })
 </script>
 
@@ -27,7 +24,10 @@ watch(selectTheme, () => {
         'w-full h-12 sticky top-0 backdrop-blur transition-all duration-300 ease-in-out border-x-0 flex items-center justify-between z-10 bg-background/50 border-border/50 px-4',
         useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']"
     >
-        <div class="w-24 h-full py-2"><img :src="darkMode.preference === 'dark' ? lightLogo : darkLogo" alt="" class="h-full"></div>
+        
+        <div class="w-24 h-full py-2">
+            <LogoBasicLogo></LogoBasicLogo>
+        </div>
         <div class="hidden w-[calc(100%-7rem)] h-full sm:flex justify-center items-center">
             <HeaderMenuList></HeaderMenuList>
         </div>

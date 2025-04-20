@@ -13,8 +13,8 @@ export const useJojoColorMode = defineStore('useJojoColorMode', () => {
         return darkMode.value
     }
 
-    const setDarkMode = (item: ColorModeInstance) => {
-        darkMode.value = item
+    const setDarkMode = (type: string) => {
+        darkMode.value.preference = type
     }
 
     return {
