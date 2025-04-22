@@ -1,4 +1,5 @@
 <script lang='ts' setup>
+const input = ref<string>('')
 const check = reactive([
     { title: 'Google Pay', value: false },
     { title: 'Apple Pay', value: false },
@@ -24,7 +25,7 @@ const check = reactive([
                 dark:has-[input:checked]:text-indigo-200 
                 dark:has-[input:checked]:ring-indigo-900"
         >
-            <span>{{ item.title }}</span>
+            <div class="flex items-center"><span class="w-[5rem] text-center">{{ item.title }}</span> <div class="radioInput"><ElInput v-model="input"></ElInput></div></div>
             <input id="apple" 
                     type="radio"
                     class="box-content 
@@ -46,4 +47,8 @@ const check = reactive([
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="postcss" scoped>
+:deep(.el-input__wrapper) {
+    @apply shadow-none border border-indigo-500 dark:border-indigo-800;
+}
+</style>

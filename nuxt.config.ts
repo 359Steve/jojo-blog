@@ -54,6 +54,13 @@ export default defineNuxtConfig({
 
   elementPlus: {
     importStyle: 'scss'
+  },
+
+  postcss: {
+    plugins: {
+      'postcss-nested': {},
+      'postcss-custom-media': {}
+    }
   }
 
 })
