@@ -44,7 +44,7 @@ const step = (b: BranchLine, deep = 0) => {
     drawBranch(b)
 
     // 左边的枝
-    if (deep < 3 || Math.random() < 0.5) {
+    if (deep < 2 || Math.random() < 0.5) {
         // 调用计算结束点方法
         pendingTasks.value.push(() => step({
             start: end,
@@ -54,7 +54,7 @@ const step = (b: BranchLine, deep = 0) => {
     }
 
     // 右边的枝
-    if (deep < 3 || Math.random() < 0.5) {
+    if (deep < 2 || Math.random() < 0.5) {
         // 调用计算结束点方法
         pendingTasks.value.push(() => step({
             start: end,
