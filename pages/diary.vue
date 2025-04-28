@@ -3,7 +3,6 @@
 </script>
 
 <template>
-    <div>日记</div>
     <NuxtPage />
 </template>
 
