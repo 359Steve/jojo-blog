@@ -15,6 +15,7 @@ const meta: Meta[] = [
 ]
 
 export default defineNuxtConfig({
+  plugins: ['~/plugins/md-editor.ts'],
   pages: true,
   typescript: {
     strict: true
