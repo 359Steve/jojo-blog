@@ -91,7 +91,51 @@ const check = reactive([
             <div class="rounded-md h-8 bg-[pink]">7</div>
         </div>
 
-        
+        <div class="columns-4xs p-4">
+            <div class="break-inside-avoid bg-pink-300 rounded-lg p-4">内容1</div>
+            <div class="break-inside-avoid bg-pink-400 rounded-lg p-4">内容2</div>
+            <div class="break-inside-avoid bg-pink-500 rounded-lg p-4">内容3</div>
+            <div class="break-inside-avoid bg-pink-600 rounded-lg p-4">内容4</div>
+            <div class="break-inside-avoid bg-pink-700 rounded-lg p-4">内容5</div>
+            <div class="break-inside-avoid bg-pink-800 rounded-lg p-4">内容6</div>
+        </div>
+
+
+        <div class="columns-2 sm:columns-4 p-4">
+            <div class="bg-pink-300 p-4">内容1</div>
+            <div class="bg-pink-400 p-4 break-before-column">内容2 123123123213123213</div>
+            <div class="bg-pink-500 p-4">内容3</div>
+            <div class="bg-pink-600 p-4">内容4</div>
+        </div>
+
+        <span class="box-decoration-slice bg-linear-to-r from-indigo-600 to-pink-500 px-2 text-white">
+            Hello<br />World
+        </span>
+        <span class="box-decoration-clone bg-linear-to-r from-indigo-600 to-pink-500 px-2 text-white">
+            Hello<br />World
+        </span>
+
+        <div class="flex">
+            <div class="shrink-0 w-64 bg-pink-300">不能缩小</div>
+            <div class="flex-1 bg-pink-500">可以自动缩小</div>
+        </div>
+
+        <div class="grid grid-flow-col grid-cols-2 auto-cols-min gap-4">
+            <div class="bg-pink-300 p-4">内容1</div>
+            <div class="bg-pink-400 p-4">内容2内容内容</div>
+            <div class="bg-pink-500 p-4">内容3</div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-pink-300 p-4 font-ww"><span>左对齐</span></div>
+            <div class="bg-pink-400 p-4">居中</div>
+            <div class="bg-pink-500 p-4">右对齐</div>
+        </div>
+
+        <div class="bg-white dark:bg-black text-gray-500/70 p-4">
+            白色背景下的淡灰色文字
+        </div>
+
     </div>
 </template>
 

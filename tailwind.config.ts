@@ -13,6 +13,15 @@ export default {
         extend: {
             borderRadius: {
                 'base': '6px',
+            },
+            columns: {
+                '4xs': '14rem'
+            },
+            flexBasis: {
+                'hh': '8rem'
+            },
+            fontFamily: {
+                'ww': '华文新魏'
             }
         },
     },

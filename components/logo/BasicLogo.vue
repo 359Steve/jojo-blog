@@ -6,7 +6,7 @@ const { darkMode } = storeToRefs(useJojoColorMode())
 </script>
 
 <template>
-    <img :src="darkMode.preference === 'dark' ? lightLogo : darkLogo" alt="" class="h-full">
+    <img :src="darkMode.preference === 'dark' ? lightLogo : darkLogo" alt="" class="h-full aspect-3/2 object-cover">
 </template>
 
 <style lang='scss' scoped>

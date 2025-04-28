@@ -108,7 +108,7 @@ const frame = () => {
 const animate = () => {
     requestAnimationFrame(() => {
         frameCount.value++
-        if (frameCount.value % 3 === 0) {
+        if (frameCount.value % 5 === 0) {
             frame()
         }
         
@@ -134,9 +134,9 @@ onMounted(() => {
 
 <template>
     <div class="relative w-full h-full">
-        <!-- <div class="fixed top-0 w-full h-[100vh] z-[-1] min-w-[1280px]">
+        <div class="fixed top-0 w-full h-[100vh] z-[-1] min-w-[1280px]">
             <canvas ref="canvasEl" class="w-full h-full"></canvas>
-        </div> -->
+        </div>
         <div class="w-full h-full">
             <!-- 导航栏 -->
             <HeaderBox></HeaderBox>
