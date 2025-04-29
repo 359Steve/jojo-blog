@@ -16,7 +16,7 @@ if (import.meta.client) {
 <template>
     <div class="w-full h-[calc(100dvh-5rem)]">
         <ClientOnly>
-            <MdEditor v-model="mdText" :theme="useJojoColorMode().getDarkMode().preference" />
+            <MdEditor :id="id" v-model="mdText" :theme="useJojoColorMode().getDarkMode().preference" />
         </ClientOnly>
     </div>
     <!-- <div class="w-full block sm:grid sm:gap-4 sm:grid-cols-3">
