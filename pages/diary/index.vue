@@ -11,12 +11,34 @@ if (res.code === 200) {
 if (import.meta.client) {
     scrollElement.value = document.documentElement
 }
+
+// 将新的文件内容写入文件
+const writeFile = async (value: string) => {
+    const res = await fetchPostApi<{ content: string, name: string }, { name: string, content: string }>('/savefile/savefile', {
+        body: {
+            content: value,
+            name: 'md'
+        }
+    })
+    if (res.code === 200) {
+        ElMessage({
+            message: '保存成功',
+            type: 'success'
+        })
+    }
+}
 </script>
 
 <template>
     <div class="w-full h-[calc(100dvh-5rem)]">
         <ClientOnly>
-            <MdEditor :id="id" v-model="mdText" :theme="useJojoColorMode().getDarkMode().preference" />
+            <MdEditor 
+                :id="id" 
+                v-model="mdText" 
+                :theme="useJojoColorMode().getDarkMode().preference"
+                preview-theme="github"
+                @save="writeFile"
+            />
         </ClientOnly>
     </div>
     <!-- <div class="w-full block sm:grid sm:gap-4 sm:grid-cols-3">
