@@ -7,13 +7,16 @@ if (res.code === 200) {
 </script>
 
 <template>
-    <div class="w-full">
+    <div class="w-full h-[calc(100dvh-3rem)]">
         <ClientOnly>
-            <MdEditor v-model="mdText" theme="light" />
+            <MdEditor v-model="mdText" :theme="useJojoColorMode().getDarkMode().preference" />
+            <!-- <MdPreview v-model="mdText"></MdPreview> -->
         </ClientOnly>
     </div>
 </template>
 
-<style lang='scss' scoped>
-
+<style lang='postcss' scoped>
+:deep(.md-editor) {
+    @apply w-full h-full
+}
 </style>
