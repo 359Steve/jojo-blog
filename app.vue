@@ -20,7 +20,11 @@ onBeforeUnmount(() => {
 <template>
     <NuxtLayout name="jojomain">
         <template #page>
-            <NuxtPage />
+            <NuxtLayout name="mainbox">
+                <template #childPage>
+                    <NuxtPage />
+                </template>
+            </NuxtLayout>
         </template>
     </NuxtLayout>
 </template>
