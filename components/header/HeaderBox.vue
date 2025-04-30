@@ -3,18 +3,21 @@ import darkImg from '~/assets/image/dark.png'
 import lightImg from '~/assets/image/light.png'
 
 const { drawer } = storeToRefs(useJojoHeader())
-const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference === 'dark' ? false : true)
 const headerEl = ref<HTMLElement | null>(null)
 
-onMounted(() =>{
+const { selectTheme } = defineProps<{
+    selectTheme?: boolean
+}>()
+
+defineEmits<{
+    (e: 'changeTheme', value: MouseEvent): void
+}>()
+
+onMounted(() => {
     nextTick(() => {
         const height: number = headerEl.value!.getBoundingClientRect().height
         useJojoHeader().setHeaderHeight(height)
     })
-})
-
-watch(selectTheme, () => {
-    useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark')
 })
 </script>
 
@@ -32,7 +35,6 @@ watch(selectTheme, () => {
         border-border/50 px-4`,
         useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']"
     >
-        
         <div class="w-24 h-full py-2">
             <LogoBasicLogo></LogoBasicLogo>
         </div>
@@ -44,18 +46,22 @@ watch(selectTheme, () => {
                 justify-center items-center 
                 hover:cursor-pointer 
                 hover:bg-[#DBDBDB] w-8 h-8 
-                bg-[white] shadow-md rounded-md"
+                bg-[white] shadow-md rounded-md p-2"
             >
-                <img class="w-6 h-6" src="~/assets/image/facebook.png" alt="">
+                <a href="https://www.facebook.com/profile.php?id=61565513711985" target="_blank">
+                    <img class="w-full" src="~/assets/image/facebook.png" alt="facebook">
+                </a>
             </div>
             <div class="hidden sm:flex 
                 justify-center items-center 
                 hover:cursor-pointer 
                 hover:bg-[#DBDBDB] 
                 w-8 h-8 bg-[white] 
-                shadow-md rounded-md"
+                shadow-md rounded-md p-2"
             >
-                <img class="w-6 h-6" src="~/assets/image/github.png" alt="">
+                <a href="https://github.com/359Steve" target="_blank">
+                    <img class="w-full" src="~/assets/image/github.png" alt="github">
+                </a>
             </div>
             <div class="flex items-center justify-between gap-x-2">
                 <div class="w-8 h-8 
@@ -63,16 +69,16 @@ watch(selectTheme, () => {
                     hover:bg-[#DBDBDB]
                     flex justify-center items-center 
                     bg-[white] shadow-md 
-                    rounded-md" 
-                    @click="selectTheme = !selectTheme"
+                    rounded-md p-2" 
+                    @click="$emit('changeTheme', $event)"
                 >
-                    <img class="w-6 h-6" :src="selectTheme ? darkImg : lightImg" alt="">
+                    <img class="w-full" :src="selectTheme ? darkImg : lightImg" alt="">
                 </div>
                 <div class="w-8 h-8 
                     hover:cursor-pointer 
                     hover:bg-[#DBDBDB]  
-                    p-1 bg-[white] shadow-md 
-                    rounded-base sm:hidden" 
+                    bg-[white] shadow-md 
+                    rounded-base sm:hidden p-2" 
                     @click="drawer = !drawer"
                 >
                     <img class="h-full leading-6" src="~/assets/image/menu.png" alt="">
