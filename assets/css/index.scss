@@ -26,3 +26,7 @@ body {
 ::view-transition-old(root) {
     animation: none;
 }
+
+.dark::view-transition-old(root) {
+    z-index: 9999;
+}

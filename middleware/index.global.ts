@@ -1,5 +1,5 @@
 // 全局路由中间件
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to, _from) => {
     // 导航栏基础路由
     const { menuList, menuId } = storeToRefs(useJojoHeader())
 
