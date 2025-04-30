@@ -15,6 +15,13 @@ const meta: Meta[] = [
 ]
 
 export default defineNuxtConfig({
+  imports: {
+    dirs: [
+      'composables',
+      'composables/*/*.{ts,js,mjs,mts}',
+      'composables/**/*.{ts,js,mjs,mts}'
+    ]
+  },
   plugins: ['~/plugins/md-editor.ts'],
   pages: true,
   typescript: {
