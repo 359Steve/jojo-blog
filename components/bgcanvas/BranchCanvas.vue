@@ -32,7 +32,7 @@ const drawBranch = (b: BranchLine) => {
 
 // 绘制直线
 const lineTo = (p1: Point, p2: Point) => {
-    ctx.value.lineWidth = 0.4
+    ctx.value.lineWidth = 0.2
     ctx.value.beginPath()
     ctx.value.moveTo(p1.x, p1.y)
     ctx.value.lineTo(p2.x, p2.y)
@@ -50,7 +50,7 @@ const step = (b: BranchLine, deep = 0) => {
         pendingTasks.value.push(() => step({
             start: end,
             lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-            theta: b.theta - 0.5 * Math.random()
+            theta: b.theta - 0.3 * Math.random()
         }, deep + 1))
     }
 
@@ -60,43 +60,25 @@ const step = (b: BranchLine, deep = 0) => {
         pendingTasks.value.push(() => step({
             start: end,
             lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-            theta: b.theta + 0.5 * Math.random()
+            theta: b.theta + 0.3 * Math.random()
         }, deep + 1))
     }
 }
 
 const init = () => {
-    ctx.value.strokeStyle = '#dbdbdb'
+    ctx.value.strokeStyle = 'rgb(107 114 128 / 0.5)'
 
-    // 左边界起点
-    const leftPoint: Point = {
-        x: 0,
-        y: Math.random() * height.value
-    }
-    const leftTheta = -Math.PI / 4 + Math.random() * (Math.PI / 2) // 向右偏上/下
+    const leftTop: Point = { x: 0, y: 0 }
+    const rightBottom: Point = { x: width.value, y: height.value }
 
-    // 右边界起点
-    const rightPoint: Point = {
-        x: width.value,
-        y: Math.random() * height.value
-    }
-    const rightTheta = Math.PI + Math.PI / 4 - Math.random() * (Math.PI / 2) // 向左偏上/下
+    const leftTheta = Math.PI / 4          // 右下 45°
+    const rightTheta = -3 * Math.PI / 4    // 左上 45°
 
-    // 下边界起点
-    const bottomPoint: Point = {
-        x: Math.random() * width.value,
-        y: height.value
-    }
-    const bottomTheta = -Math.PI / 2 + (Math.random() * 0.4 - 0.2) // 向上偏左/右
-
-    // 构建三条起始分支
     const branches: BranchLine[] = [
-        { start: leftPoint, lenght: 4, theta: leftTheta },
-        { start: rightPoint, lenght: 4, theta: rightTheta },
-        { start: bottomPoint, lenght: 4, theta: bottomTheta }
+        { start: leftTop, lenght: 3, theta: leftTheta },
+        { start: rightBottom, lenght: 3, theta: rightTheta }
     ]
 
-    // 对每条起始分支执行 step()
     branches.forEach(branch => step(branch))
 }
 
@@ -119,22 +101,29 @@ const animate = () => {
 
 onMounted(() => {
     const rect = canvasEl.value?.getBoundingClientRect()
+    const ratio = window.devicePixelRatio || 1
+
     if (canvasEl.value && rect) {
         width.value = rect.width
         height.value = rect.height
 
-        // 设置 canvas 的绘图尺寸
-        canvasEl.value.width = rect.width
-        canvasEl.value.height = rect.height
+        // 设置实际像素大小
+        canvasEl.value.width = rect.width * ratio
+        canvasEl.value.height = rect.height * ratio
+
+        // 缩放上下文，让坐标系统仍然用 CSS 像素
+        ctx.value.scale(ratio, ratio)
 
         init()
     }
+
     animate()
 })
+
 </script>
 
 <template>
-    <div class="fixed top-0 w-full h-[100dvh] z-[-1] min-w-[1280px]">
+    <div class="fixed inset-0 z-[-1]">
         <canvas ref="canvasEl" class="w-full h-full"></canvas>
     </div>
 </template>

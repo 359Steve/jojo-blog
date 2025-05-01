@@ -1,7 +1,7 @@
 <script lang='ts' setup>
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference === 'dark' ? false : true)
 
-const changeTheme = (_e: MouseEvent): void => {
+const changeTheme = async (_e: MouseEvent): Promise<void> => {
     selectTheme.value = !selectTheme.value
     const transition: ViewTransition = document.startViewTransition(() => {
         useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark')
@@ -25,7 +25,7 @@ const changeTheme = (_e: MouseEvent): void => {
         ]
         document.documentElement.animate(
             {
-                clipPath: isDark ? clipPath.reverse() : clipPath,
+                clipPath: isDark ? clipPath.reverse() : clipPath
             },
             // 设置时间，已经目标伪元素
             {
