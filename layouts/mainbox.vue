@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="w-full sm:max-w-xl md:max-w-2xl lg:max-w-4xl m-auto p-4 box-border">
+    <div class="w-full h-auto mobile-pad:max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl m-auto p-4 box-border">
         <slot name="childPage"></slot>
     </div>
 </template>

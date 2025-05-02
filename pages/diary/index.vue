@@ -14,9 +14,9 @@ if (import.meta.client) {
 </script>
 
 <template>
-    <div class="w-full block sm:grid sm:gap-4 sm:grid-cols-3">
+    <div class="w-full block mobile-pad:grid mobile-pad:gap-4 mobile-pad:grid-cols-3">
         <div class="w-full p-4">
-            <div class="relative sm:sticky sm:top-12">
+            <div class="relative mobile-pad:sticky mobile-pad:top-12">
                 <NuxtLayout name="jojoclient">
                     <template #client>
                         <MdCatalog :editorId="id" :scrollElement="scrollElement!" />
@@ -25,7 +25,7 @@ if (import.meta.client) {
             </div>
         </div>
 
-        <div class="w-full sm:col-span-2 p-4">
+        <div class="w-full mobile-pad:col-span-2 p-4">
             <NuxtLayout name="jojoclient">
                 <template #client>
                     <ClientOnly>

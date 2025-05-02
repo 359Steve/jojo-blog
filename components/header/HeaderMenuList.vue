@@ -10,22 +10,22 @@ const toPath = (item: typeof menuList.value[number]) => {
 
 <template>
     <div class="w-full">
-        <ul class="w-full sm:flex justify-center items-center sm:gap-x-12">
+        <ul class="w-full mobile-pad:flex justify-center items-center mobile-pad:gap-x-12">
             <li v-for="item in menuList" 
                 :key="item.id" 
                 :class="[
-                    `sm:h-full 
+                    `mobile-pad:h-full 
                     leading-[3rem] 
-                    mb-4 sm:mb-0 
-                    px-4 sm:px-0 
-                    shadow-sm sm:shadow-none  
-                    rounded-base sm:rounded-none 
+                    mb-4 mobile-pad:mb-0 
+                    px-4 mobile-pad:px-0 
+                    shadow-sm mobile-pad:shadow-none  
+                    rounded-base mobile-pad:rounded-none 
                     hover:cursor-pointer`,
-                    menuId === item.id ? 'shadow-none bg-black sm:bg-inherit dark:bg-[white] sm:dark:bg-inherit' : 'hover:bg-[#DBDBDB] sm:hover:bg-transparent hover:text-black sm:dark:text-white'
+                    menuId === item.id ? 'shadow-none bg-black mobile-pad:bg-inherit dark:bg-[white] mobile-pad:dark:bg-inherit' : 'hover:bg-[#DBDBDB] mobile-pad:hover:bg-transparent hover:text-black mobile-pad:dark:text-white'
                 ]"
                 @click="toPath(item)"
             >
-                <span :class="[menuId === item.id ? 'font-bold text-white sm:text-black dark:text-black sm:dark:text-white' : '']">{{ item.title }}</span>
+                <span :class="[menuId === item.id ? 'font-bold text-white mobile-pad:text-black dark:text-black mobile-pad:dark:text-white' : '']">{{ item.title }}</span>
             </li>
         </ul>
     </div>
