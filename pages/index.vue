@@ -17,13 +17,13 @@ const onMouseenter = (e: MouseEvent): void => {
     const currentTheta = Math.atan2(h, w)
 
     if (currentTheta < theta.value && currentTheta >= -theta.value) {
-        directionClass.value = 'translate-x-[100%] opacity-100 animate-[rightEnter_0.3s_ease_both_1]'
+        directionClass.value = 'translate-x-[100%] opacity-100 animate-rightEnter'
     } else if (currentTheta >= theta.value && currentTheta <= Math.PI - theta.value) {
-        directionClass.value = 'translate-y-[-100%] opacity-100 animate-[topEnter_0.3s_ease_both_1]'
+        directionClass.value = 'translate-y-[-100%] opacity-100 animate-topEnter'
     } else if (currentTheta <= -theta.value && currentTheta >= -Math.PI + theta.value) {
-        directionClass.value = 'translate-y-[100%] opacity-100 animate-[bottomEnter_0.3s_ease_both_1]'
+        directionClass.value = 'translate-y-[100%] opacity-100 animate-bottomEnter'
     } else {
-        directionClass.value = 'translate-x-[-100%] opacity-100 animate-[leftEnter_0.3s_ease_both_1]'
+        directionClass.value = 'translate-x-[-100%] opacity-100 animate-leftEnter'
     }
 }
 
@@ -33,13 +33,13 @@ const onMouseleave = (e: MouseEvent): void => {
     const currentTheta = Math.atan2(h, w)
 
     if (currentTheta < theta.value && currentTheta >= -theta.value) {
-        directionClass.value = 'opacity-100 animate-[rightLeave_0.3s_ease_both_1]'
+        directionClass.value = 'opacity-100 animate-rightLeave'
     } else if (currentTheta >= theta.value && currentTheta <= Math.PI - theta.value) {
-        directionClass.value = 'opacity-100 animate-[topLeave_0.3s_ease_both_1]'
+        directionClass.value = 'opacity-100 animate-topLeave'
     } else if (currentTheta <= -theta.value && currentTheta >= -Math.PI + theta.value) {
-        directionClass.value = 'opacity-100 animate-[bottomLeave_0.3s_ease_both_1]'
+        directionClass.value = 'opacity-100 animate-bottomLeave'
     } else {
-        directionClass.value = 'opacity-100 animate-[leftLeave_0.3s_ease_both_1]'
+        directionClass.value = 'opacity-100 animate-leftLeave'
     }
 }
 
@@ -62,14 +62,13 @@ onMounted(() => {
         </div>
         <div class="w-full mobile-pad:w-[75%] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="relative w-full">
-                <div class="w-[50%] aspect-[4/5] sm:aspect-[6/9] bg-base-color dark:bg-white"></div>
+                <div class="w-[50%] aspect-[4/5] sm:aspect-[6/9] bg-half-gray"></div>
                 <div class="
                     absolute 
                     w-[calc(100%-1rem)] 
                     h-[calc(100%-2rem)] 
                     top-4 left-4 p-4 
-                    bg-[white] 
-                    dark:bg-base-color 
+                    bg-white
                     shadow-md"
                 >
                     <div 
@@ -78,11 +77,9 @@ onMounted(() => {
                         @mouseenter="onMouseenter"
                         @mouseleave="onMouseleave"
                     >
-                        <img 
-                            src="~/assets/image/index_bg.png" 
-                            alt="个人履历" 
-                            class="w-full h-full object-cover grayscale-[0.5]"
-                        />
+                        <Starport port="my-id" class="w-full h-full">
+                            <RecordImage/>
+                        </Starport>
                         <div
                             ref="indexBgMove"
                             :class="[`
@@ -96,6 +93,7 @@ onMounted(() => {
                             dark:bg-black/40 
                             flex items-end
                             `, directionClass]"
+                            @click="navigateTo('/record')"
                         >
                             <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
                                 <div>点击查看我的个人履历！</div>

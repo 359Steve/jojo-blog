@@ -22,7 +22,9 @@ onBeforeUnmount(() => {
         <template #page>
             <NuxtLayout name="mainbox">
                 <template #childPage>
-                    <NuxtPage />
+                    <StarportCarrier>
+                        <NuxtPage />
+                    </StarportCarrier>
                 </template>
             </NuxtLayout>
         </template>

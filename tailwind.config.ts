@@ -1,5 +1,27 @@
 /** @type { import('tailwindcss').Config } */
 
+const generateSlideAnimations = (): Record<string, Record<string, Record<string, string>>> => {
+    const directions = ['top', 'right', 'bottom', 'left']
+    const result: Record<string, Record<string, Record<string, string>>> = {}
+
+    directions.forEach(dir => {
+        const axis = dir === 'top' || dir === 'bottom' ? 'Y' : 'X'
+        const sign = dir === 'top' || dir === 'left' ? '-' : ''
+
+        result[`${dir}Enter`] = {
+            '0%': { transform: `translate${axis}(${sign}100%)` },
+            '100%': { transform: `translate${axis}(0)` }
+        }
+
+        result[`${dir}Leave`] = {
+            '0%': { transform: `translate${axis}(0)` },
+            '100%': { transform: `translate${axis}(${sign}100%)` }
+        }
+    })
+
+    return result
+}
+
 export default {
     darkMode: 'class',
     content: [
@@ -30,72 +52,16 @@ export default {
                 'half-gray': 'rgb(107 114 128 / 0.5)',
                 'base-color': '#121212'
             },
-            keyframes: {
-                'topEnter': {
-                    '0%': {
-                        transform: 'translateY(-100%)'
-                    },
-                    '100%': {
-                        transform: 'translateY(0)'
-                    }
-                },
-                'rightEnter': {
-                    '0%': {
-                        transform: 'translateX(100%)'
-                    },
-                    '100%': {
-                        transform: 'translateY(0)'
-                    }
-                },
-                'bottomEnter': {
-                    '0%': {
-                        transform: 'translateY(100%)'
-                    },
-                    '100%': {
-                        transform: 'translateY(0)'
-                    }
-                },
-                'leftEnter': {
-                    '0%': {
-                        transform: 'translateX(-100%)'
-                    },
-                    '100%': {
-                        transform: 'translateX(0)'
-                    }
-                },
-                'topLeave': {
-                    '0%': {
-                        opacity: '1',
-                        transform: 'translateY(0)'
-                    },
-                    '100%': {
-                        transform: 'translateY(-100%)'
-                    }
-                },
-                'rightLeave': {
-                    '0%': {
-                        transform: 'translateX(0)'
-                    },
-                    '100%': {
-                        transform: 'translateX(100%)'
-                    }
-                },
-                'bottomLeave': {
-                    '0%': {
-                        transform: 'translateY(0)'
-                    },
-                    '100%': {
-                        transform: 'translateY(100%)'
-                    }
-                },
-                'leftLeave': {
-                    '0%': {
-                        transform: 'translateX(0)'
-                    },
-                    '100%': {
-                        transform: 'translateX(-100%)'
-                    }
-                }
+            keyframes: generateSlideAnimations(),
+            animation: {
+                topEnter: 'topEnter 0.3s ease both',
+                rightEnter: 'rightEnter 0.3s ease both',
+                bottomEnter: 'bottomEnter 0.3s ease both',
+                leftEnter: 'leftEnter 0.3s ease both',
+                topLeave: 'topLeave 0.3s ease both',
+                rightLeave: 'rightLeave 0.3s ease both',
+                bottomLeave: 'bottomLeave 0.3s ease both',
+                leftLeave: 'leftLeave 0.3s ease both',
             }
         },
     },
