@@ -78,7 +78,7 @@ onMounted(() => {
                         @mouseleave="onMouseleave"
                     >
                         <Starport port="my-id" class="w-full h-full">
-                            <RecordImage/>
+                            <RecordImage :class="[`transition-all duration-1000`, useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
                         </Starport>
                         <div
                             ref="indexBgMove"

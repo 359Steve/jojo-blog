@@ -1,12 +1,18 @@
 <script lang='ts' setup>
+onMounted(() => {
+    useVueStarport().setIsRound(true)
+})
 
+onBeforeUnmount(() => {
+    useVueStarport().setIsRound(false)
+})
 </script>
 
 <template>
     <div class="w-full grid mobile-pad:grid-cols-3 gap-4">
         <div class="w-full flex justify-center items-center">
-            <Starport port="my-id" class="w-full aspect-[3/2]">
-                <RecordImage/>
+            <Starport port="my-id" class="w-24 h-24">
+                <RecordImage class="rounded-[50%] transition-all duration-1000" />
             </Starport>
         </div>
         <div class="mobile-pad:col-span-2">2</div>

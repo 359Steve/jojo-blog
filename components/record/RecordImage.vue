@@ -3,9 +3,7 @@
 </script>
 
 <template>
-    <img src="~/assets/image/index_bg.png" alt="个人履历" class="w-full h-full transition-all duration-500 object-cover" />
+    <img src="~/assets/image/index_bg.png" alt="个人履历" class="w-full h-full object-cover" />
 </template>
 
-<style lang='scss' scoped>
-
-</style>
+<style lang='scss' scoped></style>
