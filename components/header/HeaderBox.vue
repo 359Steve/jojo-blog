@@ -38,11 +38,11 @@ onMounted(() => {
         <div class="w-24 h-full py-2">
             <LogoBasicLogo></LogoBasicLogo>
         </div>
-        <div class="hidden w-[calc(100%-7rem)] h-full mobile-pad:flex justify-center items-center">
+        <div class="hidden w-[calc(100%-7rem)] h-full sm:flex justify-center items-center">
             <HeaderMenuList></HeaderMenuList>
         </div>
         <div class=" w-fit h-full flex justify-between items-center gap-x-2">
-            <div class="hidden mobile-pad:flex 
+            <div class="hidden sm:flex 
                 justify-center items-center 
                 hover:cursor-pointer 
                 hover:bg-[#DBDBDB] w-8 h-8 
@@ -52,7 +52,7 @@ onMounted(() => {
                     <img class="w-full" src="~/assets/image/facebook.png" alt="facebook">
                 </a>
             </div>
-            <div class="hidden mobile-pad:flex 
+            <div class="hidden sm:flex 
                 justify-center items-center 
                 hover:cursor-pointer 
                 hover:bg-[#DBDBDB] 
@@ -78,7 +78,7 @@ onMounted(() => {
                     hover:cursor-pointer 
                     hover:bg-[#DBDBDB]  
                     bg-[white] shadow-md 
-                    rounded-base mobile-pad:hidden p-2" 
+                    rounded-base sm:hidden p-2" 
                     @click="drawer = !drawer"
                 >
                     <img class="h-full leading-6" src="~/assets/image/menu.png" alt="">

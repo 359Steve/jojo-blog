@@ -62,6 +62,9 @@ export default {
                 rightLeave: 'rightLeave 0.3s ease both',
                 bottomLeave: 'bottomLeave 0.3s ease both',
                 leftLeave: 'leftLeave 0.3s ease both',
+            },
+            boxShadow: {
+                'base': '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
             }
         },
     },
