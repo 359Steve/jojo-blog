@@ -3,8 +3,6 @@ import type { StaticImage, Timeline } from '~/types/com-types'
 
 const myText = ref<string>('')
 const indexBg = ref<HTMLElement | null>(null)
-const maskEl = ref<HTMLElement | null>(null)
-const indexEl = ref<HTMLElement | null>(null)
 const rect = ref<DOMRect>()
 const theta = ref<number>(0)
 const directionClass = ref<string>('')
@@ -59,17 +57,14 @@ const onMouseleave = (e: MouseEvent): void => {
 }
 
 const detailRecord = async (item: Timeline) => {
-    const res = await import(`~/assets/image/${item.id}.png`)
-    console.log(res)
+    navigateTo({ path: '/record', query: { id: item.id } })
 }
 
 onMounted(() => {
     nextTick(() => {
-        if (indexBg.value && maskEl.value && indexEl.value) {
+        if (indexBg.value) {
             rect.value = indexBg.value!.getBoundingClientRect()
             theta.value = Math.atan2(rect.value!.height, rect.value!.width)
-            const maskHeight = maskEl.value.getBoundingClientRect().height
-            // indexEl.value.style.height = `${maskHeight - 32}px`
         }
     })
 })
@@ -78,17 +73,17 @@ onMounted(() => {
 <template>
     <div class="w-full min-h-[calc(100dvh-5rem)] flex flex-col gap-6">
         <!-- 介绍 -->
-        <div class="w-full mobile-pad:w-[75%] mx-auto">
+        <div class="w-full sm:w-[75%] mx-auto">
             <div class="w-full h-full pt-8 pb-8">
                 <h1 class="font-extralight text-[2.25em] text-center">Josef Joestar</h1>
                 <div v-if="myText" class="mt-4 text-center">{{ myText }}</div>
             </div>
         </div>
-        <div class="w-full mobile-pad:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
+        <div class="w-full sm:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
             <div class="w-full">
                 <div class="relative w-full h-full py-0 md:py-4 flex items-center">
-                    <div ref="maskEl" class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
-                    <div ref="indexEl" class="
+                    <div class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
+                    <div class="
                         w-[calc(100%-1rem)] 
                         h-[calc(100%-2rem)]
                         ml-4

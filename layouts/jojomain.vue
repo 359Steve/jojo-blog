@@ -44,6 +44,7 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
             <!-- 导航栏 -->
             <HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
             <slot name="page"></slot>
+            <FooterBox></FooterBox>
         </div>
     </div>
 </template>

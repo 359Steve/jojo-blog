@@ -15,7 +15,7 @@ defineEmits<{
         <div v-for="item in timelineData" :key="item.id" class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
             <div class="relative w-full h-full">
                 <div
-                    class="absolute size-3 bg-[#E4E7EC] rounded-[50%] top-[calc(-0.75rem/2)] left-[calc(-0.75rem/2)]">
+                    class="absolute size-3 bg-[#E4E7EC] rounded-[50%] left-[calc(-0.75rem/2)]">
                 </div>
                 <div class="absolute w-[4px] h-full bg-[#E4E7EC] left-[-2px]"></div>
                 <div class="w-full h-full ml-2"> 
