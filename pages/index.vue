@@ -1,22 +1,24 @@
 <script lang='ts' setup>
-interface Timeline {
-    id: number
-    timestamp: string
-    title: string
-    description: string
-}
+import type { StaticImage, Timeline } from '~/types/com-types'
 
 const myText = ref<string>('')
 const indexBg = ref<HTMLElement | null>(null)
+const maskEl = ref<HTMLElement | null>(null)
+const indexEl = ref<HTMLElement | null>(null)
 const rect = ref<DOMRect>()
 const theta = ref<number>(0)
 const directionClass = ref<string>('')
 
+const getImage = async (id: number): Promise<string> => {
+    const res: StaticImage = await import(`~/assets/image/${id}.png`)
+    return res.default
+}
+
 const timelineData = reactive<Timeline[]>([
-    { id: 1, timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）' },
-    { id: 2, timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统' },
-    { id: 3, timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发' },
-    { id: 4, timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用' },
+    { id: 1, timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）', url: await getImage(1)} ,
+    { id: 2, timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统', url: await getImage(2) },
+    { id: 3, timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发', url: await getImage(3) },
+    { id: 4, timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用', url: await getImage(4) },
 ])
 
 const res = await useGet<any, { content: string }>('/my/my')
@@ -56,10 +58,19 @@ const onMouseleave = (e: MouseEvent): void => {
     }
 }
 
+const detailRecord = async (item: Timeline) => {
+    const res = await import(`~/assets/image/${item.id}.png`)
+    console.log(res)
+}
+
 onMounted(() => {
     nextTick(() => {
-        rect.value = indexBg.value!.getBoundingClientRect()
-        theta.value = Math.atan2(rect.value!.height, rect.value!.width)
+        if (indexBg.value && maskEl.value && indexEl.value) {
+            rect.value = indexBg.value!.getBoundingClientRect()
+            theta.value = Math.atan2(rect.value!.height, rect.value!.width)
+            const maskHeight = maskEl.value.getBoundingClientRect().height
+            // indexEl.value.style.height = `${maskHeight - 32}px`
+        }
     })
 })
 </script>
@@ -73,43 +84,58 @@ onMounted(() => {
                 <div v-if="myText" class="mt-4 text-center">{{ myText }}</div>
             </div>
         </div>
-        <div class="w-full mobile-pad:w-[75%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
-            <div class="relative w-full">
-                <div class="w-[50%] aspect-[4/5] sm:aspect-[6/9] bg-half-gray"></div>
-                <div class="
-                    absolute 
-                    w-[calc(100%-1rem)] 
-                    h-[calc(100%-2rem)] 
-                    top-4 left-4 p-4 s
-                    bg-white
-                    shadow-md"
-                >
-                    <div 
-                        ref="indexBg" 
-                        class="hidden mobile-pad:block relative w-full h-full cursor-pointer overflow-hidden"
-                        @mouseenter="onMouseenter"
-                        @mouseleave="onMouseleave"
+        <div class="w-full mobile-pad:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
+            <div class="w-full">
+                <div class="relative w-full h-full py-0 md:py-4 flex items-center">
+                    <div ref="maskEl" class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
+                    <div ref="indexEl" class="
+                        w-[calc(100%-1rem)] 
+                        h-[calc(100%-2rem)]
+                        ml-4
+                        p-4
+                        bg-white
+                        shadow-md"
                     >
-                        <RecordImageBox :port="'my-id'" :direction-class="directionClass"></RecordImageBox>
-                    </div>
-                    <div 
-                        class="block mobile-pad:hidden relative w-full h-full cursor-pointer overflow-hidden"
-                    >
-                        <RecordImageBox :port="'my-id2'" class="opacity-100"></RecordImageBox>
+                        <div
+                            ref="indexBg" 
+                            class="relative w-full h-full cursor-pointer overflow-hidden"
+                            @mouseenter="onMouseenter"
+                            @mouseleave="onMouseleave"
+                        >
+                            <Starport port="my-id" class="w-full h-full">
+                                <RecordImage :class="[`transition-all duration-1000 min-w-32 min-h-32`, useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
+                            </Starport>
+                            <div
+                                :class="[`
+                                absolute
+                                w-full
+                                h-full
+                                top-0 
+                                opacity-0
+                                backdrop-blur-sm 
+                                bg-white/40 
+                                dark:bg-black/40 
+                                flex items-end
+                                `, directionClass]"
+                                @click="navigateTo(`/record/1`)"
+                            >
+                                <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
+                                    <div>点击查看我的个人履历！</div>
+                                    <div>您将了解到我的学习背景、技能特长和经历</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div
+                            class="block mobile-pad:hidden relative w-full h-full cursor-pointer overflow-hidden"
+                        >
+                            <RecordImageBox :port="'my-id2'" class="opacity-100"></RecordImageBox>
+                        </div> -->
                     </div>
                 </div>
             </div>
             <div class="w-full h-full grid grid-cols-1 text-sm justify-center">
-                <div v-for="item in timelineData" :key="item.id" class="grid grid-cols-2">
-                    <div :class="[`relative w-full h-full`, item.id % 2 === 0 ? 'pl-4 col-start-2' : 'pr-4 col-start-1']">
-                        <div :class="[`absolute size-3 bg-[#E4E7EC] rounded-[50%] top-[calc(-0.75rem/2)]`, item.id % 2 === 0 ? 'left-[calc(-0.75rem/2)]' : 'right-[calc(-0.75rem/2)]']"></div>
-                        <div :class="[`absolute w-[4px] h-full bg-[#E4E7EC]`, item.id % 2 === 0 ? 'left-[-2px]' : 'right-[-2px]']"></div>
-                        <div class="w-full h-full">
-                            <div :class="[`w-full flex items-center text-gray-400 text-xs`, item.id % 2 === 0 ? 'justify-start' : 'justify-end']"><span>{{ item.timestamp }}</span></div>
-                            <div :class="[`p-2 rounded-base cursor-pointer mt-2 truncate overflow-hidden whitespace-nowrap hover:shadow-base transition-all`, item.id % 2 === 0 ? 'text-left' : 'text-right']"><span>{{ item.description }}</span></div>
-                        </div>
-                    </div>
-                </div>
+                <IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData" @detail-record="detailRecord"></IndexBasicTime>
+                <IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData" @detail-record="detailRecord"></IndexMdToLgTime>
             </div>
         </div>
     </div>

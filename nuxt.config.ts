@@ -15,6 +15,9 @@ const meta: Meta[] = [
 ]
 
 export default defineNuxtConfig({
+  experimental: {
+    payloadExtraction: false
+  },
   imports: {
     dirs: [
       'composables',

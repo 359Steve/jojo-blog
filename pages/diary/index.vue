@@ -17,22 +17,12 @@ if (import.meta.client) {
     <div class="w-full block mobile-pad:grid mobile-pad:gap-4 mobile-pad:grid-cols-3">
         <div class="w-full p-4">
             <div class="relative mobile-pad:sticky mobile-pad:top-12">
-                <NuxtLayout name="jojoclient">
-                    <template #client>
-                        <MdCatalog :editorId="id" :scrollElement="scrollElement!" />
-                    </template>
-                </NuxtLayout>
+                <MdCatalog :editorId="id" :scrollElement="scrollElement!" />
             </div>
         </div>
 
         <div class="w-full mobile-pad:col-span-2 p-4">
-            <NuxtLayout name="jojoclient">
-                <template #client>
-                    <ClientOnly>
-                        <MdPreview :id="id" :modelValue="mdText" preview-theme="github" :theme="useJojoColorMode().getDarkMode().preference" />
-                    </ClientOnly>
-                </template>
-            </NuxtLayout>
+            <MdPreview :id="id" :modelValue="mdText" preview-theme="github" :theme="useJojoColorMode().getDarkMode().preference" />
         </div>
     </div>
 </template>

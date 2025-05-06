@@ -15,7 +15,7 @@ onBeforeUnmount(() => {
 <template>
     <div class="w-full grid mobile-pad:grid-cols-3 gap-4">
         <div class="w-full flex justify-center items-center">
-            <Starport :port="id" class="w-24 h-24">
+            <Starport port="my-id" class="w-24 h-24">
                 <RecordImage class="rounded-[50%] transition-all duration-1000" />
             </Starport>
         </div>
