@@ -103,7 +103,7 @@ onMounted(() => {
                             @mouseleave="onMouseleave"
                         >
                             <Starport port="my-id" class="w-full h-full">
-                                <RecordImage :class="[`transition-all duration-1000 min-w-32 min-h-32`, useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
+                                <RecordImage :class="[`transition-all duration-1000`, useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
                             </Starport>
                             <div
                                 :class="[`
@@ -117,7 +117,7 @@ onMounted(() => {
                                 dark:bg-black/40 
                                 flex items-end
                                 `, directionClass]"
-                                @click="navigateTo(`/record/1`)"
+                                @click="navigateTo(`/record`)"
                             >
                                 <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
                                     <div>点击查看我的个人履历！</div>
@@ -125,11 +125,6 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
-                        <!-- <div
-                            class="block mobile-pad:hidden relative w-full h-full cursor-pointer overflow-hidden"
-                        >
-                            <RecordImageBox :port="'my-id2'" class="opacity-100"></RecordImageBox>
-                        </div> -->
                     </div>
                 </div>
             </div>

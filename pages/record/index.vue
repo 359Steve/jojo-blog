@@ -1,8 +1,4 @@
 <script lang='ts' setup>
-const route = useRoute()
-const id = computed((): string => {
-    return route.params.id as string
-})
 onMounted(() => {
     useVueStarport().setIsRound(true)
 })
