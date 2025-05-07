@@ -25,7 +25,9 @@ export default defineNuxtConfig({
       'composables/**/*.{ts,js,mjs,mts}'
     ]
   },
-  plugins: ['~/plugins/md-editor.ts'],
+  plugins: [
+    '~/plugins/md-editor.ts'
+  ],
   pages: true,
   typescript: {
     strict: true
@@ -50,7 +52,7 @@ export default defineNuxtConfig({
   },
 
   // 初始化样式
-  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss'],
+  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css'],
 
   // 定义公共样式
   vite: {
