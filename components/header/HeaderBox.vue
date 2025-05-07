@@ -35,7 +35,7 @@ onMounted(() => {
         border-border/50 px-4`,
         useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']"
     >
-        <div class="w-24 h-full py-2">
+        <div class="w-24 h-full py-2 cursor-pointer">
             <LogoBasicLogo></LogoBasicLogo>
         </div>
         <div class="hidden w-[calc(100%-7rem)] h-full sm:flex justify-center items-center">

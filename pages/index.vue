@@ -73,13 +73,13 @@ onMounted(() => {
 <template>
     <div class="w-full min-h-[calc(100dvh-5rem)] flex flex-col gap-6">
         <!-- 介绍 -->
-        <div class="w-full sm:w-[75%] mx-auto">
+        <div class="w-full mobile-pad:w-[75%] mx-auto">
             <div class="w-full h-full pt-8 pb-8">
                 <h1 class="font-extralight text-[2.25em] text-center">Josef Joestar</h1>
                 <div v-if="myText" class="mt-4 text-center">{{ myText }}</div>
             </div>
         </div>
-        <div class="w-full sm:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
+        <div class="w-full mobile-pad:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
             <div class="w-full">
                 <div class="relative w-full h-full py-0 md:py-4 flex items-center">
                     <div class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
@@ -97,8 +97,11 @@ onMounted(() => {
                             @mouseenter="onMouseenter"
                             @mouseleave="onMouseleave"
                         >
-                            <Starport port="my-id" class="w-full h-full">
-                                <RecordImage :class="[`transition-all duration-1000`, useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
+                            <Starport port="my-id" class="w-full aspect-[3/2] md:h-full max-h-full">
+                                <RecordImage
+                                    class="transition-all duration-1000"
+                                    :class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']"
+                                />
                             </Starport>
                             <div
                                 :class="[`
