@@ -57,7 +57,7 @@ const onMouseleave = (e: MouseEvent): void => {
 }
 
 const detailRecord = async (item: Timeline) => {
-    navigateTo({ path: '/record', query: { id: item.id } })
+    navigateTo(`/record/${item.id}`)
 }
 
 onMounted(() => {
@@ -112,7 +112,7 @@ onMounted(() => {
                                 dark:bg-black/40 
                                 flex items-end
                                 `, directionClass]"
-                                @click="navigateTo(`/record`)"
+                                @click="navigateTo(`/record/home`)"
                             >
                                 <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
                                     <div>点击查看我的个人履历！</div>
