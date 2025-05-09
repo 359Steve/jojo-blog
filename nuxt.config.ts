@@ -52,7 +52,7 @@ export default defineNuxtConfig({
   },
 
   // 初始化样式
-  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css'],
+  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css', 'remixicon/fonts/remixicon.css'],
 
   // 定义公共样式
   vite: {
