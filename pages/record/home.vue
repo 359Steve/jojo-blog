@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="w-full">
+    <div class="w-full py-8">
         页面开头
     </div>
 </template>

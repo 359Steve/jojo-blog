@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import type { StaticImage, Timeline } from '~/types/com-types'
+import type { Timeline } from '~/types/com-types'
 
 const myText = ref<string>('')
 const indexBg = ref<HTMLElement | null>(null)
@@ -8,16 +8,11 @@ const theta = ref<number>(0)
 const directionClass = ref<string>('')
 const isSm = ref<boolean>(false)
 
-const getImage = async (id: number): Promise<string> => {
-    const res: StaticImage = await import(`~/assets/image/${id}.png`)
-    return res.default
-}
-
 const timelineData = reactive<Timeline[]>([
-    { id: 1, timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）', url: await getImage(1)} ,
-    { id: 2, timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统', url: await getImage(2) },
-    { id: 3, timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发', url: await getImage(3) },
-    { id: 4, timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用', url: await getImage(4) },
+    { id: 1, timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）', url: await useLoadStaticImage(1)} ,
+    { id: 2, timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统', url: await useLoadStaticImage(2) },
+    { id: 3, timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发', url: await useLoadStaticImage(3) },
+    { id: 4, timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用', url: await useLoadStaticImage(4) },
 ])
 
 const res = await useGet<any, { content: string }>('/my/my')
@@ -57,6 +52,10 @@ const onMouseleave = (e: MouseEvent): void => {
     } else {
         directionClass.value = 'opacity-100 animate-leftLeave'
     }
+}
+
+const toRecord = () => {
+    navigateTo('/record/home')
 }
 
 const detailRecord = async (item: Timeline) => {
@@ -124,7 +123,7 @@ onMounted(() => {
                                 dark:bg-black/40 
                                 flex items-end
                                 `, directionClass, isSm ? 'opacity-100' : 'opacity-0']"
-                                @click="navigateTo(`/record/home`)"
+                                @click="toRecord"
                             >
                                 <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
                                     <div>点击查看我的个人履历！</div>

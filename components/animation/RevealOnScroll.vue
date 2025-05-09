@@ -18,7 +18,7 @@ useIntersectionObserver(el, ([entry]) => {
 
 <template>
     <div ref="el" :class="[
-        'w-full h-full transition-all ease-out animate__animated',
+        'transition-all ease-out animate__animated',
         visible ? animationClass : 'animate__fadeOut',  // 默认隐藏状态
         baseClass
     ]">
