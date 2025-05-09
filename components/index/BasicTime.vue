@@ -23,11 +23,13 @@ defineEmits<{
                     <div
                         :class="[`w-full flex items-center text-gray-400 text-xs`, item.id % 2 === 0 ? 'justify-start' : 'justify-end']">
                         <span>{{ item.timestamp }}</span></div>
-                    <div @click="$emit('detailRecord', item)"
-                        :class="[`p-2 rounded-base cursor-pointer mt-2 shadow-base transition-all flex items-center`, item.id % 2 === 0 ? 'text-left' : 'text-right']">
-                        <img :src="item.url" alt="timestamp" class="size-8 mr-2">
-                        <div class="w-[calc(100%-2rem)] h-full break-normal text-center"><span>{{ item.description }}</span></div>
-                    </div>
+                    <AnimationRevealOnScroll :animation-class="item.id % 2 ===0 ? 'animate__fadeInRight': 'animate__fadeInLeft'">
+                        <div @click="$emit('detailRecord', item)"
+                            :class="[`p-2 rounded-base backdrop-blur cursor-pointer mt-2 shadow-base transition-all flex items-center`, item.id % 2 === 0 ? 'text-left' : 'text-right']">
+                            <img :src="item.url" alt="timestamp" class="size-8 mr-2">
+                            <div class="w-[calc(100%-2rem)] h-full break-normal text-center"><span>{{ item.description }}</span></div>
+                        </div>
+                    </AnimationRevealOnScroll>
                 </div>
             </div>
         </div>

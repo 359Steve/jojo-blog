@@ -91,51 +91,49 @@ onMounted(() => {
         </div>
         <div class="w-full sm:w-[75%] md:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 ">
             <div class="w-full">
-                <AnimationRevealOnScroll>
-                    <div class="relative w-full h-full py-0 md:py-4 flex items-center">
-                        <div class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
-                        <div class="
-                            w-[calc(100%-1rem)] 
-                            h-[calc(100%-2rem)]
-                            ml-4
-                            p-4
-                            bg-white
-                            shadow-md"
+                <div class="relative w-full h-full py-0 md:py-4 flex items-center">
+                    <div class="absolute z-[-1] w-[50%] h-full md:h-[calc(100%-2rem)] bg-half-gray"></div>
+                    <div class="
+                        w-[calc(100%-1rem)] 
+                        h-[calc(100%-2rem)]
+                        ml-4
+                        p-4
+                        bg-white
+                        shadow-md"
+                    >
+                        <div
+                            ref="indexBg" 
+                            class="relative w-full h-full cursor-pointer overflow-hidden"
+                            @mouseenter="onMouseenter"
+                            @mouseleave="onMouseleave"
                         >
+                            <Starport port="my-id" class="w-full aspect-[3/2] md:h-full max-h-full">
+                                <RecordImage
+                                    class="transition-all duration-1000"
+                                    :class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']"
+                                />
+                            </Starport>
                             <div
-                                ref="indexBg" 
-                                class="relative w-full h-full cursor-pointer overflow-hidden"
-                                @mouseenter="onMouseenter"
-                                @mouseleave="onMouseleave"
+                                :class="[`
+                                absolute
+                                w-full
+                                h-full
+                                top-0 
+                                backdrop-blur-sm 
+                                bg-white/40 
+                                dark:bg-black/40 
+                                flex items-end
+                                `, directionClass, isSm ? 'opacity-100' : 'opacity-0']"
+                                @click="navigateTo(`/record/home`)"
                             >
-                                <Starport port="my-id" class="w-full aspect-[3/2] md:h-full max-h-full">
-                                    <RecordImage
-                                        class="transition-all duration-1000"
-                                        :class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']"
-                                    />
-                                </Starport>
-                                <div
-                                    :class="[`
-                                    absolute
-                                    w-full
-                                    h-full
-                                    top-0 
-                                    backdrop-blur-sm 
-                                    bg-white/40 
-                                    dark:bg-black/40 
-                                    flex items-end
-                                    `, directionClass, isSm ? 'opacity-100' : 'opacity-0']"
-                                    @click="navigateTo(`/record/home`)"
-                                >
-                                    <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
-                                        <div>点击查看我的个人履历！</div>
-                                        <div>您将了解到我的学习背景、技能特长和经历</div>
-                                    </div>
+                                <div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
+                                    <div>点击查看我的个人履历！</div>
+                                    <div>您将了解到我的学习背景、技能特长和经历</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </AnimationRevealOnScroll>
+                </div>
             </div>
             <div class="w-full h-full grid grid-cols-1 text-sm justify-center">
                <AnimationRevealOnScroll>
