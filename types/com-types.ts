@@ -15,3 +15,10 @@ export interface RecordList {
     id: number
     title: string
 }
+
+export interface RecordButtonList {
+    id: number
+    icon: string
+    title: string
+    href: string
+}
