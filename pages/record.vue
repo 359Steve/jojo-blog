@@ -34,15 +34,15 @@ onBeforeUnmount(() => {
                 </Starport>
             </div>
             <div class="w-full flex items-center justify-center">
-                <AnimationRevealOnScroll :base-class="'flex items-center justify-center'">
+                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'" :base-class="'flex items-center justify-center'">
                     <span class="text-center text-gray-400">
                         努力做一个摆脱CV的前端工程师
                     </span>
                 </AnimationRevealOnScroll>
             </div>
             <div class="w-full flex items-center justify-center gap-2">
-                <AnimationRevealOnScroll v-for="item in recordButtonList" :key="item.id" :base-class="'w-fit'">
-                    <a :href="item.href" class="button">
+                <AnimationRevealOnScroll v-for="item in recordButtonList" :key="item.id" :animation-class="'animate__fadeInDown'" :base-class="'w-fit'">
+                    <a :href="item.href" target="_blank" class="button">
                         <ElButton size="default">
                             <template #icon>
                                 <div><i :class="item.icon" class="text-sm"></i></div>
@@ -55,7 +55,9 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 子页面 -->
-        <NuxtPage />
+        <div class="w-full h-fit mt-4 sm:mt-8">
+            <NuxtPage />
+        </div>
     </div>
 </template>
 

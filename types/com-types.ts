@@ -22,3 +22,17 @@ export interface RecordButtonList {
     title: string
     href: string
 }
+
+export interface Summary {
+    id: string
+    icon: string
+    title: string
+    summary: string
+    year: string
+}
+
+export interface RecordSummary {
+    id: string
+    year: string
+    data: Summary[]
+}
