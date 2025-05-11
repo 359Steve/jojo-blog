@@ -63,6 +63,6 @@ onBeforeUnmount(() => {
 
 <style lang='postcss' scoped>
 :deep(.el-button) {
-    @apply text-gray-400 hover:text-black hover:bg-gray-400/20
+    @apply text-gray-400 hover:text-black hover:bg-gray-400/20 dark:hover:text-white
 }
 </style>
