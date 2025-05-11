@@ -9,10 +9,10 @@ const directionClass = ref<string>('')
 const isSm = ref<boolean>(false)
 
 const timelineData = reactive<Timeline[]>([
-    { id: 1, timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）', url: await useLoadStaticImage(1)} ,
-    { id: 2, timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统', url: await useLoadStaticImage(2) },
-    { id: 3, timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发', url: await useLoadStaticImage(3) },
-    { id: 4, timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用', url: await useLoadStaticImage(4) },
+    { id: '1-1', timestamp: '2021年9月', title: '入学', description: '开始学习前端基础（HTML/CSS/JS）', url: await useLoadStaticImage(1)} ,
+    { id: '1-2', timestamp: '2022年3月', title: '完成第一个项目', description: 'React博客系统', url: await useLoadStaticImage(2) },
+    { id: '1-3', timestamp: '2022年10月', title: '加入开发团队', description: '学院官网项目开发', url: await useLoadStaticImage(3) },
+    { id: '1-4', timestamp: '2023年6月', title: '发布MiniMycc', description: '使用Electron构建桌面应用', url: await useLoadStaticImage(4) },
 ])
 
 const res = await useGet<any, { content: string }>('/my/my')
@@ -59,7 +59,7 @@ const toRecord = () => {
 }
 
 const detailRecord = async (item: Timeline) => {
-    navigateTo(`/record/${item.id}`)
+    navigateTo({ path: '/record/detail', query: { id: item.id } })
 }
 
 onMounted(() => {

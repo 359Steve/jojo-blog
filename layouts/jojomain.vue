@@ -40,6 +40,9 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
 <template>
     <div class="relative w-full h-full">
         <BgcanvasBranchCanvas></BgcanvasBranchCanvas>
+        <el-backtop :right="50" :bottom="100">
+            <i class="ri-arrow-up-line"></i>
+        </el-backtop>
         <div class="w-full h-full">
             <!-- 导航栏 -->
             <HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
@@ -49,6 +52,8 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
     </div>
 </template>
 
-<style lang='scss' scoped>
-
+<style lang='postcss' scoped>
+:deep(.el-backtop) {
+    @apply hidden sm:flex justify-center items-center text-black dark:text-white
+}
 </style>

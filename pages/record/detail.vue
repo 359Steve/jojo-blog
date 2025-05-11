@@ -1,12 +1,12 @@
 <script lang='ts' setup>
 const route = useRoute()
 
-console.log(route.params.id)
+const id = computed(() => route.query.id)
 </script>
 
 <template>
-    <div>
-        时间详情
+    <div class="w-full h-24">
+        123123
     </div>
 </template>
 

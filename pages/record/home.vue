@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import type { RecordSummary } from '~/types/com-types';
+import type { RecordSummary, Summary } from '~/types/com-types';
 
 const summaryList = reactive<RecordSummary[]>([
     {
@@ -48,6 +48,9 @@ const summaryList = reactive<RecordSummary[]>([
     }
 ])
 
+const toDetail = (item: Summary): void => {
+    navigateTo({ path: '/record/detail', query: { id: item.id } })
+}
 </script>
 
 <template>
@@ -63,7 +66,7 @@ const summaryList = reactive<RecordSummary[]>([
                 </AnimationRevealOnScroll>
             </div>
             <div class="relative w-full h-full mb-4 pl-4 sm:pl-8 grid grid-cols-1 mobile-pad:grid-cols-2 md:grid-cols-3 gap-4">
-                <AnimationRevealOnScroll v-for="demo in item.data" :key="demo.id" :animation-class="'animate__fadeInDown animate__delay-1s'" :base-class="'group flex p-2 items-center gap-4 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-100/5 rounded-base transition-all duration-300'">
+                <AnimationRevealOnScroll v-for="demo in item.data" :key="demo.id" @click="toDetail(demo)" :animation-class="'animate__fadeInDown animate__delay-1s'" :base-class="'group flex p-2 items-center gap-4 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-100/5 rounded-base transition-all duration-300'">
                     <div class="max-w-12 py-2 flex justify-center items-center">
                         <img class="w-full object-cover rounded-base" src="~/assets/image/index_one.png" alt="">
                     </div>
