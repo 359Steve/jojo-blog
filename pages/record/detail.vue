@@ -35,9 +35,6 @@ const srcList = reactive<string[]>([
             The engineer shrugs, “I updated my LinkedIn.”
         </div>
     </div>
-    <div class="flex items-center justify-center">
-        <ElButton @click="router.back()" type="primary" size="large">返回</ElButton>
-    </div>
     <div class="w-full py-8 mt-4">
         <div class="w-[60%] flex items-center m-auto">
             <div class="flex-grow h-px bg-gray-300"></div>

@@ -1,5 +1,6 @@
 <script lang='ts' setup>
 import type { RecordSummary, Summary } from '~/types/com-types';
+import { toWords } from 'number-to-words';
 
 const summaryList = reactive<RecordSummary[]>([
     {
@@ -51,17 +52,21 @@ const summaryList = reactive<RecordSummary[]>([
 const toDetail = (item: Summary): void => {
     navigateTo({ path: '/record/detail', query: { id: item.id } })
 }
+
+const foYear = (value: number): string => {
+    return toWords(value)
+}
 </script>
 
 <template>
     <div class="w-full py-4 sm:py-8">
-        <div v-for="item in summaryList" :key="item.id" class="w-full mb-4 sm:mb-8">
-            <div class="w-full mb-2">
+        <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-8 sm:mb-16">
+            <div class="absolute w-full top-[-30%] mb-2">
                 <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'">
                     <span
-                        class="text-[5em] font-bold text-gray-200 dark:text-gray-700/10"
+                        class="text-[8em] font-bold text-transparent text-stroke opacity-35 dark:text-stroke-dark"
                     >
-                        -{{ item.year }}-
+                        {{ foYear(Number(item.year) % 100) }}
                     </span>
                 </AnimationRevealOnScroll>
             </div>

@@ -12,7 +12,7 @@ export const useJojoHeader = defineStore('jojoHeader', () => {
     const menuList = reactive<Menu[]>([
         { id: 1, title: '首页', path: '/' },
         { id: 2, title: '博客', path: '/blog' },
-        { id: 3, title: '日记', path: '/diary' },
+        { id: 3, title: '日记', path: '/record' },
     ])
     const drawer = ref<boolean>(false) // 是否打开侧边菜单弹窗
     const menuId = ref<number>(1) // 当前选中菜单

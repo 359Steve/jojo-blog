@@ -25,7 +25,7 @@ const toPath = (item: typeof menuList.value[number]) => {
                 ]"
                 @click="toPath(item)"
             >
-                <span :class="[menuId === item.id ? 'font-bold text-white sm:text-black dark:text-black sm:dark:text-white' : '']">{{ item.title }}</span>
+                <span :class="[menuId === item.id ? 'font-bold text-white sm:text-black dark:text-black sm:dark:text-white' : 'text-gray-500']">{{ item.title }}</span>
             </li>
         </ul>
     </div>

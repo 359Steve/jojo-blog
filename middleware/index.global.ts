@@ -1,21 +1,15 @@
-// 全局路由中间件
 export default defineNuxtRouteMiddleware((to, _from) => {
     const path = to.path
-    // 导航栏基础路由
     const { menuList, menuId } = storeToRefs(useJojoHeader())
-    // 动态切换头像
     const { avatarUrl } = storeToRefs(useVueStarport())
 
-    path.startsWith('/record/') ? avatarUrl.value = 'my' : avatarUrl.value = 'index_bg'
+    // 动态切换头像
+    avatarUrl.value = path.startsWith('/record/') ? 'my' : 'index_bg'
 
-    if (!menuList.value.some(item => item.path === path)) {
-        menuId.value = 0
-    } else {
-        for (const item of menuList.value) {
-            if (item.path === path) {
-                menuId.value = item.id
-                return true
-            }
-        }
-    }
+    // 优先匹配最长的路径（避免 / 匹配到所有路径）
+    const matched = menuList.value
+        .filter(item => path === item.path || path.startsWith(item.path + '/'))
+        .sort((a, b) => b.path.length - a.path.length)[0]
+
+    menuId.value = matched ? matched.id : 0
 })

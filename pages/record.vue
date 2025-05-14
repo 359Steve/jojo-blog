@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
             <div class="w-full flex justify-center items-center">
                 <Starport
                     port="my-id"
-                    class="aspect-square w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
+                    class="aspect-square w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
                 >
                     <RecordImage class="rounded-[50%] transition-all duration-1000" />
                 </Starport>

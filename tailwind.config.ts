@@ -68,5 +68,20 @@ export default {
             }
         },
     },
-    plugins: ["prettier-plugin-tailwindcss"],
+    plugins: [
+        "prettier-plugin-tailwindcss", 
+        function ({ addUtilities }: { addUtilities: (utilities: object) => void }) {
+            addUtilities({
+            '.text-stroke': {
+                '-webkit-text-stroke-width': '2px',
+                '-webkit-text-stroke-color': '#aaa',
+            },
+            '.text-stroke-dark': {
+                '@media (prefers-color-scheme: dark)': {
+                    opacity: '0.2',
+                },
+            },
+            });
+        },
+    ],
 }
