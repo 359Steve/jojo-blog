@@ -1,5 +1,4 @@
 <script lang='ts' setup>
-const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.query.id)
 

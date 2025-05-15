@@ -60,17 +60,15 @@ const foYear = (value: number): string => {
 
 <template>
     <div class="w-full py-4 sm:py-8">
-        <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-8 sm:mb-16">
-            <div class="absolute w-full top-[-30%] mb-2">
-                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'">
-                    <span
-                        class="text-[8em] font-bold text-transparent text-stroke opacity-35 dark:text-stroke-dark"
-                    >
+        <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-4 sm:mb-8">
+            <div class="w-full h-fit max-w-full overflow-x-hidden py-0">
+                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'" :base-class="'text-center'">
+                    <span class="text-[6em] font-bold text-transparent text-stroke opacity-35 dark:text-stroke-dark whitespace-nowrap overflow-hidden text-ellipsis" >
                         {{ foYear(Number(item.year) % 100) }}
                     </span>
                 </AnimationRevealOnScroll>
             </div>
-            <div class="relative w-full h-full mb-4 pl-4 sm:pl-8 grid grid-cols-1 mobile-pad:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="relative w-full h-full mb-4 grid grid-cols-1 mobile-pad:grid-cols-2 md:grid-cols-3 gap-4 border-b-[1px] border-r-[1px] border-gray-200 dark:border-gray-500/50">
                 <AnimationRevealOnScroll v-for="demo in item.data" :key="demo.id" @click="toDetail(demo)" :animation-class="'animate__fadeInDown'" :base-class="'group flex p-2 items-center gap-4 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-100/5 rounded-base transition-all duration-300'">
                     <div class="max-w-12 py-2">
                         <Starport :port="demo.id" class="w-12 h-12 flex justify-center items-center">
