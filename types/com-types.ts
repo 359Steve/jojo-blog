@@ -36,3 +36,12 @@ export interface RecordSummary {
     year: string
     data: Summary[]
 }
+
+export interface Error {
+    url: string
+    statusCode: number
+    statusMessage: string
+    message: string
+    description: string
+    data: any
+}

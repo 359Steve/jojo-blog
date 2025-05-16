@@ -2,6 +2,10 @@
 const route = useRoute()
 const id = computed(() => route.query.id)
 
+if (!id.value) {
+    throw createError({ statusCode: 500, statusMessage: '出错了！' })
+}
+
 const srcList = reactive<string[]>([
     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
     'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',

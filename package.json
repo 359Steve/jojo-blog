@@ -15,7 +15,6 @@
     "@nuxtjs/color-mode": "^3.5.2",
     "@pinia/nuxt": "^0.11.0",
     "@types/node": "^22.15.3",
-    "@types/tailwindcss": "^3.1.0",
     "@vue/runtime-core": "^3.5.13",
     "@vueuse/core": "^13.1.0",
     "@vueuse/nuxt": "^13.1.0",

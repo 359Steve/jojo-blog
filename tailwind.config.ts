@@ -1,5 +1,6 @@
 /** @type { import('tailwindcss').Config } */
 
+
 const generateSlideAnimations = (): Record<string, Record<string, Record<string, string>>> => {
     const directions = ['top', 'right', 'bottom', 'left']
     const result: Record<string, Record<string, Record<string, string>>> = {}

@@ -62,7 +62,7 @@ const foYear = (value: number): string => {
     <div class="w-full py-4 sm:py-8">
         <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-4 sm:mb-8">
             <div class="w-full h-fit max-w-full overflow-x-hidden py-0">
-                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'" :base-class="'text-center'">
+                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'">
                     <span class="text-[6em] font-bold text-transparent text-stroke opacity-35 dark:text-stroke-dark whitespace-nowrap overflow-hidden text-ellipsis" >
                         {{ foYear(Number(item.year) % 100) }}
                     </span>
