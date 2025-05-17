@@ -28,12 +28,15 @@ export interface Summary {
     icon: string
     title: string
     summary: string
-    year: string
+    timeRange: string
 }
 
 export interface RecordSummary {
     id: string
-    year: string
+    timeRange: string 
+    title: string
+    role: string
+    summary: string
     data: Summary[]
 }
 
