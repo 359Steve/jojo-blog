@@ -26,7 +26,7 @@ onMounted(() => {
     <header ref="headerEl" :class="[
         `w-full h-12 
         sticky top-0 
-        backdrop-blur 
+        backdrop-blur-md 
         transition-all 
         duration-300 ease-in-out 
         border-x-0 
