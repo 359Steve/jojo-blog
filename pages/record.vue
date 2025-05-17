@@ -24,33 +24,37 @@ onBeforeUnmount(() => {
 
 <template>
     <div class="w-full">
-        <div class="w-full grid grid-cols-1 gap-4">
-            <div class="w-full flex justify-center items-center">
+        <div class="w-full grid md:grid-cols-2 gap-4 sm:gap-8">
+            <div class="w-full flex justify-center md:justify-end items-center">
+                <div>
+                    <div class="w-full flex items-center justify-center">
+                        <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'" :base-class="'flex items-center justify-center'">
+                            <h3 class="text-center font-bold">
+                                努力做一个摆脱CV的前端工程师
+                            </h3>
+                        </AnimationRevealOnScroll>
+                    </div>
+                    <div class="w-full flex mt-4 items-center justify-center gap-2">
+                        <AnimationRevealOnScroll v-for="item in recordButtonList" :key="item.id" :animation-class="'animate__fadeInDown'" :base-class="'w-fit'">
+                            <a :href="item.href" target="_blank" class="button">
+                                <ElButton size="default">
+                                    <template #icon>
+                                        <div><i :class="item.icon" class="text-sm"></i></div>
+                                    </template>
+                                    <span>{{ item.title }}</span>
+                                </ElButton>
+                            </a>
+                        </AnimationRevealOnScroll>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full flex justify-center md:justify-start items-center">
                 <Starport
                     port="my-id"
                     class="aspect-square w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32"
                 >
                     <RecordImage class="rounded-[50%] transition-all duration-1000" />
                 </Starport>
-            </div>
-            <div class="w-full flex items-center justify-center">
-                <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'" :base-class="'flex items-center justify-center'">
-                    <span class="text-center text-gray-400">
-                        努力做一个摆脱CV的前端工程师
-                    </span>
-                </AnimationRevealOnScroll>
-            </div>
-            <div class="w-full flex items-center justify-center gap-2">
-                <AnimationRevealOnScroll v-for="item in recordButtonList" :key="item.id" :animation-class="'animate__fadeInDown'" :base-class="'w-fit'">
-                    <a :href="item.href" target="_blank" class="button">
-                        <ElButton size="default">
-                            <template #icon>
-                                <div><i :class="item.icon" class="text-sm"></i></div>
-                            </template>
-                            <span>{{ item.title }}</span>
-                        </ElButton>
-                    </a>
-                </AnimationRevealOnScroll>
             </div>
         </div>
 

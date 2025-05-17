@@ -17,8 +17,8 @@ const disabled = computed(() => {
                         <template #error>
                             <main class="w-full mx-auto">
                                 <span class="text-4xl">✉️</span>
-                                <h1 class="text-base md:text-xl lg:text-4xl bg-clip-text bg-gradient-to-r from-primary to-secondary font-black mb-2">Contact Me</h1>
-                                <p class="text-sm lg:text-base font-normal text-secondary mb-10 text-gray-500/50">Reach out to me over email or fill up this contact form. I will get back to you ASAP - I promise.</p>
+                                <h1 class="text-base md:text-xl lg:text-4xl bg-clip-text bg-gradient-to-r from-primary to-secondary font-black mb-2">提交问题</h1>
+                                <p class="text-sm lg:text-base font-normal text-secondary mb-10 text-gray-500/50">请通过电子邮件或填写此问题表格。我会在最短的时间内解决问题。</p>
                                 <form class="form">
                                     <div class="flex flex-col md:flex-row justify-between gap-5">
                                         <input 
@@ -37,9 +37,8 @@ const disabled = computed(() => {
                                     <div>
                                         <textarea 
                                             v-model="content"
-                                            placeholder="你的问题" 
-                                            rows="10"
-                                            class="bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 px-2 mt-4 py-2 rounded-md text-sm text-neutral-700 w-full">
+                                            placeholder="你的问题"
+                                            class="h-[9em] sm:h-[15em] bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 px-2 mt-4 py-2 rounded-md text-sm text-neutral-700 w-full">
                                         </textarea>
                                     </div>
                                     <ElButton :disabled="disabled" type="primary"><span class="font-bold text-sm text-neutral-500">提交</span></ElButton>

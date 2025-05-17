@@ -60,7 +60,7 @@ const foYear = (value: number): string => {
 
 <template>
     <div class="w-full py-4 sm:py-8">
-        <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-4 sm:mb-8">
+        <!-- <div v-for="item in summaryList" :key="item.id" class="relative w-full mb-4 sm:mb-8">
             <div class="w-full h-fit max-w-full overflow-x-hidden py-0">
                 <AnimationRevealOnScroll :animation-class="'animate__fadeInDown'">
                     <span class="text-[6em] font-bold text-transparent text-stroke opacity-35 dark:text-stroke-dark whitespace-nowrap overflow-hidden text-ellipsis" >
@@ -83,10 +83,282 @@ const foYear = (value: number): string => {
                     </div>
                 </AnimationRevealOnScroll>
             </div>
-        </div>
+        </div> -->
+        <main class="w-full mx-auto">
+            <h1
+                class="w-full text-base md:text-xl lg:text-4xl bg-clip-text bg-gradient-to-r from-primary to-secondary font-black">
+                Work History</h1>
+            <div class="w-full text-sm lg:text-base font-normal text-secondary mt-4">
+                I'm a full-stack developer that loves 
+                <span class="bg-neutral-100 px-1 py-0.5">building products</span> 
+                and web apps that can impact
+                millions of lives
+            </div>
+            <div class="w-full">
+                <div class="flex md:flex-row flex-col space-y-10 md:space-y-0 space-x-10 my-20 relative">
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40">2022 - Present</p>
+                    <div>
+                        <h5
+                            class="font-semibold bg-clip-text bg-gradient-to-r from-primary to-secondary text-lg md:text-lg lg:text-lg text-emerald-500">
+                            Amazon</h5>
+                        <p class="text-secondary text-base md:text-base lg:text-base font-semibold">Senior Software
+                            Engineer</p>
+                        <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm mb-4">Building the future of
+                            e-commerce</p>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Developed a new feature
+                                that improves the shopping experience1Developed a new feature
+                                that improves the shopping experience1</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Implemented a
+                                recommendation algorithm to suggest products</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Enhanced the checkout
+                                process making it more intuitive and user-friendly</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Built a feature for
+                                tracking packages in real-time</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex md:flex-row flex-col space-y-10 md:space-y-0 space-x-10 my-20 relative">
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40">2021 - 2022</p>
+                    <div>
+                        <h5
+                            class="__className_399708 font-semibold bg-clip-text bg-gradient-to-r from-primary to-secondary text-lg md:text-lg lg:text-lg text-emerald-500">
+                            Google</h5>
+                        <p class="text-secondary text-base md:text-base lg:text-base font-semibold">Senior Software
+                            Engineer</p>
+                        <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm mb-4">Building the future of
+                            search</p>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Improved the search
+                                algorithm to provide more relevant results</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Developed a new feature
+                                that personalizes search results</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Enhanced the search
+                                functionality making it more intuitive and user-friendly</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Implemented a feature
+                                for tracking search history</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex md:flex-row flex-col space-y-10 md:space-y-0 space-x-10 my-20 relative">
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40">2020 - 2021</p>
+                    <div>
+                        <h5
+                            class="__className_399708 font-semibold bg-clip-text bg-gradient-to-r from-primary to-secondary text-lg md:text-lg lg:text-lg text-emerald-500">
+                            Facebook</h5>
+                        <p class="text-secondary text-base md:text-base lg:text-base font-semibold">Senior Software
+                            Engineer</p>
+                        <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm mb-4">Building the future of
+                            social networking</p>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Developed a new feature
+                                that improves the user experience</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Implemented a
+                                recommendation algorithm to suggest friends</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Enhanced the news feed
+                                algorithm to show more relevant posts</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Built a feature for
+                                tracking user activity</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex md:flex-row flex-col space-y-10 md:space-y-0 space-x-10 my-20 relative">
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40">2019 - 2020</p>
+                    <div>
+                        <h5
+                            class="__className_399708 font-semibold bg-clip-text bg-gradient-to-r from-primary to-secondary text-lg md:text-lg lg:text-lg text-emerald-500">
+                            Apple</h5>
+                        <p class="text-secondary text-base md:text-base lg:text-base font-semibold">Senior Software
+                            Engineer</p>
+                        <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm mb-4">Building the future of
+                            technology</p>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Improved the iOS
+                                operating system to enhance user experience</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Developed a new feature
+                                that personalizes user interface</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Enhanced the app store
+                                algorithm to suggest more relevant apps</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Implemented a feature
+                                for tracking app usage</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex md:flex-row flex-col space-y-10 md:space-y-0 space-x-10 my-20 relative">
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40">2018 - 2019</p>
+                    <div>
+                        <h5
+                            class="__className_399708 font-semibold bg-clip-text bg-gradient-to-r from-primary to-secondary text-lg md:text-lg lg:text-lg text-emerald-500">
+                            Microsoft</h5>
+                        <p class="text-secondary text-base md:text-base lg:text-base font-semibold">Senior Software
+                            Engineer</p>
+                        <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm mb-4">Building the future of
+                            software</p>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Improved the Windows
+                                operating system to enhance user experience</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Developed a new feature
+                                that personalizes user interface</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Enhanced the office
+                                suite to improve productivity</p>
+                        </div>
+                        <div class="flex space-x-1 items-start my-2"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-3 w-4 mt-1 text-neutral-300">
+                                <path
+                                    d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                                    fill="currentColor" stroke-width="0"></path>
+                            </svg>
+                            <p class="font-normal text-secondary text-sm md:text-sm lg:text-sm">Implemented a feature
+                                for tracking software usage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </template>
 
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>

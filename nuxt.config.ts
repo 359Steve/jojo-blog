@@ -42,7 +42,7 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'light',
   },
-  // app配置
+  // 项目配置
   app: {
     head: {
       title: 'jojo-blog',
