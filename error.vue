@@ -23,13 +23,46 @@ const disabled = computed(() => {
                                     <div class="flex flex-col md:flex-row justify-between gap-5">
                                         <input 
                                             placeholder="你的名字"
-                                            class="bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 px-2 py-2 rounded-md text-sm text-neutral-700 w-full"
+                                            class="
+                                                bg-neutral-100 
+                                                dark:bg-gray-100/10
+                                                focus:outline-none 
+                                                border
+                                                dark:border-gray-100/20
+                                                focus:border-emerald-500
+                                                dark:focus:border-emerald-500
+                                                px-2 py-2 
+                                                rounded-md 
+                                                text-sm 
+                                                text-neutral-700
+                                                dark:text-[white]
+                                                w-full"
                                             type="text" 
                                             v-model="name"
                                         />
                                         <input 
                                             placeholder="你的邮箱"
-                                            class="bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 px-2 py-2 rounded-md text-sm text-neutral-700 w-full"
+                                            class="
+                                                w-full block text-sm
+                                                px-2 py-2 rounded-md
+                                                bg-neutral-100 text-neutral-700
+                                                dark:border-gray-100/20
+                                                dark:bg-gray-100/10
+                                                dark:focus:border-emerald-500
+                                                dark:text-[white]
+                                                border
+                                                focus:outline-none
+                                                focus:ring-emerald-500
+                                                focus:border-emerald-500
+                                                invalid:border-red-500
+                                                invalid:text-red-600
+                                                focus:invalid:border-red-500
+                                                focus:invalid:ring-red-500
+                                                dark:invalid:border-red-500
+                                                dark:invalid:text-red-600
+                                                dark:focus:invalid:border-red-500
+                                                dark:focus:invalid:ring-red-500
+                                            "
                                             type="email" 
                                             v-model="email"
                                         />
@@ -38,7 +71,20 @@ const disabled = computed(() => {
                                         <textarea 
                                             v-model="content"
                                             placeholder="你的问题"
-                                            class="h-[9em] sm:h-[15em] bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 px-2 mt-4 py-2 rounded-md text-sm text-neutral-700 w-full">
+                                            class="
+                                                h-[9em] sm:h-[15em] 
+                                                bg-neutral-100 
+                                                focus:outline-none border 
+                                                focus:border-emerald-500 
+                                                px-2 mt-4 py-2 rounded-md 
+                                                text-sm text-neutral-700 
+                                                w-full
+                                                dark:border-gray-100/20
+                                                dark:bg-gray-100/10
+                                                dark:focus:border-emerald-500
+                                                dark:text-[white]
+                                            "
+                                            >
                                         </textarea>
                                     </div>
                                     <ElButton :disabled="disabled" type="primary"><span class="font-bold text-sm text-neutral-500">提交</span></ElButton>
@@ -54,7 +100,7 @@ const disabled = computed(() => {
 
 <style lang='postcss' scoped>
 :deep(.el-button) {
-    @apply w-full h-11 border-none px-2 py-2 mt-4 bg-neutral-100
+    @apply w-full h-11 border-none px-2 py-2 mt-4 bg-neutral-100 dark:bg-gray-100/10
 }
 
 :deep(.el-button.is-disabled:hover) {
