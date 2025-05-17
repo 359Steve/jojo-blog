@@ -1,6 +1,5 @@
 /** @type { import('tailwindcss').Config } */
 
-
 const generateSlideAnimations = (): Record<string, Record<string, Record<string, string>>> => {
     const directions = ['top', 'right', 'bottom', 'left']
     const result: Record<string, Record<string, Record<string, string>>> = {}
@@ -26,11 +25,11 @@ const generateSlideAnimations = (): Record<string, Record<string, Record<string,
 export default {
     darkMode: 'class',
     content: [
-        './pages/**/*.{vue,js,ts,jsx,tsx}',
-        './components/**/*.{vue,js,ts,jsx,tsx}',
-        './layouts/**/*.{vue,js,ts,jsx,tsx}',
-        './plugins/**/*.{js,ts}',
-        './nuxt.config.{js,ts}',
+        './pages/**/*.{vue,js,ts}',
+        './components/**/*.{vue,js,ts}',
+        './layouts/**/*.{vue,js,ts}',
+        './app.vue',
+        './nuxt.config.ts'
     ],
     theme: {
         extend: {
