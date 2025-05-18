@@ -11,6 +11,8 @@ defineEmits<{
 const el = ref<HTMLElement | null>(null)
 const visible = ref<boolean>(false)
 
+defineExpose({ el })
+
 useIntersectionObserver(el, ([entry]) => {
     if (entry.isIntersecting) {
         visible.value = true

@@ -1,3 +1,5 @@
+import type { ShallowRef } from "vue"
+
 export interface Timeline {
     id: string
     timestamp: string
@@ -60,4 +62,16 @@ export interface BlogList {
     tags: Tags[]
     description: string
     url: string
+}
+
+export interface UseBoundingClientRect {
+    top: ShallowRef<number, number>
+    right: ShallowRef<number, number>
+    bottom: ShallowRef<number, number>
+    left: ShallowRef<number, number>
+    width: ShallowRef<number, number>
+    height: ShallowRef<number, number>
+    x: ShallowRef<number, number>
+    y: ShallowRef<number, number>
+    update: () => void
 }
