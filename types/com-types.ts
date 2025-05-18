@@ -48,3 +48,16 @@ export interface Error {
     description: string
     data: any
 }
+
+export interface Tags {
+    name: string
+    icon: string
+}
+
+export interface BlogList {
+    id: number
+    title: string
+    tags: Tags[]
+    description: string
+    url: string
+}
