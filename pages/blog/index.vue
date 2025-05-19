@@ -1,6 +1,6 @@
 <script lang='ts' setup>
 import type { AnimationRevealOnScroll, ElInput } from '~/.nuxt/components'
-import type { BlogList } from '~/types/com-types'
+import { type BlogList, StackColor } from '~/types/com-types'
 
 const blogList = reactive<BlogList[]>([
     {
@@ -8,8 +8,8 @@ const blogList = reactive<BlogList[]>([
         title: "Aceternity",
         description: "A design and development studio that focuses on building quality apps.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project1')
     },
@@ -18,8 +18,8 @@ const blogList = reactive<BlogList[]>([
         title: "Algochurn",
         description: "Practice for technical interviews with hands on coding challenges.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project2')
     },
@@ -28,8 +28,8 @@ const blogList = reactive<BlogList[]>([
         title: "Moonbeam",
         description: "Never write from scratch again with Moonbeam, your AI first writing tool.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project3')
     },
@@ -38,8 +38,8 @@ const blogList = reactive<BlogList[]>([
         title: "Tailwind Master Kit",
         description: "A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project4')
     },
@@ -48,8 +48,8 @@ const blogList = reactive<BlogList[]>([
         title: "Aceternity",
         description: "A design and development studio that focuses on building quality apps.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project1')
     },
@@ -58,8 +58,8 @@ const blogList = reactive<BlogList[]>([
         title: "Algochurn",
         description: "Practice for technical interviews with hands on coding challenges.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project2')
     },
@@ -68,8 +68,8 @@ const blogList = reactive<BlogList[]>([
         title: "Moonbeam",
         description: "Never write from scratch again with Moonbeam, your AI first writing tool.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project3')
     },
@@ -78,8 +78,8 @@ const blogList = reactive<BlogList[]>([
         title: "Tailwind Master Kit",
         description: "A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project4')
     },
@@ -88,8 +88,8 @@ const blogList = reactive<BlogList[]>([
         title: "Tailwind Master Kit",
         description: "A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.",
         tags: [
-            { name: "Nextjs", icon: "ri-tailwind-css-fill" },
-            { name: "Tailwindcss", icon: "ri-vuejs-fill" }
+            { name: "TailwindCSS", icon: "ri-tailwind-css-fill" },
+            { name: "Nuxt", icon: "ri-vuejs-fill" }
         ],
         url: await useLoadStaticImage('project4')
     }
@@ -117,7 +117,8 @@ const isLeftAligned = computed(() => {
     return Math.abs(childBounds.left.value - parentBounds.left.value) < 1
 })
 
-const onTransitionEnd = () => {
+const onTransitionEnd = (event: TransitionEvent) => {
+    if (event.propertyName !== 'transform') return
     coincidence.value = isLeftAligned.value
 }
 
@@ -143,7 +144,7 @@ watch(coincidence, () => {
 </script>
 
 <template>
-    <AnimationRevealOnScroll ref="animationEl" :animation-class="'animate__fadeInDown'" :base-class="'reactive mb-10 flex items-center justify-between overflow-hidden'">
+    <AnimationRevealOnScroll ref="animationEl" :animation-class="'animate__fadeInDown'" :base-class="'reactive mb-10 flex items-center justify-between overflow-hidden rounded-base'">
         <h1
             class="
             text-xl 
@@ -164,17 +165,40 @@ watch(coincidence, () => {
             :class="inputShow ? 'translate-x-0' : 'translate-x-full'"
             @blur="inputShow = false"
         >
+            <template #append>
+                <i class="
+                    ri-search-eye-line 
+                    text-black
+                    text-xl 
+                    md:text-2xl
+                    bg-clip-text 
+                    bg-gradient-to-r 
+                    font-black"
+                    @mousedown.prevent
+                ></i>
+            </template>
         </ElInput>
-        <div @click="controlInput" :class="['absolute flex justify-center items-center cursor-pointer right-0 h-full aspect-square border-none shadow-none rounded-base hover:bg-neutral-100', !coincidence ? 'hidden' : 'block']">
-            <i class="
-                ri-search-eye-line 
-                text-black
-                dark:text-white
-                text-xl 
-                md:text-2xl
-                bg-clip-text 
-                bg-gradient-to-r 
-                font-black"
+        <div
+            @click="controlInput"
+            class="absolute flex justify-center items-center cursor-pointer right-0 h-full aspect-square border-none shadow-none rounded-base transition"
+            :class="[
+                // 显示隐藏控制
+                inputShow && !coincidence ? 'hidden' : 'block',
+                // 背景色逻辑
+                (inputShow || !coincidence) ? 'bg-neutral-100 text-black' : '',
+                // hover 统一写法
+                'hover:bg-neutral-100 hover:text-black'
+            ]"
+            >
+            <i
+                :class="[`
+                    ri-search-eye-line
+                    text-xl 
+                    md:text-2xl
+                    bg-clip-text 
+                    bg-gradient-to-r 
+                    font-black`
+                ]"
             ></i>
         </div>
     </AnimationRevealOnScroll>
@@ -257,7 +281,7 @@ watch(coincidence, () => {
                             text-secondary
                             "
                         >
-                            <i :class="['mr-2', tag.icon]"></i>{{ tag.name }}
+                            <i :style="{ color: StackColor[tag.name] }" :class="[`mr-2`, tag.icon ]"></i>{{ tag.name }}
                         </span>
                     </div>
                 </div>
@@ -268,12 +292,12 @@ watch(coincidence, () => {
 
 <style lang='postcss' scoped>
 :deep(.el-input) {
-    @apply absolute transition-all delay-300 w-full h-full top-0 left-0;
+    @apply absolute transition-all delay-100 w-full h-full top-0 left-0;
 }
 
-/* :deep(.el-input-group__append) {
-    @apply h-full aspect-square p-0 border-none shadow-none bg-neutral-100 rounded-tr-base rounded-br-base rounded-tl-none rounded-bl-none;
-} */
+:deep(.el-input-group__append) {
+    @apply h-full aspect-square cursor-pointer p-0 border-none shadow-none bg-neutral-100 rounded-tr-base rounded-br-base rounded-tl-none rounded-bl-none;
+}
 
 :deep(.el-input__wrapper) {
     @apply border-none shadow-none ring-0 focus:ring-0 focus:outline-none bg-neutral-100 px-2 py-2 rounded-tl-base rounded-bl-base rounded-tr-none rounded-br-none;
