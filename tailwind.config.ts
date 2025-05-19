@@ -1,4 +1,6 @@
 /** @type { import('tailwindcss').Config } */
+const { default: flattenColorPalette, } = require("tailwindcss/lib/util/flattenColorPalette")
+
 
 const generateSlideAnimations = (): Record<string, Record<string, Record<string, string>>> => {
     const directions = ['top', 'right', 'bottom', 'left']
@@ -20,6 +22,17 @@ const generateSlideAnimations = (): Record<string, Record<string, Record<string,
     })
 
     return result
+}
+
+const addVariablesForColors = ({ addBase, theme }: any) => {
+    let allColors = flattenColorPalette(theme("colors"));
+    let newVars = Object.fromEntries(
+        Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+    );
+
+    addBase({
+        ":root": newVars,
+    });
 }
 
 export default {
@@ -52,7 +65,17 @@ export default {
                 'half-gray': 'rgb(107 114 128 / 0.5)',
                 'base-color': '#121212'
             },
-            keyframes: generateSlideAnimations(),
+            keyframes: {
+                ...generateSlideAnimations(),
+                aurora: {
+                    from: {
+                        backgroundPosition: "50% 50%, 50% 50%",
+                    },
+                    to: {
+                        backgroundPosition: "350% 50%, 350% 50%",
+                    },
+                },
+            },
             animation: {
                 topEnter: 'topEnter 0.3s ease both',
                 rightEnter: 'rightEnter 0.3s ease both',
@@ -62,6 +85,7 @@ export default {
                 rightLeave: 'rightLeave 0.3s ease both',
                 bottomLeave: 'bottomLeave 0.3s ease both',
                 leftLeave: 'leftLeave 0.3s ease both',
+                aurora: "aurora 60s linear infinite"
             },
             boxShadow: {
                 'base': '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
@@ -69,19 +93,7 @@ export default {
         },
     },
     plugins: [
-        "prettier-plugin-tailwindcss", 
-        function ({ addUtilities }: { addUtilities: (utilities: object) => void }) {
-            addUtilities({
-            '.text-stroke': {
-                '-webkit-text-stroke-width': '2px',
-                '-webkit-text-stroke-color': '#aaa',
-            },
-            '.text-stroke-dark': {
-                '@media (prefers-color-scheme: dark)': {
-                    opacity: '0.2',
-                },
-            },
-            });
-        },
+        "prettier-plugin-tailwindcss",
+        addVariablesForColors
     ],
 }
