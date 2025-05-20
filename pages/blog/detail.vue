@@ -8,9 +8,7 @@ if (!id.value) {
 </script>
 
 <template>
-    <RecordBackground>
-        <div class="w-full h-[400px]">123123</div>
-    </RecordBackground>
+    <div>123123</div>
 </template>
 
 <style lang='scss' scoped>

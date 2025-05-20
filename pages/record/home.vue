@@ -123,7 +123,7 @@ const getItemTime = computed(() => {
         <main class="w-full mx-auto">
             <div class="w-full">
                 <AnimationRevealOnScroll v-for="(item, index) in summaryList" :key="item.id" :animation-class="'animate__fadeInDown'" :base-class="'flex sm:flex-row flex-col space-x-10 my-16 relative'">
-                    <p class="text-sm lg:text-base font-normal text-secondary w-40 mb-4 sm:mb-0">{{ getItemTime(index) }}</p>
+                    <p class="text-sm lg:text-base font-normal text-secondary w-40 mb-4 sm:mb-0 ml-0">{{ getItemTime(index) }}</p>
                     <div>
                         <h5 class="
                             font-semibold 

@@ -39,7 +39,8 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
 
 <template>
     <div class="relative w-full h-full">
-        <BgcanvasBranchCanvas></BgcanvasBranchCanvas>
+        <RecordBackground :class-name="'w-full h-[100dvh] fixed inset-0 z-[-1]'"></RecordBackground>
+        <!-- <BgcanvasBranchCanvas></BgcanvasBranchCanvas> -->
         <el-backtop :right="50" :bottom="100">
             <i class="ri-arrow-up-line"></i>
         </el-backtop>

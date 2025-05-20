@@ -22,7 +22,8 @@ defineEmits<{
                     <div class="w-full flex items-center text-gray-400 text-xs">
                         <span>{{ item.timestamp }}</span></div>
                     <AnimationRevealOnScroll :animation-class="'animate__fadeInRight'">
-                        <div @click="$emit('detailRecord', item)" class="p-2 rounded-base cursor-pointer mt-2 shadow-base transition-all flex items-center">
+                        <div @click="$emit('detailRecord', item)" class="p-2 rounded-base cursor-pointer mt-2 shadow-lg hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]
+                    dark:hover:bg-gray-100/10 transition-all flex items-center">
                             <img :src="item.url" alt="timestamp" class="size-8 mr-2">
                             <span>{{ item.description }}</span>
                         </div>

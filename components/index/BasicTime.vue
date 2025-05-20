@@ -25,7 +25,8 @@ defineEmits<{
                         <span>{{ item.timestamp }}</span></div>
                     <AnimationRevealOnScroll :animation-class="(index + 1) % 2 ===0 ? 'animate__fadeInRight': 'animate__fadeInLeft'">
                         <div @click="$emit('detailRecord', item)"
-                            :class="[`p-2 rounded-base backdrop-blur cursor-pointer mt-2 shadow-base transition-all flex items-center`, (index + 1) % 2 === 0 ? 'text-left' : 'text-right']">
+                            :class="[`p-2 rounded-base hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]
+                    dark:hover:bg-gray-100/10 backdrop-blur cursor-pointer mt-2 shadow-lg transition-all flex items-center`, (index + 1) % 2 === 0 ? 'text-left' : 'text-right']">
                             <img :src="item.url" alt="timestamp" class="size-8 mr-2">
                             <div class="w-[calc(100%-2rem)] h-full break-normal text-center"><span>{{ item.description }}</span></div>
                         </div>
