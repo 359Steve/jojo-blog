@@ -1,11 +1,7 @@
-<script lang='ts' setup>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
-    <img class="w-full h-full object-cover rounded-base" src="~/assets/image/index_two.png" alt="">
+	<img class="h-full w-full rounded-base object-cover" src="~/assets/image/index_two.png" alt="" />
 </template>
 
-<style lang='scss' scoped>
-
-</style>
+<style lang="scss" scoped></style>

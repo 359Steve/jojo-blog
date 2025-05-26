@@ -1,36 +1,41 @@
 <script lang="ts" setup>
-const { baseClass = 'duration-700', animationClass = 'animate__fadeInUp' } = defineProps<{
-    baseClass?: string
-    animationClass?: string
-}>()
+	const { baseClass = 'duration-700', animationClass = 'animate__fadeInUp' } = defineProps<{
+		baseClass?: string
+		animationClass?: string
+	}>()
 
-defineEmits<{
-    (e: 'click'): void
-}>()
+	defineEmits<{
+		(e: 'click'): void
+	}>()
 
-const el = ref<HTMLElement | null>(null)
-const visible = ref<boolean>(false)
+	const el = ref<HTMLElement | null>(null)
+	const visible = ref<boolean>(false)
 
-defineExpose({ el })
+	defineExpose({ el })
 
-useIntersectionObserver(el, ([entry]) => {
-    if (entry.isIntersecting) {
-        visible.value = true
-    }
-}, {
-    threshold: 0.1
-})
+	useIntersectionObserver(
+		el,
+		([entry]) => {
+			if (entry.isIntersecting) {
+				visible.value = true
+			}
+		},
+		{
+			threshold: 0.1,
+		},
+	)
 </script>
 
 <template>
-    <div ref="el" :class="[
-            'transition-all ease-out animate__animated',
-            visible ? animationClass : 'animate__fadeOut',  // 默认隐藏状态
-            baseClass
-        ]"
-        @click="$emit('click')"
-    >
-        <slot></slot>
-    </div>
+	<div
+		ref="el"
+		:class="[
+			'animate__animated transition-all ease-out',
+			visible ? animationClass : 'animate__fadeOut', // 默认隐藏状态
+			baseClass,
+		]"
+		@click="$emit('click')"
+	>
+		<slot></slot>
+	</div>
 </template>
-

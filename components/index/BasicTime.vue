@@ -1,40 +1,57 @@
-<script lang='ts' setup>
+<script lang="ts" setup>
 import type { Timeline } from '~/types/com-types';
 
 const { timelineData } = defineProps<{
-    timelineData: Timeline[]
-}>()
+	timelineData: Timeline[];
+}>();
 
 defineEmits<{
-    (e: 'detailRecord', value: Timeline): void
-}>()
+	(e: 'detailRecord', value: Timeline): void;
+}>();
 </script>
 
 <template>
-    <div class="w-full h-full">
-        <div v-for="(item, index) in timelineData" :key="item.id" class="grid grid-cols-2">
-            <div :class="[`relative w-full h-full`, (index + 1) % 2 === 0 ? 'pl-4 col-start-2' : 'pr-4 col-start-1']">
-                <div
-                    :class="[`absolute size-3 bg-[#E4E7EC] rounded-[50%]`, (index + 1) % 2 === 0 ? 'left-[calc(-0.75rem/2)]' : 'right-[calc(-0.75rem/2)]']">
-                </div>
-                <div :class="[`absolute w-[4px] h-full bg-[#E4E7EC]`, (index + 1) % 2 === 0 ? 'left-[-2px]' : 'right-[-2px]']">
-                </div>
-                <div class="w-full h-full">
-                    <div
-                        :class="[`w-full flex items-center text-gray-400 text-xs`, (index + 1) % 2 === 0 ? 'justify-start' : 'justify-end']">
-                        <span>{{ item.timestamp }}</span></div>
-                    <AnimationRevealOnScroll :animation-class="(index + 1) % 2 ===0 ? 'animate__fadeInRight': 'animate__fadeInLeft'">
-                        <div @click="$emit('detailRecord', item)"
-                            :class="[`p-2 rounded-base hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]
-                    dark:hover:bg-gray-100/10 backdrop-blur cursor-pointer mt-2 shadow-lg transition-all flex items-center`, (index + 1) % 2 === 0 ? 'text-left' : 'text-right']">
-                            <img :src="item.url" alt="timestamp" class="size-8 mr-2">
-                            <div class="w-[calc(100%-2rem)] h-full break-normal text-center"><span>{{ item.description }}</span></div>
-                        </div>
-                    </AnimationRevealOnScroll>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="h-full w-full">
+		<div v-for="(item, index) in timelineData" :key="item.id" class="grid grid-cols-2">
+			<div :class="[`relative h-full w-full`, (index + 1) % 2 === 0 ? 'col-start-2 pl-4' : 'col-start-1 pr-4']">
+				<div
+					:class="[
+						`absolute size-3 rounded-[50%] bg-[#E4E7EC]`,
+						(index + 1) % 2 === 0 ? 'left-[calc(-0.75rem/2)]' : 'right-[calc(-0.75rem/2)]',
+					]"
+				></div>
+				<div
+					:class="[`absolute h-full w-[4px] bg-[#E4E7EC]`, (index + 1) % 2 === 0 ? 'left-[-2px]' : 'right-[-2px]']"
+				></div>
+				<div class="h-full w-full">
+					<div
+						:class="[
+							`flex w-full items-center text-xs text-gray-400`,
+							(index + 1) % 2 === 0 ? 'justify-start' : 'justify-end',
+						]"
+					>
+						<span>{{ item.timestamp }}</span>
+					</div>
+					<AnimationRevealOnScroll
+						:animation-class="(index + 1) % 2 === 0 ? 'animate__fadeInRight' : 'animate__fadeInLeft'"
+					>
+						<div
+							@click="$emit('detailRecord', item)"
+							:class="[
+								`mt-2 flex cursor-pointer items-center rounded-base p-2 shadow-lg backdrop-blur transition-all hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)] dark:hover:bg-gray-100/10`,
+								(index + 1) % 2 === 0 ? 'text-left' : 'text-right',
+							]"
+						>
+							<img :src="item.url" alt="timestamp" class="mr-2 size-8" />
+							<div class="h-full w-[calc(100%-2rem)] break-normal text-center">
+								<span>{{ item.description }}</span>
+							</div>
+						</div>
+					</AnimationRevealOnScroll>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
-<style lang='scss' scoped></style>
+<style lang="scss" scoped></style>

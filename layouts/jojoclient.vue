@@ -1,13 +1,9 @@
-<script lang='ts' setup>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
-    <ClientOnly>
-        <slot name="client"></slot>
-    </ClientOnly>
+	<ClientOnly>
+		<slot name="client"></slot>
+	</ClientOnly>
 </template>
 
-<style lang='scss' scoped>
-
-</style>
+<style lang="scss" scoped></style>

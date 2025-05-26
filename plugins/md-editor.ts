@@ -1,6 +1,6 @@
-import { MdEditor, MdPreview, MdCatalog } from "md-editor-v3"
+import { MdCatalog, MdEditor, MdPreview } from "md-editor-v3"
 import 'md-editor-v3/lib/style.css'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.component('MdEditor', MdEditor).component('MdPreview', MdPreview).component('MdCatalog', MdCatalog)
+	nuxtApp.vueApp.component('MdEditor', MdEditor).component('MdPreview', MdPreview).component('MdCatalog', MdCatalog)
 })
