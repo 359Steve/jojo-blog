@@ -1,4 +1,7 @@
 <script lang='ts' setup>
+import { detectDeviceDetail } from '~/composables/public'
+
+const isMobile = ref<'mobile' | 'tablet' | 'desktop'>()
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference === 'dark' ? false : true)
 
 const changeTheme = async (_e: MouseEvent): Promise<void> => {
@@ -35,12 +38,17 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
         )
     })
 }
+
+onMounted(() => {
+    const { type } = detectDeviceDetail()
+    isMobile.value = type
+})
 </script>
 
 <template>
     <div class="relative w-full h-full">
-        <RecordBackground :class-name="'w-full h-[100dvh] fixed inset-0 z-[-1]'"></RecordBackground>
-        <!-- <BgcanvasBranchCanvas></BgcanvasBranchCanvas> -->
+        <RecordBackground v-if="isMobile === 'desktop' || 'tablet'" :class-name="'w-full h-[100dvh] fixed inset-0 z-[-1]'"></RecordBackground>
+        <BgcanvasBranchCanvas v-else></BgcanvasBranchCanvas>
         <el-backtop :right="50" :bottom="100">
             <i class="ri-arrow-up-line"></i>
         </el-backtop>

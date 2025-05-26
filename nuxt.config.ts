@@ -1,79 +1,88 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 interface Meta {
-  charset?: string
-  name?: string
-  content?: string
-  hid?: string
-  [key: string]: any
+	charset?: string
+	name?: string
+	content?: string
+	hid?: string
+	[key: string]: any
 }
 
 const meta: Meta[] = [
-  { charset: 'utf-8' },
-  { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-  { name: 'format-detection', content: 'telephone=no' },
-  { hid: 'keywords', name: 'keywords', content: 'nuxt3' }
+	{ charset: 'utf-8' },
+	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+	{ name: 'format-detection', content: 'telephone=no' },
+	{ hid: 'keywords', name: 'keywords', content: 'nuxt3' }
 ]
 
 export default defineNuxtConfig({
-  experimental: {
-    payloadExtraction: false
-  },
-  imports: {
-    dirs: [
-      'composables',
-      'composables/*/*.{ts,js,mjs,mts}',
-      'composables/**/*.{ts,js,mjs,mts}'
-    ]
-  },
-  plugins: [
-    '~/plugins/md-editor.ts'
-  ],
-  pages: true,
-  typescript: {
-    strict: true
-  },
-  compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt', '@nuxtjs/color-mode'],
+	nitro: {
+		devProxy: {
+			'/training-plans': {
+				target: 'http://172.18.163.25:8561/api/training-plans',
+				changeOrigin: true,
+				prependPath: true
+			}
+		}
+	},
+	experimental: {
+		payloadExtraction: false
+	},
+	imports: {
+		dirs: [
+			'composables',
+			'composables/*/*.{ts,js,mjs,mts}',
+			'composables/**/*.{ts,js,mjs,mts}'
+		]
+	},
+	plugins: [
+		'~/plugins/md-editor.ts'
+	],
+	pages: true,
+	typescript: {
+		strict: true
+	},
+	compatibilityDate: '2024-11-01',
+	devtools: { enabled: true },
+	modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt', '@nuxtjs/color-mode'],
 
-  colorMode: {
-    classSuffix: '',
-    storageKey: 'nuxt-color-mode',
-    preference: 'system',
-    fallback: 'light',
-  },
-  // 项目配置
-  app: {
-    head: {
-      title: 'jojo-blog',
-      meta,
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }]
-    }
-  },
+	colorMode: {
+		classSuffix: '',
+		storageKey: 'nuxt-color-mode',
+		preference: 'system',
+		fallback: 'light',
+	},
+	// 项目配置
+	app: {
+		head: {
+			title: 'jojo-blog',
+			meta,
+			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }]
+		}
+	},
 
-  // 初始化样式
-  css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css', 'remixicon/fonts/remixicon.css'],
+	// 初始化样式
+	css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css', 'remixicon/fonts/remixicon.css'],
 
-  // 定义公共样式
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "~/assets/css/element-variables.scss" as element;'
-        }
-      }
-    }
-  },
+	// 定义公共样式
+	vite: {
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: '@use "~/assets/css/element-variables.scss" as element;'
+				}
+			}
+		}
+	},
 
-  elementPlus: {
-    importStyle: 'scss'
-  },
+	elementPlus: {
+		importStyle: 'scss'
+	},
 
-  postcss: {
-    plugins: {
-      'postcss-nested': {},
-      'postcss-custom-media': {}
-    }
-  }
+	postcss: {
+		plugins: {
+			'postcss-nested': {},
+			'postcss-custom-media': {}
+		}
+	}
 
 })
