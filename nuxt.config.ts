@@ -1,10 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 interface Meta {
-	charset?: string
-	name?: string
-	content?: string
-	hid?: string
-	[key: string]: any
+	charset?: string;
+	name?: string;
+	content?: string;
+	hid?: string;
+	[key: string]: any;
 }
 
 const meta: Meta[] = [
@@ -12,7 +12,7 @@ const meta: Meta[] = [
 	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 	{ name: 'format-detection', content: 'telephone=no' },
 	{ hid: 'keywords', name: 'keywords', content: 'nuxt3' }
-]
+];
 
 export default defineNuxtConfig({
 	nitro: {
@@ -28,28 +28,29 @@ export default defineNuxtConfig({
 		payloadExtraction: false
 	},
 	imports: {
-		dirs: [
-			'composables',
-			'composables/*/*.{ts,js,mjs,mts}',
-			'composables/**/*.{ts,js,mjs,mts}'
-		]
+		dirs: ['composables', 'composables/*/*.{ts,js,mjs,mts}', 'composables/**/*.{ts,js,mjs,mts}']
 	},
-	plugins: [
-		'~/plugins/md-editor.ts'
-	],
+	plugins: ['~/plugins/md-editor.ts', '~/plugins/vue-starport.ts', '~/plugins/iconify.ts'],
 	pages: true,
 	typescript: {
 		strict: true
 	},
 	compatibilityDate: '2024-11-01',
 	devtools: { enabled: true },
-	modules: ['@nuxtjs/tailwindcss', '@element-plus/nuxt', '@pinia/nuxt', 'pinia-plugin-persistedstate', '@vueuse/nuxt', '@nuxtjs/color-mode'],
+	modules: [
+		'@nuxtjs/tailwindcss',
+		'@element-plus/nuxt',
+		'@pinia/nuxt',
+		'pinia-plugin-persistedstate',
+		'@vueuse/nuxt',
+		'@nuxtjs/color-mode'
+	],
 
 	colorMode: {
 		classSuffix: '',
 		storageKey: 'nuxt-color-mode',
 		preference: 'system',
-		fallback: 'light',
+		fallback: 'light'
 	},
 	// 项目配置
 	app: {
@@ -61,7 +62,12 @@ export default defineNuxtConfig({
 	},
 
 	// 初始化样式
-	css: ['~/assets/css/index.scss', '~/assets/css/tailwind.scss', 'animate.css/animate.min.css', 'remixicon/fonts/remixicon.css'],
+	css: [
+		'~/assets/css/index.scss',
+		'~/assets/css/tailwind.scss',
+		'animate.css/animate.min.css',
+		'remixicon/fonts/remixicon.css'
+	],
 
 	// 定义公共样式
 	vite: {
@@ -84,5 +90,4 @@ export default defineNuxtConfig({
 			'postcss-custom-media': {}
 		}
 	}
-
-})
+});
