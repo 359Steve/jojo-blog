@@ -14,32 +14,34 @@ const timelineData = reactive<Timeline[]>([
 		timestamp: '2021年9月',
 		title: '入学',
 		description: '开始学习前端基础',
-		url: await useLoadStaticImage(1),
+		url: await useLoadStaticImage(1)
 	},
 	{
 		id: '1-2',
 		timestamp: '2022年3月',
 		title: '完成第一个项目',
 		description: 'React博客系统',
-		url: await useLoadStaticImage(2),
+		url: await useLoadStaticImage(2)
 	},
 	{
 		id: '1-3',
 		timestamp: '2022年10月',
 		title: '加入开发团队',
 		description: '学院官网项目开发',
-		url: await useLoadStaticImage(3),
+		url: await useLoadStaticImage(3)
 	},
 	{
 		id: '1-4',
 		timestamp: '2023年6月',
 		title: '发布MiniMycc',
 		description: '使用Electron构建桌面应用',
-		url: await useLoadStaticImage(4),
-	},
+		url: await useLoadStaticImage(4)
+	}
 ]);
 
-const res = await useGet<any, { content: string }>('/my/my');
+const res = await useGet<{ id: number }, { content: string }>('/user-find', {
+	params: { id: 1 }
+});
 if (res.code === 200) {
 	myText.value = res.data.content;
 }
@@ -130,11 +132,8 @@ onMounted(() => {
 								/>
 							</Starport>
 							<div
-								:class="[
-									`absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40`,
-									directionClass,
-									isSm ? 'opacity-100' : 'opacity-0',
-								]"
+								class="absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40"
+								:class="[directionClass, isSm ? 'opacity-100' : 'opacity-0']"
 								@click="toRecord"
 							>
 								<div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
