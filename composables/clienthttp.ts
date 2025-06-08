@@ -1,77 +1,78 @@
-type Method = 'get' | 'post' | 'put' | 'delete'
+type Method = 'get' | 'post' | 'put' | 'delete';
 // 自定义 Options 类型
 type Options<T> = {
-	baseURL?: string
-	method?: Method
-	body?: T
-	query?: T
-	params?: T
-	headers?: Record<string, string>
-	[key: string]: any
-}
+	baseURL?: string;
+	method?: Method;
+	body?: T;
+	query?: T;
+	params?: T;
+	headers?: Record<string, string>;
+	[key: string]: any;
+};
 // 响应基本信息类型
 type BaseResponse<T> = {
-	code: number
-	msg: string
-	data: T
-	[key: string]: any
-}
+	code: number;
+	msg: string;
+	data: T;
+	[key: string]: any;
+};
 
 export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
 	// 获取全局变量
-	const appConfig = useAppConfig()
+	const appConfig = useAppConfig();
 	// 获取nuxtApp实例
-	const nuxtApp = useNuxtApp()
+	const nuxtApp = useNuxtApp();
 	// 获取token
-	const token: string = useUserState().getToken() || ''
+	// const token: string = useUserState().getToken() || '';
 
 	return $fetch<BaseResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
+		method: option?.method as any,
+		...option,
 
 		// 设置请求拦截
 		onRequest({ options }) {
 			options.headers = {
-				Authorization: `Bearer ${token}`,
+				// Authorization: `Bearer ${token}`,
 				...options.headers
-			} as Headers & { Authorization?: string }
+			} as Headers & { Authorization?: string };
 		},
 
 		// 响应拦截
 		onResponse({ response }) {
-			if (response.ok) {
-				const data = response._data as BaseResponse<Rp>
-				if (data.code !== 200) {
-					if (import.meta.client) {
-						// 直接提示错误信息
-						ElMessage({
-							type: 'error',
-							message: data.msg
-						})
-					} else {
-						// 跳转错误页面
-						nuxtApp.runWithContext(() => {
-							navigateTo({
-								path: '/pageError',
-								query: {
-									code: data.code,
-									msg: data.msg
-								}
-							})
-						})
-					}
+			if (!response.ok) return;
+			const data = response._data as BaseResponse<Rp>;
+			if (data.code !== 200) {
+				if (import.meta.client) {
+					// 直接提示错误信息
+					ElMessage({
+						type: 'error',
+						message: data.msg
+					});
+				} else {
+					// 跳转错误页面
+					nuxtApp.runWithContext(() => {
+						navigateTo({
+							path: '/pageError',
+							query: {
+								code: data.code,
+								msg: data.msg
+							}
+						});
+					});
 				}
 			}
 		},
 
 		// 响应失败
 		onResponseError({ response }) {
-			const data = response._data as BaseResponse<Rp>
+			const data = response._data as BaseResponse<Rp>;
 			// 如果是客户端直接提示错误信息
 			if (import.meta.client) {
 				ElMessage({
 					type: 'error',
-					message: data.msg
-				})
+					message: data.msg || '请求出错！'
+				});
 			} else {
 				// 跳转错误页面
 				nuxtApp.runWithContext(() => {
@@ -79,17 +80,14 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 						path: '/pageError',
 						query: {
 							code: data.code,
-							msg: data.msg
+							message: data.msg || '请求出错！'
 						}
-					})
-				})
+					});
+				});
 			}
-		},
-
-		method: option?.method as any,
-		...option,
-	})
-}
+		}
+	});
+};
 
 // GET请求封装
 export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}): Promise<BaseResponse<Rp>> => {
@@ -97,13 +95,15 @@ export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq>
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'get',
 			...option
-		}).then(res => {
-			resolve(res as BaseResponse<Rp>)
-		}).catch(err => {
-			reject(err)
 		})
-	})
-}
+			.then(res => {
+				resolve(res as BaseResponse<Rp>);
+			})
+			.catch(err => {
+				reject(err);
+			});
+	});
+};
 
 // POST 封装
 export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<BaseResponse<Rp>> => {
@@ -111,10 +111,12 @@ export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<R
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'post',
 			...option
-		}).then(res => {
-			resolve(res as BaseResponse<Rp>)
-		}).catch(err => {
-			reject(err)
 		})
-	})
-}
+			.then(res => {
+				resolve(res as BaseResponse<Rp>);
+			})
+			.catch(err => {
+				reject(err);
+			});
+	});
+};
