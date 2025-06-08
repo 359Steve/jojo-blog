@@ -43,6 +43,7 @@
 	},
 	"devDependencies": {
 		"@element-plus/nuxt": "^1.1.1",
+		"@iconify/vue": "^5.0.0",
 		"@nuxtjs/tailwindcss": "^6.13.2",
 		"@types/number-to-words": "^1.2.3",
 		"eslint-plugin-prettier": "^5.4.0",
