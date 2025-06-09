@@ -15,6 +15,8 @@ export default defineConfig(
 			// 禁用 prettier 插件的规则（如 soybeans 内部引用了）
 			'prettier/prettier': 'off',
 			'no-underscore-dangle': 'off',
+			// 关闭自动排序
+			'import/order': 'off',
 		},
 	},
 );
