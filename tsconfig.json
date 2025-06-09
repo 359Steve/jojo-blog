@@ -1,17 +1,21 @@
 {
-  // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json",
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "strictNullChecks": true,
-    "module": "esnext",
-    "types": ["@nuxt/types", "@types/node", "@vue/runtime-core"],
-    "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
-    }
-  }
+	// https://nuxt.com/docs/guide/concepts/typescript
+	"extends": "./.nuxt/tsconfig.json",
+	"compilerOptions": {
+		"target": "es2022",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"module": "esnext",
+		"paths": {
+			"~/*": ["./*"],
+			"@/*": ["./*"]
+		},
+		"types": ["@nuxt/types", "@types/node", "@vue/runtime-core"],
+		"strict": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": false,
+		"noImplicitAny": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true
+	}
 }
