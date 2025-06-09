@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
 interface Meta {
 	charset?: string;
 	name?: string;
@@ -33,7 +34,13 @@ export default defineNuxtConfig({
 	plugins: ['~/plugins/md-editor.ts', '~/plugins/vue-starport.ts', '~/plugins/iconify.ts'],
 	pages: true,
 	typescript: {
-		strict: true
+		strict: true,
+		tsConfig: {
+			compilerOptions: {
+				experimentalDecorators: true,
+				emitDecoratorMetadata: true
+			}
+		}
 	},
 	compatibilityDate: '2024-11-01',
 	devtools: { enabled: true },
