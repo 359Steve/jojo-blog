@@ -1,4 +1,3 @@
-import { injectable } from 'inversify';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import process from 'node:process';
@@ -6,7 +5,6 @@ import { container } from '../core/container';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { UserRepository } from '../repositories/UserRepository';
 
-@injectable()
 export class UserService {
 	private userRepo: UserRepository;
 
@@ -32,6 +30,30 @@ export class UserService {
 		};
 
 		return res ? result_ok : result_error;
+	}
+
+	// 登录
+	async loginUser(body: CreateUserDto) {
+		const res = await this.userRepo.loginUser(body);
+
+		if (res) {
+			// 生成token
+			const accessToken = signToken(res);
+
+			return {
+				code: 200,
+				msg: '登录成功',
+				data: {
+					accessToken
+				}
+			};
+		}
+
+		return {
+			code: 500,
+			msg: '登录失败',
+			data: null
+		};
 	}
 
 	// 查询用户
