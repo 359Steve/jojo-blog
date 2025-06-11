@@ -1,20 +1,14 @@
 <script lang="ts" setup>
-import type { user_info } from '@prisma/client';
-
 const queryData = async () => {
-	const res = await fetchPostApi<Omit<user_info, 'id'>, any>('/user', {
+	const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>('/user-login', {
 		body: {
-			user_name: 'jojo2',
-			password: '123456',
-			pet_name: 'josef',
-			avatar_url: 'index_bg',
-			sign: '一个前端小白',
-			describe: '一个前端小白'
+			user_name: 'jojo',
+			password: '123456'
 		}
 	});
 
 	if (res.code === 200) {
-		ElMessage.success('注册成功');
+		useUserState().setToken(res.data.accessToken);
 	}
 };
 </script>
