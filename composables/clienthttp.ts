@@ -17,13 +17,16 @@ type BaseResponse<T> = {
 	[key: string]: any;
 };
 
+// let Authorization: Record<string, string> | null = null;
+
 export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
 	// 获取全局变量
 	const appConfig = useAppConfig();
 	// 获取nuxtApp实例
 	const nuxtApp = useNuxtApp();
 	// 获取token
-	// const token: string = useUserState().getToken() || '';
+	const token: string = useUserState().getToken() || '';
+	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
 
 	return $fetch<BaseResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
@@ -33,7 +36,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 		// 设置请求拦截
 		onRequest({ options }) {
 			options.headers = {
-				// Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 				...options.headers
 			} as Headers & { Authorization?: string };
 		},
@@ -47,7 +50,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 					// 直接提示错误信息
 					ElMessage({
 						type: 'error',
-						message: data.msg
+						message: data.msg || data.statusMessage || '请求出错！'
 					});
 				} else {
 					// 跳转错误页面
@@ -56,7 +59,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 							path: '/pageError',
 							query: {
 								code: data.code,
-								msg: data.msg
+								msg: data.msg || data.statusMessage || '请求出错！'
 							}
 						});
 					});
@@ -71,7 +74,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 			if (import.meta.client) {
 				ElMessage({
 					type: 'error',
-					message: data.msg || '请求出错！'
+					message: data.msg || data.statusMessage || '请求出错！'
 				});
 			} else {
 				// 跳转错误页面
@@ -80,7 +83,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 						path: '/pageError',
 						query: {
 							code: data.code,
-							message: data.msg || '请求出错！'
+							message: data.msg || data.statusMessage || '请求出错！'
 						}
 					});
 				});
