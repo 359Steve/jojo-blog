@@ -16,6 +16,12 @@ const meta: Meta[] = [
 ];
 
 export default defineNuxtConfig({
+	runtimeConfig: {
+		public: {
+			jwtSecret: 'jojo-blog',
+			accessTokenExpiresIn: '7d'
+		}
+	},
 	nitro: {
 		devProxy: {
 			'/training-plans': {
