@@ -1,8 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { injectable } from 'inversify';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 
-@injectable()
 export class UserRepository {
 	private prisma: PrismaClient;
 
@@ -14,6 +12,16 @@ export class UserRepository {
 		return this.prisma.user_info.create({
 			data: {
 				...dto
+			}
+		});
+	}
+
+	async loginUser(body: CreateUserDto) {
+		const { user_name, password } = body;
+		return this.prisma.user_info.findFirst({
+			where: {
+				user_name,
+				password
 			}
 		});
 	}
