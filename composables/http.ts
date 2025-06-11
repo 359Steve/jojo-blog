@@ -17,37 +17,28 @@ type BaseResponse<T> = {
 	[key: string]: any;
 };
 
+// let Authorization: Record<string, string> | null = null;
+
 export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
 	// 获取全局变量
 	const appConfig = useAppConfig();
 	// 获取nuxtApp实例
 	const nuxtApp = useNuxtApp();
 	// 获取token
-	// const token: string = useUserState().getToken() || ''
-	// 生成唯一的key
-	const key =
-		url +
-		btoa(
-			decodeURIComponent(
-				JSON.stringify({
-					...(option?.params || {}),
-					...(option?.query || {})
-				})
-			)
-		);
+	const token: string = useUserState().getToken() || '';
+	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
 
 	return useFetch<BaseResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
-		key,
 		method: option?.method as any,
 		...option,
 
 		// 设置请求拦截
 		onRequest({ options }) {
 			options.headers = {
-				// Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 				...options.headers
-			} as Headers & { Authorization?: string };
+			} as Headers & { Authorization: string };
 		},
 
 		// 响应拦截
@@ -59,7 +50,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					// 直接提示错误信息
 					ElMessage({
 						type: 'error',
-						message: data.msg || '请求出错！'
+						message: data.msg || data.statusMessage || '请求出错！'
 					});
 				} else {
 					// 跳转错误页面
@@ -68,7 +59,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 							path: '/pageError',
 							query: {
 								code: data.code,
-								msg: data.msg || '请求出错！'
+								msg: data.msg || data.statusMessage || '请求出错！'
 							}
 						});
 					});
@@ -83,7 +74,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 			if (import.meta.client) {
 				ElMessage({
 					type: 'error',
-					message: data.msg || '请求出错！'
+					message: data.msg || data.statusMessage || '请求出错！'
 				});
 			} else {
 				// 跳转错误页面
@@ -92,7 +83,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 						path: '/pageError',
 						query: {
 							code: data.code,
-							msg: data.msg || '请求出错！'
+							msg: data.msg || data.statusMessage || '请求出错！'
 						}
 					});
 				});
