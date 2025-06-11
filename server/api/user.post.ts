@@ -1,8 +1,11 @@
-import { UserController } from '../controllers/UserController';
 import { container } from '../core/container';
+import type { CreateUserDto } from '../dto/CreateUserDto';
+import { UserService } from '../services/UserService';
 
 export default defineEventHandler(async event => {
-	const userController = container.get(UserController);
+	const userService = container.get(UserService);
+	// 读取body参数
+	const body = await readBody<CreateUserDto>(event);
 
-	return await userController.createUser(event);
+	return await userService.createUser(body);
 });
