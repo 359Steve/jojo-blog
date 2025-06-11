@@ -1,3 +1,3 @@
 export default defineAppConfig({
-    baseUrl: '/api',
-})
+	baseUrl: '/api'
+});
