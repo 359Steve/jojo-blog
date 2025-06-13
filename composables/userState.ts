@@ -1,23 +1,27 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-export const useUserState = defineStore('userState', () => {
-	const token = ref<string>('')
+export const useUserState = defineStore(
+	'userState',
+	() => {
+		const token = ref<string>('');
 
-	// 获取token
-	const getToken = () => {
-		return token.value
+		// 获取token
+		const getToken = () => {
+			return token.value;
+		};
+
+		// 设置token
+		const setToken = (value: string) => {
+			token.value = value;
+		};
+
+		return {
+			token,
+			getToken,
+			setToken
+		};
+	},
+	{
+		persist: true
 	}
-
-	// 设置token
-	const setToken = (value: string) => {
-		token.value = value
-	}
-
-	return {
-		token,
-		getToken,
-		setToken
-	}
-}, {
-	persist: true
-})
+);
