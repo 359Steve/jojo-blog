@@ -1,23 +1,21 @@
-<script lang='ts' setup>
+<script lang="ts" setup>
 definePageMeta({
-    middleware: ['record']
-})
+	middleware: ['record']
+});
 
 onMounted(() => {
-    useVueStarport().setIsRound(true)
-})
+	useVueStarport().setIsRound(true);
+});
 
 onBeforeUnmount(() => {
-    useVueStarport().setIsRound(false)
-})
+	useVueStarport().setIsRound(false);
+});
 </script>
 
 <template>
-    <div class="w-full pt-4 sm:pt-8">
-        <NuxtPage />
-    </div>
+	<div class="w-full pt-4 sm:pt-8">
+		<NuxtPage />
+	</div>
 </template>
 
-<style lang='postcss' scoped>
-
-</style>
+<style lang="postcss" scoped></style>
