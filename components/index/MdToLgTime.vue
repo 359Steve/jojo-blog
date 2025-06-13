@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Timeline } from '~/types/com-types';
 
-const { timelineData } = defineProps<{
+const { timelineData = [] } = defineProps<{
 	timelineData: Timeline[];
 }>();
 
@@ -21,10 +21,8 @@ defineEmits<{
 						<span>{{ item.timestamp }}</span>
 					</div>
 					<AnimationRevealOnScroll animation-class="'animate__fadeInRight'">
-						<div
-							@click="$emit('detailRecord', item)"
-							class="mt-2 flex cursor-pointer items-center rounded-base p-2 shadow-lg transition-all hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)] dark:hover:bg-gray-100/10"
-						>
+						<div class="mt-2 flex cursor-pointer items-center rounded-base p-2 shadow-lg transition-all hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)] dark:hover:bg-gray-100/10"
+							@click="$emit('detailRecord', item)">
 							<img :src="item.url" alt="timestamp" class="mr-2 size-8" />
 							<span>{{ item.description }}</span>
 						</div>
