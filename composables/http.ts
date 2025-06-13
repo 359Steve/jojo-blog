@@ -64,7 +64,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					// 直接提示错误信息
 					ElMessage({
 						type: 'error',
-						message: data.msg || data.statusMessage || '请求出错！'
+						message: error.msg || error.data.message || '请求出错！'
 					});
 				} else {
 					// 跳转错误页面
