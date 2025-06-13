@@ -29,9 +29,6 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 	const appConfig = useAppConfig();
 	// 获取nuxtApp实例
 	const nuxtApp = useNuxtApp();
-	// 获取token
-	const token: string = useUserState().getToken() || '';
-	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
 
 	return useFetch<BaseResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
@@ -47,10 +44,10 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					...options.headers
 				};
 			} else {
-			options.headers = {
+				options.headers = {
 					Authorization: `Bearer ${useUserState().getToken() ?? ''}`,
-				...options.headers
-			} as Headers & { Authorization: string };
+					...options.headers
+				} as Headers & { Authorization: string };
 			}
 		},
 
