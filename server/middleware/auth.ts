@@ -1,31 +1,29 @@
-// 白名单接口路径（可用通配符逻辑）
-const whitelist = ['/api/user', '/api/user-login'];
+const whitelist = ['/api/user-query', '/api/user-login', '/api/user-register'];
 
-// token认证中间件
 export default defineEventHandler(event => {
+	let realToken = '';
 	const path = event.node.req.url || '';
-	const authHeader = getHeader(event, 'Authorization');
 
 	if (!path.startsWith('/api')) return;
-
 	// 如果是白名单接口，跳过校验
 	if (whitelist.includes(path)) return;
 
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
-		sendError(
-			event,
-			createError({
-				statusCode: 401,
-				statusMessage: '你还未登录！'
-			})
-		);
+	if (import.meta.server) {
+		const token: TokenCookie = parseCookies(event) as any;
+		const cookieToken: { token: string } = JSON.parse((token.userState ?? JSON.stringify({})) as unknown as string);
+		realToken = cookieToken?.token;
+	} else {
+		const authHeader = getHeader(event, 'Authorization');
+		realToken = authHeader?.split(' ')[1] ?? '';
 	}
 
-	const token = authHeader?.split(' ')[1];
+	if (!realToken) {
+		sendErrorWithMessage(event, 401, '你还未登录！');
+	}
 
 	try {
 		// 验证token
-		const payload = verifyToken(token || '');
+		const payload = verifyToken(realToken || '');
 		event.context.user = payload;
 	} catch {
 		sendError(
