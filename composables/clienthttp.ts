@@ -10,12 +10,17 @@ type Options<T> = {
 	[key: string]: any;
 };
 // 响应基本信息类型
-type BaseResponse<T> = {
+interface H3Error<T> {
+	data: T;
+	stack: any[];
+	statusCode: number;
+	statusMessage: string;
+	[key: string]: any;
+}
+interface BaseResponse<T> extends H3Error<T> {
 	code: number;
 	msg: string;
-	data: T;
-	[key: string]: any;
-};
+}
 
 // let Authorization: Record<string, string> | null = null;
 
