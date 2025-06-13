@@ -39,9 +39,10 @@ const timelineData = reactive<Timeline[]>([
 	}
 ]);
 
-const res = await useGet<{ id: number }, { content: string }>('/user-find', {
+const res = await useGet<{ id: number }, { content: string }>('/user-query', {
 	params: { id: 1 }
 });
+
 if (res.code === 200) {
 	myText.value = res.data.content;
 }
@@ -110,7 +111,7 @@ onMounted(() => {
 					<h1 class="text-center text-[2.25em] font-extralight">Josef Joestar</h1>
 				</AnimationRevealOnScroll>
 				<AnimationRevealOnScroll>
-					<div v-if="myText" class="mt-4 text-center">{{ myText }}</div>
+					<div class="mt-4 text-center">{{ myText }}</div>
 				</AnimationRevealOnScroll>
 			</div>
 		</div>
@@ -119,23 +120,15 @@ onMounted(() => {
 				<div class="relative flex h-full w-full items-center py-0 md:py-4">
 					<div class="absolute z-[-1] h-full w-[50%] bg-half-gray md:h-[calc(100%-2rem)]"></div>
 					<div class="ml-4 h-[calc(100%-2rem)] w-[calc(100%-1rem)] bg-white p-4 shadow-md">
-						<div
-							ref="indexBg"
-							class="relative h-full w-full cursor-pointer overflow-hidden"
-							@mouseenter="onMouseenter"
-							@mouseleave="onMouseleave"
-						>
-							<Starport port="my-id" class="aspect-[3/2] max-h-full w-full md:h-full">
-								<RecordImage
-									class="transition-all duration-1000"
-									:class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']"
-								/>
+						<div ref="indexBg" class="relative h-full w-full cursor-pointer overflow-hidden"
+							@mouseenter="onMouseenter" @mouseleave="onMouseleave">
+							<Starport id="record-image-my-id" port="my-id"
+								class="aspect-[3/2] max-h-full w-full md:h-full">
+								<RecordImage class="transition-all duration-1000"
+									:class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
 							</Starport>
-							<div
-								class="absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40"
-								:class="[directionClass, isSm ? 'opacity-100' : 'opacity-0']"
-								@click="toRecord"
-							>
+							<div class="absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40"
+								:class="[directionClass, isSm ? 'opacity-100' : 'opacity-0']" @click="toRecord">
 								<div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
 									<div>点击查看我的个人履历！</div>
 									<div>您将了解到我的学习背景、技能特长和经历</div>
@@ -147,16 +140,10 @@ onMounted(() => {
 			</div>
 			<div class="grid h-full w-full grid-cols-1 justify-center text-sm">
 				<AnimationRevealOnScroll>
-					<IndexBasicTime
-						class="block md:hidden lg:block"
-						:timeline-data="timelineData"
-						@detail-record="detailRecord"
-					></IndexBasicTime>
-					<IndexMdToLgTime
-						class="hidden md:block lg:hidden"
-						:timeline-data="timelineData"
-						@detail-record="detailRecord"
-					></IndexMdToLgTime>
+					<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData"
+						@detail-record="detailRecord"></IndexBasicTime>
+					<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData"
+						@detail-record="detailRecord"></IndexMdToLgTime>
 				</AnimationRevealOnScroll>
 			</div>
 		</div>
