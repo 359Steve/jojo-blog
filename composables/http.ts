@@ -40,10 +40,18 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 
 		// 设置请求拦截
 		onRequest({ options }) {
+			if (import.meta.server) {
+				const ssrHeaders = useRequestHeaders(['cookie']);
+				options.headers = {
+					...ssrHeaders,
+					...options.headers
+				};
+			} else {
 			options.headers = {
-				Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${useUserState().getToken() ?? ''}`,
 				...options.headers
 			} as Headers & { Authorization: string };
+			}
 		},
 
 		// 响应拦截
