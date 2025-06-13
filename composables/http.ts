@@ -83,7 +83,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 
 		// 响应失败
 		onResponseError({ response }) {
-			const data = response._data as BaseResponse<Rp>;
+			const error = response._data as BaseResponse<{ message: string }>;
 			// 如果是客户端直接提示错误信息
 			if (import.meta.client) {
 				ElMessage({
