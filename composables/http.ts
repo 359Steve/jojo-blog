@@ -59,6 +59,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 			if (!response.ok) return;
 			const data = response._data as BaseResponse<Rp>;
 			if (data.code !== 200) {
+				const error = data as BaseResponse<{ message: string }>;
 				if (import.meta.client) {
 					// 直接提示错误信息
 					ElMessage({
