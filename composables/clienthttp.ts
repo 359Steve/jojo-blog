@@ -88,8 +88,8 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 					navigateTo({
 						path: '/pageError',
 						query: {
-							code: data.code,
-							message: data.msg || data.statusMessage || '请求出错！'
+							code: error.code,
+							message: error.msg || error.data.message || '请求出错！'
 						}
 					});
 				});
