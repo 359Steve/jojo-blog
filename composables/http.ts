@@ -88,7 +88,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 			if (import.meta.client) {
 				ElMessage({
 					type: 'error',
-					message: data.msg || data.statusMessage || '请求出错！'
+					message: error.msg || error.data.message || '请求出错！'
 				});
 			} else {
 				// 跳转错误页面
@@ -96,8 +96,8 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					navigateTo({
 						path: '/pageError',
 						query: {
-							code: data.code,
-							msg: data.msg || data.statusMessage || '请求出错！'
+							code: error.code,
+							msg: error.msg || error.data.message || '请求出错！'
 						}
 					});
 				});
