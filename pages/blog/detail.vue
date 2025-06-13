@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-const route = useRoute();
-const id = computed(() => route.query.id);
-const content = ref<string>('');
+definePageMeta({
+	middleware: ['blog']
+});
 
-if (!id.value) {
-	throw createError({ statusCode: 500, statusMessage: '出错了！' });
-}
+// const route = useRoute();
+// const id = computed(() => route.query.id);
+const content = ref<string>('');
 
 const res = await useGet<any, { content: string }>('/md');
 if (res.code === 200) {
@@ -20,15 +20,12 @@ if (res.code === 200) {
 				Tailwind Master Kit
 			</h1>
 			<h3 class="text-secondary text-sm font-normal sm:text-base">
-				A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.
+				A beautiful and comprehensive Tailwind CSS components library for building modern websites and
+				applications.
 			</h3>
 		</AnimationRevealOnScroll>
-		<MdPreview
-			:model-value="content"
-			:theme="useJojoColorMode().darkMode.preference"
-			preview-theme="github"
-			code-theme="github"
-		></MdPreview>
+		<MdPreview :model-value="content" :theme="useJojoColorMode().darkMode.preference" preview-theme="github"
+			code-theme="github"></MdPreview>
 	</main>
 </template>
 
