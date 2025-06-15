@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { RecordSummary, Summary } from '~/types/com-types';
 
+const recordText = ref<HTMLDivElement[] | null>();
 const summaryList = reactive<RecordSummary[]>([
 	{
 		id: '1',
@@ -223,6 +224,8 @@ const summaryList = reactive<RecordSummary[]>([
 		]
 	}
 ]);
+// 图片高度
+const imageHeight = ref<number[]>([]);
 
 const toDetail = (parentId: string, item: Summary): void => {
 	navigateTo({ path: '/record/detail', query: { parentId, id: item.id } });
@@ -231,6 +234,14 @@ const toDetail = (parentId: string, item: Summary): void => {
 const getItemTime = computed(() => {
 	return (id: number): string =>
 		id > 0 ? `${summaryList[id].timeRange} - ${summaryList[id - 1].timeRange}` : `${summaryList[id].timeRange} - 现在`;
+});
+
+onMounted(() => {
+	if (import.meta.client && recordText.value) {
+		recordText.value.forEach((el: HTMLDivElement, index: number) => {
+			imageHeight.value[index] = el.getBoundingClientRect().height;
+		});
+	}
 });
 </script>
 
@@ -254,16 +265,16 @@ const getItemTime = computed(() => {
 						</div>
 
 						<p
-							class="from-primary text-secondary text-[16px] font-semibold leading-relaxed tracking-wider sm:text-base">
+							class="from-primary text-secondary font-semibold leading-relaxed tracking-wider sm:text-base">
 							{{ item.role }}
 						</p>
-						<p
-							class="from-primary text-secondary mb-4 text-[16px] font-normal leading-relaxed tracking-wider sm:text-sm">
+						<p class="from-primary text-secondary mb-4 text-sm font-normal leading-relaxed tracking-wider">
 							{{ item.summary }}
 						</p>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2"
 							:class="[index % 2 === 0 ? '' : 'sm:flex-row-reverse']">
-							<div class="h-fit w-full" :class="[index % 2 === 0 ? 'sm:order-1' : 'sm:order-2']">
+							<div ref="recordText" class="h-fit w-full"
+								:class="[index % 2 === 0 ? 'sm:order-1' : 'sm:order-2']">
 								<div v-for="demo in item.data" :key="demo.id"
 									class="group my-2 flex w-full cursor-pointer grid-cols-1 items-start space-x-1 sm:grid-cols-2"
 									@click="toDetail(item.id, demo)">
@@ -275,15 +286,16 @@ const getItemTime = computed(() => {
 											fill="currentColor" stroke-width="0"></path>
 									</svg>
 									<p
-										class="from-primary text-secondary underline-animate truncate text-sm font-normal tracking-wider md:text-sm lg:text-sm">
+										class="from-primary text-secondary underline-animate truncate text-sm font-normal tracking-wider sm:text-base">
 										{{ demo.summary }}
 									</p>
 								</div>
 							</div>
 							<div class="flex h-full w-full cursor-pointer items-center justify-center"
-								:class="[index % 2 === 0 ? 'sm:order-2' : 'sm:order-1']">
-								<Starport :id="`record-image-my-id${item.id}`" :port="`my-id${item.id}`"
-									class="h-[150px] w-full">
+								:class="[index % 2 === 0 ? 'sm:order-2' : 'sm:order-1']"
+								:style="{ height: imageHeight + 'px' }">
+								<Starport :id="`record-image-my-id${item.id}`" :port="`my-id${item.id}`" class="w-full"
+									:style="{ height: `${imageHeight[index]}px` }">
 									<RecordDetailImage class="duration-1200 transition-all"
 										@click="toDetail(item.id, item.data[0])" />
 								</Starport>
