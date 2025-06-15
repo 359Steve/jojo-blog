@@ -118,8 +118,8 @@ onMounted(() => {
 		<div class="mx-auto grid w-full grid-cols-1 gap-8 sm:w-[75%] md:w-[90%] md:grid-cols-2 md:gap-4">
 			<div class="w-full">
 				<div class="relative flex h-full w-full items-center py-0 md:py-4">
-					<div class="absolute z-[-1] h-full w-[50%] bg-half-gray md:h-[calc(100%-2rem)]"></div>
-					<div class="ml-4 h-[calc(100%-2rem)] w-[calc(100%-1rem)] bg-white p-4 shadow-md">
+					<div class="absolute z-[-1] h-full w-[50%] rounded-base bg-half-gray md:h-[calc(100%-2rem)]"></div>
+					<div class="ml-4 h-[calc(100%-2rem)] w-[calc(100%-1rem)] rounded-base bg-white p-4 shadow-md">
 						<div ref="indexBg" class="relative h-full w-full cursor-pointer overflow-hidden"
 							@mouseenter="onMouseenter" @mouseleave="onMouseleave">
 							<Starport id="record-image-my-id" port="my-id"
