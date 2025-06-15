@@ -224,8 +224,8 @@ const summaryList = reactive<RecordSummary[]>([
 	}
 ]);
 
-const toDetail = (item: Summary): void => {
-	navigateTo({ path: '/record/detail', query: { id: item.id } });
+const toDetail = (parentId: string, item: Summary): void => {
+	navigateTo({ path: '/record/detail', query: { parentId, id: item.id } });
 };
 
 const getItemTime = computed(() => {
@@ -235,41 +235,62 @@ const getItemTime = computed(() => {
 </script>
 
 <template>
-	<div class="mx-auto w-full sm:w-[75%]">
+	<div class="mx-auto w-full">
 		<RecordHeader />
 		<main class="mx-auto w-full">
-			<div class="w-full">
-				<AnimationRevealOnScroll v-for="(item, index) in summaryList" :key="item.id"
-					animation-class="animate__fadeInDown"
-					base-class="flex sm:flex-row flex-col space-x-10 my-16 relative">
-					<p class="text-secondary mb-4 ml-0 w-40 text-sm font-normal sm:mb-0 lg:text-base">{{
-						getItemTime(index) }}</p>
-					<div>
-						<h5
-							class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold text-emerald-500 md:text-lg lg:text-lg">
-							{{ item.title }}
-						</h5>
-						<p class="text-secondary text-[18px] font-semibold sm:text-base">
+			<div class="grid w-full grid-cols-1 gap-8 sm:gap-12 md:gap-16">
+				<div v-for="(item, index) in summaryList" :key="item.id"
+					base-class="flex sm:flex-row flex-col space-x-10 relative">
+					<div class="w-full">
+						<div class="flex w-full items-center justify-between">
+							<h5
+								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-emerald-500 md:text-lg lg:text-lg">
+								{{ item.title }}
+							</h5>
+							<h5
+								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-emerald-500 md:text-lg lg:text-lg">
+								{{ getItemTime(index) }}
+							</h5>
+						</div>
+
+						<p
+							class="from-primary text-secondary text-[16px] font-semibold leading-relaxed tracking-wider sm:text-base">
 							{{ item.role }}
 						</p>
-						<p class="text-secondary mb-4 text-[16px] font-normal sm:text-sm">
+						<p
+							class="from-primary text-secondary mb-4 text-[16px] font-normal leading-relaxed tracking-wider sm:text-sm">
 							{{ item.summary }}
 						</p>
-						<div v-for="demo in item.data" :key="demo.id"
-							class="group my-2 flex cursor-pointer items-start space-x-1" @click="toDetail(demo)">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-								fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-								stroke-linejoin="round" class="mt-1 h-3 w-4 text-neutral-300">
-								<path
-									d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-									fill="currentColor" stroke-width="0"></path>
-							</svg>
-							<p class="text-secondary underline-animate text-sm font-normal md:text-sm lg:text-sm">
-								{{ demo.summary }}
-							</p>
+						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2"
+							:class="[index % 2 === 0 ? '' : 'sm:flex-row-reverse']">
+							<div class="h-fit w-full" :class="[index % 2 === 0 ? 'sm:order-1' : 'sm:order-2']">
+								<div v-for="demo in item.data" :key="demo.id"
+									class="group my-2 flex w-full cursor-pointer grid-cols-1 items-start space-x-1 sm:grid-cols-2"
+									@click="toDetail(item.id, demo)">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+										stroke-linejoin="round" class="mt-1 h-3 w-4 text-neutral-300">
+										<path
+											d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+											fill="currentColor" stroke-width="0"></path>
+									</svg>
+									<p
+										class="from-primary text-secondary underline-animate truncate text-sm font-normal tracking-wider md:text-sm lg:text-sm">
+										{{ demo.summary }}
+									</p>
+								</div>
+							</div>
+							<div class="flex h-full w-full cursor-pointer items-center justify-center"
+								:class="[index % 2 === 0 ? 'sm:order-2' : 'sm:order-1']">
+								<Starport :id="`record-image-my-id${item.id}`" :port="`my-id${item.id}`"
+									class="h-[150px] w-full">
+									<RecordDetailImage class="duration-1200 transition-all"
+										@click="toDetail(item.id, item.data[0])" />
+								</Starport>
+							</div>
 						</div>
 					</div>
-				</AnimationRevealOnScroll>
+				</div>
 			</div>
 		</main>
 	</div>
