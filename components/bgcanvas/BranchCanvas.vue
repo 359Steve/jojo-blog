@@ -23,7 +23,7 @@ const ctx = computed(() => canvasEl.value!.getContext('2d')!);
 const getEndPoint = (b: BranchLine): Point => {
 	return {
 		x: b.start.x + b.lenght * Math.cos(b.theta),
-		y: b.start.y + b.lenght * Math.sin(b.theta),
+		y: b.start.y + b.lenght * Math.sin(b.theta)
 	};
 };
 
@@ -54,10 +54,10 @@ const step = (b: BranchLine, deep = 0) => {
 				{
 					start: end,
 					lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-					theta: b.theta - 0.3 * Math.random(),
+					theta: b.theta - 0.3 * Math.random()
 				},
-				deep + 1,
-			),
+				deep + 1
+			)
 		);
 	}
 
@@ -69,10 +69,10 @@ const step = (b: BranchLine, deep = 0) => {
 				{
 					start: end,
 					lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-					theta: b.theta + 0.3 * Math.random(),
+					theta: b.theta + 0.3 * Math.random()
 				},
-				deep + 1,
-			),
+				deep + 1
+			)
 		);
 	}
 };
@@ -88,16 +88,16 @@ const init = () => {
 
 	const branches: BranchLine[] = [
 		{ start: leftTop, lenght: 3, theta: leftTheta },
-		{ start: rightBottom, lenght: 3, theta: rightTheta },
+		{ start: rightBottom, lenght: 3, theta: rightTheta }
 	];
 
-	branches.forEach((branch) => step(branch));
+	branches.forEach(branch => step(branch));
 };
 
 const frame = () => {
 	const tasks = [...pendingTasks.value];
 	pendingTasks.value = [];
-	tasks.forEach((task) => task());
+	tasks.forEach(task => task());
 };
 
 const animate = () => {
