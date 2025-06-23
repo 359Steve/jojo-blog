@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@codemirror/view": "^6.36.6",
+		"@iconify-json/ri": "^1.2.5",
 		"@iconify/vue": "^5.0.0",
 		"@nuxtjs/color-mode": "^3.5.2",
 		"@nuxtjs/tailwindcss": "^6.13.2",
@@ -22,6 +23,7 @@
 		"@types/node": "^22.15.3",
 		"@vue/runtime-core": "^3.5.13",
 		"@vueuse/core": "^13.1.0",
+		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^13.1.0",
 		"animate.css": "^4.1.1",
 		"class-transformer": "^0.5.1",
