@@ -106,7 +106,7 @@ onMounted(() => {
 	<div class="flex min-h-[calc(100dvh-5rem)] w-full flex-col gap-6">
 		<!-- 介绍 -->
 		<div class="mx-auto w-full sm:w-[75%]">
-			<div class="h-full w-full pb-8 pt-8">
+			<div class="h-full w-full pb-4 pt-8 sm:pb-8">
 				<AnimationRevealOnScroll>
 					<h1 class="text-center text-[2.25em] font-extralight">Josef Joestar</h1>
 				</AnimationRevealOnScroll>
@@ -118,8 +118,11 @@ onMounted(() => {
 		<div class="mx-auto grid w-full grid-cols-1 gap-8 sm:w-[75%] md:w-[90%] md:grid-cols-2 md:gap-4">
 			<div class="w-full">
 				<div class="relative flex h-full w-full items-center py-0 md:py-4">
-					<div class="absolute z-[-1] h-full w-[50%] rounded-base bg-half-gray md:h-[calc(100%-2rem)]"></div>
-					<div class="ml-4 h-[calc(100%-2rem)] w-[calc(100%-1rem)] rounded-base bg-white p-4 shadow-md">
+					<div
+						class="absolute z-[-1] h-[calc(100%-1rem)] w-[50%] rounded-base bg-half-gray sm:h-full md:h-[calc(100%-2rem)]">
+					</div>
+					<div
+						class="ml-4 h-fit w-[calc(100%-1rem)] rounded-base bg-white p-4 shadow-md sm:h-[calc(100%-2rem)]">
 						<div ref="indexBg" class="relative h-full w-full cursor-pointer overflow-hidden"
 							@mouseenter="onMouseenter" @mouseleave="onMouseleave">
 							<Starport id="record-image-my-id" port="my-id"
@@ -127,6 +130,7 @@ onMounted(() => {
 								<RecordImage class="transition-all duration-1000"
 									:class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
 							</Starport>
+
 							<div class="absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40"
 								:class="[directionClass, isSm ? 'opacity-100' : 'opacity-0']" @click="toRecord">
 								<div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
@@ -138,7 +142,7 @@ onMounted(() => {
 					</div>
 				</div>
 			</div>
-			<div class="grid h-full w-full grid-cols-1 justify-center text-sm">
+			<div class="mb-8 grid h-full w-full grid-cols-1 justify-center text-sm sm:mb-0">
 				<AnimationRevealOnScroll>
 					<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData"
 						@detail-record="detailRecord"></IndexBasicTime>
