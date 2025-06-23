@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import darkImg from '~/assets/image/dark.png';
-import lightImg from '~/assets/image/light.png';
-
 const { drawer } = storeToRefs(useJojoHeader());
 const headerEl = ref<HTMLElement | null>(null);
 
@@ -34,26 +31,30 @@ onMounted(() => {
 		</div>
 		<div class="flex h-full w-fit items-center justify-between gap-x-2">
 			<div
-				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] sm:flex">
+				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
 				<a href="https://www.facebook.com/profile.php?id=61565513711985" target="_blank"
 					rel="noopener noreferrer">
-					<img class="w-full" src="~/assets/image/facebook.png" alt="facebook" />
+					<Icon icon="ri:facebook-circle-fill" />
 				</a>
 			</div>
 			<div
-				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] sm:flex">
+				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
 				<a href="https://github.com/359Steve" target="_blank" rel="noopener noreferrer">
-					<img class="w-full" src="~/assets/image/github.png" alt="github" />
+					<Icon icon="ri:github-fill"></Icon>
 				</a>
 			</div>
 			<div class="flex items-center justify-between gap-x-2">
 				<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
 					@click="$emit('changeTheme', $event)">
-					<img class="w-full" :src="selectTheme ? darkImg : lightImg" alt="" />
+					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black"></Icon>
 				</div>
-				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] sm:hidden"
+				<a class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
+					target="_blank" rel="noopener noreferrer" href="http://localhost:3000/admin">
+					<Icon icon="ri:settings-5-fill" class="dark:text-black"></Icon>
+				</a>
+				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:hidden"
 					@click="drawer = !drawer">
-					<img class="h-full leading-6" src="~/assets/image/menu.png" alt="" />
+					<Icon icon="ri:menu-fold-4-fill" />
 				</div>
 			</div>
 		</div>
