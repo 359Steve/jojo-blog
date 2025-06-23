@@ -4,8 +4,15 @@ import { detectDeviceDetail } from '~/composables/public';
 const isMobile = ref<'mobile' | 'tablet' | 'desktop'>();
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
 
-const changeTheme = async (_e: MouseEvent): Promise<void> => {
+const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 	selectTheme.value = !selectTheme.value;
+	// 判断是否支持该api
+	const isViewTransitionSupported = 'startViewTransition' in document;
+
+	if (!isViewTransitionSupported) {
+		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
+		return true;
+	}
 	const transition: ViewTransition = document.startViewTransition(() => {
 		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
 	});
@@ -22,15 +29,17 @@ const changeTheme = async (_e: MouseEvent): Promise<void> => {
 		const clipPath = [`circle(0% at ${clientX}px ${clientY}px)`, `circle(${radius}px at ${clientX}px ${clientY}px)`];
 		document.documentElement.animate(
 			{
-				clipPath: isDark ? clipPath.reverse() : clipPath,
+				clipPath: isDark ? clipPath.reverse() : clipPath
 			},
 			// 设置时间，已经目标伪元素
 			{
 				duration: 500,
-				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
-			},
+				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)'
+			}
 		);
 	});
+
+	return true;
 };
 
 onMounted(() => {
@@ -41,14 +50,14 @@ onMounted(() => {
 
 <template>
 	<div class="relative h-full w-full">
-		<RecordBackground
-			v-if="isMobile === 'desktop' || 'tablet'"
-			class-name="w-full h-[100dvh] fixed inset-0 z-[-1]"
-		></RecordBackground>
-		<BgcanvasBranchCanvas v-else></BgcanvasBranchCanvas>
-		<el-backtop :right="50" :bottom="100">
+		<ClientOnly>
+			<RecordBackground v-if="['desktop', 'tablet'].includes(isMobile!)"
+				class-name="w-full h-[100dvh] fixed inset-0 z-[-1]"></RecordBackground>
+			<BgcanvasBranchCanvas v-else></BgcanvasBranchCanvas>
+		</ClientOnly>
+		<ElBacktop :right="50" :bottom="100">
 			<i class="ri-arrow-up-line"></i>
-		</el-backtop>
+		</ElBacktop>
 		<div class="h-full w-full">
 			<!-- 导航栏 -->
 			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
