@@ -1,5 +1,6 @@
 export default defineNuxtRouteMiddleware((to, _from) => {
 	const path = to.path;
+
 	const { menuList, menuId } = storeToRefs(useJojoHeader());
 	const { avatarUrl } = storeToRefs(useVueStarport());
 
@@ -12,4 +13,6 @@ export default defineNuxtRouteMiddleware((to, _from) => {
 		.sort((a, b) => b.path.length - a.path.length)[0];
 
 	menuId.value = matched ? matched.id : 0;
+
+	// return true;
 });
