@@ -16,10 +16,10 @@ const meta: Meta[] = [
 ];
 
 export default defineNuxtConfig({
-	devServer: {
-		host: '0.0.0.0',
-		port: 5173
-	},
+	// devServer: {
+	// 	host: '0.0.0.0',
+	// 	port: 5173
+	// },
 	runtimeConfig: {
 		public: {
 			jwtSecret: 'jojo-blog',
@@ -60,7 +60,8 @@ export default defineNuxtConfig({
 		'@pinia/nuxt',
 		'pinia-plugin-persistedstate',
 		'@vueuse/nuxt',
-		'@nuxtjs/color-mode'
+		'@nuxtjs/color-mode',
+		'@vueuse/motion/nuxt'
 	],
 
 	colorMode: {
