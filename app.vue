@@ -17,16 +17,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<NuxtLayout name="jojomain">
-		<template #page>
-			<NuxtLayout name="mainbox">
-				<template #childPage>
-					<StarportCarrier>
-						<NuxtPage />
-					</StarportCarrier>
-				</template>
-			</NuxtLayout>
-		</template>
+	<NuxtLayout>
+		<NuxtPage />
 	</NuxtLayout>
 </template>
 
