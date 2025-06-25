@@ -26,12 +26,6 @@ export default defineEventHandler(event => {
 		const payload = verifyToken(realToken || '');
 		event.context.user = payload;
 	} catch {
-		sendError(
-			event,
-			createError({
-				statusCode: 401,
-				statusMessage: '登录已失效！'
-			})
-		);
+		sendErrorWithMessage(event, 401, '登录已失效！');
 	}
 });
