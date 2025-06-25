@@ -1,13 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-interface Meta {
-	charset?: string;
-	name?: string;
-	content?: string;
-	hid?: string;
-	[key: string]: any;
-}
-
 const meta: Meta[] = [
 	{ charset: 'utf-8' },
 	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -20,19 +12,20 @@ export default defineNuxtConfig({
 	// 	host: '0.0.0.0',
 	// 	port: 5173
 	// },
+	extends: ['./admin'],
+	components: [
+		{
+			path: '~/components'
+		},
+		{
+			path: '~/admin/components',
+			pathPrefix: false
+		}
+	],
 	runtimeConfig: {
 		public: {
 			jwtSecret: 'jojo-blog',
 			accessTokenExpiresIn: '7d'
-		}
-	},
-	nitro: {
-		devProxy: {
-			'/training-plans': {
-				target: 'http://172.18.163.25:8561/api/training-plans',
-				changeOrigin: true,
-				prependPath: true
-			}
 		}
 	},
 	experimental: {

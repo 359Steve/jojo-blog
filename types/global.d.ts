@@ -13,6 +13,14 @@ declare global {
 		};
 		token: string;
 	}
+
+	interface Meta {
+		charset?: string;
+		name?: string;
+		content?: string;
+		hid?: string;
+		[key: string]: any;
+	}
 }
 
 export { };
