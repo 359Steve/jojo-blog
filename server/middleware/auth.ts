@@ -4,9 +4,12 @@ export default defineEventHandler(event => {
 	let realToken = '';
 	const path = event.node.req.url || '';
 
+	// 去掉携带的参数
+	const realPath = path.split('?')[0];
+
 	if (!path.startsWith('/api')) return;
 	// 如果是白名单接口，跳过校验
-	if (whitelist.includes(path)) return;
+	if (whitelist.includes(realPath)) return;
 
 	if (import.meta.server) {
 		const token: TokenCookie = parseCookies(event) as any;
