@@ -273,7 +273,7 @@ onMounted(() => {
 						</p>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2"
 							:class="[index % 2 === 0 ? '' : 'sm:flex-row-reverse']">
-							<div ref="recordText" class="h-fit w-full"
+							<div ref="recordText" class="aaaaa h-fit w-full"
 								:class="[index % 2 === 0 ? 'sm:order-1' : 'sm:order-2']">
 								<div v-for="demo in item.data" :key="demo.id"
 									class="group my-2 flex w-full cursor-pointer grid-cols-1 items-start space-x-1 sm:grid-cols-2"

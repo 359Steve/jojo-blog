@@ -9,10 +9,5 @@ export default defineNuxtConfig({
 			path: './components',
 			pathPrefix: false
 		}
-	],
-	app: {
-		head: {
-			title: 'jojo-admin'
-		}
-	}
+	]
 });

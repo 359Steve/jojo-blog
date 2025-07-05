@@ -1,4 +1,8 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+useHead({
+	title: 'jojo-admin'
+});
+</script>
 
 <template>
 	<div class="relative h-full w-full">

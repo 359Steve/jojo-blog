@@ -31,3 +31,40 @@ body {
 .dark::view-transition-old(root) {
 	z-index: 9999;
 }
+
+@keyframes grow {
+	0% {
+		stroke-dasharray: 0 350px;
+		opacity: 0;
+	}
+
+	10% {
+		opacity: 1;
+	}
+
+	40% {
+		stroke-dasharray: 350px 0;
+	}
+
+	100% {
+		stroke-dasharray: 350px 0;
+		opacity: 1;
+	}
+}
+
+@keyframes shrink {
+	0% {
+		stroke-dasharray: 350px 0;
+		opacity: 1;
+	}
+
+	99% {
+		stroke-dasharray: 0 350px;
+		opacity: 1;
+	}
+
+	100% {
+		stroke-dasharray: 0 350px;
+		opacity: 0;
+	}
+}
