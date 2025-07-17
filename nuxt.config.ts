@@ -9,7 +9,6 @@ const meta: Meta[] = [
 
 export default defineNuxtConfig({
 	devServer: {
-		host: '0.0.0.0',
 		port: 5173
 	},
 	extends: ['./admin'],

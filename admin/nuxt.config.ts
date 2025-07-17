@@ -1,3 +1,5 @@
+import sbgLoader from 'vite-svg-loader';
+
 export default defineNuxtConfig({
 	typescript: {
 		strict: true
@@ -9,5 +11,9 @@ export default defineNuxtConfig({
 			path: './components',
 			pathPrefix: false
 		}
-	]
+	],
+	plugins: ['~/admin/plugins/motion.client.ts'],
+	vite: {
+		plugins: [sbgLoader()]
+	}
 });

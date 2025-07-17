@@ -1,17 +1,5 @@
 <script lang="ts" setup>
 import BiliIcon from './utils/bilibili';
-const queryData = async () => {
-	const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>('/user-login', {
-		body: {
-			user_name: 'jojo',
-			password: '123456'
-		}
-	});
-
-	if (res.code === 200) {
-		useUserState().setToken(res.data.accessToken);
-	}
-};
 </script>
 
 <template>
@@ -27,7 +15,7 @@ const queryData = async () => {
 				rel="noopener noreferrer" class="mr-4 flex items-center gap-2">
 				<BiliIcon icon-class="hidden sm:block" text-class="hidden sm:block text-xs"></BiliIcon>
 			</a>
-			<span class="text-xs" @click="queryData">Copyright © 2023 Josef Joestar</span>
+			<span class="text-xs">Copyright © 2023 Josef Joestar</span>
 		</div>
 	</div>
 </template>

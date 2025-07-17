@@ -44,7 +44,9 @@ export default {
 	theme: {
 		extend: {
 			screens: {
-				'mobile-pad': '480px'
+				'mobile-pad': '480px',
+				'admin-lg': '1180px',
+				'admin-md': '968px'
 			},
 			borderRadius: {
 				base: '6px'
@@ -56,7 +58,8 @@ export default {
 				hh: '8rem'
 			},
 			fontFamily: {
-				ww: '华文新魏'
+				ww: '华文新魏',
+				cmm: 'Consolas,Monaco,monospace'
 			},
 			backgroundColor: {
 				'half-gray': 'rgb(107 114 128 / 0.5)',

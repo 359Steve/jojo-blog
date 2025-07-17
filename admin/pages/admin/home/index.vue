@@ -1,7 +1,12 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const visible = ref(true);
+</script>
 
 <template>
-	<div>后台首页</div>
+	<button @click="visible = !visible">切换</button>
+	<Motion v-if="visible">
+		<div class="box">Hello Motion</div>
+	</Motion>
 </template>
 
 <style lang="scss" scoped></style>
