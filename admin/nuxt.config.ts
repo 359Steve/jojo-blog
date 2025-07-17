@@ -12,7 +12,6 @@ export default defineNuxtConfig({
 			pathPrefix: false
 		}
 	],
-	plugins: ['~/admin/plugins/motion.client.ts'],
 	vite: {
 		plugins: [sbgLoader()]
 	}

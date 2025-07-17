@@ -4,7 +4,7 @@ const visible = ref(true);
 
 <template>
 	<button @click="visible = !visible">切换</button>
-	<Motion v-if="visible">
+	<Motion>
 		<div class="box">Hello Motion</div>
 	</Motion>
 </template>

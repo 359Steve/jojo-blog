@@ -40,22 +40,22 @@ const changeTheme = (value: boolean | string | number): void => {
 
 <template>
 	<div class="select-none">
-		<img :src="bg" class="admin-md:block fixed z-[-1] hidden h-full w-[80%]" />
+		<img :src="bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
 		<div class="absolute right-5 top-3 flex">
 			<!-- 主题 -->
 			<ElSwitch v-model="selectTheme" inline-prompt :active-icon="DayIcon" :inactive-icon="DarkIcon"
 				@change="changeTheme" />
 		</div>
 		<div
-			class="admin-md:grid-cols-2 admin-lg:gap-[18rem] grid h-[100vh] w-full max-w-full grid-cols-1 gap-[9rem] px-8 py-0">
-			<div class="admin-md:flex hidden items-center justify-end">
-				<Illustration class="admin-lg:w-[500px] w-[360px]"></Illustration>
+			class="grid h-[100vh] w-full max-w-full grid-cols-1 gap-[9rem] px-8 py-0 admin-md:grid-cols-2 admin-lg:gap-[18rem]">
+			<div class="hidden items-center justify-end admin-md:flex">
+				<Illustration class="w-[360px] admin-lg:w-[500px]"></Illustration>
 			</div>
-			<div class="admin-md:justify-normal flex items-center justify-center overflow-hidden text-center">
-				<div class="admin-lg:w-[360px] w-[290px]">
+			<div class="flex items-center justify-center overflow-hidden text-center admin-md:justify-normal">
+				<div class="w-[290px] admin-lg:w-[360px]">
 					<Avatar class="h-[80px] w-full" />
 					<Motion>
-						<h2 class="font-cmm mx-0 my-[8px] text-[2.24rem] font-bold text-[#999]">JOJOADMIN</h2>
+						<h2 class="mx-0 my-[8px] font-cmm text-[2.24rem] font-bold text-[#999]">JOJOADMIN</h2>
 					</Motion>
 
 					<ElForm ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
