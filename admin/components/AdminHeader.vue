@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div class="w-full bg-[pink] p-4"></div>
+	<div class="flex h-full w-full items-center justify-center bg-white">header</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="postcss" scoped></style>

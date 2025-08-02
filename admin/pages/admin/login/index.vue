@@ -27,7 +27,7 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 				useUserState().setToken(res.data.accessToken);
 
 				// 跳转到首页
-				navigateTo('/admin/home');
+				navigateTo('/admin/');
 			}
 		}
 	});

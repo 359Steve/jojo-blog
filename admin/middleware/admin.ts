@@ -4,10 +4,6 @@ export default defineNuxtRouteMiddleware(to => {
 	const path = to.path;
 	const cookies = useUserState().getToken();
 
-	if (path === '/admin') {
-		return navigateTo('/admin/home');
-	}
-
 	if (!whiteRoutes.includes(path)) {
 		if (!cookies) return navigateTo('/admin/login');
 	}
