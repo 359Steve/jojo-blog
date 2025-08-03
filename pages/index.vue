@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { Timeline } from '~/types/com-types';
-
 const myText = ref<string>('');
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();

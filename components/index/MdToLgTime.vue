@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { Timeline } from '~/types/com-types';
-
 const { timelineData = [] } = defineProps<{
 	timelineData: Timeline[];
 }>();

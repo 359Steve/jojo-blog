@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { detectDeviceDetail } from '~/composables/public';
-
-const isMobile = ref<'mobile' | 'tablet' | 'desktop'>();
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
+const jojoMain = useTemplateRef('jojoMain');
+const windWidth = ref<number>(0);
 
 const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 	selectTheme.value = !selectTheme.value;
@@ -43,16 +42,23 @@ const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 };
 
 onMounted(() => {
-	const { type } = detectDeviceDetail();
-	isMobile.value = type;
+	nextTick(() => {
+		if (jojoMain.value) {
+			useResizeObserver(jojoMain, entries => {
+				const { contentRect } = entries[0];
+				const { width } = contentRect;
+				windWidth.value = width;
+			});
+		}
+	});
 });
 </script>
 
 <template>
-	<div class="relative h-full w-full">
+	<div ref="jojoMain" class="relative h-full w-full">
 		<ClientOnly>
-			<RecordBackground v-if="['desktop', 'tablet'].includes(isMobile!)"
-				class-name="w-full h-[100dvh] fixed inset-0 z-[-1]"></RecordBackground>
+			<RecordBackground v-if="windWidth > 640" class-name="w-full h-[100dvh] fixed inset-0 z-[-1]">
+			</RecordBackground>
 			<BgcanvasBranchCanvas v-else></BgcanvasBranchCanvas>
 		</ClientOnly>
 		<ElBacktop :right="50" :bottom="100">

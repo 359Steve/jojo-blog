@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { RecordButtonList } from '~/types/com-types';
-
 const recordButtonList = reactive<RecordButtonList[]>([
 	{
 		id: 1,

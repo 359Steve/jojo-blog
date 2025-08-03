@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { RecordSummary, Summary } from '~/types/com-types';
-
 const recordText = ref<HTMLDivElement[] | null>();
 const summaryList = reactive<RecordSummary[]>([
 	{

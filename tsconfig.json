@@ -7,10 +7,18 @@
 		"experimentalDecorators": true,
 		"module": "esnext",
 		"paths": {
-			"~/*": ["./*"],
-			"@/*": ["./*"]
+			"~/*": [
+				"./*"
+			],
+			"@/*": [
+				"./*"
+			]
 		},
-		"types": ["@nuxt/types", "@types/node", "@vue/runtime-core"],
+		"types": [
+			"@nuxt/types",
+			"@types/node",
+			"@vue/runtime-core"
+		],
 		"strict": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": false,
