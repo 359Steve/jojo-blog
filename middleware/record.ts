@@ -1,10 +1,10 @@
-export default defineNuxtRouteMiddleware((to) => {
-	const path = to.path
+export default defineNuxtRouteMiddleware(to => {
+	const path = to.path;
 
 	// 精准匹配 '/record' 或 '/record/'
-	if (path === '/record' || path === '/record/') {
-		return navigateTo('/record/home')
+	if (path.replace(/\/$/, '') === '/record') {
+		return navigateTo('/record/home');
 	}
 
-	return true
-})
+	return true;
+});
