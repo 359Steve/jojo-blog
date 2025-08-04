@@ -4,5 +4,6 @@ export default {
 		title: '标签管理',
 		icon: 'tabler:label-off',
 		rank: 1
-	}
+	},
+	children: []
 } satisfies RouteConfigsTable;

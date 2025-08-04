@@ -5,5 +5,6 @@ export default {
 		icon: 'mdi:home',
 		title: '首页',
 		rank: 0
-	}
+	},
+	children: []
 } satisfies RouteConfigsTable;
