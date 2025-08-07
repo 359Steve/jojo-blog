@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus';
 import { loginRules } from './utils/rule';
-import { Avatar, DarkIcon, DayIcon, Illustration, bg } from './utils/static';
 
 const ruleForm = reactive({
 	username: 'admin',
@@ -11,7 +10,6 @@ const ruleForm = reactive({
 const ruleFormRef = ref<FormInstance>();
 const disabled = ref<boolean>(false);
 const loading = ref<boolean>(false);
-const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
 
 const onLogin = (formEl: FormInstance | undefined): void => {
 	formEl?.validate(async valid => {
@@ -32,19 +30,14 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 		}
 	});
 };
-
-const changeTheme = (value: boolean | string | number): void => {
-	useJojoColorMode().setDarkMode(value ? 'light' : 'dark');
-};
 </script>
 
 <template>
 	<div class="select-none">
-		<img :src="bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
+		<img :src="getIcons().bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
 		<div class="absolute right-5 top-3 flex">
 			<!-- 主题 -->
-			<ElSwitch v-model="selectTheme" inline-prompt :active-icon="DayIcon" :inactive-icon="DarkIcon"
-				@change="changeTheme" />
+			<LaySwitch></LaySwitch>
 		</div>
 		<div
 			class="grid h-[100vh] w-full max-w-full grid-cols-1 gap-[9rem] px-8 py-0 admin-md:grid-cols-2 admin-lg:gap-[18rem]">

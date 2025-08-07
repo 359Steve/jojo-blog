@@ -3,6 +3,7 @@
 <template>
 	<div class="h-fit w-full bg-white">
 		<LayNavbar></LayNavbar>
+		<LayTag></LayTag>
 	</div>
 </template>
 
