@@ -1,29 +1,30 @@
 <script lang="ts" setup>
 const route = useRoute();
-const isCollapse = ref<boolean>(false);
 const theme = useJojoColorMode().getDarkMode().preference;
 const menuData = ref<RouteConfigsTable[]>(getRouterConfig());
+const leftIsCollapse = defineModel<boolean>('leftIsCollapse');
+
 const activeMenu = computed(() => route.path);
 
-const toggleSideBar = () => {
-	isCollapse.value = !isCollapse.value;
+const toggleSideBar = (): void => {
+	leftIsCollapse.value = !leftIsCollapse.value;
 };
 </script>
 
 <template>
 	<ElAside
-		class="relative h-full !overflow-x-hidden border-r-[1px] border-solid border-r-[#0505050f] bg-white transition-[width_0.3s]"
-		:class="[isCollapse ? '!w-[54px]' : '!w-[210px]']">
-		<LaySidebarLogo :is-collapse="isCollapse" />
+		class="relative h-full !overflow-x-hidden border-r-[1px] border-solid border-r-[#0505050f] bg-white transition-[width_0.5s]"
+		:class="[leftIsCollapse ? '!w-[54px]' : '!w-[210px]']">
+		<LaySidebarLogo :is-collapse="leftIsCollapse" />
 		<ElScrollbar class="!h-[calc(100%-88px)] w-full !min-w-[54px] !overflow-x-hidden">
-			<ElMenu :class="[isCollapse ? '!w-[54px]' : '']" unique-opened mode="vertical" :router="true"
-				popper-class="pure-scrollbar" :collapse="isCollapse" :collapse-transition="false" :popper-effect="theme"
-				:default-active="`${activeMenu}`">
+			<ElMenu :class="[leftIsCollapse ? '!w-[54px]' : '']" unique-opened mode="vertical" :router="true"
+				popper-class="pure-scrollbar" :collapse="leftIsCollapse" :collapse-transition="false"
+				:popper-effect="theme" :default-active="`${activeMenu}`">
 				<LaySidebarItem v-for="routes in menuData" :key="routes.path" :item="routes" :base-path="routes.path"
-					:is-collapse="isCollapse" />
+					:is-collapse="leftIsCollapse!" />
 			</ElMenu>
 		</ElScrollbar>
-		<LaySidebarLeftCollapse :is-collapse="isCollapse" @toggle-side-bar="toggleSideBar" />
+		<LaySidebarLeftCollapse :is-collapse="leftIsCollapse!" @toggle-side-bar="toggleSideBar" />
 	</ElAside>
 </template>
 
@@ -37,15 +38,15 @@ const toggleSideBar = () => {
 }
 
 :deep(.el-menu-item) {
-	@apply h-[50px] hover:bg-transparent;
+	@apply h-[50px] text-[#606266] !transition-none hover:bg-transparent;
 }
 
 :deep(.el-menu-item.is-active) {
-	@apply bg-[#409EFF] !text-black;
+	@apply relative !bg-transparent !text-white;
 }
 
-.active-menu {
-	@apply transition-colors duration-300;
+:deep(.el-menu-item.is-active::before) {
+	@apply absolute inset-[4px_8px] z-[1] rounded-[3px] bg-[#409EFF] content-[''];
 }
 
 :deep(.el-sub-menu__title) {
@@ -57,6 +58,21 @@ const toggleSideBar = () => {
 }
 
 :deep(.el-sub-menu.is-active .el-sub-menu__title) {
-	@apply !text-black hover:bg-transparent;
+	@apply !text-black;
+}
+
+:deep(.el-menu-item:hover),
+:deep(.el-sub-menu__title:hover) {
+	@apply !bg-transparent !text-black;
+}
+
+:deep(.el-menu-item.is-active),
+:deep(.el-sub-menu.is-active),
+:deep(.el-sub-menu__title.is-active) {
+	@apply !bg-transparent !text-white;
+}
+
+:deep(.el-sub-menu.is-active .el-sub-menu__title.el-tooltip__trigger::before) {
+	@apply absolute inset-y-0 left-[-1px] h-full w-[2px] bg-[#409EFF] content-[''];
 }
 </style>
