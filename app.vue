@@ -13,6 +13,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	window.removeEventListener('scroll', handleScroll);
+	// 还原数据
+	useAdminMenu().reset();
 });
 </script>
 

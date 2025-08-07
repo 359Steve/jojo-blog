@@ -1,27 +1,31 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-export const useJojoColorMode = defineStore('useJojoColorMode', () => {
-	interface ColorModeInstance {
-		preference: 'dark' | 'light'
-		value: string
-		unknown: boolean
-		forced: boolean
-	}
-	const darkMode = ref<ColorModeInstance>(useColorMode() as ColorModeInstance)
+export const useJojoColorMode = defineStore(
+	'useJojoColorMode',
+	() => {
+		interface ColorModeInstance {
+			preference: 'dark' | 'light';
+			value: string;
+			unknown: boolean;
+			forced: boolean;
+		}
+		const darkMode = ref<ColorModeInstance>(useColorMode() as ColorModeInstance);
 
-	const getDarkMode = () => {
-		return darkMode.value
-	}
+		const getDarkMode = () => {
+			return darkMode.value;
+		};
 
-	const setDarkMode = (type: 'dark' | 'light') => {
-		darkMode.value.preference = type
-	}
+		const setDarkMode = (type: 'dark' | 'light') => {
+			darkMode.value.preference = type;
+		};
 
-	return {
-		darkMode,
-		getDarkMode,
-		setDarkMode
+		return {
+			darkMode,
+			getDarkMode,
+			setDarkMode
+		};
+	},
+	{
+		persist: true
 	}
-}, {
-	persist: true
-})
+);
