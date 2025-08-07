@@ -101,6 +101,11 @@ declare global {
 		/** 子路由配置项 */
 		children?: Array<RouteChildrenConfigsTable>;
 	}
+
+	/** 面包屑导航菜单类型 */
+	declare type RouteChildrenConfigsTable<T extends keyof RouteConfigsTable> = {
+		[P in T]: RouteConfigsTable[P];
+	};
 }
 
 export { };

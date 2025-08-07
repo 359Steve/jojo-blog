@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+const { leftIsCollapse, drawerCollapse } = storeToRefs(useAdminMenu());
 const appWrapperRef = useTemplateRef('appWrapperRef');
-const leftIsCollapse = ref<boolean>(false);
 
 onMounted(() => {
 	nextTick(() => {
@@ -11,10 +11,13 @@ onMounted(() => {
 					leftIsCollapse.value = true;
 				} else if (width > 760 && width <= 990) {
 					leftIsCollapse.value = true;
+					drawerCollapse.value = false;
 				} else if (width > 990) {
 					leftIsCollapse.value = false;
+					drawerCollapse.value = false;
 				} else {
 					leftIsCollapse.value = false;
+					drawerCollapse.value = false;
 				}
 			});
 		}
@@ -27,7 +30,7 @@ onMounted(() => {
 		<ElContainer class="h-full w-full">
 			<AdminAside v-model:left-is-collapse="leftIsCollapse" class="hidden sm:block" />
 			<ElContainer>
-				<ElHeader>
+				<ElHeader class="!h-fit transition-[width_0.3s]">
 					<AdminHeader />
 				</ElHeader>
 				<ElMain>

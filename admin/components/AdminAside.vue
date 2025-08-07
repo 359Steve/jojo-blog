@@ -1,10 +1,5 @@
 <script lang="ts" setup>
-const route = useRoute();
-const theme = useJojoColorMode().getDarkMode().preference;
-const menuData = ref<RouteConfigsTable[]>(getRouterConfig());
 const leftIsCollapse = defineModel<boolean>('leftIsCollapse');
-
-const activeMenu = computed(() => route.path);
 
 const toggleSideBar = (): void => {
 	leftIsCollapse.value = !leftIsCollapse.value;
@@ -12,18 +7,14 @@ const toggleSideBar = (): void => {
 </script>
 
 <template>
-	<ElAside
+	<Teleport to="body">
+		<LaySideDrawer></LaySideDrawer>
+	</Teleport>
+	<ElAside v-bind="$attrs"
 		class="relative h-full !overflow-x-hidden border-r-[1px] border-solid border-r-[#0505050f] bg-white transition-[width_0.5s]"
 		:class="[leftIsCollapse ? '!w-[54px]' : '!w-[210px]']">
-		<LaySidebarLogo :is-collapse="leftIsCollapse" />
-		<ElScrollbar class="!h-[calc(100%-88px)] w-full !min-w-[54px] !overflow-x-hidden">
-			<ElMenu :class="[leftIsCollapse ? '!w-[54px]' : '']" unique-opened mode="vertical" :router="true"
-				popper-class="pure-scrollbar" :collapse="leftIsCollapse" :collapse-transition="false"
-				:popper-effect="theme" :default-active="`${activeMenu}`">
-				<LaySidebarItem v-for="routes in menuData" :key="routes.path" :item="routes" :base-path="routes.path"
-					:is-collapse="leftIsCollapse!" />
-			</ElMenu>
-		</ElScrollbar>
+		<LaySidebarLogo />
+		<LaySideMenuScroll :left-is-collapse="leftIsCollapse!" />
 		<LaySidebarLeftCollapse :is-collapse="leftIsCollapse!" @toggle-side-bar="toggleSideBar" />
 	</ElAside>
 </template>

@@ -45,8 +45,7 @@ onMounted(() => {
 	nextTick(() => {
 		if (jojoMain.value) {
 			useResizeObserver(jojoMain, entries => {
-				const { contentRect } = entries[0];
-				const { width } = contentRect;
+				const [{ inlineSize: width, blockSize: _height }] = entries[0].borderBoxSize;
 				windWidth.value = width;
 			});
 		}

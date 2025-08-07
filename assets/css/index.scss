@@ -54,6 +54,26 @@ body {
 	}
 }
 
+.el-drawer__body {
+	padding: 0 !important;
+}
+
+/* breadcrumb transition */
+.breadcrumb-enter-active {
+	transition: all 0.4s;
+}
+
+.breadcrumb-leave-active {
+	position: absolute;
+	transition: all 0.3s;
+}
+
+.breadcrumb-enter-from,
+.breadcrumb-leave-active {
+	opacity: 0;
+	transform: translateX(20px);
+}
+
 @keyframes grow {
 	0% {
 		stroke-dasharray: 0 350px;
