@@ -107,7 +107,7 @@ declare global {
 		[P in T]: RouteConfigsTable[P];
 	};
 
-	type tagsViewsType = {
+	declare type tagsViewsType = {
 		icon: string | FunctionalComponent;
 		text: string;
 		divided: boolean;
