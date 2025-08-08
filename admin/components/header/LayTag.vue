@@ -166,7 +166,7 @@ watch(
 }
 
 :deep(.el-scrollbar__view) {
-	@apply flex items-center;
+	@apply flex items-center pr-1;
 }
 
 :deep(.el-dropdown-menu__item--divided) {
