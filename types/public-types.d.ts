@@ -106,6 +106,14 @@ declare global {
 	declare type RouteChildrenConfigsTable<T extends keyof RouteConfigsTable> = {
 		[P in T]: RouteConfigsTable[P];
 	};
+
+	type tagsViewsType = {
+		icon: string | FunctionalComponent;
+		text: string;
+		divided: boolean;
+		disabled: boolean;
+		show: boolean;
+	};
 }
 
 export { };

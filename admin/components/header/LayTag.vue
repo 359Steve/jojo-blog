@@ -1,27 +1,60 @@
 <script lang="ts" setup>
 const menuList = getRouterConfig();
 const route = useRoute();
-const tagRefs = useTemplateRef('tagRefs');
-const currentTagWidth = ref(0);
-const currentTagLeft = ref(0);
+const dropCollapse = ref(false);
+const tagsViews = reactive<Array<tagsViewsType>>([
+	{
+		icon: 'mdi:restore',
+		text: '重新加载',
+		divided: false,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:close-line',
+		text: '关闭当前标签页',
+		divided: false,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:text-direction-r',
+		text: '关闭左侧标签页',
+		divided: true,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:text-direction-l',
+		text: '关闭右侧标签页',
+		divided: false,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:text-spacing',
+		text: '关闭其他标签页',
+		divided: true,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:align-vertically',
+		text: '关闭全部标签页',
+		divided: false,
+		disabled: false,
+		show: true
+	},
+	{
+		icon: 'ri:fullscreen-exit-line',
+		text: '内容区全屏',
+		divided: true,
+		disabled: false,
+		show: true
+	}
+]);
 
-// 计算当前tag的宽度
-const getTagWidth = (): void => {
-	nextTick(() => {
-		currentTagLeft.value = 0;
-		if (tagRefs.value?.length) {
-			for (const item of tagRefs.value) {
-				if (item!.$el.classList.contains('is-active')) {
-					currentTagWidth.value = item!.$el.offsetWidth;
-					return;
-				}
-				currentTagLeft.value += item!.$el.offsetWidth;
-			}
-		}
-	});
-};
-
-const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>, id: number): void => {
+const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	// 判断当前路由是否等于关闭的tag
 	if (route.path.replace(/\/$/, '') === item.path.replace(/\/$/, '')) {
 		const currentIndex = useAdminMenu()
@@ -34,22 +67,6 @@ const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>, id: number):
 	}
 
 	useAdminMenu().closeTag(item.path);
-
-	// 计算当前tag的宽度
-	const currentTagIndex = tagRefs.value?.findIndex(tag => tag?.$el.classList.contains('is-active')) ?? 0;
-	const currentActiveTag = tagRefs.value![currentTagIndex];
-	const currentTag = tagRefs.value![id];
-	if (currentTagIndex === id) {
-		// 说明是关闭的是当前tag
-		const preTag = tagRefs.value![currentTagIndex - 1];
-		currentTagWidth.value = preTag?.$el.offsetWidth;
-		currentTagLeft.value -= currentActiveTag?.$el.offsetWidth;
-	} else if (currentTagIndex > id) {
-		// 说明是关闭的是前面的tag
-		setTimeout(() => {
-			currentTagLeft.value -= currentTag?.$el.offsetWidth;
-		}, 240);
-	}
 };
 
 const getPath = (path: string, list: RouteConfigsTable[]) => {
@@ -69,32 +86,45 @@ const getPath = (path: string, list: RouteConfigsTable[]) => {
 
 getPath(route.path, menuList);
 
+const onDropdownVisibleChange = (visible: boolean): void => {
+	dropCollapse.value = visible;
+};
+
 watch(
 	() => route.path,
 	() => {
 		getPath(route.path, menuList);
-		getTagWidth();
 	}
 );
-
-onMounted(() => {
-	getTagWidth();
-});
 </script>
 
 <template>
-	<div class="relative flex w-full items-center shadow-sm shadow-[rgba(0,21,41,0.08)]">
-		<ElTag v-for="(item, index) in useAdminMenu().getTagMenu()" ref="tagRefs" :key="item.path"
-			:closable="item.path !== '/admin'" effect="plain"
-			class="!flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
-			:class="[route.path === item.path ? 'is-active' : '']" @close="closeTag(item, index)"
-			@click="navigateTo({ path: item.path })">
-			<span>{{ item.name }}</span>
-		</ElTag>
-		<!--
- <div class="absolute bottom-0 h-[2px] bg-[#409EFF] transition-all"
-			:style="{ left: `${currentTagLeft}px`, width: `${currentTagWidth}px` }"></div>
--->
+	<div class="relative flex w-full items-center justify-between shadow-sm shadow-[rgba(0,21,41,0.08)]">
+		<ElScrollbar class="flex h-fit w-[calc(100%-50px)]">
+			<ElTag v-for="item in useAdminMenu().getTagMenu()" :key="item.path" :closable="item.path !== '/admin'"
+				effect="plain"
+				class="relative !flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
+				:class="[route.path === item.path ? 'is-active' : '']" @close="closeTag(item)"
+				@click="navigateTo({ path: item.path })">
+				<span>{{ item.name }}</span>
+			</ElTag>
+		</ElScrollbar>
+
+		<ElDropdown trigger="click" placement="bottom-end" @visible-change="onDropdownVisibleChange">
+			<div class="h-full px-3">
+				<Icon :icon="dropCollapse ? 'ri:arrow-up-s-line' : 'ri:arrow-down-s-line'" width="20" height="20">
+				</Icon>
+			</div>
+			<template #dropdown>
+				<ElDropdownMenu class="!p-0">
+					<ElDropdownItem v-for="(item, key) in tagsViews" :key="key" :command="{ key, item }"
+						:divided="item.divided" :disabled="item.disabled">
+						<Icon :icon="item.icon" width="16" height="16" class="mr-[5px]" />
+						<span class="text-[14px]">{{ item.text }}</span>
+					</ElDropdownItem>
+				</ElDropdownMenu>
+			</template>
+		</ElDropdown>
 	</div>
 </template>
 
@@ -104,7 +134,15 @@ onMounted(() => {
 }
 
 .is-active::after {
-	@apply absolute bottom-0 left-0 h-[2px] w-full bg-[#409EFF] content-[''];
+	@apply absolute bottom-0 left-0 h-[2px] !w-full bg-[#409EFF] content-[''];
+}
+
+:deep(.el-tag::after) {
+	@apply absolute bottom-0 left-0 h-[2px] w-0 bg-[#409EFF] transition-[width_0.3s_ease] content-[''];
+}
+
+:deep(.el-tag:hover::after) {
+	@apply w-full;
 }
 
 :deep(.el-tag__close) {
@@ -125,5 +163,22 @@ onMounted(() => {
 
 :deep(.el-tag .el-tag__close:hover) {
 	@apply bg-[#409EFF];
+}
+
+:deep(.el-scrollbar__view) {
+	@apply flex items-center;
+}
+
+:deep(.el-dropdown-menu__item--divided) {
+	@apply !m-0;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+	@apply !bg-[#ebf5ff] !text-[#409EFF];
+}
+
+:deep(.el-dropdown-menu__item:not(.is-disabled):hover),
+:deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
+	@apply !bg-[#ebf5ff] !text-[#409EFF];
 }
 </style>
