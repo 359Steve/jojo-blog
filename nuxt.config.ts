@@ -8,9 +8,6 @@ const meta: Meta[] = [
 ];
 
 export default defineNuxtConfig({
-	devServer: {
-		port: 5173
-	},
 	extends: ['./admin'],
 	components: [
 		{

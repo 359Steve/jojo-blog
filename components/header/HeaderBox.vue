@@ -48,10 +48,11 @@ onMounted(() => {
 					@click="$emit('changeTheme', $event)">
 					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black"></Icon>
 				</div>
-				<a class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
-					target="_blank" rel="noopener noreferrer" href="http://localhost:5173/admin">
+				<NuxtLink
+					class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
+					target="_blank" rel="noopener noreferrer" to="/admin">
 					<Icon icon="ri:settings-5-fill" class="dark:text-black"></Icon>
-				</a>
+				</NuxtLink>
 				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:hidden"
 					@click="drawer = !drawer">
 					<Icon icon="ri:menu-fold-4-fill" />
