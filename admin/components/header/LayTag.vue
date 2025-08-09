@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { CSSProperties } from 'vue';
+
 const menuList = getRouterConfig();
 const route = useRoute();
 const dropCollapse = ref(false);
@@ -53,6 +55,22 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	}
 ]);
+const visible = ref(false);
+const contextmenuRef = useTemplateRef('contextmenuRef');
+const buttonLeft = ref(0);
+const buttonTop = ref(0);
+
+const changeTagsViews = (newPath: string): void => {
+	const tagMenuList = useAdminMenu().getTagMenu();
+	const currentIndex = useAdminMenu()
+		.getTagMenu()
+		.findIndex(item => item.path === newPath);
+	tagsViews[1].disabled = currentIndex === 0;
+	tagsViews[2].disabled = currentIndex <= 1;
+	tagsViews[3].disabled = currentIndex >= tagMenuList.length - 1;
+	tagsViews[4].disabled = tagMenuList.length <= 2;
+	tagsViews[5].disabled = tagMenuList.length <= 1;
+};
 
 const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	// 判断当前路由是否等于关闭的tag
@@ -85,32 +103,66 @@ const getPath = (path: string, list: RouteConfigsTable[]) => {
 };
 
 getPath(route.path, menuList);
+changeTagsViews(route.path);
 
-const onDropdownVisibleChange = (visible: boolean): void => {
-	dropCollapse.value = visible;
+const handleVisible = (value: boolean) => {
+	dropCollapse.value = value;
 };
+
+// 关闭菜单
+const closeMenu = () => {
+	visible.value = false;
+};
+
+// 打开菜单
+const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEvent) => {
+	changeTagsViews(item.path);
+	buttonLeft.value = e.clientX - 54;
+	buttonTop.value = e.clientY - 40;
+	visible.value = true;
+};
+
+const getContextMenuStyle = computed((): CSSProperties => {
+	return { left: `${buttonLeft.value}px`, top: `${buttonTop.value}px` };
+});
 
 watch(
 	() => route.path,
-	() => {
+	newPath => {
 		getPath(route.path, menuList);
+		changeTagsViews(newPath);
 	}
 );
+
+onMounted(() => {
+	onClickOutside(
+		contextmenuRef,
+		() => {
+			closeMenu();
+			changeTagsViews(route.path);
+		},
+		{
+			detectIframe: true
+		}
+	);
+});
 </script>
 
 <template>
 	<div class="relative flex w-full items-center justify-between shadow-sm shadow-[rgba(0,21,41,0.08)]">
 		<ElScrollbar class="flex h-fit w-[calc(100%-50px)]">
-			<ElTag v-for="item in useAdminMenu().getTagMenu()" :key="item.path" :closable="item.path !== '/admin'"
-				effect="plain"
-				class="relative !flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
-				:class="[route.path === item.path ? 'is-active' : '']" @close="closeTag(item)"
-				@click="navigateTo({ path: item.path })">
-				<span>{{ item.name }}</span>
-			</ElTag>
+			<div v-for="item in useAdminMenu().getTagMenu()" :key="item.path"
+				@contextmenu.prevent="openMenu(item, $event)">
+				<ElTag :closable="item.path !== '/admin'" effect="plain"
+					class="relative !flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
+					:class="[route.path === item.path ? 'is-active' : '']" @close="closeTag(item)"
+					@click="navigateTo({ path: item.path })">
+					<span>{{ item.name }}</span>
+				</ElTag>
+			</div>
 		</ElScrollbar>
 
-		<ElDropdown trigger="click" placement="bottom-end" @visible-change="onDropdownVisibleChange">
+		<ElDropdown trigger="click" placement="bottom-end" @visible-change="handleVisible">
 			<div class="h-full px-3">
 				<Icon :icon="dropCollapse ? 'ri:arrow-up-s-line' : 'ri:arrow-down-s-line'" width="20" height="20">
 				</Icon>
@@ -125,6 +177,21 @@ watch(
 				</ElDropdownMenu>
 			</template>
 		</ElDropdown>
+
+		<!-- 右键菜单按钮 -->
+		<Transition name="el-zoom-in-top">
+			<ul v-show="visible" ref="contextmenuRef" :style="getContextMenuStyle"
+				class="absolute z-30 m-0 list-none whitespace-nowrap rounded-[4px] bg-white py-[5px] text-[13px] font-normal text-[#303133] shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none">
+				<div v-for="(item, key) in tagsViews.slice(0, 6).filter(item => !item.disabled)" :key="key"
+					class="flex items-center">
+					<li v-if="item.show"
+						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-[#409EFF]">
+						<Icon :icon="item.icon" width="16" height="16" class="mr-2 block" />
+						{{ item.text }}
+					</li>
+				</div>
+			</ul>
+		</Transition>
 	</div>
 </template>
 
@@ -173,12 +240,16 @@ watch(
 	@apply !m-0;
 }
 
-:deep(.el-dropdown-menu__item:hover) {
+:deep(.el-dropdown-menu__item:not(.is-disabled):hover) {
 	@apply !bg-[#ebf5ff] !text-[#409EFF];
 }
 
 :deep(.el-dropdown-menu__item:not(.is-disabled):hover),
 :deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
 	@apply !bg-[#ebf5ff] !text-[#409EFF];
+}
+
+:deep(.el-dropdown-menu__item.is-disabled) {
+	@apply !text-[#c0c4cc];
 }
 </style>

@@ -30,7 +30,12 @@ export default defineNuxtConfig({
 	imports: {
 		dirs: ['composables', 'composables/*/*.{ts,js,mjs,mts}', 'composables/**/*.{ts,js,mjs,mts}']
 	},
-	plugins: ['~/plugins/md-editor.ts', '~/plugins/vue-starport.ts', '~/plugins/iconify.ts'],
+	plugins: [
+		'~/plugins/md-editor.ts',
+		'~/plugins/vue-starport.ts',
+		'~/plugins/iconify.ts',
+		'~/plugins/preventDefault.client.ts'
+	],
 	pages: true,
 	typescript: {
 		strict: true,
