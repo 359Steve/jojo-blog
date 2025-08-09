@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue';
 
 const menuList = getRouterConfig();
 const route = useRoute();
+const router = useRouter();
 const dropCollapse = ref(false);
 const tagsViews = reactive<Array<tagsViewsType>>([
 	{
@@ -59,6 +60,7 @@ const visible = ref(false);
 const contextmenuRef = useTemplateRef('contextmenuRef');
 const buttonLeft = ref(0);
 const buttonTop = ref(0);
+const contextmenuItem = ref<RouteChildrenConfigsTable<'path' | 'name'> | null>(null);
 
 const changeTagsViews = (newPath: string): void => {
 	const tagMenuList = useAdminMenu().getTagMenu();
@@ -85,6 +87,33 @@ const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	}
 
 	useAdminMenu().closeTag(item.path);
+};
+
+const closeTagLeft = (currentTagIndex: number): void => {
+	useAdminMenu()
+		.getTagMenu()
+		.slice(1, currentTagIndex)
+		.forEach(item => {
+			closeTag(item);
+		});
+};
+
+const closeTagRight = (currentTagIndex: number): void => {
+	useAdminMenu()
+		.getTagMenu()
+		.slice(currentTagIndex + 1, useAdminMenu().getTagMenu().length)
+		.forEach(item => {
+			closeTag(item);
+		});
+};
+
+const closeTagAll = (currentTagIndex: number): void => {
+	useAdminMenu()
+		.getTagMenu()
+		.filter((_, index) => index !== 0 && index !== currentTagIndex)
+		.forEach(item => {
+			closeTag(item);
+		});
 };
 
 const getPath = (path: string, list: RouteConfigsTable[]) => {
@@ -117,9 +146,77 @@ const closeMenu = () => {
 // 打开菜单
 const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEvent) => {
 	changeTagsViews(item.path);
+	contextmenuItem.value = item;
 	buttonLeft.value = e.clientX - 54;
 	buttonTop.value = e.clientY - 40;
 	visible.value = true;
+};
+
+// 点击下拉菜单项
+const handleCommand = (value: { item: tagsViewsType; key: number }): void => {
+	const { key } = value;
+	const tagList = useAdminMenu().getTagMenu();
+	const currentTag = tagList.find(item => item.path === route.path);
+	const currentIndex = tagList.findIndex(item => item.path === route.path);
+	switch (key) {
+		case 0:
+			router.replace({ path: route.fullPath });
+			break;
+		case 1:
+			closeTag(currentTag!);
+			break;
+		case 2:
+			closeTagLeft(currentIndex);
+			break;
+		case 3:
+			closeTagRight(currentIndex);
+			break;
+		case 4:
+			closeTagAll(currentIndex);
+			break;
+		case 5:
+			useAdminMenu()
+				.getTagMenu()
+				.slice(1, useAdminMenu().getTagMenu().length)
+				.forEach(item => {
+					closeTag(item);
+				});
+			break;
+		default:
+			break;
+	}
+};
+
+const contextmenuClose = (key: number): void => {
+	const tagList = useAdminMenu().getTagMenu();
+	const currentIndex = tagList.findIndex(item => item.path === contextmenuItem.value?.path);
+	switch (key) {
+		case 0:
+			router.replace({ path: contextmenuItem.value?.path });
+			break;
+		case 1:
+			closeTag(contextmenuItem.value!);
+			break;
+		case 2:
+			closeTagLeft(currentIndex);
+			break;
+		case 3:
+			closeTagRight(currentIndex);
+			break;
+		case 4:
+			closeTagAll(currentIndex);
+			break;
+		case 5:
+			useAdminMenu()
+				.getTagMenu()
+				.slice(1, useAdminMenu().getTagMenu().length)
+				.forEach(item => {
+					closeTag(item);
+				});
+			break;
+		default:
+			break;
+	}
 };
 
 const getContextMenuStyle = computed((): CSSProperties => {
@@ -162,7 +259,7 @@ onMounted(() => {
 			</div>
 		</ElScrollbar>
 
-		<ElDropdown trigger="click" placement="bottom-end" @visible-change="handleVisible">
+		<ElDropdown trigger="click" placement="bottom-end" @visible-change="handleVisible" @command="handleCommand">
 			<div class="h-full px-3">
 				<Icon :icon="dropCollapse ? 'ri:arrow-up-s-line' : 'ri:arrow-down-s-line'" width="20" height="20">
 				</Icon>
@@ -185,7 +282,8 @@ onMounted(() => {
 				<div v-for="(item, key) in tagsViews.slice(0, 6).filter(item => !item.disabled)" :key="key"
 					class="flex items-center">
 					<li v-if="item.show"
-						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-[#409EFF]">
+						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-[#409EFF]"
+						@click="contextmenuClose(key)">
 						<Icon :icon="item.icon" width="16" height="16" class="mr-2 block" />
 						{{ item.text }}
 					</li>
