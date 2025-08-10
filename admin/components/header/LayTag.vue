@@ -3,10 +3,10 @@ import type { CSSProperties } from 'vue';
 
 const menuList = getRouterConfig();
 const route = useRoute();
-const router = useRouter();
 const dropCollapse = ref(false);
 const tagsViews = reactive<Array<tagsViewsType>>([
 	{
+		id: 1,
 		icon: 'mdi:restore',
 		text: '重新加载',
 		divided: false,
@@ -14,6 +14,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
+		id: 2,
 		icon: 'ri:close-line',
 		text: '关闭当前标签页',
 		divided: false,
@@ -21,6 +22,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
+		id: 3,
 		icon: 'ri:text-direction-r',
 		text: '关闭左侧标签页',
 		divided: true,
@@ -28,6 +30,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
+		id: 4,
 		icon: 'ri:text-direction-l',
 		text: '关闭右侧标签页',
 		divided: false,
@@ -35,6 +38,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
+		id: 5,
 		icon: 'ri:text-spacing',
 		text: '关闭其他标签页',
 		divided: true,
@@ -42,6 +46,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
+		id: 6,
 		icon: 'ri:align-vertically',
 		text: '关闭全部标签页',
 		divided: false,
@@ -49,8 +54,13 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		show: true
 	},
 	{
-		icon: 'ri:fullscreen-exit-line',
-		text: '内容区全屏',
+		id: 7,
+		get icon() {
+			return useAdminMenu().contentFullscreen ? 'ri:fullscreen-line' : 'ri:fullscreen-exit-line';
+		},
+		get text() {
+			return useAdminMenu().contentFullscreen ? '内容全屏' : '退出全屏';
+		},
 		divided: true,
 		disabled: false,
 		show: true
@@ -64,9 +74,7 @@ const contextmenuItem = ref<RouteChildrenConfigsTable<'path' | 'name'> | null>(n
 
 const changeTagsViews = (newPath: string): void => {
 	const tagMenuList = useAdminMenu().getTagMenu();
-	const currentIndex = useAdminMenu()
-		.getTagMenu()
-		.findIndex(item => item.path === newPath);
+	const currentIndex = tagMenuList.findIndex(item => item.path === newPath);
 	tagsViews[1].disabled = currentIndex === 0;
 	tagsViews[2].disabled = currentIndex <= 1;
 	tagsViews[3].disabled = currentIndex >= tagMenuList.length - 1;
@@ -75,63 +83,45 @@ const changeTagsViews = (newPath: string): void => {
 };
 
 const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
+	const tagList = useAdminMenu().getTagMenu();
 	// 判断当前路由是否等于关闭的tag
-	if (route.path.replace(/\/$/, '') === item.path.replace(/\/$/, '')) {
-		const currentIndex = useAdminMenu()
-			.getTagMenu()
-			.findIndex(demo => demo.path === route.path);
-		const currentPath = useAdminMenu().getTagMenu()[currentIndex - 1].path;
+	if (normalizePath(route.path) === normalizePath(item.path)) {
+		const currentIndex = tagList.findIndex(demo => demo.path === route.path);
+		const currentPath = tagList[currentIndex - 1].path;
 		navigateTo({
 			path: currentPath
 		});
 	}
+	visible.value = false;
 
 	useAdminMenu().closeTag(item.path);
 };
 
-const closeTagLeft = (currentTagIndex: number): void => {
-	useAdminMenu()
-		.getTagMenu()
-		.slice(1, currentTagIndex)
-		.forEach(item => {
-			closeTag(item);
-		});
+const closeTagsByRange = (start: number, end: number) => {
+	useAdminMenu().getTagMenu().slice(start, end).forEach(closeTag);
 };
 
-const closeTagRight = (currentTagIndex: number): void => {
-	useAdminMenu()
-		.getTagMenu()
-		.slice(currentTagIndex + 1, useAdminMenu().getTagMenu().length)
-		.forEach(item => {
-			closeTag(item);
-		});
-};
-
-const closeTagAll = (currentTagIndex: number): void => {
+const closeTagOthers = (currentTagIndex: number) => {
 	useAdminMenu()
 		.getTagMenu()
 		.filter((_, index) => index !== 0 && index !== currentTagIndex)
-		.forEach(item => {
-			closeTag(item);
-		});
+		.forEach(item => closeTag(item));
 };
 
-const getPath = (path: string, list: RouteConfigsTable[]) => {
-	list.forEach(item => {
-		if (item.path === path) {
-			useAdminMenu().setTagMenu({
-				name: item.meta?.title,
-				path: item.path
-			});
-			return;
+const setCurrentTag = (path: string) => {
+	const findPath = (p: string, list: RouteConfigsTable[]) => {
+		for (const item of list) {
+			if (item.path === p) {
+				useAdminMenu().setTagMenu({ name: item.meta?.title, path: item.path });
+				return;
+			}
+			if (item.children?.length) findPath(p, item.children);
 		}
-		if (item.children && item.children.length) {
-			getPath(path, item.children);
-		}
-	});
+	};
+	findPath(path, menuList);
 };
 
-getPath(route.path, menuList);
+setCurrentTag(route.path);
 changeTagsViews(route.path);
 
 const handleVisible = (value: boolean) => {
@@ -143,80 +133,55 @@ const closeMenu = () => {
 	visible.value = false;
 };
 
-// 打开菜单
+// 右键菜单
 const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEvent) => {
 	changeTagsViews(item.path);
 	contextmenuItem.value = item;
-	buttonLeft.value = e.clientX - 54;
+	buttonLeft.value = e.clientX - (useAdminMenu().getLeftIsCollapse() ? 54 : 210);
 	buttonTop.value = e.clientY - 40;
 	visible.value = true;
 };
 
-// 点击下拉菜单项
-const handleCommand = (value: { item: tagsViewsType; key: number }): void => {
-	const { key } = value;
+const executeCommand = (id: number, target?: RouteChildrenConfigsTable<'path' | 'name'>) => {
 	const tagList = useAdminMenu().getTagMenu();
-	const currentTag = tagList.find(item => item.path === route.path);
-	const currentIndex = tagList.findIndex(item => item.path === route.path);
-	switch (key) {
-		case 0:
-			router.replace({ path: route.fullPath });
-			break;
+	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === normalizePath(route.path))!;
+	const currentIndex = tagList.findIndex(t => normalizePath(t.path) === normalizePath(currentTag.path));
+
+	switch (id) {
 		case 1:
-			closeTag(currentTag!);
+			navigateTo({ path: currentTag.path });
 			break;
 		case 2:
-			closeTagLeft(currentIndex);
+			closeTag(currentTag);
 			break;
 		case 3:
-			closeTagRight(currentIndex);
+			closeTagsByRange(1, currentIndex);
 			break;
 		case 4:
-			closeTagAll(currentIndex);
+			closeTagsByRange(currentIndex + 1, tagList.length);
 			break;
 		case 5:
-			useAdminMenu()
-				.getTagMenu()
-				.slice(1, useAdminMenu().getTagMenu().length)
-				.forEach(item => {
-					closeTag(item);
-				});
+			closeTagOthers(currentIndex);
+			break;
+		case 6:
+			closeTagsByRange(1, tagList.length);
+			break;
+		case 7:
+			useAdminMenu().setContentFullscreen(!useAdminMenu().contentFullscreen);
 			break;
 		default:
 			break;
 	}
 };
 
-const contextmenuClose = (key: number): void => {
-	const tagList = useAdminMenu().getTagMenu();
-	const currentIndex = tagList.findIndex(item => item.path === contextmenuItem.value?.path);
-	switch (key) {
-		case 0:
-			router.replace({ path: contextmenuItem.value?.path });
-			break;
-		case 1:
-			closeTag(contextmenuItem.value!);
-			break;
-		case 2:
-			closeTagLeft(currentIndex);
-			break;
-		case 3:
-			closeTagRight(currentIndex);
-			break;
-		case 4:
-			closeTagAll(currentIndex);
-			break;
-		case 5:
-			useAdminMenu()
-				.getTagMenu()
-				.slice(1, useAdminMenu().getTagMenu().length)
-				.forEach(item => {
-					closeTag(item);
-				});
-			break;
-		default:
-			break;
-	}
+/** 下拉菜单点击 */
+const handleCommand = ({ item }: { item: tagsViewsType; key: number }) => {
+	executeCommand(item.id);
+};
+
+/** 右键菜单点击 */
+const contextmenuClose = (id: number) => {
+	if (contextmenuItem.value) executeCommand(id, contextmenuItem.value);
 };
 
 const getContextMenuStyle = computed((): CSSProperties => {
@@ -226,7 +191,7 @@ const getContextMenuStyle = computed((): CSSProperties => {
 watch(
 	() => route.path,
 	newPath => {
-		getPath(route.path, menuList);
+		setCurrentTag(route.path);
 		changeTagsViews(newPath);
 	}
 );
@@ -283,7 +248,7 @@ onMounted(() => {
 					class="flex items-center">
 					<li v-if="item.show"
 						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-[#409EFF]"
-						@click="contextmenuClose(key)">
+						@click="contextmenuClose(item.id)">
 						<Icon :icon="item.icon" width="16" height="16" class="mr-2 block" />
 						{{ item.text }}
 					</li>

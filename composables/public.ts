@@ -37,3 +37,5 @@ export const detectDeviceDetail = (): {
 	// 默认未知设备
 	return { type: 'desktop', model: 'Unknown Device' };
 };
+
+export const normalizePath = (path: string) => path.replace(/\/$/, '');

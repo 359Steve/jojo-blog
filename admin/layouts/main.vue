@@ -28,7 +28,8 @@ onMounted(() => {
 <template>
 	<div ref="appWrapperRef" class="h-[100vh] w-full bg-[#EFF2F5]">
 		<ElContainer class="h-full w-full">
-			<AdminAside v-model:left-is-collapse="leftIsCollapse" class="hidden sm:block" />
+			<AdminAside v-if="useAdminMenu().contentFullscreen" v-model:left-is-collapse="leftIsCollapse"
+				class="hidden sm:block" />
 			<ElContainer>
 				<ElHeader class="!h-fit transition-[width_0.3s]">
 					<AdminHeader />

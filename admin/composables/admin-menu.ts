@@ -9,6 +9,8 @@ export const useAdminMenu = defineStore(
 				path: '/admin'
 			}
 		]);
+		const { isFullscreen, toggle } = useFullscreen();
+		const contentFullscreen = ref<boolean>(true);
 
 		const setLeftIsCollapse = (value: boolean): void => {
 			leftIsCollapse.value = value;
@@ -16,6 +18,10 @@ export const useAdminMenu = defineStore(
 
 		const setDrawerCollapse = (value: boolean): void => {
 			drawerCollapse.value = value;
+		};
+
+		const setContentFullscreen = (value: boolean): void => {
+			contentFullscreen.value = value;
 		};
 
 		const setTagMenu = (value: RouteChildrenConfigsTable<'name' | 'path'>): void => {
@@ -39,6 +45,10 @@ export const useAdminMenu = defineStore(
 			return tagMenu.value;
 		};
 
+		const getContentFullscreen = (): boolean => {
+			return contentFullscreen.value;
+		};
+
 		// 关闭tag
 		const closeTag = (path: string): void => {
 			tagMenu.value = tagMenu.value.filter(item => item.path !== path);
@@ -54,14 +64,19 @@ export const useAdminMenu = defineStore(
 			leftIsCollapse,
 			drawerCollapse,
 			tagMenu,
+			isFullscreen,
+			contentFullscreen,
 			setLeftIsCollapse,
 			setDrawerCollapse,
 			setTagMenu,
+			setContentFullscreen,
 			getLeftIsCollapse,
 			getDrawerCollapse,
 			getTagMenu,
+			getContentFullscreen,
 			reset,
-			closeTag
+			closeTag,
+			toggle
 		};
 	},
 	{

@@ -2,7 +2,7 @@
 
 <template>
 	<div class="h-fit w-full bg-white">
-		<LayNavbar></LayNavbar>
+		<LayNavbar v-if="useAdminMenu().contentFullscreen"></LayNavbar>
 		<LayTag></LayTag>
 	</div>
 </template>

@@ -108,6 +108,7 @@ declare global {
 	};
 
 	declare type tagsViewsType = {
+		id: number;
 		icon: string | FunctionalComponent;
 		text: string;
 		divided: boolean;
