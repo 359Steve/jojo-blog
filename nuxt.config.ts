@@ -21,7 +21,8 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			jwtSecret: 'jojo-blog',
-			accessTokenExpiresIn: '7d'
+			accessTokenExpiresIn: '7d',
+			expiresin: 604800
 		}
 	},
 	experimental: {
