@@ -56,7 +56,8 @@ export default defineNuxtConfig({
 		'pinia-plugin-persistedstate',
 		'@vueuse/nuxt',
 		'@nuxtjs/color-mode',
-		'@vueuse/motion/nuxt'
+		'@vueuse/motion/nuxt',
+		'@nuxtjs/google-fonts'
 	],
 
 	colorMode: {
@@ -78,9 +79,20 @@ export default defineNuxtConfig({
 	css: [
 		'~/assets/css/index.scss',
 		'~/assets/css/tailwind.scss',
+		'~/assets/css/index.scss',
 		'animate.css/animate.min.css',
 		'remixicon/fonts/remixicon.css'
 	],
+
+	googleFonts: {
+		families: {
+			'Klee One': true
+		},
+		download: true,
+		base64: false,
+		overwriting: true,
+		outputDir: 'assets/fonts'
+	},
 
 	// 定义公共样式
 	vite: {
@@ -89,7 +101,8 @@ export default defineNuxtConfig({
 				scss: {
 					additionalData: '@use "~/assets/css/element-variables.scss" as element;'
 				}
-			}
+			},
+			preprocessorMaxWorkers: true
 		}
 	},
 

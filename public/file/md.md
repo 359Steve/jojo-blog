@@ -363,7 +363,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if (!paths.includes(to.path)) {
         let token: string = ''
-        
+
         /**
          * 需要token的就不需要ssr，不需要token的可以ssr，比如请求用户页面需要token当在服务端时直接放行然后客户端还会
          * 再次执行拦截所以此时就是会执行此代码然后验证token。
@@ -434,4 +434,61 @@ const getError = () => {
 }
 // 清除错误重定向页面
 clearError({ redirect: '/login' })
+```
+
+## 复习
+#### 使用 v-bind 动态样式
+```vue
+<script setup lang="ts">
+const color = ref("red")
+</script>
+
+<template>
+<div class="text">hello</div>
+</template>
+
+<style>
+.text {
+color: v-bind(color);
+}
+</style>
+<!-- color应用的是vue生成的css变量v-bind(color)会编译成var(--生成的变量) -->
+```
+
+#### CSS 模块
+```vue
+<script lang="ts" setup>
+const color = ref('red')
+</script>
+
+<template>
+	<div :class="$style.red">后台首页</div>
+</template>
+
+<style lang="scss" scoped module>
+.red {
+	color: v-bind(color);
+}
+</style>
+<!-- style必须是module才能使用$style访问class，$style.red会自动生成一个clss名字 -->
+```
+
+#### 使用@nuxtjs/google-fonts安装字体
+```javascript
+// 安装并引入插件
+modules: [
+	'@nuxtjs/google-fonts'
+]
+// 字体配置
+googleFonts: {
+	families: {
+		'Klee One': true
+	},
+	download: true,
+	base64: false,
+	overwriting: true,
+	outputDir: 'assets/fonts'
+}
+// 运行时会自动下载配置的字体，可直接使用
+font-family: 'Times New Roman', 'Klee One';
 ```

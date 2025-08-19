@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { CSSProperties } from 'vue';
+
 const recordText = ref<HTMLDivElement[] | null>();
 const summaryList = reactive<RecordSummary[]>([
 	{
@@ -234,6 +236,10 @@ const getItemTime = computed(() => {
 		id > 0 ? `${summaryList[id].timeRange} - ${summaryList[id - 1].timeRange}` : `${summaryList[id].timeRange} - 现在`;
 });
 
+const newHeight = (index: number): CSSProperties => {
+	return { height: `${imageHeight.value[index]}px` }
+}
+
 onMounted(() => {
 	if (import.meta.client && recordText.value) {
 		recordText.value.forEach((el: HTMLDivElement, index: number) => {
@@ -290,10 +296,9 @@ onMounted(() => {
 								</div>
 							</div>
 							<div class="flex h-full w-full cursor-pointer items-center justify-center"
-								:class="[index % 2 === 0 ? 'sm:order-2' : 'sm:order-1']"
-								:style="{ height: imageHeight + 'px' }">
+								:class="[index % 2 === 0 ? 'sm:order-2' : 'sm:order-1']">
 								<Starport :id="`record-image-my-id${item.id}`" :port="`my-id${item.id}`" class="w-full"
-									:style="{ height: `${imageHeight[index]}px` }">
+									:style="newHeight(index)">
 									<RecordDetailImage class="duration-1200 transition-all"
 										@click="toDetail(item.id, item.data[0])" />
 								</Starport>
