@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { StatusCode } from '~/types/com-types';
+
 definePageMeta({
 	middleware: ['blog']
 });
@@ -8,7 +10,7 @@ definePageMeta({
 const content = ref<string>('');
 
 const res = await useGet<any, { content: string }>('/md');
-if (res.code === 200) {
+if (res.code === StatusCode.SUCCESS) {
 	content.value = res.data.content;
 }
 </script>

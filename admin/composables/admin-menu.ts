@@ -26,8 +26,8 @@ export const useAdminMenu = defineStore(
 
 		const setTagMenu = (value: RouteChildrenConfigsTable<'name' | 'path'>): void => {
 			if (
-				value.path.replace(/\/$/, '') !== '/admin/login' &&
-				!tagMenu.value.find(item => item.path.replace(/\/$/, '') === value.path.replace(/\/$/, ''))
+				normalizePath(value.path) !== '/admin/login' &&
+				!tagMenu.value.find(item => normalizePath(item.path) === normalizePath(value.path))
 			) {
 				tagMenu.value.push(value);
 			}

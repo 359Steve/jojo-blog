@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+import { StatusCode } from '~/types/com-types';
+
 const id = ref<string>('preview-only');
 const scrollElement = ref<HTMLElement | null>(null);
 const mdText = ref<string>('');
 
 const res = await useGet<any, { content: string }>('/md');
-if (res.code === 200) {
+if (res.code === StatusCode.SUCCESS) {
 	mdText.value = res.data.content;
 }
 
@@ -22,12 +24,8 @@ if (import.meta.client) {
 		</div>
 
 		<div class="w-full p-4 mobile-pad:col-span-2">
-			<MdPreview
-				:id="id"
-				:modelValue="mdText"
-				preview-theme="github"
-				:theme="useJojoColorMode().getDarkMode().preference"
-			/>
+			<MdPreview :id="id" :modelValue="mdText" preview-theme="github"
+				:theme="useJojoColorMode().getDarkMode().preference" />
 		</div>
 	</div>
 </template>

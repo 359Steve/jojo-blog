@@ -1,8 +1,11 @@
+import type { StatusCode } from '~/types/com-types';
+
 declare module 'esbuild-plugin-decorators';
 
 declare global {
-	interface JoJoResponse<T> {
-		code: number;
+	// 请求返回值类型
+	declare interface NitroResponse<T> {
+		code: StatusCode;
 		msg: string;
 		data: T | null;
 	}

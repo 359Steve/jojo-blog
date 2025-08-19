@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { StatusCode } from '~/types/com-types';
+
 const myText = ref<string>('');
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
@@ -41,7 +43,7 @@ const res = await useGet<{ id: number }, { content: string }>('/user-query', {
 	params: { id: 1 }
 });
 
-if (res.code === 200) {
+if (res.code === StatusCode.SUCCESS) {
 	myText.value = res.data.content;
 }
 

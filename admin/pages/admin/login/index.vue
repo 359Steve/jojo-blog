@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus';
 import { loginRules } from './utils/rule';
+import { StatusCode } from '~/types/com-types';
+
+const Illustration = getIcons().Illustration;
+const Avatar = getIcons().Avatar;
 
 const ruleForm = reactive({
 	username: 'admin',
@@ -21,11 +25,16 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 				}
 			});
 
-			if (res.code === 200) {
+			if (res.code === StatusCode.SUCCESS) {
 				useUserState().setToken(res.data.accessToken);
 
 				// 跳转到首页
 				navigateTo('/admin/');
+			} else {
+				ElMessage({
+					type: 'error',
+					message: res.msg
+				});
 			}
 		}
 	});

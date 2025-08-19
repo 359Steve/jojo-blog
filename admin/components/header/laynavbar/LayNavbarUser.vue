@@ -1,4 +1,26 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { StatusCode } from '~/types/com-types';
+
+const loginOut = (): void => {
+	ElMessageBox.confirm('确定退出系统吗?', {
+		cancelButtonText: '取消',
+		confirmButtonText: '确定',
+		type: 'warning'
+	}).then(async () => {
+		const res = await fetchPostApi('/logout')
+
+		if (res.code === StatusCode.SUCCESS) {
+			useUserState().setToken('');
+			navigateTo({ path: '/admin/login' });
+		} else {
+			ElMessage({
+				type: 'error',
+				message: res.msg
+			});
+		}
+	})
+}
+</script>
 
 <template>
 	<ElDropdown trigger="click">
@@ -9,11 +31,11 @@
 		</span>
 		<template #dropdown>
 			<ElDropdownMenu class="!p-0">
-				<ElDropdownItem>
+				<ElDropdownItem @click="loginOut">
 					<Icon icon="ri:logout-circle-line" class="mr-[5px]" width="16" height="16"></Icon>
 					<span class="text-[14px]">退出系统</span>
 				</ElDropdownItem>
-				<ElDropdownItem @click="navigateTo('/admin/userinfo')">
+				<ElDropdownItem @click="navigateTo({ path: '/admin/userinfo/123123' })">
 					<Icon icon="ri:user-line" class="mr-[5px]" width="16" height="16"></Icon>
 					<span class="text-[14px]">个人中心</span>
 				</ElDropdownItem>

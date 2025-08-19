@@ -17,8 +17,7 @@ const width = ref<number>(0);
 const height = ref<number>(0);
 const pendingTasks = ref<TaskFn[]>([]);
 const frameCount = ref<number>(0);
-
-const ctx = computed(() => canvasEl.value!.getContext('2d')!);
+const ctx = ref<CanvasRenderingContext2D | null>(null)
 
 const getEndPoint = (b: BranchLine): Point => {
 	return {
@@ -29,11 +28,11 @@ const getEndPoint = (b: BranchLine): Point => {
 
 // 绘制直线
 const lineTo = (p1: Point, p2: Point) => {
-	ctx.value.lineWidth = 0.2;
-	ctx.value.beginPath();
-	ctx.value.moveTo(p1.x, p1.y);
-	ctx.value.lineTo(p2.x, p2.y);
-	ctx.value.stroke();
+	ctx.value!.lineWidth = 0.2;
+	ctx.value!.beginPath();
+	ctx.value!.moveTo(p1.x, p1.y);
+	ctx.value!.lineTo(p2.x, p2.y);
+	ctx.value!.stroke();
 };
 
 // 计算结束点并调用绘制方法
@@ -78,7 +77,7 @@ const step = (b: BranchLine, deep = 0) => {
 };
 
 const init = () => {
-	ctx.value.strokeStyle = 'rgb(107 114 128 / 0.5)';
+	ctx.value!.strokeStyle = 'rgb(107 114 128 / 0.5)';
 
 	const leftTop: Point = { x: 0, y: 0 };
 	const rightBottom: Point = { x: width.value, y: height.value };
@@ -123,8 +122,10 @@ onMounted(() => {
 		canvasEl.value.width = rect.width * ratio;
 		canvasEl.value.height = rect.height * ratio;
 
+		ctx.value = canvasEl.value.getContext('2d')
+
 		// 缩放上下文，让坐标系统仍然用 CSS 像素
-		ctx.value.scale(ratio, ratio);
+		ctx.value!.scale(ratio, ratio);
 
 		init();
 	}

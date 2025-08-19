@@ -11,17 +11,17 @@ export class UserService {
 	}
 
 	// 创建用户
-	async createUser<T>(dto: CreateUserDto): Promise<JoJoResponse<T>> {
+	async createUser<T>(dto: CreateUserDto): Promise<NitroResponse<T>> {
 		return await this.userRepo.createUser<T>(dto);
 	}
 
 	// 登录
-	async loginUser<T>(body: CreateUserDto): Promise<JoJoResponse<T>> {
+	async loginUser<T>(body: CreateUserDto): Promise<NitroResponse<T>> {
 		return await this.userRepo.loginUser<T>(body);
 	}
 
 	// 查询用户
-	async findUser<T>(id: number): Promise<JoJoResponse<T>> {
+	async findUser<T>(id: number): Promise<NitroResponse<T>> {
 		return await this.userRepo.findUser<T>(id);
 	}
 }

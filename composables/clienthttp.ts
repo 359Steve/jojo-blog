@@ -1,3 +1,5 @@
+import { StatusCode } from "~/types/com-types";
+
 type Method = 'get' | 'post' | 'put' | 'delete';
 // 自定义 Options 类型
 type Options<T> = {
@@ -17,10 +19,8 @@ interface H3Error<T> {
 	statusMessage: string;
 	[key: string]: any;
 }
-interface BaseResponse<T> extends H3Error<T> {
-	code: number;
-	msg: string;
-}
+
+type NewResponse<T> = NitroResponse<T> & H3Error<T>
 
 // let Authorization: Record<string, string> | null = null;
 
@@ -33,7 +33,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 	const token: string = useUserState().getToken() || '';
 	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
 
-	return $fetch<BaseResponse<Rp>>(url, {
+	return $fetch<NewResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
 		method: option?.method as any,
 		...option,
@@ -49,9 +49,9 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 		// 响应拦截
 		onResponse({ response }) {
 			if (!response.ok) return;
-			const data = response._data as BaseResponse<Rp>;
-			if (data.code !== 200) {
-				const error = data as BaseResponse<{ message: string }>;
+			const data = response._data as NewResponse<Rp>;
+			if (data.code !== StatusCode.SUCCESS) {
+				const error = data as NewResponse<{ message: string }>;
 				if (import.meta.client) {
 					// 直接提示错误信息
 					ElMessage({
@@ -75,7 +75,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 
 		// 响应失败
 		onResponseError({ response }) {
-			const error = response._data as BaseResponse<{ message: string }>;
+			const error = response._data as NewResponse<{ message: string }>;
 			// 如果是客户端直接提示错误信息
 			if (import.meta.client) {
 				ElMessage({
@@ -99,14 +99,14 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 };
 
 // GET请求封装
-export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}): Promise<BaseResponse<Rp>> => {
+export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'get',
 			...option
 		})
 			.then(res => {
-				resolve(res as BaseResponse<Rp>);
+				resolve(res as NewResponse<Rp>);
 			})
 			.catch(err => {
 				reject(err);
@@ -115,14 +115,14 @@ export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq>
 };
 
 // POST 封装
-export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<BaseResponse<Rp>> => {
+export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'post',
 			...option
 		})
 			.then(res => {
-				resolve(res as BaseResponse<Rp>);
+				resolve(res as NewResponse<Rp>);
 			})
 			.catch(err => {
 				reject(err);

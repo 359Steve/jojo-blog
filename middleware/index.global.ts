@@ -1,4 +1,5 @@
 export default defineNuxtRouteMiddleware((to, _from) => {
+	to.path = normalizePath(to.path)
 	const path = to.path;
 
 	const { menuList, menuId } = storeToRefs(useJojoHeader());
