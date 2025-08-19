@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, _from) => {
 	const { avatarUrl } = storeToRefs(useVueStarport());
 
 	// 动态切换头像
-	avatarUrl.value = path.startsWith('/record/') ? 'my' : 'index_bg';
+	avatarUrl.value = path.startsWith('/record') ? 'my' : 'index_bg';
 
 	// 优先匹配最长的路径（避免 / 匹配到所有路径）
 	const matched = menuList.value

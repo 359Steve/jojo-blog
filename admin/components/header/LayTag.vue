@@ -85,7 +85,7 @@ const changeTagsViews = (newPath: string): void => {
 const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	const tagList = useAdminMenu().getTagMenu();
 	// 判断当前路由是否等于关闭的tag
-	if (normalizePath(route.path) === normalizePath(item.path)) {
+	if (route.path === item.path) {
 		const currentIndex = tagList.findIndex(demo => demo.path === route.path);
 		const currentPath = tagList[currentIndex - 1].path;
 		navigateTo({
@@ -144,7 +144,7 @@ const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEven
 
 const executeCommand = (id: number, target?: RouteChildrenConfigsTable<'path' | 'name'>) => {
 	const tagList = useAdminMenu().getTagMenu();
-	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === normalizePath(route.path))!;
+	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === route.path)!;
 	const currentIndex = tagList.findIndex(t => normalizePath(t.path) === normalizePath(currentTag.path));
 
 	switch (id) {
