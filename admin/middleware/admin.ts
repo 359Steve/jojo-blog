@@ -6,6 +6,13 @@ export default defineNuxtRouteMiddleware(to => {
 
 	if (!whiteRoutes.includes(path)) {
 		if (!cookies) return navigateTo('/admin/login');
+		try {
+			// 验证token
+			const payload = verifyToken(cookies || '');
+			if (!payload) return navigateTo('/admin/login');
+		} catch {
+			return navigateTo('/admin/login');
+		}
 	}
 
 	return true;
