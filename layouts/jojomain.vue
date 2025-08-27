@@ -66,6 +66,7 @@ onMounted(() => {
 		<div class="h-full w-full">
 			<!-- 导航栏 -->
 			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
+			<NuxtLoadingIndicator />
 			<slot name="page"></slot>
 			<FooterBox></FooterBox>
 		</div>
