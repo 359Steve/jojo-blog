@@ -71,7 +71,8 @@ export default defineNuxtConfig({
 		head: {
 			title: 'jojo-blog',
 			meta,
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }]
+			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }],
+			viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
 		}
 	},
 
