@@ -15,5 +15,5 @@ export default defineNuxtRouteMiddleware((to, _from) => {
 
 	menuId.value = matched ? matched.id : 0;
 
-	// return true;
+	return true;
 });
