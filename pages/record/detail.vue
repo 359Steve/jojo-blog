@@ -45,8 +45,8 @@ const srcList = reactive<string[]>([
 				<span class="mx-4 text-sm text-gray-500">照片墙</span>
 				<div class="h-px flex-grow bg-gray-300"></div>
 			</div>
-			<div
-				class="scroll-wrap mt-4 flex aspect-video grid-cols-4 grid-rows-2 flex-row gap-4 overflow-x-auto sm:mt-8 sm:grid sm:overflow-visible">
+			<ElScrollbar>
+				<div class="scroll-wrap mt-4 flex aspect-video grid-cols-4 grid-rows-2 flex-row gap-4 sm:mt-8 sm:grid">
 				<div v-for="(item, index) in srcList" :key="item"
 					class="flex-shrink-0 overflow-hidden sm:row-span-1 sm:w-full" :class="[
 						index < 2 ? 'sm:col-span-2' : 'sm:row-start-2',
@@ -54,10 +54,11 @@ const srcList = reactive<string[]>([
 						index === 2 ? 'sm:col-start-1' : '',
 						index === 3 ? 'sm:col-start-2' : ''
 					]">
-					<ElImage :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="srcList"
-						show-progress fit="cover" />
+						<ElImage :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+							:preview-src-list="srcList" show-progress fit="cover" />
+					</div>
 				</div>
-			</div>
+			</ElScrollbar>
 		</div>
 	</div>
 </template>
