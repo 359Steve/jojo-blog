@@ -4,7 +4,7 @@ const parentId = computed(() => route.query.parentId);
 const id = computed(() => route.query.id);
 
 if (!id.value) {
-	throw createError({ statusCode: 500, statusMessage: '出错了！' });
+	showError({ statusCode: 500, statusMessage: '出错了！' })
 }
 
 const srcList = reactive<string[]>([
