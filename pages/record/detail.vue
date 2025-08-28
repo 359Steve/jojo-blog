@@ -47,13 +47,13 @@ const srcList = reactive<string[]>([
 			</div>
 			<ElScrollbar>
 				<div class="scroll-wrap mt-4 flex aspect-video grid-cols-4 grid-rows-2 flex-row gap-4 sm:mt-8 sm:grid">
-				<div v-for="(item, index) in srcList" :key="item"
-					class="flex-shrink-0 overflow-hidden sm:row-span-1 sm:w-full" :class="[
-						index < 2 ? 'sm:col-span-2' : 'sm:row-start-2',
-						index === 1 ? 'sm:col-start-3 sm:row-span-2' : '',
-						index === 2 ? 'sm:col-start-1' : '',
-						index === 3 ? 'sm:col-start-2' : ''
-					]">
+					<div v-for="(item, index) in srcList" :key="item"
+						class="flex-shrink-0 overflow-hidden sm:row-span-1 sm:w-full" :class="[
+							index < 2 ? 'sm:col-span-2' : 'sm:row-start-2',
+							index === 1 ? 'sm:col-start-3 sm:row-span-2' : '',
+							index === 2 ? 'sm:col-start-1' : '',
+							index === 3 ? 'sm:col-start-2' : ''
+						]">
 						<ElImage :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
 							:preview-src-list="srcList" show-progress fit="cover" />
 					</div>
