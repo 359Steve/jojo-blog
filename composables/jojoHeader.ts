@@ -10,7 +10,7 @@ export const useJojoHeader = defineStore('jojoHeader', () => {
 	const headerHeight = ref<number>(0) // 导航栏高度
 
 	const menuList = reactive<Menu[]>([
-		{ id: 1, title: '首页', path: '/' },
+		{ id: 1, title: '首页', path: '' },
 		{ id: 2, title: '博客', path: '/blog' },
 		{ id: 3, title: '日记', path: '/record' },
 	])
