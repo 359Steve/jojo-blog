@@ -11,11 +11,13 @@ export default defineNuxtConfig({
 	extends: ['./admin'],
 	components: [
 		{
-			path: '~/components'
+			path: '~/components',
+			extensions: ['.vue', '.tsx']
 		},
 		{
 			path: '~/admin/components',
-			pathPrefix: false
+			pathPrefix: false,
+			extensions: ['.vue', '.tsx']
 		}
 	],
 	runtimeConfig: {
@@ -29,7 +31,7 @@ export default defineNuxtConfig({
 		payloadExtraction: false
 	},
 	imports: {
-		dirs: ['composables', 'composables/*/*.{ts,js,mjs,mts}', 'composables/**/*.{ts,js,mjs,mts}']
+		dirs: ['composables', 'composables/*/*.{ts,js,mjs,mts}', 'composables/**/*.{ts,js,mjs,mts}'],
 	},
 	plugins: [
 		'~/plugins/md-editor.ts',
@@ -85,15 +87,15 @@ export default defineNuxtConfig({
 		'remixicon/fonts/remixicon.css'
 	],
 
-	googleFonts: {
-		families: {
-			'Klee One': true
-		},
-		download: true,
-		base64: false,
-		overwriting: true,
-		outputDir: 'assets/fonts'
-	},
+	// googleFonts: {
+	// 	families: {
+	// 		'Klee One': true
+	// 	},
+	// 	download: true,
+	// 	base64: false,
+	// 	overwriting: true,
+	// 	outputDir: 'assets/fonts'
+	// },
 
 	// 定义公共样式
 	vite: {
