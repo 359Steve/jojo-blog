@@ -67,7 +67,13 @@ onMounted(() => {
 			<!-- 导航栏 -->
 			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
 			<NuxtLoadingIndicator />
-			<slot name="page"></slot>
+			<NuxtLayout name="mainbox">
+				<template #childPage>
+					<StarportCarrier>
+						<slot name="page" />
+					</StarportCarrier>
+				</template>
+			</NuxtLayout>
 			<FooterBox></FooterBox>
 		</div>
 	</div>
