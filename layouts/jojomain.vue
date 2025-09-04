@@ -66,7 +66,7 @@ onMounted(() => {
 		<div class="h-full w-full">
 			<!-- 导航栏 -->
 			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
-			<NuxtLoadingIndicator />
+			<NuxtLoadingIndicator color="#A3AAB6" />
 			<NuxtLayout name="mainbox">
 				<template #childPage>
 					<StarportCarrier>
