@@ -1,6 +1,16 @@
 <script lang="ts" setup>
 const scrollY = ref<number>(0);
 
+useHead({
+	titleTemplate: (titleChunk) => {
+		return titleChunk ? `${titleChunk} %separator %siteName` : '%siteName';
+	},
+	templateParams: {
+		siteName: 'jojo',
+		separator: '-'
+	}
+})
+
 const handleScroll = () => {
 	const scrollTop = window.scrollY || document.documentElement.scrollTop;
 	useJojoHeader().setScroll(scrollTop > scrollY.value && scrollTop > useJojoHeader().getHeaderHeight());
@@ -19,9 +29,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+	<div>
+		<NuxtLayout>
+			<NuxtPage />
+		</NuxtLayout>
+	</div>
 </template>
 
 <style lang="scss" scoped></style>
