@@ -33,7 +33,7 @@ const reverse = (): void => {
 const playSequence = (): void => {
 	play();
 	reverse();
-	setTimeout(playSequence, times.value[times.value.length - 1] * 1000 * 2 + 2000);
+	setTimeout(playSequence, times.value[times.value.length - 1] * 1000 * 2 + 2500);
 };
 onMounted(() => {
 	nextTick(() => {
