@@ -24,10 +24,10 @@ const loginOut = (): void => {
 
 <template>
 	<ElDropdown trigger="click">
-		<span class="flex h-[48px] w-fit cursor-pointer items-center gap-[6px] px-[6px] hover:bg-[#f1f1f1]">
+		<span class="flex h-[48px] w-fit cursor-pointer items-center gap-[6px] px-[6px] hover:bg-admin-header-bg-hover">
 			<ElAvatar :size="24" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 				type="circle" />
-			<p class="dark:text-white">admin</p>
+			<p>admin</p>
 		</span>
 		<template #dropdown>
 			<ElDropdownMenu class="!p-0">
@@ -46,11 +46,11 @@ const loginOut = (): void => {
 
 <style lang="postcss" scoped>
 :deep(.el-dropdown-menu__item:hover) {
-	@apply !bg-[#ebf5ff] !text-[#409EFF];
+	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
 }
 
 :deep(.el-dropdown-menu__item:not(.is-disabled):hover),
 :deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
-	@apply !bg-[#ebf5ff] !text-[#409EFF];
+	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
 }
 </style>

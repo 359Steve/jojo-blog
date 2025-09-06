@@ -11,7 +11,7 @@ const toggleSideBar = (): void => {
 		<LaySideDrawer></LaySideDrawer>
 	</Teleport>
 	<ElAside v-bind="$attrs"
-		class="relative h-full !overflow-x-hidden border-r-[1px] border-solid border-r-[#0505050f] bg-white transition-[width_0.5s]"
+		class="relative h-full !overflow-x-hidden border-r-[1px] border-solid border-r-admin-menu-border bg-admin-menu-bg transition-[width_0.5s]"
 		:class="[leftIsCollapse ? '!w-[54px]' : '!w-[210px]']">
 		<LaySidebarLogo />
 		<LaySideMenuScroll :left-is-collapse="leftIsCollapse!" />
@@ -29,7 +29,7 @@ const toggleSideBar = (): void => {
 }
 
 :deep(.el-menu-item) {
-	@apply h-[50px] text-[#606266] !transition-none hover:bg-transparent;
+	@apply h-[50px] text-admin-menu-text !transition-none hover:bg-transparent;
 }
 
 :deep(.el-menu-item.is-active) {
@@ -37,11 +37,11 @@ const toggleSideBar = (): void => {
 }
 
 :deep(.el-menu-item.is-active::before) {
-	@apply absolute inset-[4px_8px] z-[1] rounded-[3px] bg-[#409EFF] content-[''];
+	@apply absolute inset-[4px_8px] z-[1] rounded-[3px] bg-admin-menu-active-before content-[''];
 }
 
 :deep(.el-sub-menu__title) {
-	@apply !h-[50px] text-[#606266] transition-colors duration-300 hover:bg-transparent hover:text-black;
+	@apply !h-[50px] text-admin-menu-text !transition-none hover:bg-transparent hover:text-admin-menu-title-hover;
 }
 
 :deep(.el-sub-menu.is-active) {
@@ -49,12 +49,12 @@ const toggleSideBar = (): void => {
 }
 
 :deep(.el-sub-menu.is-active .el-sub-menu__title) {
-	@apply !text-black;
+	@apply !text-admin-menu-title-hover;
 }
 
 :deep(.el-menu-item:hover),
 :deep(.el-sub-menu__title:hover) {
-	@apply !bg-transparent !text-black;
+	@apply !bg-transparent !text-admin-menu-title-hover;
 }
 
 :deep(.el-menu-item.is-active),
@@ -64,6 +64,6 @@ const toggleSideBar = (): void => {
 }
 
 :deep(.el-sub-menu.is-active .el-sub-menu__title.el-tooltip__trigger::before) {
-	@apply absolute inset-y-0 left-[-1px] h-full w-[2px] bg-[#409EFF] content-[''];
+	@apply absolute inset-y-0 left-[-1px] h-full w-[2px] bg-admin-menu-active-before content-[''];
 }
 </style>

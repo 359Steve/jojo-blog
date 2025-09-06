@@ -8,8 +8,7 @@ const { item, basePath, isCollapse } = defineProps<{
 
 <template>
 	<ElMenuItem v-if="(!item.children || item.children.length === 0) && item.path !== '/admin/userinfo'"
-		:index="`${basePath}`" class="!text-[#606266] hover:!text-black"
-		@click="useAdminMenu().setDrawerCollapse(false)">
+		:index="`${basePath}`" class="!text-admin-menu-text " @click="useAdminMenu().setDrawerCollapse(false)">
 		<div :class="[isCollapse ? 'mr-0' : 'mr-[10px]']" class="item-icon z-10">
 			<Icon :icon="item.meta?.icon" class="!h-[20px] !w-[20px]"></Icon>
 		</div>
@@ -19,7 +18,7 @@ const { item, basePath, isCollapse } = defineProps<{
 			</div>
 		</template>
 	</ElMenuItem>
-	<ElSubMenu v-else-if="item.path !== '/admin/userinfo'" :index="`${basePath}`" class="border-l">
+	<ElSubMenu v-else-if="item.path !== '/admin/userinfo'" :index="`${basePath}`">
 		<template #title>
 			<Icon :icon="item.meta?.icon" class="!h-[20px] !w-[20px]" :class="[isCollapse ? 'mr-0' : 'mr-[10px]']">
 			</Icon>

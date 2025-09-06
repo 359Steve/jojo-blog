@@ -39,13 +39,13 @@ const findRoutePath = (path: string): HeaderRouteCrumb[] => {
 	dfs(menuList, path, []);
 	return result;
 };
-const crumbList = ref<HeaderRouteCrumb[]>(findRoutePath(route.path));
+const crumbList = ref<HeaderRouteCrumb[]>(findRoutePath(exceptPath(route.path)));
 
 // 监听路由变化
 watch(
 	() => route.path,
 	() => {
-		crumbList.value = findRoutePath(route.path);
+		crumbList.value = findRoutePath(exceptPath(route.path));
 	}
 );
 </script>
@@ -60,4 +60,8 @@ watch(
 	</ElBreadcrumb>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="postcss" scoped>
+:deep(.is-link:hover) {
+	@apply !transition-none text-admin-menu-title-hover
+}
+</style>

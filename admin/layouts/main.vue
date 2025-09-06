@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div ref="appWrapperRef" class="h-[100vh] w-full bg-[#EFF2F5]">
+	<div ref="appWrapperRef" class="h-[100vh] w-full bg-admin-main-bg">
 		<ElContainer class="h-full w-full">
 			<AdminAside v-if="useAdminMenu().contentFullscreen" v-model:left-is-collapse="leftIsCollapse"
 				class="hidden sm:block" />

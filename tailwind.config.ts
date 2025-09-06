@@ -63,7 +63,30 @@ export default {
 			},
 			backgroundColor: {
 				'half-gray': 'rgb(107 114 128 / 0.5)',
-				'base-color': '#121212'
+				'base-color': '#121212',
+				'admin-sub-menu-active-text': 'var(--jojo-admin-sub-menu-active-text)',
+				'admin-main-bg': 'var(--jojo-main-bg)',
+				'admin-menu-bg': 'var(--jojo-admin-menu-bg)',
+				'admin-menu-hover': 'var(--jojo-admin-menu-hover)',
+				'admin-sub-menu-bg': 'var(--jojo-admin-sub-menu-bg)',
+				'admin-menu-text': 'var(--jojo-admin-menu-text)',
+				'admin-sidebar-logo': 'var(--jojo-admin-sidebar-logo)',
+				'admin-menu-title-hover': 'var(--jojo-admin-menu-title-hover)',
+				'admin-menu-active-before': 'var(--jojo-admin-menu-active-before)',
+				'admin-tag-active-bg': 'var(--jojo-admin-menu-active-before)',
+				'admin-header-bg-hover': 'var(--jojo-admin-menu-hover)',
+				'admin-dropdown-menu-bg': 'var(--jojo-admin-dropdown-menu-bg)'
+			},
+			textColor: {
+				'admin-tag-text': 'var(--jojo-admin-menu-text)',
+				'admin-tag-active-text': 'var(--jojo-admin-menu-active-before)',
+				'admin-sub-menu-active-text': 'var(--jojo-admin-sub-menu-active-text)',
+				'admin-menu-text': 'var(--jojo-admin-menu-text)',
+				'admin-menu-title-hover': 'var(--jojo-admin-menu-title-hover)',
+				'admin-menu-disabled-text': 'var(--jojo-admin-text-color-disabled)'
+			},
+			borderColor: {
+				'admin-menu-border': 'var(--jojo-admin-border-color)',
 			},
 			keyframes: {
 				...generateSlideAnimations(),
@@ -120,7 +143,8 @@ export default {
 				shrink: 'shrink 1s ease forwards'
 			},
 			boxShadow: {
-				base: '0 1px 5px 0 rgba(0, 0, 0, 0.1)'
+				base: '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
+				'admin-menu-shadow': '0 1px 5px 0 var(--jojo-admin-border-color)',
 			}
 		}
 	},

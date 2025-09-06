@@ -39,3 +39,5 @@ export const detectDeviceDetail = (): {
 };
 
 export const normalizePath = (path: string) => path.replace(/\/$/, '');
+
+export const exceptPath = (path: string) => path.replace(/\/\d+$/, '');

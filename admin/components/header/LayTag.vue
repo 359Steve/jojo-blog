@@ -109,6 +109,7 @@ const closeTagOthers = (currentTagIndex: number) => {
 };
 
 const setCurrentTag = (path: string) => {
+	const newPath = exceptPath(path);
 	const findPath = (p: string, list: RouteConfigsTable[]) => {
 		for (const item of list) {
 			if (item.path === p) {
@@ -118,7 +119,7 @@ const setCurrentTag = (path: string) => {
 			if (item.children?.length) findPath(p, item.children);
 		}
 	};
-	findPath(path, menuList);
+	findPath(newPath, menuList);
 };
 
 setCurrentTag(route.path);
@@ -144,7 +145,7 @@ const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEven
 
 const executeCommand = (id: number, target?: RouteChildrenConfigsTable<'path' | 'name'>) => {
 	const tagList = useAdminMenu().getTagMenu();
-	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === route.path)!;
+	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === exceptPath(route.path))!;
 	const currentIndex = tagList.findIndex(t => normalizePath(t.path) === normalizePath(currentTag.path));
 
 	switch (id) {
@@ -211,14 +212,15 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="relative flex w-full items-center justify-between shadow-sm shadow-[rgba(0,21,41,0.08)]">
+	<div
+		class="relative flex w-full items-center justify-between border-b border-admin-menu-border border-solid bg-admin-menu-bg">
 		<ElScrollbar class="flex h-fit w-[calc(100%-50px)]">
 			<div v-for="item in useAdminMenu().getTagMenu()" :key="item.path"
 				@contextmenu.prevent="openMenu(item, $event)">
 				<ElTag :closable="item.path !== '/admin'" effect="plain"
 					class="relative !flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
-					:class="[route.path === item.path ? 'is-active' : '']" @close="closeTag(item)"
-					@click="navigateTo({ path: item.path })">
+					:class="[exceptPath(route.path) === item.path ? 'is-active' : '']" @close="closeTag(item)"
+					@click="navigateTo({ path: item.path === '/admin/userinfo' ? '/admin/userinfo/123123' : item.path })">
 					<span>{{ item.name }}</span>
 				</ElTag>
 			</div>
@@ -243,11 +245,11 @@ onMounted(() => {
 		<!-- 右键菜单按钮 -->
 		<Transition name="el-zoom-in-top">
 			<ul v-show="visible" ref="contextmenuRef" :style="getContextMenuStyle"
-				class="absolute z-30 m-0 list-none whitespace-nowrap rounded-[4px] bg-white py-[5px] text-[13px] font-normal text-[#303133] shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none">
+				class="absolute z-30 m-0 list-none whitespace-nowrap rounded-[4px] bg-admin-menu-bg py-[5px] text-[13px] font-normal text-admin-menu-text shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none">
 				<div v-for="(item, key) in tagsViews.slice(0, 6).filter(item => !item.disabled)" :key="key"
 					class="flex items-center">
 					<li v-if="item.show"
-						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-[#409EFF]"
+						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-admin-tag-active-text"
 						@click="contextmenuClose(item.id)">
 						<Icon :icon="item.icon" width="16" height="16" class="mr-2 block" />
 						{{ item.text }}
@@ -260,15 +262,27 @@ onMounted(() => {
 
 <style lang="postcss" scoped>
 .is-active {
-	@apply relative z-10 text-[#409EFF] shadow-[0_0_0.7px_#888];
+	@apply relative z-10 text-admin-tag-active-text shadow-[0_0_0.7px_#888];
 }
 
 .is-active::after {
-	@apply absolute bottom-0 left-0 h-[2px] !w-full bg-[#409EFF] content-[''];
+	@apply absolute bottom-0 left-0 h-[2px] !w-full bg-admin-tag-active-bg content-[''];
+}
+
+:deep(.el-tag) {
+	@apply text-admin-tag-text
+}
+
+:deep(.el-tag.is-active) {
+	@apply text-admin-tag-active-text;
+}
+
+:deep(.el-tag:hover) {
+	@apply text-admin-tag-active-text;
 }
 
 :deep(.el-tag::after) {
-	@apply absolute bottom-0 left-0 h-[2px] w-0 bg-[#409EFF] transition-[width_0.3s_ease] content-[''];
+	@apply absolute bottom-0 left-0 h-[2px] w-0 bg-admin-tag-active-bg transition-[width_0.3s_ease] content-[''];
 }
 
 :deep(.el-tag:hover::after) {
@@ -280,11 +294,11 @@ onMounted(() => {
 }
 
 :deep(.el-tag:hover .el-tag__close) {
-	@apply opacity-100;
+	@apply opacity-100 bg-transparent text-admin-tag-active-text;
 }
 
 :deep(.is-active .el-tag__close) {
-	@apply text-[#409EFF] opacity-100;
+	@apply text-admin-tag-active-text opacity-100;
 }
 
 :deep(.is-active .el-tag__close:hover) {
@@ -292,7 +306,7 @@ onMounted(() => {
 }
 
 :deep(.el-tag .el-tag__close:hover) {
-	@apply bg-[#409EFF];
+	@apply bg-transparent text-admin-tag-active-text;
 }
 
 :deep(.el-scrollbar__view) {
@@ -304,15 +318,11 @@ onMounted(() => {
 }
 
 :deep(.el-dropdown-menu__item:not(.is-disabled):hover) {
-	@apply !bg-[#ebf5ff] !text-[#409EFF];
+	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
 }
 
 :deep(.el-dropdown-menu__item:not(.is-disabled):hover),
 :deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
-	@apply !bg-[#ebf5ff] !text-[#409EFF];
-}
-
-:deep(.el-dropdown-menu__item.is-disabled) {
-	@apply !text-[#c0c4cc];
+	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
 }
 </style>

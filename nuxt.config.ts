@@ -73,7 +73,9 @@ export default defineNuxtConfig({
 		head: {
 			title: 'jojo-blog',
 			meta,
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }],
+			link: [
+				{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }
+			],
 			viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
 		}
 	},
@@ -81,7 +83,7 @@ export default defineNuxtConfig({
 	// 初始化样式
 	css: [
 		'~/assets/css/index.scss',
-		'~/assets/css/tailwind.scss',
+		'~/assets/css/tailwind.css',
 		'~/assets/css/index.scss',
 		'animate.css/animate.min.css',
 		'remixicon/fonts/remixicon.css'
@@ -89,7 +91,7 @@ export default defineNuxtConfig({
 
 	// googleFonts: {
 	// 	families: {
-	// 		'Klee One': true
+	// 		'Zhi Mang Xing': true
 	// 	},
 	// 	download: true,
 	// 	base64: false,

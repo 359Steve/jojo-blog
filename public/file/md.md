@@ -40,6 +40,34 @@ declare module '@nuxt/schema' {
         myName: string
     }
 }
+
+// 在扩展类型时，确保导入或导出至少一个东西非常重要
+export {}
+```
+
+
+
+#### 添加类型标注，请在根目录中创建types/app-config.d.ts
+```javascript
+declare module 'nuxt/schema' {
+  interface AppConfig {
+    // 这会完全替换已有的 `theme` 属性的推断类型
+    theme: {
+      // 你可能想为此值指定更具体的类型，比如字符串字面量类型
+      primaryColor?: 'red' | 'blue'
+    }
+  }
+  interface AppConfigInput {
+    /** 主题配置 */
+    theme?: {
+      /** 主应用颜色 */
+      primaryColor?: string
+    }
+  }
+}
+
+// 为了增强类型时总是确保导入或导出某个内容
+export {}
 ```
 
 
@@ -436,7 +464,10 @@ const getError = () => {
 clearError({ redirect: '/login' })
 ```
 
+
+
 ## 复习
+
 #### 使用 v-bind 动态样式
 ```vue
 <script setup lang="ts">
@@ -455,7 +486,10 @@ color: v-bind(color);
 <!-- color应用的是vue生成的css变量v-bind(color)会编译成var(--生成的变量) -->
 ```
 
+
+
 #### CSS 模块
+
 ```vue
 <script lang="ts" setup>
 const color = ref('red')
@@ -473,7 +507,10 @@ const color = ref('red')
 <!-- style必须是module才能使用$style访问class，$style.red会自动生成一个clss名字 -->
 ```
 
+
+
 #### 使用@nuxtjs/google-fonts安装字体
+
 ```javascript
 // 安装并引入插件
 modules: [
@@ -491,4 +528,635 @@ googleFonts: {
 }
 // 运行时会自动下载配置的字体，可直接使用
 font-family: 'Times New Roman', 'Klee One';
+```
+
+
+
+#### 使用nuxt内置标签给页面添加head
+
+```html
+<Head>
+	<Title>{{ title }}</Title>
+	<Meta name="description" :content="title" />
+	<Style>
+	body { background-color: green; }
+	</Style>
+</Head>
+```
+
+
+
+#### 使用 titleTemplate 选项为站点标题提供动态模板，使用 templateParams 在 titleTemplate 中提供除默认 %s 以外的额外占位符
+
+```javascript
+// 推荐在app.vue页面设置
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - Site Title` : 'Site Title';
+  }
+})
+// 添加占位符
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} %separator %siteName` : '%siteName';
+  },
+  templateParams: {
+    siteName: 'Site Title',
+    separator: '-'
+  }
+})
+```
+
+
+
+#### 动态添加sdk依赖到body
+
+```javascript
+useHead({
+  script: [
+    {
+      src: 'https://third-party-script.com',
+      // 有效选项为: 'head' head开始 | 'bodyClose' body结尾 | 'bodyOpen' body开始
+      tagPosition: 'bodyClose'
+    }
+  ]
+})
+```
+
+
+
+#### useAsyncData 组合函数负责包装异步逻辑，并在解析完成后返回结果。
+
+```javascript
+// useAsyncData 组合函数是包装并等待多个 $fetch 请求完成后处理结果的绝佳方式。
+const { data: discounts, status } = await useAsyncData('cart-discount', async () => {
+  const [coupons, offers] = await Promise.all([
+    useFetch('/cart/coupons'),
+    useFetch('/cart/offers')
+  ])
+
+  return { coupons, offers }
+})
+```
+
+
+
+#### 禁用自动导入
+
+```javascript
+export default defineNuxtConfig({
+  imports: {
+    autoImport: false
+  }
+})
+```
+
+
+
+#### 部分禁用自动导入，禁用自定义的导入但是内置的ref等导入不受影响
+
+```javascript
+export default defineNuxtConfig({
+  imports: {
+	scan: false
+  }
+})
+```
+
+
+
+#### 禁用自动导入组件
+
+```javascript
+export default defineNuxtConfig({
+  components: {
+	dirs: []
+  }
+})
+```
+
+
+
+#### 第三方包自动导入
+
+```javascript
+export default defineNuxtConfig({
+  imports: {
+    presets: [
+      {
+        from: 'vue-i18n',
+        imports: ['useI18n']
+      }
+    ]
+  }
+})
+```
+
+
+
+#### 动态组件
+
+```javascript
+// 想使用<component :is="someComputedComponent">，必须使用vue提供的resolveComponent
+const MyButton = resolveComponent('MyButton')
+<component :is="clickable ? MyButton : 'div'" />
+```
+
+
+
+#### 动态导入
+
+```javascript
+// 只需在组件名称前添加 Lazy 前缀
+<LazyMountainsList v-if="show" />
+
+// 懒加载api
+<LazyMyComponent hydrate-on-visible /> // 当组件进入视口时进行 hydration。
+<LazyMyComponent hydrate-on-idle /> // 当浏览器空闲时进行 hydration。
+<LazyMyComponent hydrate-on-interaction="mouseover" /> // 在指定交互（例如点击、鼠标悬停）后进行 hydration。
+<LazyMyComponent hydrate-on-media-query="(max-width: 768px)" /> // 当窗口匹配媒体查询时进行 hydration。
+<LazyMyComponent :hydrate-after="2000" /> // 在指定延迟（以毫秒为单位）后进行 hydration。
+<LazyMyComponent :hydrate-when="isReady" /> // 基于布尔条件进行 hydration。
+<LazyMyComponent hydrate-never /> // 永不 hydration 组件。
+<LazyMyComponent hydrate-on-visible @hydrated="onHydrate" /> //监听 Hydration 事件
+```
+
+
+
+#### 客户端渲染组件
+
+```javascript
+// 在组件文件名后添加 .client 后缀
+Comments.client.vue
+```
+
+
+
+#### 服务器组件
+
+```javascript
+// 当它们的 props 更新时，将触发网络请求，从而原地更新渲染的 HTML
+export default defineNuxtConfig({
+  experimental: {
+    componentIslands: true
+  }
+})
+// 或者
+HighlightedMarkdown.server.vue
+```
+
+
+
+#### 动态更改布局
+
+```javascript
+function enableCustomLayout () {
+  setPageLayout('custom')
+}
+```
+
+
+
+#### 内联中间件
+
+```javascript
+export default defineNuxtConfig({
+  middleware: [
+    function (to, from) {
+      // 自定义内联中间件
+    },
+    'auth',
+  ]
+})
+// 中间件的执行顺序如下：全局中间件（按照首字母排序）->内联中间件（按照首字母排序）->命名中间件（按照首字母排序）
+```
+
+
+
+#### 动态添加中间件
+
+```javascript
+export default defineNuxtPlugin(() => {
+  addRouteMiddleware('global-test', () => {
+    console.log('此全局中间件在插件中添加，将在每次路由变更时运行')
+  }, { global: true })
+
+  addRouteMiddleware('named-test', () => {
+    console.log('此命名中间件在插件中添加，将覆盖同名的任何现有中间件')
+  })
+})
+```
+
+
+
+#### 构建时设置中间件
+
+```javascript
+export default defineNuxtConfig({
+  hooks: {
+    'pages:extend' (pages) {
+      function setMiddleware (pages: NuxtPage[]) {
+        for (const page of pages) {
+          if (/* 某些条件 */ true) {
+            page.meta ||= {}
+            // 注意，这将覆盖页面中 `definePageMeta` 设置的任何中间件
+            page.meta.middleware = ['named']
+          }
+          if (page.children) {
+            setMiddleware(page.children)
+          }
+        }
+      }
+      setMiddleware(pages)
+    }
+  }
+})
+```
+
+
+
+#### 并行插件
+
+```javascript
+export default defineNuxtPlugin({
+  name: 'my-plugin',
+  parallel: true,
+  async setup (nuxtApp) {
+    // 下一个插件将立即执行
+  }
+})
+```
+
+
+
+#### 依赖插件
+
+```javascript
+export default defineNuxtPlugin({
+  name: 'depends-on-my-plugin',
+  dependsOn: ['my-plugin'],
+  async setup (nuxtApp) {
+    // 此插件将等待 `my-plugin` 执行结束后再运行
+  }
+})
+```
+
+
+
+#### 提供辅助函数
+
+```javascript
+export default defineNuxtPlugin(() => {
+  return {
+    provide: {
+      hello: (msg: string) => `Hello ${msg}!`
+    }
+  }
+})
+
+<script setup lang="ts">
+// 或者，你也可以在这里使用
+const { $hello } = useNuxtApp()
+</script>
+```
+
+
+
+#### 类型定义插件
+
+```javascript
+declare module '#app' {
+  interface NuxtApp {
+    $hello (msg: string): string
+  }
+}
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $hello (msg: string): string
+  }
+}
+```
+
+
+
+#### Vue 指令
+
+```javascript
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.directive('focus', {
+    mounted (el) {
+      el.focus()
+    },
+    getSSRProps (binding, vnode) {
+      // 你可以在这里提供 SSR 特定的 props
+      return {}
+    }
+  })
+})
+```
+
+
+
+#### 服务器路由
+
+```javascript
+// ~/server/api 内的文件，路由会自动带上 /api 前缀。
+// 若想添加无 /api 前缀的服务器路由，可放入 ~/server/routes 目录。
+```
+
+
+
+#### 通配路由
+
+```javascript
+// 例如，创建文件 ~/server/api/foo/[...].ts 将注册一个通配路由，用于匹配所有未被其他路由处理的请求，如 /api/foo/bar/baz
+```
+
+
+
+#### 状态码
+
+```javascript
+// 要返回其他状态码，请使用 setResponseStatus 工具。
+export default defineEventHandler((event) => {
+  setResponseStatus(event, 202)
+})
+```
+
+
+
+#### 服务器存储
+
+```javascript
+export default defineNuxtConfig({
+  nitro: {
+    storage: {
+      redis: {
+        driver: 'redis',
+        /* redis 连接选项 */
+        port: 6379, // Redis 端口
+        host: "127.0.0.1", // Redis 主机地址
+        username: "", // 需 Redis >= 6
+        password: "",
+        db: 0, // 默认 0
+        tls: {} // tls/ssl
+      }
+    }
+  }
+})
+
+export default defineEventHandler(async (event) => {
+  // 列举所有键
+  const keys = await useStorage('redis').getKeys()
+
+  // 设置键值
+  await useStorage('redis').setItem('foo', 'bar')
+
+  // 删除键
+  await useStorage('redis').removeItem('foo')
+
+  return {}
+})
+
+// 或者在服务器插件中定义
+import redisDriver from 'unstorage/drivers/redis'
+
+export default defineNitroPlugin(() => {
+  const storage = useStorage()
+
+  // 动态传入运行时配置或其他来源的凭据
+  const driver = redisDriver({
+      base: 'redis',
+      host: useRuntimeConfig().redis.host,
+      port: useRuntimeConfig().redis.port,
+      /* 其他 redis 连接选项 */
+    })
+
+  // 挂载驱动
+  storage.mount('redis', driver)
+})
+```
+
+
+
+#### 事件
+
+```javascript
+// 自定义事件
+nuxtApp.hook('app:user:registered', payload => {
+  console.log('有新用户注册了！', payload)
+})
+
+//触发事件
+await nuxtApp.callHook('app:user:registered', {
+  id: 1,
+  name: 'John Doe',
+})
+```
+
+
+
+#### <ClientOnly>
+
+```vue
+<!-- 使用 <ClientOnly> 组件仅在客户端渲染组件。 -->
+<!--
+	placeholderTag | fallbackTag：指定在服务器端渲染的标签。
+	placeholder | fallback：指定在服务器端渲染的内容。
+ -->
+ <template>
+  <div>
+    <Sidebar />
+    <!-- <Comment> 组件仅在客户端渲染 -->
+    <ClientOnly fallback-tag="span" fallback="正在加载评论...">
+      <Comment />
+    </ClientOnly>
+  </div>
+</template>
+
+<!-- 使用插槽形式置顶服务端渲染的内容 -->
+<template>
+  <div>
+    <Sidebar />
+    <!-- 在服务器端渲染为 "span" 元素 -->
+    <ClientOnly fallbackTag="span">
+      <!-- 此组件仅在客户端渲染 -->
+      <Comments />
+      <template #fallback>
+        <!-- 这将在服务器端渲染 -->
+        <p>正在加载评论...</p>
+      </template>
+    </ClientOnly>
+  </div>
+</template>
+```
+
+
+
+#### <DevOnly>
+
+```vue
+<!-- 使用 <DevOnly> 组件仅在开发环境中渲染组件。 -->
+<template>
+  <div>
+    <Sidebar />
+    <DevOnly>
+      <!-- 该组件仅在开发环境中渲染 -->
+      <LazyDebugBar />
+
+      <!-- 如果你需要在生产环境中有替代内容 -->
+      <!-- 请务必使用 `nuxt preview` 来测试这些内容 -->
+      <template #fallback>
+        <div><!-- 用于 flex.justify-between 的空 div --></div>
+      </template>
+    </DevOnly>
+  </div>
+</template>
+```
+
+
+
+#### <NuxtClientFallback>
+
+```vue
+<!-- 当其子组件在 SSR 中触发错误时，该组件会改为在客户端渲染其内容 -->
+<!-- 该组件将会在客户端渲染 -->
+<NuxtClientFallback fallback-tag="span">
+	<Comments />
+	<BrokeInSSR />
+</NuxtClientFallback>
+<!-- 事件：@ssr-error：当子组件在 SSR 中触发错误时发出该事件。注意该事件仅在服务端触发。 -->
+<NuxtClientFallback @ssr-error="logSomeError">
+</NuxtClientFallback>
+
+<!--
+	placeholderTag | fallbackTag：指定在服务端渲染失败时用作替代的标签。
+	placeholder | fallback：指定服务端渲染失败时显示的替代内容。
+	keepFallback：如果服务端渲染失败，是否保留替代内容。
+ -->
+<!-- 如果默认插槽在服务端渲染失败，则使用 <span>Hello world</span> 渲染 -->
+<NuxtClientFallback fallback-tag="span" fallback="Hello world">
+	<BrokeInSsr />
+</NuxtClientFallback>
+```
+
+
+
+#### <NuxtPicture>
+
+```txt
+Nuxt 提供了一个 <NuxtPicture> 组件用于自动图片优化。
+```
+
+
+
+#### <NuxtTime>
+
+```txt
+Nuxt 提供了一个 <NuxtTime> 组件用于格式化时间。
+```
+
+
+
+#### <NuxtPage>
+
+```javascript
+// <NuxtPage> 也支持传递自定义 props，方便你将其逐级向下传递。
+<template>
+  <NuxtPage :foobar="123" />
+</template>
+// 在页面中
+const props = defineProps<{ foobar: number }>()
+console.log(props.foobar) // 输出: 123
+
+const attrs = useAttrs()
+console.log(attrs.foobar) // 输出: 123
+```
+
+
+
+#### <NuxtLayout>
+
+```javascript
+// NuxtLayout 也接受你可能需要传递给布局的任何额外属性
+<NuxtLayout name="custom" title="我是一个自定义布局">
+</NuxtLayout>
+
+<script setup lang="ts">
+const layoutCustomProps = useAttrs()
+
+console.log(layoutCustomProps.title) // 我是一个自定义布局
+</script>
+
+// 布局的 Ref
+const layout = ref()
+
+function logFoo () {
+  layout.value.layoutRef.foo()
+}
+```
+
+
+#### 静态文件及跨应用链接处理
+
+```javascript
+// 对于 /public 目录下的静态文件（如 PDF 或图片），可使用 external 属性确保链接正确解析。
+<NuxtLink to="/example-report.pdf" external>
+    下载报告
+</NuxtLink>
+```
+
+
+#### useAsyncData监听参数
+```javascript
+// 在检测到任何变化时自动重新执行获取函数
+const page = ref(1)
+const { data: posts } = await useAsyncData(
+  'posts',
+  () => $fetch('https://fakeApi.com/posts', {
+    params: {
+      page: page.value
+    }
+  }), {
+    watch: [page]
+  }
+)
+```
+
+
+#### useAsyncData响应式键
+```javascript
+// 键变化时自动更新
+const route = useRoute()
+const userId = computed(() => `user-${route.params.id}`)
+
+// 当路由变化且 userId 更新时，数据会自动重新获取
+const { data: user } = useAsyncData(
+  userId,
+  () => fetchUserById(route.params.id)
+)
+```
+
+
+#### useAsyncData共享状态与选项一致性
+```javascript
+// 当多次调用 useAsyncData 使用相同键时，它们会共享同一个 data、error 和 status ref
+// 同一键的所有调用中保持一致:
+{
+	handler 函数
+	deep 选项
+	transform 函数
+	pick 数组
+	getCachedData 函数
+	default 值
+}
+// 不同且不会触发警告:
+{
+	server
+	lazy
+	immediate
+	dedupe
+	watch
+}
 ```
