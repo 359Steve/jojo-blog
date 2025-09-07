@@ -17,6 +17,8 @@
 		--jojo-admin-menu-hover: rgb(5 5 5 / 6%);
 		--jojo-admin-text-color-disabled: #c0c4cc;
 		--jojo-admin-dropdown-menu-bg: #ebf5ff;
+
+		--jojo-blog-base-color: '#fff'
 	}
 
 	.dark {
@@ -33,5 +35,7 @@
 		--jojo-admin-menu-hover: rgb(253 253 253 / 12%);
 		--jojo-admin-text-color-disabled: #6C6E72;
 		--jojo-admin-dropdown-menu-bg: #060F19;
+
+		--jojo-blog-base-color: '#000'
 	}
 }

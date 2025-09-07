@@ -26,7 +26,7 @@ onMounted(() => {
 		<div class="h-full w-24 cursor-pointer py-2">
 			<LogoBasicLogo></LogoBasicLogo>
 		</div>
-		<div class="hidden h-full w-[calc(100%-7rem)] items-center justify-center sm:flex">
+		<div class="hidden h-full absolute left-[50%] translate-x-[-50%]  items-center justify-center sm:flex">
 			<HeaderMenuList></HeaderMenuList>
 		</div>
 		<div class="flex h-full w-fit items-center justify-between gap-x-2">

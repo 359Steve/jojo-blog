@@ -84,9 +84,10 @@ const changeTagsViews = (newPath: string): void => {
 
 const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	const tagList = useAdminMenu().getTagMenu();
+	const newPath = exceptPath(route.path);
 	// 判断当前路由是否等于关闭的tag
-	if (route.path === item.path) {
-		const currentIndex = tagList.findIndex(demo => demo.path === route.path);
+	if (newPath === item.path) {
+		const currentIndex = tagList.findIndex(demo => demo.path === newPath);
 		const currentPath = tagList[currentIndex - 1].path;
 		navigateTo({
 			path: currentPath

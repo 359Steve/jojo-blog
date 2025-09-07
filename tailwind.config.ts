@@ -75,7 +75,9 @@ export default {
 				'admin-menu-active-before': 'var(--jojo-admin-menu-active-before)',
 				'admin-tag-active-bg': 'var(--jojo-admin-menu-active-before)',
 				'admin-header-bg-hover': 'var(--jojo-admin-menu-hover)',
-				'admin-dropdown-menu-bg': 'var(--jojo-admin-dropdown-menu-bg)'
+				'admin-dropdown-menu-bg': 'var(--jojo-admin-dropdown-menu-bg)',
+
+				'blog-base-color': 'var(--jojo-blog-base-color)'
 			},
 			textColor: {
 				'admin-tag-text': 'var(--jojo-admin-menu-text)',
