@@ -4,6 +4,11 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+enum TagType {
+    BLOG // 博客标签
+    PERSON // 个人标签
+}
+
 generator client {
     provider = "prisma-client-js"
 }
@@ -21,4 +26,14 @@ model user_info {
     pet_name   String
     sign       String @default("这个人很懒，什么都没写")
     describe   String @default("暂无描述")
+}
+
+model tag {
+    id   Int     @id @default(autoincrement())
+    name String  @db.VarChar(50)
+    icon String  @db.VarChar(255)
+    url  String  @db.VarChar(255)
+    type TagType @default(BLOG)
+
+    @@unique([name, type], map: "uk_name_type") // 同一类型下标签名称唯一
 }
