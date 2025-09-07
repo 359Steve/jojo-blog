@@ -39,9 +39,9 @@ onMounted(() => {
 						<slot />
 					</AdminMain>
 				</ElMain>
-				<ElFooter>
+				<!-- <ElFooter>
 					<AdminFooter />
-				</ElFooter>
+				</ElFooter> -->
 			</ElContainer>
 		</ElContainer>
 	</div>
