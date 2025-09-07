@@ -4,10 +4,7 @@ import { join } from 'node:path';
 import process from 'node:process';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
-
-const returnData = <T>(code: StatusCode, msg: string, data: T | null): NitroResponse<T> => {
-	return { code, msg, data };
-};
+import { returnData } from '../utils/public';
 
 export class UserRepository {
 	private prisma: PrismaClient;
