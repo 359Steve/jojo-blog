@@ -15,5 +15,11 @@ export default defineNuxtConfig({
 	],
 	vite: {
 		plugins: [sbgLoader()]
+	},
+	imports: {
+		dirs: [
+			'composables',
+			'composables/api/tag'
+		]
 	}
 });

@@ -31,7 +31,10 @@ export default defineNuxtConfig({
 		payloadExtraction: false
 	},
 	imports: {
-		dirs: ['composables', 'composables/*/*.{ts,js,mjs,mts}', 'composables/**/*.{ts,js,mjs,mts}'],
+		dirs: [
+			'composables',
+			'composables/api/tag'
+		],
 	},
 	plugins: [
 		'~/plugins/md-editor.ts',
