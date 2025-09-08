@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import type { CreateTagDto, FindAllReq } from '~/server/dto/CreateTagDto';
-import { StatusCode } from '~/types/com-types';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { ElFormItem, ElPopover, type FormInstance, type FormRules } from 'element-plus';
 
 enum TagType {
@@ -19,9 +18,9 @@ const formData = reactive<CreateTagDto>({
 })
 const tableData = ref<CreateTagDto[]>([])
 const tableHeight = ref<number>(0)
-const pageNumber = ref<number>(1)
-const pageSize = ref<number>(10)
 const total = ref<number>(0)
+const searchTag = ref<string>('')
+const isEdit = ref<boolean>(false)
 
 const rulesText = (value: string): boolean => {
 	return /^[a-z0-9]+:[a-z0-9-_]+$/i.test(value)
@@ -54,40 +53,44 @@ const isIDisabled = computed(() => {
 })
 
 // 查询全部标签
-const queryTagAll = async (): Promise<void> => {
-	const res = await fetchUseGet<FindAllReq, { records: CreateTagDto[], total: number }>('/tagQueryAll', {
-		query: {
-			pageNumber: pageNumber.value,
-			pageSize: pageSize.value
-		}
-	})
+const queryTag = async (name: string, n: number) => {
+	const { records, total: t } = await queryTagAll(name, n)
 
-	if (res.code === StatusCode.SUCCESS) {
-		tableData.value = res.data.records
-		total.value = res.data.total
-	}
+	tableData.value = records
+	total.value = t
 }
 
 // 新增标签
 const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async valid => {
 		if (valid) {
-			const res = await fetchPostApi<CreateTagDto, CreateTagDto>('/tagCreate', {
-				body: formData
+			const { data, msg } = await createTags(formData)
+
+			ElMessage({
+				type: data ? 'success' : 'error',
+				message: msg
+			})
+			queryTagAll('', 1)
+		}
+	})
+}
+
+// 修改标签
+const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
+	formEl?.validate(async valid => {
+		if (valid) {
+			const { data, msg } = await updateTags(formData)
+
+			ElMessage({
+				type: data ? 'success' : 'error',
+				message: msg
 			})
 
-			if (res.code === StatusCode.SUCCESS) {
-				ElMessage({
-					type: 'success',
-					message: res.msg
-				})
-
-				queryTagAll()
-			} else {
-				ElMessage({
-					type: 'error',
-					message: '创建失败！'
-				})
+			for (const item of tableData.value) {
+				if (item.id === formData.id) {
+					Object.assign(item, formData)
+					break
+				}
 			}
 		}
 	})
@@ -95,11 +98,21 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 
 // 编辑
 const editClick = (value: CreateTagDto): void => {
-	console.log(value)
+	Object.assign(formData, value)
+	isEdit.value = true
 }
 
-onMounted(() => {
-	queryTagAll()
+// 分页查询
+const handleCurrentChange = (val: number): void => {
+	queryTag(searchTag.value, val)
+}
+
+watch(searchTag, async () => {
+	queryTag(searchTag.value, 1)
+})
+
+onMounted(async () => {
+	await queryTag(searchTag.value, 1)
 
 	nextTick(() => {
 		tableHeight.value = formRef.value?.offsetHeight || 0
@@ -112,10 +125,10 @@ onMounted(() => {
 		<div ref="formRef" class="w-full">
 			<h3 class="font-bold mb-2">新增标签</h3>
 			<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules" class="!w-full">
-				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:pr-4" prop="name" label="名称：">
+				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:odd:pr-4" prop="name" label="名称：">
 					<ElInput v-model="formData.name" placeholder="请输入标签" clearable />
 				</ElFormItem>
-				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:pr-4" prop="icon" label="图标：">
+				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:odd:pr-4" prop="icon" label="图标：">
 					<ElInput v-model="formData.icon" placeholder="请输入图标" clearable>
 						<template #prefix>
 							<Icon class="cursor-pointer text-[20px]"
@@ -130,51 +143,59 @@ onMounted(() => {
 						</template>
 					</ElInput>
 				</ElFormItem>
-				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:pr-4" prop="url" label="链接：">
+				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:odd:pr-4" prop="url" label="链接：">
 					<ElInput v-model="formData.url" placeholder="请输入链接" clearable />
 				</ElFormItem>
-				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:pr-4" prop="type" label="类型：">
+				<ElFormItem class="!w-full sm:!w-[50%] !mx-0 sm:odd:pr-4" prop="type" label="类型：">
 					<ElSelect v-model="formData.type" placeholder="请选择" class="!w-full" clearable>
 						<ElOption label="博客" value="BLOG" />
 						<ElOption label="个人" value="PERSON" />
 					</ElSelect>
 				</ElFormItem>
 				<ElFormItem class="!w-full !mx-0 sm:pr-4">
-					<el-button :disabled="isIDisabled" @click="createTag(ruleFormRef!)" type="primary">新增</el-button>
+					<ElButton v-if="!isEdit" :disabled="isIDisabled" @click="createTag(ruleFormRef!)" type="primary">新增
+					</ElButton>
+					<ElButton v-if="isEdit" :disabled="isIDisabled" type="primary" @click="updateTag(ruleFormRef!)">修改
+					</ElButton>
+					<ElButton v-if="isEdit" type="" plain @click="isEdit = false">取消</ElButton>
 				</ElFormItem>
 			</ElForm>
 		</div>
 		<div class="w-full" :style="{ height: `calc(100% - ${tableHeight}px)` }">
-			<h3 class="font-bold mb-2">标签列表</h3>
-			<el-table :data="tableData" show-overflow-tooltip class="w-full !text-[16px] !border-none"
+			<div class="font-bold mb-2 w-full flex justify-between items-center">
+				<h3>标签列表</h3>
+				<ElInput v-model="searchTag" placeholder="请输入名称" clearable class="!w-[200px]" />
+			</div>
+			<ElTable :data="tableData" show-overflow-tooltip class="w-full !text-[16px] !border-none"
 				:class="['!h-[calc(100%-38px)] sm:!h-[calc(100%-70px)]']">
-				<el-table-column prop="name" label="名称" width="200" />
-				<el-table-column prop="icon" label="Icon" width="200">
+				<ElTableColumn prop="name" label="名称" width="200" />
+				<ElTableColumn prop="icon" label="Icon" width="200">
 					<template #default="scope">
 						<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
 					</template>
-				</el-table-column>
-				<el-table-column prop="url" label="链接" width="400">
+				</ElTableColumn>
+				<ElTableColumn prop="url" label="链接" width="400">
 					<template #default="scope">
 						<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
 					</template>
-				</el-table-column>
-				<el-table-column prop="type" label="类型" width="200">
+				</ElTableColumn>
+				<ElTableColumn prop="type" label="类型" width="200">
 					<template #default="scope">
 						<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
 					</template>
-				</el-table-column>
-				<el-table-column fixed="right" label="操作" min-width="120">
+				</ElTableColumn>
+				<ElTableColumn fixed="right" label="操作" min-width="120">
 					<template #default="scope">
-						<el-button link type="primary" size="small" class="!text-[16px]" @click="editClick(scope.row)">
+						<ElButton link type="primary" size="small" class="!text-[16px]" @click="editClick(scope.row)">
 							编辑
-						</el-button>
-						<el-button link type="danger" class="!text-[16px]" size="small">删除</el-button>
+						</ElButton>
+						<ElButton link type="danger" class="!text-[16px]" size="small">删除</ElButton>
 					</template>
-				</el-table-column>
-			</el-table>
+				</ElTableColumn>
+			</ElTable>
 			<div ref="footerRef" class="hidden sm:flex h-[32px] w-full justify-end">
-				<el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" />
+				<ElPagination background layout="prev, pager, next" :total="total" :page-size="10"
+					@current-change="handleCurrentChange" />
 			</div>
 		</div>
 	</div>
@@ -195,5 +216,9 @@ onMounted(() => {
 
 :deep(.el-select__wrapper) {
 	@apply text-[14px] h-[34px]
+}
+
+:deep(.el-table__inner-wrapper::before) {
+	@apply hidden
 }
 </style>
