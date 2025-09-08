@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 	const body = await readBody<CreateUserDto>(event);
 
 	try {
-		return await userService.createUser<CreateUserDto>(body);
+		return await userService.createUser(body);
 	} catch {
 		sendErrorWithMessage(event, 500, '注册失败！');
 		return null;

@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
 	const body = await readBody<CreateUserDto>(event);
 
 	try {
-		return await userService.loginUser<LoginResponse>(body);
+		return await userService.loginUser(body);
 	} catch {
 		sendErrorWithMessage(event, 500, '登录失败！');
 		return null;

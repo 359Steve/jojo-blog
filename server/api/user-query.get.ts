@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
 
 	try {
 		// 查询用户信息
-		return await userService.findUser<FindResponse>(id);
+		return await userService.findUser(id);
 	} catch {
 		sendErrorWithMessage(event, 500, '查询失败！');
 		return null;
