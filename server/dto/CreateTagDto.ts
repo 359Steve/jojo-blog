@@ -30,7 +30,4 @@ export class CreateTagDto {
 	type!: keyof typeof TagType;
 }
 
-export interface FindAllReq {
-	pageNumber: number;
-	pageSize: number;
-}
+
