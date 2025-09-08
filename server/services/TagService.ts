@@ -1,5 +1,5 @@
 import { container } from "../core/container";
-import { CreateTagDto, FindAllReq } from "../dto/CreateTagDto";
+import { CreateTagDto } from "../dto/CreateTagDto";
 import { TagRepository } from "../repositories/TagRepository";
 
 export class TagService {
@@ -15,7 +15,12 @@ export class TagService {
 	}
 
 	// 创建标签
-	async createTag<T>(body: CreateTagDto): Promise<NitroResponse<T>> {
-		return await this.tagRepo.createTag<T>(body);
+	async createTag(body: CreateTagDto) {
+		return await this.tagRepo.createTag(body);
+	}
+
+	// 修改标签
+	async updateTag(body: CreateTagDto) {
+		return await this.tagRepo.updateTag(body);
 	}
 }
