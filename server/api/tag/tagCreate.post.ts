@@ -1,6 +1,6 @@
-import { container } from "../../core/container";
 import { CreateTagDto } from "../../dto/CreateTagDto";
-import { TagService } from "../../services/TagService";
+import { container } from "~/server/core/container";
+import { TagService } from "~/server/services/TagService";
 
 export default defineEventHandler(async (event) => {
 	const tagService = container.get(TagService);
