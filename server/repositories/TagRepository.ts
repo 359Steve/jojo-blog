@@ -2,20 +2,17 @@ import { PrismaClient } from "@prisma/client";
 import { returnData } from "../utils/public";
 import { StatusCode } from "~/types/com-types";
 import { CreateTagDto } from "../dto/CreateTagDto";
+import { prisma } from "../core/prisma";
 
 export class TagRepository {
-	private prisma: PrismaClient;
-
-	constructor() {
-		this.prisma = new PrismaClient();
-	}
+	constructor(private prismaClient: PrismaClient = prisma) { }
 
 	// 查询全部标签
 	async findAllTag(query: FindAllReq) {
 		const { name, pageNumber, pageSize } = query
 
 		const [records, total] = await Promise.all([
-			this.prisma.tag.findMany({
+			this.prismaClient.tag.findMany({
 				skip: (Number(pageNumber) - 1) * Number(pageSize),
 				take: Number(pageSize),
 				where: {
@@ -24,7 +21,7 @@ export class TagRepository {
 					}
 				}
 			}),
-			this.prisma.tag.count({
+			this.prismaClient.tag.count({
 				where: {
 					name: {
 						contains: name
@@ -41,7 +38,7 @@ export class TagRepository {
 
 	// 创建标签
 	async createTag(value: CreateTagDto) {
-		const res = await this.prisma.tag.create({
+		const res = await this.prismaClient.tag.create({
 			data: {
 				...value
 			}
@@ -52,7 +49,7 @@ export class TagRepository {
 
 	// 修改标签
 	async updateTag(body: CreateTagDto) {
-		const res = await this.prisma.tag.update({
+		const res = await this.prismaClient.tag.update({
 			where: {
 				id: Number(body.id)
 			},
@@ -66,7 +63,7 @@ export class TagRepository {
 
 	// 删除标签
 	async deleteTag(id: number) {
-		const res = await this.prisma.tag.delete({
+		const res = await this.prismaClient.tag.delete({
 			where: {
 				id: Number(id)
 			}

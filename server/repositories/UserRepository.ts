@@ -5,16 +5,13 @@ import process from 'node:process';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
+import { prisma } from '../core/prisma';
 
 export class UserRepository {
-	private prisma: PrismaClient;
-
-	constructor() {
-		this.prisma = new PrismaClient();
-	}
+	constructor(private prismaClient: PrismaClient = prisma) { }
 
 	async createUser(dto: CreateUserDto) {
-		const res = await this.prisma.user_info.create({
+		const res = await this.prismaClient.user_info.create({
 			data: {
 				...dto
 			}
@@ -25,7 +22,7 @@ export class UserRepository {
 
 	async loginUser(body: CreateUserDto) {
 		const { user_name, password } = body;
-		const res = await this.prisma.user_info.findFirst({
+		const res = await this.prismaClient.user_info.findFirst({
 			where: {
 				user_name,
 				password
@@ -43,7 +40,7 @@ export class UserRepository {
 	}
 
 	async findUser(id: number) {
-		const res = await this.prisma.user_info.findUnique({
+		const res = await this.prismaClient.user_info.findUnique({
 			where: {
 				id: Number(id)
 			}
