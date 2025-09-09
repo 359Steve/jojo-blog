@@ -134,3 +134,19 @@ export const postApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): 
 			});
 	});
 };
+
+// DELETE 封装
+export const deleteApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+	return new Promise((resolve, reject) => {
+		apiCore<Rq, Rp>(url, {
+			method: 'delete',
+			...option
+		})
+			.then(res => {
+				resolve(res.data.value as NewResponse<Rp>);
+			})
+			.catch(err => {
+				reject(err);
+			});
+	});
+};

@@ -129,3 +129,19 @@ export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<R
 			});
 	});
 };
+
+// DELETE 封装
+export const fetchDeleteApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+	return new Promise((resolve, reject) => {
+		fetchApiCore<Rq, Rp>(url, {
+			method: 'delete',
+			...option
+		})
+			.then(res => {
+				resolve(res as NewResponse<Rp>);
+			})
+			.catch(err => {
+				reject(err);
+			});
+	});
+};
