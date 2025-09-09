@@ -63,4 +63,15 @@ export class TagRepository {
 
 		return res ? returnData(StatusCode.SUCCESS, '修改成功！', res) : returnData(StatusCode.FAIL, '修改失败！', null);
 	}
+
+	// 删除标签
+	async deleteTag(id: number) {
+		const res = await this.prisma.tag.delete({
+			where: {
+				id: Number(id)
+			}
+		});
+
+		return res ? returnData(StatusCode.SUCCESS, '删除成功！', res) : returnData(StatusCode.FAIL, '删除失败！', null);
+	}
 }

@@ -61,3 +61,24 @@ export const updateTags = async (value: CreateTagDto) => {
 		msg: res.msg
 	}
 }
+
+// 删除标签
+export const deleteTags = async (id: number) => {
+	const res = await fetchDeleteApi<{ id: number }, CreateTagDto>('/tag/tagDelete', {
+		query: {
+			id
+		}
+	})
+
+	if (res.code === StatusCode.SUCCESS) {
+		return {
+			data: res.data,
+			msg: res.msg
+		}
+	}
+
+	return {
+		data: null,
+		msg: res.msg
+	}
+}

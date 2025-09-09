@@ -19,6 +19,7 @@ const formData = reactive<CreateTagDto>({
 const tableData = ref<CreateTagDto[]>([])
 const tableHeight = ref<number>(0)
 const total = ref<number>(0)
+const pageNumber = ref<number>(1)
 const searchTag = ref<string>('')
 const isEdit = ref<boolean>(false)
 
@@ -70,7 +71,8 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 				type: data ? 'success' : 'error',
 				message: msg
 			})
-			queryTagAll('', 1)
+
+			queryTag('', pageNumber.value)
 		}
 	})
 }
@@ -102,8 +104,21 @@ const editClick = (value: CreateTagDto): void => {
 	isEdit.value = true
 }
 
+// 删除标签
+const deleteClick = async (value: CreateTagDto): Promise<void> => {
+	const { data, msg } = await deleteTags(value.id!)
+
+	ElMessage({
+		type: data ? 'success' : 'error',
+		message: msg
+	})
+
+	queryTag('', pageNumber.value)
+}
+
 // 分页查询
 const handleCurrentChange = (val: number): void => {
+	pageNumber.value = val
 	queryTag(searchTag.value, val)
 }
 
@@ -189,7 +204,8 @@ onMounted(async () => {
 						<ElButton link type="primary" size="small" class="!text-[16px]" @click="editClick(scope.row)">
 							编辑
 						</ElButton>
-						<ElButton link type="danger" class="!text-[16px]" size="small">删除</ElButton>
+						<ElButton link type="danger" class="!text-[16px]" size="small" @click="deleteClick(scope.row)">
+							删除</ElButton>
 					</template>
 				</ElTableColumn>
 			</ElTable>

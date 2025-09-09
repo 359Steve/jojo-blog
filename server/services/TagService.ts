@@ -23,4 +23,9 @@ export class TagService {
 	async updateTag(body: CreateTagDto) {
 		return await this.tagRepo.updateTag(body);
 	}
+
+	// 删除标签
+	async deleteTag(id: number) {
+		return await this.tagRepo.deleteTag(id);
+	}
 }
