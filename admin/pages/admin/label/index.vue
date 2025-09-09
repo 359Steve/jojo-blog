@@ -105,15 +105,17 @@ const editClick = (value: CreateTagDto): void => {
 }
 
 // 删除标签
-const deleteClick = async (value: CreateTagDto): Promise<void> => {
-	const { data, msg } = await deleteTags(value.id!)
+const deleteClick = (value: CreateTagDto): void => {
+	useConfirm('删除标签', 'warning', async () => {
+		const { data, msg } = await deleteTags(value.id!)
 
-	ElMessage({
-		type: data ? 'success' : 'error',
-		message: msg
+		ElMessage({
+			type: data ? 'success' : 'error',
+			message: msg
+		})
+
+		queryTag('', pageNumber.value)
 	})
-
-	queryTag('', pageNumber.value)
 }
 
 // 分页查询

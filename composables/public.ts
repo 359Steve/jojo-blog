@@ -41,3 +41,18 @@ export const detectDeviceDetail = (): {
 export const normalizePath = (path: string) => path.replace(/\/$/, '');
 
 export const exceptPath = (path: string) => path.replace(/\/\d+$/, '');
+
+// 封装box确认弹窗
+export const useConfirm = (message: string, type: 'warning' | 'success' | 'info' | 'error' = 'warning', onConfirm: () => void, onCancel?: () => void) => {
+	ElMessageBox.confirm(message, '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type
+	})
+		.then(() => {
+			onConfirm();
+		})
+		.catch(() => {
+			onCancel && onCancel();
+		});
+}
