@@ -15,7 +15,6 @@
 			]
 		},
 		"types": [
-			"@nuxt/types",
 			"@types/node",
 			"@vue/runtime-core"
 		],

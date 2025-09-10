@@ -32,15 +32,14 @@ export default defineNuxtConfig({
 	},
 	imports: {
 		dirs: [
-			'composables',
-			'composables/api/tag'
+			'composables'
 		],
 	},
 	plugins: [
-		'~/plugins/md-editor.ts',
 		'~/plugins/vue-starport.ts',
 		'~/plugins/iconify.ts',
-		'~/plugins/preventDefault.client.ts'
+		'~/plugins/md-editor.ts',
+		'~/plugins/preventDefault.client.ts',
 	],
 	pages: true,
 	typescript: {
@@ -62,7 +61,8 @@ export default defineNuxtConfig({
 		'@vueuse/nuxt',
 		'@nuxtjs/color-mode',
 		'@vueuse/motion/nuxt',
-		'@nuxtjs/google-fonts'
+		'@nuxtjs/google-fonts',
+		'@nuxt/eslint'
 	],
 
 	colorMode: {
