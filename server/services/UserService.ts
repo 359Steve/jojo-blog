@@ -21,7 +21,17 @@ export class UserService {
 	}
 
 	// 查询用户
-	async findUser(id: number) {
-		return await this.userRepo.findUser(id);
+	async findUser(user_name: string) {
+		return await this.userRepo.findUser(user_name);
+	}
+
+	// 上传头像
+	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+		return await this.userRepo.uploadAvatar(files);
+	}
+
+	// 更新信息
+	async updateUser(body: CreateUserDto) {
+		return await this.userRepo.updateUser(body);
 	}
 }

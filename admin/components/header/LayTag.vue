@@ -90,7 +90,7 @@ const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 		const currentIndex = tagList.findIndex(demo => demo.path === newPath);
 		const currentPath = tagList[currentIndex - 1].path;
 		navigateTo({
-			path: currentPath
+			path: currentPath.includes('userinfo') ? `${currentPath}/123123` : currentPath
 		});
 	}
 	visible.value = false;

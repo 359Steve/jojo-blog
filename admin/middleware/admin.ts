@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async to => {
 		} else {
 			// 验证token
 			try {
-				const res = await postApi<{ token: string }, any>('/verify-token', {
+				const res = await postApi<{ token: string }, any>('/user/verify-token', {
 					body: {
 						token: cookies
 					}

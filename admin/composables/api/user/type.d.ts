@@ -1,0 +1,3 @@
+interface UploadAvatarRep {
+	url: string
+}

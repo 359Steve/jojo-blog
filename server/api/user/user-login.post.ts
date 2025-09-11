@@ -1,7 +1,7 @@
-import { container } from '../core/container';
-import type { CreateUserDto } from '../dto/CreateUserDto';
-import { UserService } from '../services/UserService';
-import { sendErrorWithMessage } from '../utils/error';
+import { container } from '../../core/container';
+import type { CreateUserDto } from '../../dto/CreateUserDto';
+import { UserService } from '../../services/UserService';
+import { sendErrorWithMessage } from '../../utils/error';
 
 interface LoginResponse {
 	accessToken: string;

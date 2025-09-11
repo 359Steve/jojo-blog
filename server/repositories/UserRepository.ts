@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-import { readFile } from 'node:fs/promises';
+import type { PrismaClient } from '@prisma/client';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import process from 'node:process';
+import fs from 'node:fs';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
@@ -29,32 +30,60 @@ export class UserRepository {
 			}
 		});
 
-		if (res) {
-			// 生成token
-			const accessToken = signToken(res);
-
-			return returnData(StatusCode.SUCCESS, '登录成功！', { accessToken });
-		}
-
-		return returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+		return res ? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) }) : returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
 	}
 
-	async findUser(id: number) {
-		const res = await this.prismaClient.user_info.findUnique({
+	async findUser(user_name: string) {
+		const res = await this.prismaClient.user_info.findFirst({
+			where: user_name
+				? { user_name }
+				: undefined
+		})
+
+		return res ? returnData(StatusCode.SUCCESS, '查询成功！',
+			user_name ? res : { ...res, password: '' }
+		) : returnData(StatusCode.FAIL, '查询失败！', null);
+	}
+
+	// 上传头像
+	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+		if (!files || files.length === 0) {
+			return returnData(StatusCode.FAIL, '没有上传文件！', null);
+		}
+
+		const file = files[0]
+		const fileName = file.filename || 'avatar.png'
+
+		// 判断当前文件是否已经存在
+		const filePath = join(process.cwd(), 'public/avatar', fileName)
+		if (fs.existsSync(filePath)) {
+			fs.unlinkSync(filePath)
+			return returnData(StatusCode.SUCCESS, '文件已存在！', { url: `/avatar/${fileName}` });
+		}
+
+		const savePath = join(process.cwd(), 'public/avatar', fileName);
+
+		if (!file.data) {
+			return returnData(StatusCode.FAIL, '上传失败！', null);
+		}
+
+		await writeFile(savePath, file.data)
+
+		// 返回文件访问路径
+		return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/avatar/${fileName}` });
+	}
+
+	// 更新信息
+	async updateUser(body: CreateUserDto) {
+		const res = await this.prismaClient.user_info.update({
 			where: {
-				id: Number(id)
+				id: Number(body.id)
+			},
+			data: {
+				...body
 			}
 		});
 
-		if (res) {
-			// 读取文件
-			const { describe } = res;
-			const filePath = join(process.cwd(), 'public/file', `${describe}.txt`);
-			const content = await readFile(filePath, 'utf-8');
-
-			return returnData(StatusCode.SUCCESS, '查询成功！', { content });
-		}
-
-		return returnData(StatusCode.FAIL, '查询失败！', null);
+		return res ? returnData(StatusCode.SUCCESS, '修改成功！', res) : returnData(StatusCode.FAIL, '修改失败！', null);
 	}
 }

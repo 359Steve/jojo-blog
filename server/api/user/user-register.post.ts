@@ -1,7 +1,7 @@
-import { container } from '../core/container';
-import type { CreateUserDto } from '../dto/CreateUserDto';
-import { UserService } from '../services/UserService';
-import { sendErrorWithMessage } from '../utils/error';
+import { container } from '../../core/container';
+import type { CreateUserDto } from '../../dto/CreateUserDto';
+import { UserService } from '../../services/UserService';
+import { sendErrorWithMessage } from '../../utils/error';
 
 export default defineEventHandler(async event => {
 	const userService = container.get(UserService);

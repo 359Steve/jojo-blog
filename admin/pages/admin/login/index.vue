@@ -18,7 +18,7 @@ const loading = ref<boolean>(false);
 const onLogin = (formEl: FormInstance | undefined): void => {
 	formEl?.validate(async valid => {
 		if (valid) {
-			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>('/user-login', {
+			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>('/user/user-login', {
 				body: {
 					user_name: ruleForm.username,
 					password: ruleForm.password
@@ -27,14 +27,10 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 
 			if (res.code === StatusCode.SUCCESS) {
 				useUserState().setToken(res.data.accessToken);
+				useUserinfo().setUserInfo(ruleForm.username)
 
 				// 跳转到首页
 				navigateTo('/admin/');
-			} else {
-				ElMessage({
-					type: 'error',
-					message: res.msg
-				});
 			}
 		}
 	});
