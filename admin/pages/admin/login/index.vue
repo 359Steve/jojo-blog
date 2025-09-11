@@ -8,7 +8,7 @@ const Avatar = getIcons().Avatar;
 
 const ruleForm = reactive({
 	username: 'admin',
-	password: 'admin@123'
+	password: 'admin@123',
 });
 
 const ruleFormRef = ref<FormInstance>();
@@ -16,18 +16,25 @@ const disabled = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
 const onLogin = (formEl: FormInstance | undefined): void => {
-	formEl?.validate(async valid => {
+	formEl?.validate(async (valid) => {
 		if (valid) {
-			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>('/user/user-login', {
-				body: {
-					user_name: ruleForm.username,
-					password: ruleForm.password
-				}
-			});
+			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>(
+				'/user/user-login',
+				{
+					body: {
+						user_name: ruleForm.username,
+						password: ruleForm.password,
+					},
+				},
+			);
 
 			if (res.code === StatusCode.SUCCESS) {
 				useUserState().setToken(res.data.accessToken);
-				useUserinfo().setUserInfo(ruleForm.username)
+				const { data } = await findUser();
+
+				if (data) {
+					useUserinfo().setUserInfo(data);
+				}
 
 				// 跳转到首页
 				navigateTo('/admin/');
@@ -42,12 +49,12 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 		<img :src="getIcons().bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
 		<div class="absolute right-5 top-3 flex">
 			<!-- 主题 -->
-			<LaySwitch></LaySwitch>
+			<LaySwitch />
 		</div>
 		<div
 			class="grid h-[100vh] w-full max-w-full grid-cols-1 gap-[9rem] px-8 py-0 admin-md:grid-cols-2 admin-lg:gap-[18rem]">
 			<div class="hidden items-center justify-end admin-md:flex">
-				<Illustration class="w-[360px] admin-lg:w-[500px]"></Illustration>
+				<Illustration class="w-[360px] admin-lg:w-[500px]" />
 			</div>
 			<div class="flex items-center justify-center overflow-hidden text-center admin-md:justify-normal">
 				<div class="w-[290px] admin-lg:w-[360px]">

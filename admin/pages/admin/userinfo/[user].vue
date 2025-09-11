@@ -10,7 +10,6 @@ definePageMeta({
 	},
 });
 
-const username = ref<string>(useUserinfo().getUserInfo());
 const toolbars = ref<ToolbarNames[]>([
 	'bold',
 	'underline',
@@ -27,14 +26,17 @@ const toolbars = ref<ToolbarNames[]>([
 ]);
 const ruleFormRef = templateRef('ruleFormRef');
 const upload = templateRef('upload');
-const formData = reactive<CreateUserDto>({
-	avatar_url: '',
-	user_name: '',
-	pet_name: '',
-	password: '',
-	sign: '',
-	describe: '',
-});
+const { data } = await useAsyncData('userinfo', () => findUser());
+const formData = reactive<CreateUserDto>(
+	data.value?.data ?? {
+		avatar_url: '',
+		user_name: '',
+		pet_name: '',
+		password: '',
+		sign: '',
+		describe: '',
+	},
+);
 const imageFile = ref<FormData | null>(new FormData());
 const updateUserRules = reactive<FormRules>({
 	user_name: [
@@ -131,14 +133,6 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 		}
 	});
 };
-
-onBeforeMount(async () => {
-	const res = await findUser(username.value);
-
-	if (res.data) {
-		Object.assign(formData, res.data);
-	}
-});
 </script>
 
 <template>

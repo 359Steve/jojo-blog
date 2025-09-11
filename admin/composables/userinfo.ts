@@ -1,19 +1,26 @@
-export const useUserinfo = defineStore('userinfo', () => {
-	const user_name = ref<string>('');
+import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
-	const setUserInfo = (name: string) => {
-		user_name.value = name;
+export const useUserinfo = defineStore('userinfo', () => {
+	const userinfo = reactive<CreateUserDto>({
+		avatar_url: '',
+		user_name: '',
+		pet_name: '',
+		password: '',
+		sign: '',
+		describe: '',
+	});
+
+	const setUserInfo = (value: CreateUserDto) => {
+		Object.assign(userinfo, value);
 	};
 
 	const getUserInfo = () => {
-		return user_name.value;
+		return userinfo;
 	};
 
 	return {
-		user_name,
+		userinfo,
 		setUserInfo,
-		getUserInfo
+		getUserInfo,
 	};
-}, {
-	persist: true
 });

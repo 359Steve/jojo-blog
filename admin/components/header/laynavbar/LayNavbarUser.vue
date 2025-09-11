@@ -5,9 +5,9 @@ const loginOut = (): void => {
 	ElMessageBox.confirm('确定退出系统吗?', {
 		cancelButtonText: '取消',
 		confirmButtonText: '确定',
-		type: 'warning'
+		type: 'warning',
 	}).then(async () => {
-		const res = await fetchPostApi('/user/logout')
+		const res = await fetchPostApi('/user/logout');
 
 		if (res.code === StatusCode.SUCCESS) {
 			useUserState().setToken('');
@@ -15,28 +15,27 @@ const loginOut = (): void => {
 		} else {
 			ElMessage({
 				type: 'error',
-				message: res.msg
+				message: res.msg,
 			});
 		}
-	})
-}
+	});
+};
 </script>
 
 <template>
 	<ElDropdown trigger="click">
 		<span class="flex h-[48px] w-fit cursor-pointer items-center gap-[6px] px-[6px] hover:bg-admin-header-bg-hover">
-			<ElAvatar :size="24" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-				type="circle" />
-			<p>admin</p>
+			<ElAvatar :size="24" :src="useUserinfo().userinfo.avatar_url" type="circle" />
+			<p>{{ useUserinfo().userinfo.user_name }}</p>
 		</span>
 		<template #dropdown>
 			<ElDropdownMenu class="!p-0">
 				<ElDropdownItem @click="loginOut">
-					<Icon icon="ri:logout-circle-line" class="mr-[5px]" width="16" height="16"></Icon>
+					<Icon icon="ri:logout-circle-line" class="mr-[5px]" width="16" height="16" />
 					<span class="text-[14px]">退出系统</span>
 				</ElDropdownItem>
 				<ElDropdownItem @click="navigateTo({ path: '/admin/userinfo/123123' })">
-					<Icon icon="ri:user-line" class="mr-[5px]" width="16" height="16"></Icon>
+					<Icon icon="ri:user-line" class="mr-[5px]" width="16" height="16" />
 					<span class="text-[14px]">个人中心</span>
 				</ElDropdownItem>
 			</ElDropdownMenu>
