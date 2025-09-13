@@ -2,7 +2,7 @@ import sbgLoader from 'vite-svg-loader';
 
 export default defineNuxtConfig({
 	typescript: {
-		strict: true
+		strict: true,
 	},
 	compatibilityDate: '2024-11-01',
 	devtools: { enabled: true },
@@ -10,17 +10,18 @@ export default defineNuxtConfig({
 		{
 			path: './components',
 			pathPrefix: false,
-			extensions: ['.vue', '.tsx']
-		}
+			extensions: ['.vue', '.tsx'],
+		},
 	],
 	vite: {
-		plugins: [sbgLoader()]
+		plugins: [sbgLoader()],
+	},
+	router: {
+		options: {
+			hashMode: false,
+		},
 	},
 	imports: {
-		dirs: [
-			'composables',
-			'composables/api/tag',
-			'composables/api/user'
-		]
-	}
+		dirs: ['composables', 'composables/api/tag', 'composables/api/user'],
+	},
 });

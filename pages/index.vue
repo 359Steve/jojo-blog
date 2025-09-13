@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { CreateUserDto } from '~/server/dto/CreateUserDto';
-
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
@@ -38,9 +36,9 @@ const timelineData = reactive<Timeline[]>([
 	},
 ]);
 
-const { data: user } = await useAsyncData('user', () => findUser());
-const userInfo = reactive<CreateUserDto>(
-	user.value?.data
+const { data: user } = await useAsyncData('user', () => findPublicUser());
+const userInfo = reactive<NonNullable<Awaited<ReturnType<typeof findPublicUser>>['data']>>(
+	user.value && user.value.data
 		? user.value.data
 		: {
 			user_name: '',
@@ -48,7 +46,6 @@ const userInfo = reactive<CreateUserDto>(
 			pet_name: '',
 			sign: '',
 			describe: '',
-			password: '',
 		},
 );
 

@@ -59,3 +59,20 @@ export const findUser = async (user_name?: string) => {
 		msg: res.msg,
 	};
 };
+
+// 查询用户公共信息
+export const findPublicUser = async () => {
+	const res = await fetchUseGet<any, Omit<CreateUserDto, 'password'>>('/user/userPublicQuery');
+
+	if (res.code === StatusCode.SUCCESS) {
+		return {
+			data: res.data,
+			msg: res.msg,
+		};
+	}
+
+	return {
+		data: null,
+		msg: res.msg,
+	};
+};
