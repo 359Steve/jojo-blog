@@ -7,6 +7,7 @@ enum TagType {
 	PERSON = '个人',
 }
 
+const { watchTable } = storeToRefs(useAdminMenu());
 const ruleFormRef = templateRef('ruleFormRef');
 const formRef = templateRef<HTMLDivElement>('formRef');
 const footerRef = templateRef<HTMLDivElement>('footerRef');
@@ -60,7 +61,7 @@ const isIDisabled = computed(() => {
 const queryTag = async (name: string, n: number) => {
 	const { records, total: t } = await queryTagAll(name, n);
 
-	tableData.value = records;
+	watchTable.value ? (tableData.value = [...tableData.value, ...records]) : (tableData.value = records);
 	total.value = t;
 };
 
@@ -131,19 +132,36 @@ watch(searchTag, async () => {
 	queryTag(searchTag.value, 1);
 });
 
+let stopScrollWatch: (() => void) | null = null;
+
 onMounted(() => {
 	nextTick(() => {
 		tableHeight.value = formRef.value?.offsetHeight || 0;
 
-		// 监听表格滚动
-		if (tableRef.value && tableRef.value.$el) {
-			const el = tableRef.value?.$el.querySelector('.el-scrollbar__wrap');
-			const { x, y } = useScroll(el);
+		watch(
+			watchTable,
+			(val) => {
+				if (val) {
+					if (tableRef.value && tableRef.value.$el) {
+						const el = tableRef.value.$el.querySelector('.el-scrollbar__wrap');
+						const { y, arrivedState } = useScroll(el);
 
-			watch([x, y], () => {
-				console.log('滚动了');
-			});
-		}
+						stopScrollWatch = watch(y, () => {
+							if (arrivedState.bottom) {
+								pageNumber.value += 1;
+								queryTag(searchTag.value, pageNumber.value);
+							}
+						});
+					}
+				} else {
+					if (stopScrollWatch) {
+						stopScrollWatch();
+						stopScrollWatch = null;
+					}
+				}
+			},
+			{ immediate: true },
+		);
 	});
 });
 </script>

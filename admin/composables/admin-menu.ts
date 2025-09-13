@@ -1,13 +1,14 @@
 export const useAdminMenu = defineStore(
 	'adminMenu',
 	() => {
+		const watchTable = ref<boolean>(false);
 		const leftIsCollapse = ref<boolean>(false);
 		const drawerCollapse = ref<boolean>(false);
 		const tagMenu = ref<RouteChildrenConfigsTable<'name' | 'path'>[]>([
 			{
 				name: '首页',
-				path: '/admin'
-			}
+				path: '/admin',
+			},
 		]);
 		const { isFullscreen, toggle } = useFullscreen();
 		const contentFullscreen = ref<boolean>(true);
@@ -24,10 +25,14 @@ export const useAdminMenu = defineStore(
 			contentFullscreen.value = value;
 		};
 
+		const setWatchTable = (value: boolean): void => {
+			watchTable.value = value;
+		};
+
 		const setTagMenu = (value: RouteChildrenConfigsTable<'name' | 'path'>): void => {
 			if (
 				normalizePath(value.path) !== '/admin/login' &&
-				!tagMenu.value.find(item => normalizePath(item.path) === normalizePath(value.path))
+				!tagMenu.value.find((item) => normalizePath(item.path) === normalizePath(value.path))
 			) {
 				tagMenu.value.push(value);
 			}
@@ -49,18 +54,24 @@ export const useAdminMenu = defineStore(
 			return contentFullscreen.value;
 		};
 
+		const getWatchTable = (): boolean => {
+			return watchTable.value;
+		};
+
 		// 关闭tag
 		const closeTag = (path: string): void => {
-			tagMenu.value = tagMenu.value.filter(item => item.path !== path);
+			tagMenu.value = tagMenu.value.filter((item) => item.path !== path);
 		};
 
 		// 重置数据
 		const reset = (): void => {
 			leftIsCollapse.value = false;
 			drawerCollapse.value = false;
+			watchTable.value = false;
 		};
 
 		return {
+			watchTable,
 			leftIsCollapse,
 			drawerCollapse,
 			tagMenu,
@@ -76,10 +87,10 @@ export const useAdminMenu = defineStore(
 			getContentFullscreen,
 			reset,
 			closeTag,
-			toggle
+			toggle,
 		};
 	},
 	{
-		persist: true
-	}
+		persist: true,
+	},
 );

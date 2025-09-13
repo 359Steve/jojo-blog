@@ -1,21 +1,22 @@
 <script lang="ts" setup>
-const { leftIsCollapse, drawerCollapse } = storeToRefs(useAdminMenu());
+const { leftIsCollapse, drawerCollapse, watchTable } = storeToRefs(useAdminMenu());
 const appWrapperRef = useTemplateRef('appWrapperRef');
 
 onMounted(() => {
 	nextTick(() => {
 		if (appWrapperRef.value) {
-			useResizeObserver(appWrapperRef, entries => {
-				const [{ inlineSize: width, blockSize: _height }] = entries[0].borderBoxSize;
-				if (width > 0 && width <= 760) {
-					leftIsCollapse.value = true;
-				} else if (width > 760 && width <= 990) {
+			useResizeObserver(appWrapperRef, (entries) => {
+				const [{ inlineSize: width }] = entries[0].borderBoxSize;
+				if (width <= 640) {
+					watchTable.value = true;
 					leftIsCollapse.value = true;
 					drawerCollapse.value = false;
-				} else if (width > 990) {
-					leftIsCollapse.value = false;
+				} else if (width <= 990) {
+					watchTable.value = false;
+					leftIsCollapse.value = true;
 					drawerCollapse.value = false;
 				} else {
+					watchTable.value = false;
 					leftIsCollapse.value = false;
 					drawerCollapse.value = false;
 				}
