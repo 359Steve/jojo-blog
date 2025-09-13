@@ -162,16 +162,16 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 			<ElFormItem label="名字" class="flex items-start" prop="user_name">
 				<ElInput v-model="formData.user_name" placeholder="请输入名字" clearable />
 			</ElFormItem>
-			<ElFormItem label="昵称" prop="pet_name">
+			<ElFormItem label="昵称" prop="pet_name" class="w-full">
 				<ElInput v-model="formData.pet_name" placeholder="请输入昵称" clearable />
 			</ElFormItem>
-			<ElFormItem label="密码" prop="password">
-				<ElInput v-model="formData.password" type="password" placeholder="请输入密码" clearable />
+			<ElFormItem label="新密码" prop="password" class="w-full">
+				<ElInput v-model="formData.password" type="password" placeholder="请输入新密码" clearable />
 			</ElFormItem>
-			<ElFormItem label="签名" prop="sign">
+			<ElFormItem label="签名" prop="sign" class="w-full">
 				<ElInput v-model="formData.sign" placeholder="请输入签名" clearable />
 			</ElFormItem>
-			<ElFormItem class="save">
+			<ElFormItem class="save col-span-1 sm:col-span-2">
 				<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>
 			</ElFormItem>
 			<ElFormItem label="简介" class="col-span-1 sm:col-span-2" prop="describe">

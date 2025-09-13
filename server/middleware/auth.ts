@@ -1,6 +1,6 @@
-const whitelist = ['/api/user/userQuery', '/api/user/user-login', '/api/user/user-register'];
+const whitelist = ['/api/user/userPublicQuery', '/api/user/user-login', '/api/user/user-register'];
 
-export default defineEventHandler(event => {
+export default defineEventHandler((event) => {
 	let realToken = '';
 	const path = event.node.req.url || '';
 

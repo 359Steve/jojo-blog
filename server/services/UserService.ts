@@ -25,6 +25,11 @@ export class UserService {
 		return await this.userRepo.findUser(user_name);
 	}
 
+	// 查询用户公共信息
+	async getPublicUserInfo() {
+		return await this.userRepo.getPublicUserInfo();
+	}
+
 	// 上传头像
 	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		return await this.userRepo.uploadAvatar(files);

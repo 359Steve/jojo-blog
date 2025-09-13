@@ -8,7 +8,7 @@ const Avatar = getIcons().Avatar;
 
 const ruleForm = reactive({
 	username: 'admin',
-	password: 'admin@123',
+	password: '',
 });
 
 const ruleFormRef = ref<FormInstance>();
@@ -30,12 +30,9 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 
 			if (res.code === StatusCode.SUCCESS) {
 				useUserState().setToken(res.data.accessToken);
-				const { data } = await findUser();
+				const { data } = await findUser(ruleForm.username);
 
-				if (data) {
-					useUserinfo().setUserInfo(data);
-				}
-
+				data && useUserinfo().setUserInfo(data);
 				// 跳转到首页
 				navigateTo('/admin/');
 			}

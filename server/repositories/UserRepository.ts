@@ -14,11 +14,13 @@ export class UserRepository {
 	async createUser(dto: CreateUserDto) {
 		const res = await this.prismaClient.user_info.create({
 			data: {
-				...dto
-			}
+				...dto,
+			},
 		});
 
-		return res ? returnData(StatusCode.SUCCESS, '注册成功！', res) : returnData(StatusCode.REGISTER_FAILED, '注册失败！', null);
+		return res
+			? returnData(StatusCode.SUCCESS, '注册成功！', res)
+			: returnData(StatusCode.REGISTER_FAILED, '注册失败！', null);
 	}
 
 	async loginUser(body: CreateUserDto) {
@@ -26,23 +28,41 @@ export class UserRepository {
 		const res = await this.prismaClient.user_info.findFirst({
 			where: {
 				user_name,
-				password
-			}
+				password,
+			},
 		});
 
-		return res ? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) }) : returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+		return res
+			? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) })
+			: returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
 	}
 
 	async findUser(user_name: string) {
 		const res = await this.prismaClient.user_info.findFirst({
-			where: user_name
-				? { user_name }
-				: undefined
-		})
+			where: user_name ? { user_name } : undefined,
+		});
 
-		return res ? returnData(StatusCode.SUCCESS, '查询成功！',
-			user_name ? res : { ...res, password: '' }
-		) : returnData(StatusCode.FAIL, '查询失败！', null);
+		return res
+			? returnData(StatusCode.SUCCESS, '查询成功！', user_name ? res : { ...res, password: '' })
+			: returnData(StatusCode.FAIL, '查询失败！', null);
+	}
+
+	// 查询用户公共信息
+	async getPublicUserInfo() {
+		const res = await this.prismaClient.user_info.findFirst({
+			select: {
+				id: true,
+				user_name: true,
+				avatar_url: true,
+				pet_name: true,
+				sign: true,
+				describe: true,
+			},
+		});
+
+		return res
+			? returnData(StatusCode.SUCCESS, '查询成功！', res)
+			: returnData(StatusCode.FAIL, '查询失败！', null);
 	}
 
 	// 上传头像
@@ -51,13 +71,13 @@ export class UserRepository {
 			return returnData(StatusCode.FAIL, '没有上传文件！', null);
 		}
 
-		const file = files[0]
-		const fileName = file.filename || 'avatar.png'
+		const file = files[0];
+		const fileName = file.filename || 'avatar.png';
 
 		// 判断当前文件是否已经存在
-		const filePath = join(process.cwd(), 'public/avatar', fileName)
+		const filePath = join(process.cwd(), 'public/avatar', fileName);
 		if (fs.existsSync(filePath)) {
-			fs.unlinkSync(filePath)
+			fs.unlinkSync(filePath);
 			return returnData(StatusCode.SUCCESS, '文件已存在！', { url: `/avatar/${fileName}` });
 		}
 
@@ -67,7 +87,7 @@ export class UserRepository {
 			return returnData(StatusCode.FAIL, '上传失败！', null);
 		}
 
-		await writeFile(savePath, file.data)
+		await writeFile(savePath, file.data);
 
 		// 返回文件访问路径
 		return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/avatar/${fileName}` });
@@ -77,13 +97,15 @@ export class UserRepository {
 	async updateUser(body: CreateUserDto) {
 		const res = await this.prismaClient.user_info.update({
 			where: {
-				id: Number(body.id)
+				id: Number(body.id),
 			},
 			data: {
-				...body
-			}
+				...body,
+			},
 		});
 
-		return res ? returnData(StatusCode.SUCCESS, '修改成功！', res) : returnData(StatusCode.FAIL, '修改失败！', null);
+		return res
+			? returnData(StatusCode.SUCCESS, '修改成功！', res)
+			: returnData(StatusCode.FAIL, '修改失败！', null);
 	}
 }
