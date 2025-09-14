@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 useHead({
-	title: 'jojo-admin'
+	title: 'jojo-admin',
 });
 
 const route = useRoute();
 
 // 获取当前路由路径
 const isLogin = computed(() => route.path.includes('/login'));
-const layout = computed(() => isLogin.value ? 'login' : 'main')
+const layout = computed(() => (isLogin.value ? 'login' : 'main'));
 </script>
 
 <template>
 	<div class="relative h-fit w-full">
+		<NuxtLoadingIndicator color="#A3AAB6" />
 		<NuxtLayout :name="layout">
 			<slot name="page" />
 		</NuxtLayout>
