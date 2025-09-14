@@ -93,6 +93,7 @@ const detailRecord = async (_item: Timeline) => {
 
 onMounted(() => {
 	nextTick(() => {
+		useVueStarport().setAvatarUrl(userInfo.avatar_url);
 		// 获取页面宽度
 		const el = document.documentElement.getBoundingClientRect();
 		isSm.value = el.width <= 640;

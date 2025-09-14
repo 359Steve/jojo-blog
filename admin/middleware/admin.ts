@@ -1,6 +1,6 @@
-import { StatusCode } from "~/types/com-types";
+import { StatusCode } from '~/types/com-types';
 
-export default defineNuxtRouteMiddleware(async to => {
+export default defineNuxtRouteMiddleware(async (to) => {
 	// 路由白名单
 	const whiteRoutes = ['/admin/login'];
 	const path = to.path;
@@ -14,9 +14,9 @@ export default defineNuxtRouteMiddleware(async to => {
 			try {
 				const res = await postApi<{ token: string }, any>('/user/verify-token', {
 					body: {
-						token: cookies
-					}
-				})
+						token: cookies,
+					},
+				});
 				return res.code === StatusCode.SUCCESS ? true : navigateTo('/admin/login');
 			} catch (error) {
 				return navigateTo('/admin/login');

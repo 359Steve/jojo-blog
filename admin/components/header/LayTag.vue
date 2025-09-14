@@ -11,7 +11,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '重新加载',
 		divided: false,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 2,
@@ -19,7 +19,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '关闭当前标签页',
 		divided: false,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 3,
@@ -27,7 +27,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '关闭左侧标签页',
 		divided: true,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 4,
@@ -35,7 +35,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '关闭右侧标签页',
 		divided: false,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 5,
@@ -43,7 +43,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '关闭其他标签页',
 		divided: true,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 6,
@@ -51,7 +51,7 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		text: '关闭全部标签页',
 		divided: false,
 		disabled: false,
-		show: true
+		show: true,
 	},
 	{
 		id: 7,
@@ -63,8 +63,8 @@ const tagsViews = reactive<Array<tagsViewsType>>([
 		},
 		divided: true,
 		disabled: false,
-		show: true
-	}
+		show: true,
+	},
 ]);
 const visible = ref(false);
 const contextmenuRef = useTemplateRef('contextmenuRef');
@@ -74,7 +74,7 @@ const contextmenuItem = ref<RouteChildrenConfigsTable<'path' | 'name'> | null>(n
 
 const changeTagsViews = (newPath: string): void => {
 	const tagMenuList = useAdminMenu().getTagMenu();
-	const currentIndex = tagMenuList.findIndex(item => item.path === newPath);
+	const currentIndex = tagMenuList.findIndex((item) => item.path === newPath);
 	tagsViews[1].disabled = currentIndex === 0;
 	tagsViews[2].disabled = currentIndex <= 1;
 	tagsViews[3].disabled = currentIndex >= tagMenuList.length - 1;
@@ -87,10 +87,10 @@ const closeTag = (item: RouteChildrenConfigsTable<'path' | 'name'>): void => {
 	const newPath = exceptPath(route.path);
 	// 判断当前路由是否等于关闭的tag
 	if (newPath === item.path) {
-		const currentIndex = tagList.findIndex(demo => demo.path === newPath);
+		const currentIndex = tagList.findIndex((demo) => demo.path === newPath);
 		const currentPath = tagList[currentIndex - 1].path;
 		navigateTo({
-			path: currentPath.includes('userinfo') ? `${currentPath}/123123` : currentPath
+			path: currentPath,
 		});
 	}
 	visible.value = false;
@@ -106,7 +106,7 @@ const closeTagOthers = (currentTagIndex: number) => {
 	useAdminMenu()
 		.getTagMenu()
 		.filter((_, index) => index !== 0 && index !== currentTagIndex)
-		.forEach(item => closeTag(item));
+		.forEach((item) => closeTag(item));
 };
 
 const setCurrentTag = (path: string) => {
@@ -146,8 +146,8 @@ const openMenu = (item: RouteChildrenConfigsTable<'path' | 'name'>, e: MouseEven
 
 const executeCommand = (id: number, target?: RouteChildrenConfigsTable<'path' | 'name'>) => {
 	const tagList = useAdminMenu().getTagMenu();
-	const currentTag = target ?? tagList.find(t => normalizePath(t.path) === exceptPath(route.path))!;
-	const currentIndex = tagList.findIndex(t => normalizePath(t.path) === normalizePath(currentTag.path));
+	const currentTag = target ?? tagList.find((t) => normalizePath(t.path) === exceptPath(route.path))!;
+	const currentIndex = tagList.findIndex((t) => normalizePath(t.path) === normalizePath(currentTag.path));
 
 	switch (id) {
 		case 1:
@@ -192,10 +192,10 @@ const getContextMenuStyle = computed((): CSSProperties => {
 
 watch(
 	() => route.path,
-	newPath => {
+	(newPath) => {
 		setCurrentTag(route.path);
 		changeTagsViews(newPath);
-	}
+	},
 );
 
 onMounted(() => {
@@ -206,22 +206,22 @@ onMounted(() => {
 			changeTagsViews(route.path);
 		},
 		{
-			detectIframe: true
-		}
+			detectIframe: true,
+		},
 	);
 });
 </script>
 
 <template>
 	<div
-		class="relative flex w-full items-center justify-between border-b border-admin-menu-border border-solid bg-admin-menu-bg">
+		class="relative flex w-full items-center justify-between border-b border-solid border-admin-menu-border bg-admin-menu-bg">
 		<ElScrollbar class="flex h-fit w-[calc(100%-50px)]">
 			<div v-for="item in useAdminMenu().getTagMenu()" :key="item.path"
 				@contextmenu.prevent="openMenu(item, $event)">
 				<ElTag :closable="item.path !== '/admin'" effect="plain"
 					class="relative !flex !h-[34px] cursor-pointer !items-center !rounded-none !border-none !px-3 !text-[14px]"
 					:class="[exceptPath(route.path) === item.path ? 'is-active' : '']" @close="closeTag(item)"
-					@click="navigateTo({ path: item.path === '/admin/userinfo' ? '/admin/userinfo/123123' : item.path })">
+					@click="navigateTo({ path: item.path })">
 					<span>{{ item.name }}</span>
 				</ElTag>
 			</div>
@@ -229,8 +229,7 @@ onMounted(() => {
 
 		<ElDropdown trigger="click" placement="bottom-end" @visible-change="handleVisible" @command="handleCommand">
 			<div class="h-full px-3">
-				<Icon :icon="dropCollapse ? 'ri:arrow-up-s-line' : 'ri:arrow-down-s-line'" width="20" height="20">
-				</Icon>
+				<Icon :icon="dropCollapse ? 'ri:arrow-up-s-line' : 'ri:arrow-down-s-line'" width="20" height="20" />
 			</div>
 			<template #dropdown>
 				<ElDropdownMenu class="!p-0">
@@ -247,7 +246,7 @@ onMounted(() => {
 		<Transition name="el-zoom-in-top">
 			<ul v-show="visible" ref="contextmenuRef" :style="getContextMenuStyle"
 				class="absolute z-30 m-0 list-none whitespace-nowrap rounded-[4px] bg-admin-menu-bg py-[5px] text-[13px] font-normal text-admin-menu-text shadow-[0_2px_8px_rgba(0,0,0,0.15)] outline-none">
-				<div v-for="(item, key) in tagsViews.slice(0, 6).filter(item => !item.disabled)" :key="key"
+				<div v-for="(item, key) in tagsViews.slice(0, 6).filter((item) => !item.disabled)" :key="key"
 					class="flex items-center">
 					<li v-if="item.show"
 						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-admin-tag-active-text"
@@ -271,7 +270,7 @@ onMounted(() => {
 }
 
 :deep(.el-tag) {
-	@apply text-admin-tag-text
+	@apply text-admin-tag-text;
 }
 
 :deep(.el-tag.is-active) {
@@ -295,7 +294,7 @@ onMounted(() => {
 }
 
 :deep(.el-tag:hover .el-tag__close) {
-	@apply opacity-100 bg-transparent text-admin-tag-active-text;
+	@apply bg-transparent text-admin-tag-active-text opacity-100;
 }
 
 :deep(.is-active .el-tag__close) {

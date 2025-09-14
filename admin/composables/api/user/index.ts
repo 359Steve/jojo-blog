@@ -41,13 +41,23 @@ export const updataUserInfo = async (body: CreateUserDto) => {
 
 // 查询用户信息
 export const findUser = async (user_name?: string) => {
-	const res = await fetchUseGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
-		query: {
-			user_name,
-		},
-	});
+	const isServer = import.meta.server;
+	const queryParams = {
+		user_name,
+	};
 
-	if (res.code === StatusCode.SUCCESS) {
+	let res;
+	if (isServer) {
+		res = await useGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
+			query: queryParams,
+		});
+	} else {
+		res = await fetchUseGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
+			query: queryParams,
+		});
+	}
+
+	if (res?.code === StatusCode.SUCCESS) {
 		return {
 			data: res.data,
 			msg: res.msg,
@@ -56,13 +66,13 @@ export const findUser = async (user_name?: string) => {
 
 	return {
 		data: null,
-		msg: res.msg,
+		msg: res?.msg,
 	};
 };
 
 // 查询用户公共信息
 export const findPublicUser = async () => {
-	const res = await fetchUseGet<any, Omit<CreateUserDto, 'password'>>('/user/userPublicQuery');
+	const res = await useGet<any, Omit<CreateUserDto, 'password'>>('/user/userPublicQuery');
 
 	if (res.code === StatusCode.SUCCESS) {
 		return {

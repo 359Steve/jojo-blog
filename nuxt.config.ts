@@ -4,7 +4,7 @@ const meta: Meta[] = [
 	{ charset: 'utf-8' },
 	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 	{ name: 'format-detection', content: 'telephone=no' },
-	{ hid: 'keywords', name: 'keywords', content: 'nuxt3' }
+	{ hid: 'keywords', name: 'keywords', content: 'nuxt3' },
 ];
 
 export default defineNuxtConfig({
@@ -12,28 +12,26 @@ export default defineNuxtConfig({
 	components: [
 		{
 			path: '~/components',
-			extensions: ['.vue', '.tsx']
+			extensions: ['.vue', '.tsx'],
 		},
 		{
 			path: '~/admin/components',
 			pathPrefix: false,
-			extensions: ['.vue', '.tsx']
-		}
+			extensions: ['.vue', '.tsx'],
+		},
 	],
 	runtimeConfig: {
 		public: {
 			jwtSecret: 'jojo-blog',
 			accessTokenExpiresIn: '7d',
-			expiresin: 604800
-		}
+			expiresin: 604800,
+		},
 	},
 	experimental: {
-		payloadExtraction: false
+		payloadExtraction: false,
 	},
 	imports: {
-		dirs: [
-			'composables'
-		],
+		dirs: ['composables'],
 	},
 	plugins: [
 		'~/plugins/vue-starport.ts',
@@ -47,9 +45,9 @@ export default defineNuxtConfig({
 		tsConfig: {
 			compilerOptions: {
 				experimentalDecorators: true,
-				emitDecoratorMetadata: true
-			}
-		}
+				emitDecoratorMetadata: true,
+			},
+		},
 	},
 	compatibilityDate: '2024-11-01',
 	devtools: { enabled: true },
@@ -62,25 +60,23 @@ export default defineNuxtConfig({
 		'@nuxtjs/color-mode',
 		'@vueuse/motion/nuxt',
 		'@nuxtjs/google-fonts',
-		'@nuxt/eslint'
+		'@nuxt/eslint',
 	],
 
 	colorMode: {
 		classSuffix: '',
 		storageKey: 'nuxt-color-mode',
 		preference: 'system',
-		fallback: 'light'
+		fallback: 'light',
 	},
 	// 项目配置
 	app: {
 		head: {
 			title: 'jojo-blog',
 			meta,
-			link: [
-				{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }
-			],
-			viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
-		}
+			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }],
+			viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+		},
 	},
 
 	// 初始化样式
@@ -89,7 +85,7 @@ export default defineNuxtConfig({
 		'~/assets/css/tailwind.css',
 		'~/assets/css/index.scss',
 		'animate.css/animate.min.css',
-		'remixicon/fonts/remixicon.css'
+		'remixicon/fonts/remixicon.css',
 	],
 
 	// googleFonts: {
@@ -107,21 +103,21 @@ export default defineNuxtConfig({
 		css: {
 			preprocessorOptions: {
 				scss: {
-					additionalData: '@use "~/assets/css/element-variables.scss" as element;'
-				}
+					additionalData: '@use "~/assets/css/element-variables.scss" as element;',
+				},
 			},
-			preprocessorMaxWorkers: true
-		}
+			preprocessorMaxWorkers: true,
+		},
 	},
 
 	elementPlus: {
-		importStyle: 'scss'
+		importStyle: 'scss',
 	},
 
 	postcss: {
 		plugins: {
 			'postcss-nested': {},
-			'postcss-custom-media': {}
-		}
-	}
+			'postcss-custom-media': {},
+		},
+	},
 });

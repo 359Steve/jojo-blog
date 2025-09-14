@@ -4,7 +4,8 @@ definePageMeta({
 });
 
 const findUsers = async () => {
-	const { data } = await findUser();
+	const user_name = useCookie('user_name').value;
+	const { data } = await findUser(user_name ?? '');
 	data && useUserinfo().setUserInfo(data);
 };
 

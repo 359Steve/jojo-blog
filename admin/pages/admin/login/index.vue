@@ -30,6 +30,7 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 
 			if (res.code === StatusCode.SUCCESS) {
 				useUserState().setToken(res.data.accessToken);
+				useCookie('user_name').value = ruleForm.username;
 				const { data } = await findUser(ruleForm.username);
 
 				data && useUserinfo().setUserInfo(data);

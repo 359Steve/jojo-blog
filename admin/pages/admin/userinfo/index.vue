@@ -3,13 +3,6 @@ import type { FormInstance, FormRules, UploadFile, UploadFiles } from 'element-p
 import type { ToolbarNames } from 'md-editor-v3';
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
-definePageMeta({
-	validate: async (route) => {
-		console.log('用户数据', route.params);
-		return true;
-	},
-});
-
 const toolbars = ref<ToolbarNames[]>([
 	'bold',
 	'underline',
@@ -26,7 +19,10 @@ const toolbars = ref<ToolbarNames[]>([
 ]);
 const ruleFormRef = templateRef('ruleFormRef');
 const upload = templateRef('upload');
-const { data } = await useAsyncData('userinfo', () => findUser());
+const { data } = await useAsyncData('userinfo', () => {
+	const user_name = useCookie('user_name').value;
+	return findUser(user_name ?? '');
+});
 const formData = reactive<CreateUserDto>(
 	data.value?.data ?? {
 		avatar_url: '',
@@ -109,9 +105,8 @@ const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) 
 const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
-			// 上传头像
-			if (!formData.avatar_url) {
-				const { data, msg } = await uploadAvatar(imageFile.value!);
+			if (imageFile.value && imageFile.value.has('file')) {
+				const { data, msg } = await uploadAvatar(imageFile.value);
 
 				if (!data) {
 					ElMessage({
@@ -130,6 +125,10 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 				type: resData ? 'success' : 'error',
 				message: resMsg,
 			});
+
+			if (resData) {
+				useUserinfo().setUserInfo(resData);
+			}
 		}
 	});
 };
@@ -203,5 +202,9 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 :deep(.save .el-form-item__content) {
 	@apply flex justify-end;
+}
+
+:deep(.el-image) {
+	@apply h-full w-full object-cover;
 }
 </style>

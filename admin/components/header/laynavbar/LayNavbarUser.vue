@@ -34,7 +34,7 @@ const loginOut = (): void => {
 					<Icon icon="ri:logout-circle-line" class="mr-[5px]" width="16" height="16" />
 					<span class="text-[14px]">退出系统</span>
 				</ElDropdownItem>
-				<ElDropdownItem @click="navigateTo({ path: '/admin/userinfo/123123' })">
+				<ElDropdownItem @click="navigateTo({ path: '/admin/userinfo' })">
 					<Icon icon="ri:user-line" class="mr-[5px]" width="16" height="16" />
 					<span class="text-[14px]">个人中心</span>
 				</ElDropdownItem>
