@@ -31,15 +31,13 @@ export const findUser = async (user_name?: string) => {
 
 	let res;
 	if (isServer) {
-		res = await fetchUseGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
+		res = await useGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
 			query: queryParams,
 		});
 	} else {
-		res = await jojoLoadingIndicator(() =>
-			useGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
-				query: queryParams,
-			}),
-		);
+		res = await fetchUseGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
+			query: queryParams,
+		});
 	}
 
 	return handleApiResponse(res);

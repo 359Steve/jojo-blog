@@ -19,10 +19,10 @@ const formData = reactive<CreateTagDto>({
 });
 
 const { data } = await useAsyncData('tags', () => queryTagAll());
-const tableData = ref<CreateTagDto[]>(data.value?.records || []);
+const tableData = ref<CreateTagDto[]>(data.value?.data?.records || []);
 const tableRef = templateRef('tableRef');
 const tableHeight = ref<number>(0);
-const total = ref<number>(data.value?.total || 0);
+const total = ref<number>(data.value?.data?.total || 0);
 const pageNumber = ref<number>(1);
 const searchTag = ref<string>('');
 const isEdit = ref<boolean>(false);
@@ -59,10 +59,10 @@ const isIDisabled = computed(() => {
 
 // 查询全部标签
 const queryTag = async (name: string, n: number) => {
-	const { records, total: t } = await queryTagAll(name, n);
+	const { data } = await queryTagAll(name, n);
 
-	watchTable.value ? (tableData.value = [...tableData.value, ...records]) : (tableData.value = records);
-	total.value = t;
+	watchTable.value ? (tableData.value = [...tableData.value, ...data!.records]) : (tableData.value = data!.records);
+	total.value = data!.total;
 };
 
 // 新增标签
