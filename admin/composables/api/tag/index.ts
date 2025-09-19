@@ -10,16 +10,15 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 		pageSize: s,
 	};
 
-	let res;
-	if (isServer) {
-		res = await useGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
-			query: queryParams,
-		});
-	} else {
-		res = await fetchUseGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
-			query: queryParams,
-		});
-	}
+	const res = await jojoLoadingIndicator(() =>
+		isServer
+			? useGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
+				query: queryParams,
+			})
+			: fetchUseGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
+				query: queryParams,
+			}),
+	);
 
 	if (res.code === StatusCode.SUCCESS) {
 		return {
@@ -36,9 +35,11 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 
 // 创建标签
 export const createTags = async (value: CreateTagDto) => {
-	const res = await fetchPostApi<CreateTagDto, CreateTagDto>('/tag/tagCreate', {
-		body: value,
-	});
+	const res = await jojoLoadingIndicator(() =>
+		fetchPostApi<CreateTagDto, CreateTagDto>('/tag/tagCreate', {
+			body: value,
+		}),
+	);
 
 	if (res.code === StatusCode.SUCCESS) {
 		return {
@@ -55,9 +56,11 @@ export const createTags = async (value: CreateTagDto) => {
 
 // 修改标签
 export const updateTags = async (value: CreateTagDto) => {
-	const res = await fetchPostApi<CreateTagDto, CreateTagDto>('/tag/tagUpdate', {
-		body: value,
-	});
+	const res = await jojoLoadingIndicator(() =>
+		fetchPostApi<CreateTagDto, CreateTagDto>('/tag/tagUpdate', {
+			body: value,
+		}),
+	);
 
 	if (res.code === StatusCode.SUCCESS) {
 		return {
@@ -74,11 +77,13 @@ export const updateTags = async (value: CreateTagDto) => {
 
 // 删除标签
 export const deleteTags = async (id: number) => {
-	const res = await fetchDeleteApi<{ id: number }, CreateTagDto>('/tag/tagDelete', {
-		query: {
-			id,
-		},
-	});
+	const res = await jojoLoadingIndicator(() =>
+		fetchDeleteApi<{ id: number }, CreateTagDto>('/tag/tagDelete', {
+			query: {
+				id,
+			},
+		}),
+	);
 
 	if (res.code === StatusCode.SUCCESS) {
 		return {

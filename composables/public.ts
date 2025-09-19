@@ -24,7 +24,7 @@ export const detectDeviceDetail = (): {
 		const model = modelMatch ? modelMatch[1].trim() : 'Android Device';
 		return {
 			type: isMobile ? 'mobile' : 'tablet',
-			model
+			model,
 		};
 	}
 
@@ -43,11 +43,16 @@ export const normalizePath = (path: string) => path.replace(/\/$/, '');
 export const exceptPath = (path: string) => path.replace(/\/\d+$/, '');
 
 // 封装box确认弹窗
-export const useConfirm = (message: string, type: 'warning' | 'success' | 'info' | 'error' = 'warning', onConfirm: () => void, onCancel?: () => void) => {
+export const useConfirm = (
+	message: string,
+	type: 'warning' | 'success' | 'info' | 'error' = 'warning',
+	onConfirm: () => void,
+	onCancel?: () => void,
+) => {
 	ElMessageBox.confirm(message, '提示', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
-		type
+		type,
 	})
 		.then(() => {
 			onConfirm();
@@ -55,9 +60,23 @@ export const useConfirm = (message: string, type: 'warning' | 'success' | 'info'
 		.catch(() => {
 			onCancel && onCancel();
 		});
-}
+};
 
 /** 密码正则（密码格式应为8-18位数字、字母、符号的任意两种组合） */
 export const REGEXP_PWD =
 	/^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/;
 
+// 封装useLoadingIndicator
+export const jojoLoadingIndicator = async <T>(fn: () => Promise<T>): Promise<T> => {
+	const { start, finish, error } = useLoadingIndicator();
+
+	start();
+	try {
+		const result = await fn();
+		finish();
+		return result;
+	} catch (err) {
+		error.value = true;
+		throw err;
+	}
+};
