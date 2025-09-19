@@ -1,3 +1,5 @@
+import { StatusCode } from '~/types/com-types';
+
 // 加载静态图片资源
 export const useLoadStaticImage = async (url: string | number): Promise<string> => {
 	const res: StaticImage = await import(`~/assets/image/${url}.png`);
@@ -79,4 +81,19 @@ export const jojoLoadingIndicator = async <T>(fn: () => Promise<T>): Promise<T> 
 		error.value = true;
 		throw err;
 	}
+};
+
+// 封装请求返回方法
+export const handleApiResponse = <T>(res: NewResponse<T>): { data: T | null; msg: string } => {
+	if (res?.code === StatusCode.SUCCESS) {
+		return {
+			data: res.data,
+			msg: res.msg,
+		};
+	}
+
+	return {
+		data: null,
+		msg: res?.msg || '请求失败',
+	};
 };

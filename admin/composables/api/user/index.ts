@@ -1,5 +1,4 @@
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
-import { StatusCode } from '~/types/com-types';
 
 // 上传头像
 export const uploadAvatar = async (file: FormData) => {
@@ -9,17 +8,7 @@ export const uploadAvatar = async (file: FormData) => {
 		}),
 	);
 
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res.msg,
-	};
+	return handleApiResponse(res);
 };
 
 // 更新信息
@@ -30,17 +19,7 @@ export const updataUserInfo = async (body: CreateUserDto) => {
 		}),
 	);
 
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res.msg,
-	};
+	return handleApiResponse(res);
 };
 
 // 查询用户信息
@@ -63,15 +42,5 @@ export const findUser = async (user_name?: string) => {
 		);
 	}
 
-	if (res?.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res?.msg,
-	};
+	return handleApiResponse(res);
 };

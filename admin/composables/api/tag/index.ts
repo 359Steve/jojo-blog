@@ -1,5 +1,4 @@
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
-import { StatusCode } from '~/types/com-types';
 
 // 查询全部标签
 export const queryTagAll = async (name: string = '', n: number = 1, s: number = 10) => {
@@ -10,27 +9,20 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 		pageSize: s,
 	};
 
-	const res = await jojoLoadingIndicator(() =>
-		isServer
-			? useGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
-				query: queryParams,
-			})
-			: fetchUseGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
+	let res;
+	if (isServer) {
+		res = await useGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
+			query: queryParams,
+		});
+	} else {
+		res = await jojoLoadingIndicator(() =>
+			fetchUseGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
 				query: queryParams,
 			}),
-	);
-
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			records: res.data.records,
-			total: res.data.total,
-		};
+		);
 	}
 
-	return {
-		records: [],
-		total: 0,
-	};
+	return handleApiResponse(res);
 };
 
 // 创建标签
@@ -41,17 +33,7 @@ export const createTags = async (value: CreateTagDto) => {
 		}),
 	);
 
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res.msg,
-	};
+	return handleApiResponse(res);
 };
 
 // 修改标签
@@ -62,17 +44,7 @@ export const updateTags = async (value: CreateTagDto) => {
 		}),
 	);
 
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res.msg,
-	};
+	return handleApiResponse(res);
 };
 
 // 删除标签
@@ -85,15 +57,5 @@ export const deleteTags = async (id: number) => {
 		}),
 	);
 
-	if (res.code === StatusCode.SUCCESS) {
-		return {
-			data: res.data,
-			msg: res.msg,
-		};
-	}
-
-	return {
-		data: null,
-		msg: res.msg,
-	};
+	return handleApiResponse(res);
 };

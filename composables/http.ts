@@ -1,28 +1,4 @@
-import { StatusCode } from "~/types/com-types";
-
-type Method = 'get' | 'post' | 'put' | 'delete';
-// 自定义 Options 类型
-type Options<T> = {
-	baseURL?: string;
-	method?: Method;
-	body?: T;
-	query?: T;
-	params?: T;
-	headers?: Record<string, string>;
-	[key: string]: any;
-};
-// 响应基本信息类型
-interface H3Error<T> {
-	data: T;
-	stack: any[];
-	statusCode: number;
-	statusMessage: string;
-	[key: string]: any;
-}
-
-type NewResponse<T> = NitroResponse<T> & H3Error<T>
-
-// let Authorization: Record<string, string> | null = null;
+import { StatusCode } from '~/types/com-types';
 
 export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
 	// 获取全局变量
@@ -41,12 +17,12 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 				const ssrHeaders = useRequestHeaders(['cookie']);
 				options.headers = {
 					...ssrHeaders,
-					...options.headers
+					...options.headers,
 				};
 			} else {
 				options.headers = {
 					Authorization: `Bearer ${useUserState().getToken() ?? ''}`,
-					...options.headers
+					...options.headers,
 				} as Headers & { Authorization: string };
 			}
 		},
@@ -61,7 +37,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					// 直接提示错误信息
 					ElMessage({
 						type: 'error',
-						message: error.msg || error.data.message || '请求出错！'
+						message: error.msg || error.data.message || '请求出错！',
 					});
 				} else {
 					// 跳转错误页面
@@ -70,8 +46,8 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 							path: '/pageError',
 							query: {
 								code: error.code,
-								msg: error.msg || error.data.message || '请求出错！'
-							}
+								msg: error.msg || error.data.message || '请求出错！',
+							},
 						});
 					});
 				}
@@ -85,7 +61,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 			if (import.meta.client) {
 				ElMessage({
 					type: 'error',
-					message: error.msg || error.data.message || '请求出错！'
+					message: error.msg || error.data.message || '请求出错！',
 				});
 			} else {
 				// 跳转错误页面
@@ -94,12 +70,12 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 						path: '/pageError',
 						query: {
 							code: error.code,
-							msg: error.msg || error.data.message || '请求出错！'
-						}
+							msg: error.msg || error.data.message || '请求出错！',
+						},
 					});
 				});
 			}
-		}
+		},
 	});
 };
 
@@ -108,12 +84,12 @@ export const useGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'get',
-			...option
+			...option,
 		})
-			.then(res => {
+			.then((res) => {
 				resolve(res.data.value as NewResponse<Rp>);
 			})
-			.catch(err => {
+			.catch((err) => {
 				reject(err);
 			});
 	});
@@ -124,12 +100,12 @@ export const postApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): 
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'post',
-			...option
+			...option,
 		})
-			.then(res => {
+			.then((res) => {
 				resolve(res.data.value as NewResponse<Rp>);
 			})
-			.catch(err => {
+			.catch((err) => {
 				reject(err);
 			});
 	});
@@ -140,12 +116,12 @@ export const deleteApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>)
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'delete',
-			...option
+			...option,
 		})
-			.then(res => {
+			.then((res) => {
 				resolve(res.data.value as NewResponse<Rp>);
 			})
-			.catch(err => {
+			.catch((err) => {
 				reject(err);
 			});
 	});
