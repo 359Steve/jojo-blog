@@ -249,7 +249,7 @@ onMounted(() => {
 				<div v-for="(item, key) in tagsViews.slice(0, 6).filter((item) => !item.disabled)" :key="key"
 					class="flex items-center">
 					<li v-if="item.show"
-						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] hover:text-admin-tag-active-text"
+						class="m-0 flex w-full cursor-pointer items-center px-[12px] py-[7px] transition-colors duration-200 hover:text-admin-tag-active-text"
 						@click="contextmenuClose(item.id)">
 						<Icon :icon="item.icon" width="16" height="16" class="mr-2 block" />
 						{{ item.text }}
@@ -277,24 +277,26 @@ onMounted(() => {
 	@apply text-admin-tag-active-text;
 }
 
-:deep(.el-tag:hover) {
-	@apply text-admin-tag-active-text;
+@media (hover: hover) {
+	:deep(.el-tag:hover) {
+		@apply text-admin-tag-active-text;
+	}
+
+	:deep(.el-tag:hover::after) {
+		@apply w-full;
+	}
+
+	:deep(.el-tag:hover .el-tag__close) {
+		@apply bg-transparent text-admin-tag-active-text opacity-100;
+	}
 }
 
 :deep(.el-tag::after) {
 	@apply absolute bottom-0 left-0 h-[2px] w-0 bg-admin-tag-active-bg transition-[width_0.3s_ease] content-[''];
 }
 
-:deep(.el-tag:hover::after) {
-	@apply w-full;
-}
-
 :deep(.el-tag__close) {
 	@apply opacity-0 transition-opacity duration-200;
-}
-
-:deep(.el-tag:hover .el-tag__close) {
-	@apply bg-transparent text-admin-tag-active-text opacity-100;
 }
 
 :deep(.is-active .el-tag__close) {
@@ -305,8 +307,11 @@ onMounted(() => {
 	@apply !bg-transparent;
 }
 
-:deep(.el-tag .el-tag__close:hover) {
-	@apply bg-transparent text-admin-tag-active-text;
+/* 移动端优化：只在支持悬停的设备上应用悬停效果 */
+@media (hover: hover) {
+	:deep(.el-tag .el-tag__close:hover) {
+		@apply bg-transparent text-admin-tag-active-text;
+	}
 }
 
 :deep(.el-scrollbar__view) {
@@ -317,12 +322,15 @@ onMounted(() => {
 	@apply !m-0;
 }
 
-:deep(.el-dropdown-menu__item:not(.is-disabled):hover) {
-	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
-}
+/* 移动端优化：只在支持悬停的设备上应用悬停效果 */
+@media (hover: hover) {
+	:deep(.el-dropdown-menu__item:not(.is-disabled):hover) {
+		@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
+	}
 
-:deep(.el-dropdown-menu__item:not(.is-disabled):hover),
-:deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
-	@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
+	:deep(.el-dropdown-menu__item:not(.is-disabled):hover),
+	:deep(.el-dropdown-menu__item:not(.is-disabled):focus) {
+		@apply !bg-admin-dropdown-menu-bg !text-admin-tag-active-text;
+	}
 }
 </style>

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-const { drawerCollapse } = storeToRefs(useAdminMenu());
+const drawerCollapse = defineModel<boolean>('drawerCollapse');
 </script>
 
 <template>
 	<ElDrawer v-model="drawerCollapse" direction="ltr" title="jojoadmin" :with-header="false"
 		class="admin-drawer !w-[210px] !p-0">
 		<LaySidebarLogo />
-		<LaySideMenuScroll :left-is-collapse="false"></LaySideMenuScroll>
+		<LaySideMenuScroll :left-is-collapse="false" />
 	</ElDrawer>
 </template>
 

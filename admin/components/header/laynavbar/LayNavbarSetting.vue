@@ -2,10 +2,10 @@
 
 <template>
 	<div class="flex h-full items-center">
-		<LaySearch></LaySearch>
-		<LaySidebarFullScreen></LaySidebarFullScreen>
-		<LayNavbarUser></LayNavbarUser>
-		<LayNavbarTheme></LayNavbarTheme>
+		<LaySearch />
+		<LaySidebarFullScreen class="hidden sm:flex" />
+		<LayNavbarUser />
+		<LayNavbarTheme />
 	</div>
 </template>
 
