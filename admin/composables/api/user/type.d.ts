@@ -1,3 +1,3 @@
 interface UploadAvatarRep {
-	url: string
+	url: string;
 }

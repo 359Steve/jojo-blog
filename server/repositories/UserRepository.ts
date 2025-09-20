@@ -23,7 +23,7 @@ export class UserRepository {
 			: returnData(StatusCode.REGISTER_FAILED, '注册失败！', null);
 	}
 
-	async loginUser(body: CreateUserDto) {
+	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		const { user_name, password } = body;
 		const res = await this.prismaClient.user_info.findFirst({
 			where: {

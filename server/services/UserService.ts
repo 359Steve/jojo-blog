@@ -16,7 +16,7 @@ export class UserService {
 	}
 
 	// 登录
-	async loginUser(body: CreateUserDto) {
+	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		return await this.userRepo.loginUser(body);
 	}
 
