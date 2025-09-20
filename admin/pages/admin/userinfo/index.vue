@@ -127,6 +127,8 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 			});
 
 			if (resData) {
+				const user_name = useCookie('user_name');
+				user_name.value = resData.user_name;
 				useUserinfo().setUserInfo(resData);
 			}
 		}
