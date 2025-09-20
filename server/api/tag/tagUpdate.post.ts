@@ -1,10 +1,11 @@
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { CreateTagSchema } from '~/server/dto/CreateTagDto';
 import { container } from '~/server/core/container';
 import { TagService } from '~/server/services/TagService';
 
 export default defineEventHandler(async (event) => {
 	const tagService = container.get(TagService);
-	const body = await readBody(event);
+	const body = await readBody<CreateTagDto>(event);
 
 	const result = CreateTagSchema.safeParse(body);
 	if (!result.success) {
