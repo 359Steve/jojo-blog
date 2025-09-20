@@ -77,8 +77,7 @@ export class UserRepository {
 		// 判断当前文件是否已经存在
 		const filePath = join(process.cwd(), 'public/avatar', fileName);
 		if (fs.existsSync(filePath)) {
-			fs.unlinkSync(filePath);
-			return returnData(StatusCode.SUCCESS, '文件已存在！', { url: `/avatar/${fileName}` });
+			fs.unlinkSync(filePath); // 删除旧文件，准备覆盖
 		}
 
 		const savePath = join(process.cwd(), 'public/avatar', fileName);
