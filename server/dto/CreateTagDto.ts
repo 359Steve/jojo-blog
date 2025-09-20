@@ -10,8 +10,8 @@ export const CreateTagSchema = z.object({
 	icon: z
 		.string()
 		.refine((val) => typeof val === 'string', { message: '图标class必须为字符串' })
-		.min(10, '图标class长度在10到255之间')
-		.max(255, '图标class长度在10到255之间'),
+		.min(2, '图标class长度在2到255之间')
+		.max(255, '图标class长度在2到255之间'),
 	url: z
 		.string()
 		.refine((val) => typeof val === 'string', { message: '链接必须为字符串' })
