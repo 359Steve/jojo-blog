@@ -1,9 +1,9 @@
-import { container } from "../core/container";
-import { CreateTagDto } from "../dto/CreateTagDto";
-import { TagRepository } from "../repositories/TagRepository";
+import { container } from '../core/container';
+import type { CreateTagDto } from '../dto/CreateTagDto';
+import { TagRepository } from '../repositories/TagRepository';
 
 export class TagService {
-	private tagRepo: TagRepository
+	private tagRepo: TagRepository;
 	constructor() {
 		// 这里手动获取容器中的依赖
 		this.tagRepo = container.get(TagRepository);
