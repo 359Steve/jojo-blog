@@ -102,6 +102,12 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 	});
 };
 
+// 取消
+const confirmCancel = (): void => {
+	delete formData.id;
+	isEdit.value = false;
+};
+
 // 编辑
 const editClick = (value: CreateTagDto): void => {
 	Object.assign(formData, value);
@@ -205,7 +211,7 @@ onMounted(() => {
 					<ElButton v-if="isEdit" :disabled="isIDisabled" type="primary" @click="updateTag(ruleFormRef!)">
 						修改
 					</ElButton>
-					<ElButton v-if="isEdit" type="" plain @click="isEdit = false">取消</ElButton>
+					<ElButton v-if="isEdit" type="" plain @click="confirmCancel">取消</ElButton>
 				</ElFormItem>
 			</ElForm>
 		</div>
