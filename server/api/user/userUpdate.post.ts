@@ -6,17 +6,13 @@ export default defineEventHandler(async (event) => {
 	const userService = container.get(UserService);
 	const body = await readBody<CreateUserDto>(event);
 
-	const result = CreateUserSchema.safeParse(body);
-	if (!result.success) {
-		const message = result.error.issues.map((error) => error.message).join(', ');
-		sendErrorWithMessage(event, 400, message);
+	const result = validateData(CreateUserSchema, body, (value: string) => {
+		sendErrorWithMessage(event, 400, value);
 		return null;
-	}
-
-	const dto = result.data; // 校验通过的数据
+	});
 
 	try {
-		return await userService.updateUser(dto);
+		return await userService.updateUser(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '更新失败');
 		return null;

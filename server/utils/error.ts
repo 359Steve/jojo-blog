@@ -7,8 +7,8 @@ export const sendErrorWithMessage = (event: H3Event, statusCode: number, message
 			statusCode,
 			statusMessage: 'Error',
 			data: {
-				message
-			}
-		})
+				message,
+			},
+		}),
 	);
 };
