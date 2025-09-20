@@ -29,11 +29,30 @@ model user_info {
 }
 
 model tag {
-    id   Int     @id @default(autoincrement())
-    name String  @db.VarChar(50)
-    icon String  @db.VarChar(255)
-    url  String  @db.VarChar(255)
-    type TagType @default(BLOG)
+    id       Int        @id @default(autoincrement())
+    name     String     @db.VarChar(50)
+    icon     String     @db.VarChar(255)
+    url      String     @db.VarChar(255)
+    type     TagType    @default(BLOG)
+    blog_tag blog_tag[]
 
     @@unique([name, type], map: "uk_name_type") // 同一类型下标签名称唯一
+}
+
+model blog {
+    id         Int        @id @default(autoincrement())
+    title      String
+    subtitle   String?
+    created_at DateTime   @default(now())
+    updated_at DateTime   @updatedAt
+    tags       blog_tag[]
+}
+
+model blog_tag {
+    blog_id Int
+    tag_id  Int
+    blog    blog @relation(fields: [blog_id], references: [id])
+    tag     tag  @relation(fields: [tag_id], references: [id])
+
+    @@id([blog_id, tag_id])
 }
