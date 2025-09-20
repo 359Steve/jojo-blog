@@ -1,33 +1,10 @@
-import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, Length } from 'class-validator';
+import { z } from 'zod';
 
-enum TagType {
-	BLOG,// 博客标签
-	PERSON // 个人标签
-}
-
-export class CreateTagDto {
-	@Transform(({ value }) => Number(value))
-	@IsNumber()
-	id?: number;
-
-	@IsNotEmpty({ message: '名字不能为空' })
-	@Length(2, 50, { message: '名字长度在2到10之间' })
-	@Transform(({ value }) => value.trim())
-	name!: string;
-
-	@IsNotEmpty({ message: '图标不能为空' })
-	@Length(10, 255, { message: '图标class长度在10到255之间' })
-	@Transform(({ value }) => value.trim())
-	icon!: string;
-
-	@IsNotEmpty({ message: '链接不能为空' })
-	@Transform(({ value }) => value.trim())
-	url!: string;
-
-	@IsNotEmpty({ message: '类型不能为空' })
-	@Transform(({ value }) => value.trim())
-	type!: keyof typeof TagType;
-}
-
-
+export const CreateTagSchema = z.object({
+	id: z.number().optional(),
+	name: z.string().min(2, '名字长度在2到50之间').max(50, '名字长度在2到50之间'),
+	icon: z.string().min(10, '图标class长度在10到255之间').max(255, '图标class长度在10到255之间'),
+	url: z.string().min(1, '链接不能为空'),
+	type: z.enum(['BLOG', 'PERSON'], { message: '类型必须是 BLOG 或 PERSON' }),
+});
+export type CreateTagDto = z.infer<typeof CreateTagSchema>;

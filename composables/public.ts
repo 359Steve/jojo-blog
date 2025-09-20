@@ -70,16 +70,15 @@ export const REGEXP_PWD =
 
 // 封装useLoadingIndicator
 export const jojoLoadingIndicator = async <T>(fn: () => Promise<T>): Promise<T> => {
-	const { start, finish, error } = useLoadingIndicator();
+	const { start, finish } = useLoadingIndicator();
 
 	start();
 	try {
 		const result = await fn();
 		finish();
 		return result;
-	} catch (err) {
-		error.value = true;
-		throw err;
+	} finally {
+		finish();
 	}
 };
 
