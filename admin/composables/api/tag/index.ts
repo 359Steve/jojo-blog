@@ -1,5 +1,10 @@
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
+enum TagType {
+	BLOG = '博客',
+	PERSON = '个人',
+}
+
 // 查询全部标签
 export const queryTagAll = async (name: string = '', n: number = 1, s: number = 10) => {
 	const isServer = import.meta.server;
@@ -21,6 +26,21 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 			}),
 		);
 	}
+
+	return handleApiResponse(res);
+};
+
+// 分类型查询标签
+export const queryTagByType = async (type: keyof typeof TagType) => {
+	const queryParams = {
+		type,
+	};
+
+	const res = await jojoLoadingIndicator(() =>
+		useGet<FindReq, CreateTagDto[]>('/tag/tagQuery', {
+			query: queryParams,
+		}),
+	);
 
 	return handleApiResponse(res);
 };
