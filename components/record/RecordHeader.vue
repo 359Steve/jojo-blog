@@ -1,14 +1,5 @@
 <script lang="ts" setup>
-const recordButtonList = reactive<RecordButtonList[]>([
-	{
-		id: 1,
-		icon: 'ri-bilibili-fill',
-		title: 'BiliBili',
-		href: 'https://space.bilibili.com/457627448?spm_id_from=333.1007.0.0'
-	},
-	{ id: 2, icon: 'ri-facebook-fill', title: 'GitHub', href: 'https://github.com/359Steve' },
-	{ id: 3, icon: 'ri-github-line', title: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61565513711985' }
-]);
+const userInfo = reactive(useVueStarport().getUserInfo());
 </script>
 
 <template>
@@ -29,17 +20,19 @@ const recordButtonList = reactive<RecordButtonList[]>([
 				</AnimationRevealOnScroll>
 				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'"
 					base-class="'flex items-center text-sm lg:text-base font-normal text-secondary mt-4'">
-					<span>努力做一个摆脱CV的前端工程师</span>
+					<span>{{ userInfo.sign }}</span>
 				</AnimationRevealOnScroll>
 				<div class="mt-4 flex w-full items-center gap-2">
-					<AnimationRevealOnScroll v-for="item in recordButtonList" :key="item.id"
+					<AnimationRevealOnScroll v-for="item in userInfo.tags" :key="item.tag_id"
 						animation-class="'animate__fadeInDown'" base-class="'w-fit'">
-						<a :href="item.href" target="_blank" rel="noopener noreferrer" class="button">
+						<a :href="item.tag.url" target="_blank" rel="noopener noreferrer" class="button">
 							<ElButton size="default">
 								<template #icon>
-									<div><i :class="item.icon" class="text-sm"></i></div>
+									<div class="text-[20px]">
+										<Icon :icon="item.tag.icon" />
+									</div>
 								</template>
-								<span>{{ item.title }}</span>
+								<span>{{ item.tag.name }}</span>
 							</ElButton>
 						</a>
 					</AnimationRevealOnScroll>

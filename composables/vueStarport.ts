@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
+import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
 export const useVueStarport = defineStore(
 	'vueStarport',
 	() => {
-		const avatarUrl = ref<string>('');
+		const userInfo = reactive<UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]>>({
+			user_name: '',
+			pet_name: '',
+			sign: '',
+			describe: '',
+			avatar_url: '',
+			tags: [],
+		});
 		const isRound = ref<boolean>(false);
 
 		const getIsRound = (): boolean => {
@@ -14,21 +23,23 @@ export const useVueStarport = defineStore(
 			isRound.value = value;
 		};
 
-		const getAvatarUrl = (): string => {
-			return avatarUrl.value;
+		const getUserInfo = (): UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]> => {
+			return userInfo;
 		};
 
-		const setAvatarUrl = (value: string): void => {
-			avatarUrl.value = value;
+		const setUserInfo = (
+			value: UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]>,
+		): void => {
+			Object.assign(userInfo, value);
 		};
 
 		return {
 			isRound,
-			avatarUrl,
+			userInfo,
+			getUserInfo,
+			setUserInfo,
 			setIsRound,
 			getIsRound,
-			getAvatarUrl,
-			setAvatarUrl,
 		};
 	},
 	{

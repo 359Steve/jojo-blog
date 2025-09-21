@@ -37,16 +37,15 @@ const timelineData = reactive<Timeline[]>([
 ]);
 
 const { data: user } = await useAsyncData('user', () => findPublicUser());
-const userInfo = reactive<NonNullable<Awaited<ReturnType<typeof findPublicUser>>['data']>>(
-	user.value && user.value.data
-		? user.value.data
-		: {
-			user_name: '',
-			avatar_url: '',
-			pet_name: '',
-			sign: '',
-			describe: '',
-		},
+const userInfo = reactive(
+	user.value?.data ?? {
+		user_name: '',
+		avatar_url: '',
+		pet_name: '',
+		sign: '',
+		describe: '',
+		tags: [],
+	},
 );
 
 const onMouseenter = (e: MouseEvent): void => {
@@ -93,7 +92,7 @@ const detailRecord = async (_item: Timeline) => {
 
 onMounted(() => {
 	nextTick(() => {
-		useVueStarport().setAvatarUrl(userInfo.avatar_url);
+		useVueStarport().setUserInfo(userInfo);
 		// 获取页面宽度
 		const el = document.documentElement.getBoundingClientRect();
 		isSm.value = el.width <= 640;
