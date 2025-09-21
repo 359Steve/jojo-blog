@@ -189,7 +189,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 				<ElInput v-model="formData.sign" placeholder="请输入签名" clearable />
 			</ElFormItem>
 			<ElFormItem label="标签：" prop="tags" class="w-full">
-				<SelectTag :tags="formData.tags" @tag-change="formData.tags = $event" />
+				<SelectTag :tags="formData.tags" type="PERSON" @tag-change="formData.tags = $event" />
 			</ElFormItem>
 			<ElFormItem class="save col-span-1 sm:col-span-2">
 				<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>

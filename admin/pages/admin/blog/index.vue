@@ -19,7 +19,7 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 					<ElInput v-model="formData.title" placeholder="请输入标题" clearable />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full" prop="url" label="标签：">
-					<ElInput v-model="formData.content" placeholder="请输入链接" clearable />
+					<SelectTag :tags="formData.tags" type="BLOG" @tag-change="formData.tags = $event" />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full" prop="icon" label="简介：">
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />

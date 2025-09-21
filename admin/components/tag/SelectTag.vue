@@ -4,8 +4,9 @@ interface TagsOptions {
 	label: string;
 }
 
-const { tags = [] } = defineProps<{
+const { tags = [], type } = defineProps<{
 	tags: number[];
+	type: keyof typeof TagType;
 }>();
 
 const emit = defineEmits<{
@@ -15,7 +16,7 @@ const emit = defineEmits<{
 const values = ref(tags);
 // 分类型查询标签
 const { data: allTags } = await useAsyncData('alltags', () => {
-	return queryTagByType('PERSON');
+	return queryTagByType(type);
 });
 const tagsOptions = ref<TagsOptions[]>(
 	allTags.value?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [],
