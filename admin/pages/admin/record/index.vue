@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 definePageMeta({
-	middleware: 'admin-redirect'
+	middleware: 'admin-redirect',
 });
 </script>
 
 <template>
-	<div>履历管理页面</div>
+	<NuxtPage />
 </template>
 
 <style lang="scss" scoped></style>

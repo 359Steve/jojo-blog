@@ -3,7 +3,25 @@ export default {
 	meta: {
 		title: '博客管理',
 		icon: 'tabler:cash-edit',
-		rank: 2
+		rank: 2,
 	},
-	children: []
+	redirect: '/admin/blog/group',
+	children: [
+		{
+			path: '/admin/blog/add',
+			name: 'AddBlog',
+			meta: {
+				title: '新增博客',
+				icon: 'tabler:file-plus',
+			},
+		},
+		{
+			path: '/admin/blog/group',
+			name: 'BlogArticle',
+			meta: {
+				title: '管理博客',
+				icon: 'tabler:article',
+			},
+		},
+	],
 } satisfies RouteConfigsTable;
