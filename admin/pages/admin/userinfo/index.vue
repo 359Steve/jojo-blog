@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules, UploadFile, UploadFiles } from 'element-plus';
 import type { ToolbarNames } from 'md-editor-v3';
-import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
-const props = { multiple: true };
 const toolbars = ref<ToolbarNames[]>([
 	'bold',
 	'underline',
@@ -24,15 +22,21 @@ const { data } = await useAsyncData('userinfo', () => {
 	const user_name = useCookie('user_name').value;
 	return findUser(user_name ?? '');
 });
-const formData = reactive<CreateUserDto>(
-	data.value?.data ?? {
-		avatar_url: '',
-		user_name: '',
-		pet_name: '',
-		password: '',
-		sign: '',
-		describe: '',
-	},
+const formData = reactive(
+	data.value?.data
+		? {
+			...data.value.data,
+			tags: data.value.data.tags.map((item) => item.tag_id),
+		}
+		: {
+			user_name: '',
+			pet_name: '',
+			password: '',
+			sign: '',
+			describe: '',
+			avatar_url: '',
+			tags: [],
+		},
 );
 const imageFile = ref<FormData | null>(new FormData());
 const updateUserRules = reactive<FormRules>({
@@ -84,6 +88,14 @@ const updateUserRules = reactive<FormRules>({
 			required: true,
 			message: '请上传头像',
 			trigger: 'blur',
+		},
+	],
+	tags: [
+		{
+			type: 'array',
+			required: true,
+			message: '请选择标签',
+			trigger: 'change',
 		},
 	],
 });
@@ -173,8 +185,8 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 			<ElFormItem label="签名：" prop="sign" class="w-full">
 				<ElInput v-model="formData.sign" placeholder="请输入签名" clearable />
 			</ElFormItem>
-			<ElFormItem label="标签：" prop="sign" class="w-full">
-				<el-cascader :props="props" clearable />
+			<ElFormItem label="标签：" prop="tags" class="w-full">
+				<SelectTag :tags="formData.tags" @tag-change="formData.tags = $event" />
 			</ElFormItem>
 			<ElFormItem class="save col-span-1 sm:col-span-2">
 				<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>
@@ -190,6 +202,10 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 </template>
 
 <style lang="postcss" scoped>
+:deep(.el-select) {
+	@apply w-full;
+}
+
 :deep(.el-form-item__label) {
 	@apply pr-0 text-[16px];
 }
@@ -199,7 +215,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 }
 
 :deep(.el-select__wrapper) {
-	@apply h-[34px] text-[14px];
+	@apply min-h-[34px] w-full text-[14px];
 }
 
 :deep(.el-upload-dragger) {
