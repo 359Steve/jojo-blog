@@ -40,6 +40,13 @@ export class UserRepository {
 	async findUser(user_name: string) {
 		const res = await this.prismaClient.user_info.findFirst({
 			where: user_name ? { user_name } : undefined,
+			include: {
+				tags: {
+					include: {
+						tag: true, // 查询标签详情
+					},
+				},
+			},
 		});
 
 		return res
@@ -57,6 +64,11 @@ export class UserRepository {
 				pet_name: true,
 				sign: true,
 				describe: true,
+				tags: {
+					include: {
+						tag: true, // 查询标签详情
+					},
+				},
 			},
 		});
 

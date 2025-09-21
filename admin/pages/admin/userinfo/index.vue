@@ -3,6 +3,7 @@ import type { FormInstance, FormRules, UploadFile, UploadFiles } from 'element-p
 import type { ToolbarNames } from 'md-editor-v3';
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
+const props = { multiple: true };
 const toolbars = ref<ToolbarNames[]>([
 	'bold',
 	'underline',
@@ -141,7 +142,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 		<h3 class="mb-2 font-bold">个人信息</h3>
 		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" label-width="auto"
 			class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
-			<ElFormItem label="头像" prop="avatar_url">
+			<ElFormItem label="头像：" prop="avatar_url">
 				<ElUpload ref="upload" class="relative" action="#" list-type="picture-card" :auto-upload="false"
 					:show-file-list="false" :limit="1" :on-change="handleAvatarSuccess">
 					<!-- 上传后显示图片 -->
@@ -160,22 +161,25 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 					</template>
 				</ElUpload>
 			</ElFormItem>
-			<ElFormItem label="名字" class="flex items-start" prop="user_name">
+			<ElFormItem label="名字：" class="flex items-start" prop="user_name">
 				<ElInput v-model="formData.user_name" placeholder="请输入名字" clearable />
 			</ElFormItem>
-			<ElFormItem label="昵称" prop="pet_name" class="w-full">
+			<ElFormItem label="昵称：" prop="pet_name" class="w-full">
 				<ElInput v-model="formData.pet_name" placeholder="请输入昵称" clearable />
 			</ElFormItem>
-			<ElFormItem label="新密码" prop="password" class="w-full">
+			<ElFormItem label="新密码：" prop="password" class="w-full">
 				<ElInput v-model="formData.password" type="password" placeholder="请输入新密码" clearable />
 			</ElFormItem>
-			<ElFormItem label="签名" prop="sign" class="w-full">
+			<ElFormItem label="签名：" prop="sign" class="w-full">
 				<ElInput v-model="formData.sign" placeholder="请输入签名" clearable />
+			</ElFormItem>
+			<ElFormItem label="标签：" prop="sign" class="w-full">
+				<el-cascader :props="props" clearable />
 			</ElFormItem>
 			<ElFormItem class="save col-span-1 sm:col-span-2">
 				<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>
 			</ElFormItem>
-			<ElFormItem label="简介" class="col-span-1 sm:col-span-2" prop="describe">
+			<ElFormItem label="简介：" class="col-span-1 sm:col-span-2" prop="describe">
 				<ClientOnly>
 					<MdEditor v-model="formData.describe" :preview="false"
 						:theme="useJojoColorMode().darkMode.preference" :toolbars="toolbars" />
@@ -187,7 +191,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 <style lang="postcss" scoped>
 :deep(.el-form-item__label) {
-	@apply text-[16px];
+	@apply pr-0 text-[16px];
 }
 
 :deep(.el-input__wrapper) {
