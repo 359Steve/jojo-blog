@@ -11,18 +11,6 @@ import { prisma } from '../core/prisma';
 export class UserRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
-	async createUser(dto: CreateUserDto) {
-		const res = await this.prismaClient.user_info.create({
-			data: {
-				...dto,
-			},
-		});
-
-		return res
-			? returnData(StatusCode.SUCCESS, '注册成功！', res)
-			: returnData(StatusCode.REGISTER_FAILED, '注册失败！', null);
-	}
-
 	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		const { user_name, password } = body;
 		const res = await this.prismaClient.user_info.findFirst({
@@ -105,15 +93,33 @@ export class UserRepository {
 	}
 
 	// 更新信息
-	async updateUser(body: CreateUserDto) {
+	async updateUser(body: UserInfoDetail<CreateUserDto, number[]>) {
+		const { tags, ...userInfo } = body;
 		const res = await this.prismaClient.user_info.update({
 			where: {
-				id: Number(body.id),
+				id: Number(userInfo.id),
 			},
 			data: {
-				...body,
+				...userInfo,
 			},
 		});
+
+		await this.prismaClient.user_tag.deleteMany({
+			where: {
+				user_id: Number(userInfo.id),
+			},
+		});
+
+		if (tags && tags.length > 0) {
+			const tagNumbers = tags.map((tag_id) => ({
+				user_id: Number(userInfo.id),
+				tag_id,
+			}));
+
+			await this.prismaClient.user_tag.createMany({
+				data: tagNumbers,
+			});
+		}
 
 		return res
 			? returnData(StatusCode.SUCCESS, '修改成功！', res)

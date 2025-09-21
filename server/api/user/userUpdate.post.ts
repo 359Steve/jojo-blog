@@ -4,7 +4,7 @@ import { UserService } from '~/server/services/UserService';
 
 export default defineEventHandler(async (event) => {
 	const userService = container.get(UserService);
-	const body = await readBody<CreateUserDto>(event);
+	const body = await readBody<UserInfoDetail<CreateUserDto, number[]>>(event);
 
 	const result = validateData(CreateUserSchema, body, (value: string) => {
 		sendErrorWithMessage(event, 400, value);
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		return await userService.updateUser(result);
+		return await userService.updateUser({ ...result, tags: body.tags });
 	} catch {
 		sendErrorWithMessage(event, 500, '更新失败');
 		return null;

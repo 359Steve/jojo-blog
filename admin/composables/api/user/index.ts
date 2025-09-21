@@ -1,3 +1,4 @@
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
 // 上传头像
@@ -12,9 +13,9 @@ export const uploadAvatar = async (file: FormData) => {
 };
 
 // 更新信息
-export const updataUserInfo = async (body: CreateUserDto) => {
+export const updataUserInfo = async (body: UserInfoDetail<CreateUserDto, number[]>) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<CreateUserDto, CreateUserDto>('/user/userUpdate', {
+		fetchPostApi<UserInfoDetail<CreateUserDto, number[]>, CreateUserDto>('/user/userUpdate', {
 			body,
 		}),
 	);
@@ -31,13 +32,19 @@ export const findUser = async (user_name?: string) => {
 
 	let res;
 	if (isServer) {
-		res = await useGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
-			query: queryParams,
-		});
+		res = await useGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
+			'/user/userQuery',
+			{
+				query: queryParams,
+			},
+		);
 	} else {
-		res = await fetchUseGet<{ user_name?: string }, CreateUserDto>('/user/userQuery', {
-			query: queryParams,
-		});
+		res = await fetchUseGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
+			'/user/userQuery',
+			{
+				query: queryParams,
+			},
+		);
 	}
 
 	return handleApiResponse(res);

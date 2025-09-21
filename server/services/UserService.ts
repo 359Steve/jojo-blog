@@ -10,11 +10,6 @@ export class UserService {
 		this.userRepo = container.get(UserRepository);
 	}
 
-	// 创建用户
-	async createUser(dto: CreateUserDto) {
-		return await this.userRepo.createUser(dto);
-	}
-
 	// 登录
 	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		return await this.userRepo.loginUser(body);
@@ -36,7 +31,7 @@ export class UserService {
 	}
 
 	// 更新信息
-	async updateUser(body: CreateUserDto) {
+	async updateUser(body: UserInfoDetail<CreateUserDto, number[]>) {
 		return await this.userRepo.updateUser(body);
 	}
 }

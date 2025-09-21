@@ -14,6 +14,11 @@ export class TagService {
 		return await this.tagRepo.findAllTag(query);
 	}
 
+	// 分类型查询标签
+	async findTag(query: FindReq) {
+		return await this.tagRepo.findTag(query);
+	}
+
 	// 创建标签
 	async createTag(body: CreateTagDto) {
 		return await this.tagRepo.createTag(body);
