@@ -38,6 +38,21 @@ export class TagRepository {
 			: returnData(StatusCode.FAIL, '查询失败！', null);
 	}
 
+	// 分类型查询标签
+	async findTag(query: FindReq) {
+		const { type } = query;
+
+		const records = await this.prismaClient.tag.findMany({
+			where: {
+				type,
+			},
+		});
+
+		return records
+			? returnData(StatusCode.SUCCESS, '查询成功！', records)
+			: returnData(StatusCode.FAIL, '查询失败！', null);
+	}
+
 	// 创建标签
 	async createTag(value: CreateTagDto) {
 		const res = await this.prismaClient.tag.create({
