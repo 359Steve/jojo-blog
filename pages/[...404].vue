@@ -12,8 +12,6 @@
 				<div class="mt-[-50px]">
 					<h3 class="mb-4 text-2xl font-bold sm:text-3xl">Look like you're lost</h3>
 					<p class="mb-6 sm:mb-5">The page you are looking for is not available!</p>
-
-					<ElButton type="primary" class="my-5" @click="navigateTo('/')">回到首页</ElButton>
 				</div>
 			</div>
 		</template>
