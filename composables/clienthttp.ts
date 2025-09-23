@@ -28,48 +28,20 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 			const data = response._data as NewResponse<Rp>;
 			if (data.code !== StatusCode.SUCCESS) {
 				const error = data as NewResponse<{ message: string }>;
-				if (import.meta.client) {
-					// 直接提示错误信息
-					ElMessage({
-						type: 'error',
-						message: error.msg || error.data.message || '请求出错！',
-					});
-				} else {
-					// 跳转错误页面
-					nuxtApp.runWithContext(() => {
-						navigateTo({
-							path: '/pageError',
-							query: {
-								code: error.code,
-								msg: error.msg || error.data.message || '请求出错！',
-							},
-						});
-					});
-				}
+				ElMessage({
+					type: 'error',
+					message: error.msg || error.data.message || '请求出错！',
+				});
 			}
 		},
 
 		// 响应失败
 		onResponseError({ response }) {
 			const error = response._data as NewResponse<{ message: string }>;
-			// 如果是客户端直接提示错误信息
-			if (import.meta.client) {
-				ElMessage({
-					type: 'error',
-					message: error.msg || error.data.message || '请求出错！',
-				});
-			} else {
-				// 跳转错误页面
-				nuxtApp.runWithContext(() => {
-					navigateTo({
-						path: '/pageError',
-						query: {
-							code: error.code,
-							message: error.msg || error.data.message || '请求出错！',
-						},
-					});
-				});
-			}
+			ElMessage({
+				type: 'error',
+				message: error.msg || error.data.message || '请求出错！',
+			});
 		},
 	});
 };

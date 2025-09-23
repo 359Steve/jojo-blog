@@ -42,12 +42,11 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 				} else {
 					// 跳转错误页面
 					nuxtApp.runWithContext(() => {
-						navigateTo({
-							path: '/pageError',
-							query: {
-								code: error.code,
-								msg: error.msg || error.data.message || '请求出错！',
-							},
+						showError({
+							statusCode: error.code || 500,
+							statusMessage: '服务端错误',
+							message: error.msg || error.data.message || '请求出错！',
+							data: error.data,
 						});
 					});
 				}
@@ -66,12 +65,11 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 			} else {
 				// 跳转错误页面
 				nuxtApp.runWithContext(() => {
-					navigateTo({
-						path: '/pageError',
-						query: {
-							code: error.code,
-							msg: error.msg || error.data.message || '请求出错！',
-						},
+					showError({
+						statusCode: error.code || 500,
+						statusMessage: '服务端错误',
+						message: error.msg || error.data.message || '请求出错！',
+						data: error.data,
 					});
 				});
 			}
