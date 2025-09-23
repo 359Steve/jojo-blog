@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import type { FormInstance } from 'element-plus';
-import { loginRules } from './utils/rule';
+import type { FormInstance, FormRules } from 'element-plus';
 import { StatusCode } from '~/types/com-types';
 
 const Illustration = getIcons().Illustration;
@@ -11,12 +10,36 @@ const ruleForm = reactive({
 	password: '',
 });
 
+const loginRules = reactive<FormRules>({
+	username: [
+		{
+			required: true,
+			message: '请输入用户名',
+			trigger: 'blur',
+		},
+	],
+	password: [
+		{
+			validator: (_rule, value, callback) => {
+				if (value === '') {
+					callback(new Error('请输入密码'));
+				} else if (!REGEXP_PWD.test(value)) {
+					callback(new Error('密码格式应为8-18位数字、字母、符号的任意两种组合'));
+				} else {
+					callback();
+				}
+			},
+			trigger: 'blur',
+		},
+	],
+});
+
 const ruleFormRef = ref<FormInstance>();
 const disabled = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
-const onLogin = (formEl: FormInstance | undefined): void => {
-	formEl?.validate(async (valid) => {
+const onLogin = (): void => {
+	ruleFormRef.value?.validate(async (valid) => {
 		if (valid) {
 			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>(
 				'/user/user-login',
@@ -33,7 +56,11 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 				useCookie('user_name').value = ruleForm.username;
 				const { data } = await findUser(ruleForm.username);
 
-				data && useUserinfo().setUserInfo(data);
+				data &&
+					useUserinfo().setUserInfo({
+						...data,
+						tags: data.tags.map((item) => item.tag_id),
+					});
 				// 跳转到首页
 				navigateTo('/admin/');
 			}
@@ -61,7 +88,7 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 						<h2 class="mx-0 my-[8px] font-cmm text-[2.24rem] font-bold text-[#999]">JOJOADMIN</h2>
 					</Motion>
 
-					<ElForm ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
+					<ElForm :model="ruleForm" :rules="loginRules" size="large">
 						<Motion :delay="100">
 							<ElFormItem prop="username">
 								<ElInput v-model="ruleForm.username" clearable placeholder="账号">
@@ -84,7 +111,7 @@ const onLogin = (formEl: FormInstance | undefined): void => {
 
 						<Motion :delay="250">
 							<ElButton size="default" type="primary" :loading="loading" :disabled="disabled"
-								@click="onLogin(ruleFormRef)">
+								@click="onLogin">
 								登录
 							</ElButton>
 						</Motion>
