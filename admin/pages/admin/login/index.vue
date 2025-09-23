@@ -6,7 +6,7 @@ const Illustration = getIcons().Illustration;
 const Avatar = getIcons().Avatar;
 
 const ruleForm = reactive({
-	username: 'admin',
+	username: '',
 	password: '',
 });
 
@@ -88,7 +88,7 @@ const onLogin = (): void => {
 						<h2 class="mx-0 my-[8px] font-cmm text-[2.24rem] font-bold text-[#999]">JOJOADMIN</h2>
 					</Motion>
 
-					<ElForm :model="ruleForm" :rules="loginRules" size="large">
+					<ElForm ref="ruleFormRef" :model="ruleForm" :rules="loginRules" size="large">
 						<Motion :delay="100">
 							<ElFormItem prop="username">
 								<ElInput v-model="ruleForm.username" clearable placeholder="账号">
