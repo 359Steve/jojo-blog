@@ -25,27 +25,16 @@ export const updataUserInfo = async (body: UserInfoDetail<CreateUserDto, number[
 
 // 查询用户信息
 export const findUser = async (user_name?: string) => {
-	const isServer = import.meta.server;
 	const queryParams = {
 		user_name,
 	};
 
-	let res;
-	if (isServer) {
-		res = await useGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
-			'/user/userQuery',
-			{
-				query: queryParams,
-			},
-		);
-	} else {
-		res = await fetchUseGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
-			'/user/userQuery',
-			{
-				query: queryParams,
-			},
-		);
-	}
+	const res = await fetchUseGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
+		'/user/userQuery',
+		{
+			query: queryParams,
+		},
+	);
 
 	return handleApiResponse(res);
 };
