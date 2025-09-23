@@ -9,6 +9,11 @@ const meta: Meta[] = [
 
 export default defineNuxtConfig({
 	extends: ['./admin'],
+	routeRules: {
+		'/admin/**': {
+			ssr: false,
+		},
+	},
 	components: [
 		{
 			path: '~/components',
