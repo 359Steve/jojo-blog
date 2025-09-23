@@ -3,8 +3,6 @@ import { StatusCode } from '~/types/com-types';
 export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
 	// 获取全局变量
 	const appConfig = useAppConfig();
-	// 获取nuxtApp实例
-	const nuxtApp = useNuxtApp();
 	// 获取token
 	const token: string = useUserState().getToken() || '';
 	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
