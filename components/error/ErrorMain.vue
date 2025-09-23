@@ -2,12 +2,10 @@
 
 <template>
 	<div class="w-full">
-		<section
-			class="flex h-[calc(100dvh-(5rem+110px))] w-full items-center justify-center font-serif sm:h-[calc(100dvh-(5rem+80px))]"
-		>
+		<section class="flex h-[100vh] w-full items-center justify-center font-serif">
 			<div class="container mx-auto">
 				<div class="flex justify-center">
-					<slot name="error"></slot>
+					<slot name="error" />
 				</div>
 			</div>
 		</section>
