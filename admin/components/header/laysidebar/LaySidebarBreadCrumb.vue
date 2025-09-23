@@ -7,36 +7,31 @@ const menuList = getRouterConfig();
 const findRoutePath = (path: string): HeaderRouteCrumb[] => {
 	const result: HeaderRouteCrumb[] = [];
 
-	const dfs = (nodes: RouteConfigsTable[], targetPath: string, currentPath: HeaderRouteCrumb[]): boolean => {
-		for (const node of nodes) {
-			// 将当前节点加入路径
-			currentPath.push({
-				name: node.meta?.title,
-				path: node.path
+	for (const item of menuList) {
+		if (item.path === path) {
+			result.push({
+				name: item.name,
+				path: item.path,
 			});
+			break;
+		}
 
-			if (node.path === targetPath) {
-				// 找到目标路径，构建结果
-				for (const item of currentPath) {
+		if (item.children && item.children.length) {
+			for (const child of item.children) {
+				if (child.path === path) {
 					result.push({
 						name: item.name,
-						path: item.path
+						path: item.path,
 					});
+					result.push({
+						name: child.name,
+						path: child.path,
+					});
+					break;
 				}
-				return true;
 			}
-
-			if (node.children && node.children.length) {
-				const found = dfs(node.children, targetPath, currentPath);
-				if (found) return true;
-			}
-
-			currentPath.pop();
 		}
-		return false;
-	};
-
-	dfs(menuList, path, []);
+	}
 	return result;
 };
 const crumbList = ref<HeaderRouteCrumb[]>(findRoutePath(exceptPath(route.path)));
@@ -46,22 +41,20 @@ watch(
 	() => route.path,
 	() => {
 		crumbList.value = findRoutePath(exceptPath(route.path));
-	}
+	},
 );
 </script>
 
 <template>
 	<ElBreadcrumb class="h-[48px] items-center p-3" separator="/">
-		<TransitionGroup name="breadcrumb">
-			<ElBreadcrumbItem v-for="item in crumbList" :key="item.path" :to="item.path" class="flex items-center">
-				{{ item.name }}
-			</ElBreadcrumbItem>
-		</TransitionGroup>
+		<ElBreadcrumbItem v-for="item in crumbList" :key="item.path" :to="item.path" class="flex items-center">
+			{{ item.name }}
+		</ElBreadcrumbItem>
 	</ElBreadcrumb>
 </template>
 
 <style lang="postcss" scoped>
 :deep(.is-link:hover) {
-	@apply !transition-none text-admin-menu-title-hover
+	@apply text-admin-menu-title-hover !transition-none;
 }
 </style>

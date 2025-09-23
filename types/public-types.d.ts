@@ -99,7 +99,7 @@ declare global {
 			rank?: number;
 		};
 		/** 子路由配置项 */
-		children?: Array<RouteChildrenConfigsTable>;
+		children?: Array<RouteChildrenConfigsTable<keyof RouteConfigsTable>>;
 	}
 
 	/** 面包屑导航菜单类型 */
