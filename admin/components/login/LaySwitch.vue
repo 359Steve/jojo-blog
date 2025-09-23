@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
+const { darkMode } = storeToRefs(useJojoColorMode());
+const selectTheme = ref<boolean>(darkMode.value.preference !== 'dark');
 
 const changeTheme = (value: boolean | string | number): void => {
 	useJojoColorMode().setDarkMode(value ? 'light' : 'dark');
