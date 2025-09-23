@@ -6,7 +6,7 @@ useHead({
 const route = useRoute();
 
 // 获取当前路由路径
-const isLogin = computed(() => route.path.includes('/login'));
+const isLogin = computed(() => route.name === 'admin-login');
 const layout = computed(() => (isLogin.value ? 'login' : 'main'));
 </script>
 
