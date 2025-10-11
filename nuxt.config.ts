@@ -88,7 +88,6 @@ export default defineNuxtConfig({
 	css: [
 		'~/assets/css/index.scss',
 		'~/assets/css/tailwind.css',
-		'~/assets/css/index.scss',
 		'animate.css/animate.min.css',
 		'remixicon/fonts/remixicon.css',
 	],
@@ -113,10 +112,13 @@ export default defineNuxtConfig({
 			},
 			preprocessorMaxWorkers: true,
 		},
+		build: {
+			cssCodeSplit: false,
+		},
 	},
 
 	elementPlus: {
-		importStyle: 'scss',
+		importStyle: 'css',
 	},
 
 	postcss: {

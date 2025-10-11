@@ -24,6 +24,10 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 				<ElFormItem class="!mx-0 !w-full" prop="icon" label="简介：">
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
+				<ElFormItem class="!mx-0 !w-full">
+					<ElButton type="primary" @click="console.log(formData)">保存</ElButton>
+					<ElButton type="" plain @click="console.log(formData)">重置</ElButton>
+				</ElFormItem>
 				<ElFormItem label="内容：" class="col-span-1 !mx-0 sm:col-span-2" prop="describe">
 					<ClientOnly>
 						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference" />

@@ -4,7 +4,7 @@ interface TagsOptions {
 	label: string;
 }
 
-const { tags = [], type } = defineProps<{
+const props = defineProps<{
 	tags: number[];
 	type: keyof typeof TagType;
 }>();
@@ -13,14 +13,23 @@ const emit = defineEmits<{
 	(e: 'tagChange', tagChange: number[]): void;
 }>();
 
-const values = ref(tags);
-// 分类型查询标签
-const { data: allTags } = await useAsyncData('alltags', () => {
-	return queryTagByType(type);
-});
+const values = ref(props.tags);
+const { data: allTags } = await useAsyncData(
+	`alltags-${props.type}`,
+	() => {
+		return queryTagByType(props.type);
+	},
+	{
+		watch: [() => props.type],
+	},
+);
 const tagsOptions = ref<TagsOptions[]>(
 	allTags.value?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [],
 );
+
+watch(allTags, (newTags) => {
+	tagsOptions.value = newTags?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [];
+});
 
 watch(values, (newVal) => {
 	emit('tagChange', newVal);
