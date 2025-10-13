@@ -10,11 +10,10 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 </script>
 
 <template>
-	<div class="h-full w-full">
-		<div class="w-full">
-			<h3 class="mb-2 font-bold">新增博客</h3>
-			<ElForm ref="ruleFormRef" :inline="true" :model="formData"
-				class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
+	<div class="flex h-full w-full flex-col">
+		<h3 class="mb-2 font-bold">新增博客</h3>
+		<ElForm ref="ruleFormRef" :inline="true" :model="formData">
+			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
 				<ElFormItem class="!mx-0 !w-full" prop="name" label="标题：">
 					<ElInput v-model="formData.title" placeholder="请输入标题" clearable />
 				</ElFormItem>
@@ -28,23 +27,29 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 					<ElButton type="primary" @click="console.log(formData)">保存</ElButton>
 					<ElButton type="" plain @click="console.log(formData)">重置</ElButton>
 				</ElFormItem>
-				<ElFormItem label="内容：" class="col-span-1 !mx-0 sm:col-span-2" prop="describe">
+			</div>
+			<div class="w-full flex-1">
+				<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="describe">
 					<ClientOnly>
 						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference" />
 					</ClientOnly>
 				</ElFormItem>
-			</ElForm>
-		</div>
+			</div>
+		</ElForm>
 	</div>
 </template>
 
 <style lang="postcss" scoped>
-:deep(.el-form-item) {
-	@apply h-fit;
+:deep(.el-form) {
+	@apply flex flex-1 flex-col;
 }
 
 :deep(.el-form-item__content) {
-	@apply flex h-fit w-full justify-end;
+	@apply flex h-full w-full justify-end;
+}
+
+:deep(.el-form-item .el-form-item__content) {
+	@apply h-full;
 }
 
 :deep(.el-form-item__label) {
@@ -57,5 +62,25 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 
 :deep(.el-select__wrapper) {
 	@apply h-[34px] text-[14px];
+}
+
+:deep(.md-editor) {
+	@apply h-full w-full;
+}
+
+:deep(.md-editor-content) {
+	@apply h-full;
+}
+
+:deep(.md-editor-content-wrapper) {
+	@apply h-full;
+}
+
+:deep(.md-editor-input-wrapper) {
+	@apply h-full;
+}
+
+:deep(.md-editor-input) {
+	@apply h-full;
 }
 </style>
