@@ -14,6 +14,7 @@ export const CreateBlogSchema = z.object({
 		.string()
 		.refine((val) => typeof val === 'string', { message: '内容必须为字符串' })
 		.min(1, '内容不能为空'),
+	tags: z.array(z.number()).optional().default([]),
 	created_at: z.string().optional(),
 	updated_at: z.string().optional(),
 });
