@@ -10,7 +10,7 @@ const findRoutePath = (path: string): HeaderRouteCrumb[] => {
 	for (const item of menuList) {
 		if (item.path === path) {
 			result.push({
-				name: item.name,
+				name: item.meta?.title,
 				path: item.path,
 			});
 			break;
@@ -20,11 +20,11 @@ const findRoutePath = (path: string): HeaderRouteCrumb[] => {
 			for (const child of item.children) {
 				if (child.path === path) {
 					result.push({
-						name: item.name,
+						name: item.meta?.title,
 						path: item.path,
 					});
 					result.push({
-						name: child.name,
+						name: child.meta?.title,
 						path: child.path,
 					});
 					break;
