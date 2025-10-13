@@ -1,12 +1,33 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 
-const formData = reactive<CreateBlogDto & { tags: number[] }>({
+const formData = reactive<CreateBlogDto>({
 	title: '',
 	subtitle: '',
 	tags: [],
 	content: '',
 });
+
+const ruleFormRef = ref();
+
+// 保存博客
+const saveBlog = async () => {
+	const { data, msg } = await createBlog(formData);
+
+	ElMessage({
+		message: msg,
+		type: data ? 'success' : 'error',
+	});
+};
+
+// 重置表单
+const resetForm = () => {
+	formData.title = '';
+	formData.subtitle = '';
+	formData.tags = [];
+	formData.content = '';
+	ruleFormRef.value?.resetFields();
+};
 </script>
 
 <template>
@@ -24,8 +45,8 @@ const formData = reactive<CreateBlogDto & { tags: number[] }>({
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full">
-					<ElButton type="primary" @click="console.log(formData)">保存</ElButton>
-					<ElButton type="" plain @click="console.log(formData)">重置</ElButton>
+					<ElButton type="primary" @click="saveBlog">保存</ElButton>
+					<ElButton type="" plain @click="resetForm">重置</ElButton>
 				</ElFormItem>
 			</div>
 			<div class="w-full flex-1">
