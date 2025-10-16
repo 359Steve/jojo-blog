@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
-import { ElFormItem, type FormRules } from 'element-plus';
+import { ElFormItem, type FormInstance, type FormRules } from 'element-plus';
 
 const formData = reactive<CreateBlogDto>({
 	title: '',
@@ -19,12 +19,16 @@ const createBlogRules = reactive<FormRules>({
 });
 
 // 保存博客
-const saveBlog = async () => {
-	const { data, msg } = await createBlog(formData);
+const saveBlog = async (formEl: FormInstance | undefined) => {
+	formEl?.validate(async (valid) => {
+		if (valid) {
+			const { data, msg } = await createBlog(formData);
 
-	ElMessage({
-		message: msg,
-		type: data ? 'success' : 'error',
+			ElMessage({
+				message: msg,
+				type: data ? 'success' : 'error',
+			});
+		}
 	});
 };
 
@@ -53,7 +57,7 @@ const resetForm = () => {
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full">
-					<ElButton type="primary" @click="saveBlog">保存</ElButton>
+					<ElButton type="primary" @click="saveBlog(ruleFormRef!)">保存</ElButton>
 					<ElButton type="" plain @click="resetForm">重置</ElButton>
 				</ElFormItem>
 			</div>
