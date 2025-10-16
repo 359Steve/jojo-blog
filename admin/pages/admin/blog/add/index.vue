@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
+import { ElFormItem, type FormRules } from 'element-plus';
 
 const formData = reactive<CreateBlogDto>({
 	title: '',
@@ -8,7 +9,14 @@ const formData = reactive<CreateBlogDto>({
 	content: '',
 });
 
-const ruleFormRef = ref();
+const ruleFormRef = templateRef('ruleFormRef');
+
+const createBlogRules = reactive<FormRules>({
+	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+	subtitle: [{ required: true, message: '请输入简介', trigger: 'blur' }],
+	tags: [{ type: 'array', required: true, message: '请选择标签', trigger: 'change' }],
+	content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
+});
 
 // 保存博客
 const saveBlog = async () => {
@@ -33,15 +41,15 @@ const resetForm = () => {
 <template>
 	<div class="flex h-full w-full flex-col">
 		<h3 class="mb-2 font-bold">新增博客</h3>
-		<ElForm ref="ruleFormRef" :inline="true" :model="formData">
+		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createBlogRules" class="!w-full">
 			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
-				<ElFormItem class="!mx-0 !w-full" prop="name" label="标题：">
+				<ElFormItem prop="title" class="!mx-0 !w-full" label="标题：">
 					<ElInput v-model="formData.title" placeholder="请输入标题" clearable />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full" prop="url" label="标签：">
+				<ElFormItem prop="tags" class="!mx-0 !w-full" label="标签：">
 					<SelectTag :tags="formData.tags" type="BLOG" @tag-change="formData.tags = $event" />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full" prop="icon" label="简介：">
+				<ElFormItem class="!mx-0 !w-full" prop="subtitle" label="简介：">
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full">
@@ -50,7 +58,7 @@ const resetForm = () => {
 				</ElFormItem>
 			</div>
 			<div class="w-full flex-1">
-				<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="describe">
+				<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="content">
 					<ClientOnly>
 						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference" />
 					</ClientOnly>
