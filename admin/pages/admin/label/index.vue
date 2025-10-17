@@ -10,7 +10,6 @@ enum TagType {
 const { watchTable } = storeToRefs(useAdminMenu());
 const ruleFormRef = templateRef('ruleFormRef');
 const formRef = templateRef<HTMLDivElement>('formRef');
-const footerRef = templateRef<HTMLDivElement>('footerRef');
 const formData = reactive<CreateTagDto>({
 	name: '',
 	icon: '',
@@ -21,7 +20,9 @@ const formData = reactive<CreateTagDto>({
 const { data } = await useAsyncData('tags', () => queryTagAll());
 const tableData = ref<CreateTagDto[]>(data.value?.data?.records || []);
 const tableRef = templateRef('tableRef');
+const tableRefs = templateRef('tableRefs');
 const tableHeight = ref<number>(0);
+const tableRefsHeight = ref<number>(0);
 const total = ref<number>(data.value?.data?.total || 0);
 const pageNumber = ref<number>(1);
 const searchTag = ref<string>('');
@@ -143,6 +144,7 @@ let stopScrollWatch: (() => void) | null = null;
 onMounted(() => {
 	nextTick(() => {
 		tableHeight.value = formRef.value?.offsetHeight || 0;
+		tableRefsHeight.value = tableRefs.value?.offsetHeight || 0;
 
 		watch(
 			watchTable,
@@ -173,8 +175,8 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="h-full w-full">
-		<div ref="formRef" class="w-full">
+	<div class="flex h-full w-full flex-col">
+		<div class="w-full">
 			<h3 class="mb-2 font-bold">新增标签</h3>
 			<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules" class="!w-full">
 				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="name" label="名称：">
@@ -215,41 +217,44 @@ onMounted(() => {
 				</ElFormItem>
 			</ElForm>
 		</div>
-		<div class="w-full" :style="{ height: `calc(100% - ${tableHeight}px)` }">
+		<div class="flex min-h-0 w-full flex-1 flex-col">
 			<div class="mb-2 flex w-full items-center justify-between font-bold">
 				<h3>标签列表</h3>
 				<ElInput v-model="searchTag" placeholder="请输入名称" clearable class="!w-[200px]" />
 			</div>
-			<ElTable ref="tableRef" :data="tableData" show-overflow-tooltip class="w-full !border-none !text-[16px]"
-				:class="['!h-[calc(100%-38px)] sm:!h-[calc(100%-70px)]']">
-				<ElTableColumn prop="name" label="名称" width="200" />
-				<ElTableColumn prop="icon" label="Icon" width="200">
-					<template #default="scope">
-						<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
-					</template>
-				</ElTableColumn>
-				<ElTableColumn prop="url" label="链接" width="400">
-					<template #default="scope">
-						<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-					</template>
-				</ElTableColumn>
-				<ElTableColumn prop="type" label="类型" width="200">
-					<template #default="scope">
-						<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
-					</template>
-				</ElTableColumn>
-				<ElTableColumn fixed="right" label="操作" min-width="120">
-					<template #default="scope">
-						<ElButton link type="primary" size="small" class="!text-[16px]" @click="editClick(scope.row)">
-							编辑
-						</ElButton>
-						<ElButton link type="danger" class="!text-[16px]" size="small" @click="deleteClick(scope.row)">
-							删除
-						</ElButton>
-					</template>
-				</ElTableColumn>
-			</ElTable>
-			<div ref="footerRef" class="hidden h-[32px] w-full justify-end sm:flex">
+			<div ref="tableRefs" class="w-full flex-1">
+				<ElTable ref="tableRef" :data="tableData" stripe :height="tableRefsHeight" class="w-full !text-[16px]">
+					<ElTableColumn fixed prop="name" label="名称" width="100" />
+					<ElTableColumn prop="icon" label="Icon" width="200">
+						<template #default="scope">
+							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
+						</template>
+					</ElTableColumn>
+					<ElTableColumn prop="url" label="链接" width="400">
+						<template #default="scope">
+							<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn prop="type" label="类型" width="200">
+						<template #default="scope">
+							<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn fixed="right" label="操作" min-width="120">
+						<template #default="scope">
+							<ElButton link type="primary" size="small" class="!text-[16px]"
+								@click="editClick(scope.row)">
+								编辑
+							</ElButton>
+							<ElButton link type="danger" class="!text-[16px]" size="small"
+								@click="deleteClick(scope.row)">
+								删除
+							</ElButton>
+						</template>
+					</ElTableColumn>
+				</ElTable>
+			</div>
+			<div class="mt-2 hidden w-full justify-end sm:flex">
 				<ElPagination background layout="prev, pager, next" :total="total" :page-size="10"
 					@current-change="handleCurrentChange" />
 			</div>
