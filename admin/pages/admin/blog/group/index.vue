@@ -1,86 +1,106 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 
-const router = useRouter();
+const pageSize = ref<number>(10);
+const pageNumber = ref<number>(1);
+const { data } = await useAsyncData('queryBlogList', () =>
+	getBlogList({
+		pageNumber: pageNumber.value,
+		pageSize: pageSize.value,
+	}),
+);
+const tableData = ref<CreateBlogDto[]>(data.value?.data?.records || []);
+const total = ref<number>(data.value?.data?.total || 0);
+const loading = ref<boolean>(false);
+const keyword = ref<string>('');
+const tableRefs = useTemplateRef<HTMLDivElement>('tableRefs');
+const tableRefsHeight = ref<number>(0);
 
-const list = ref<any[]>([]);
-const loading = ref(false);
-const keyword = ref('');
-
-const pagination = reactive({ page: 1, limit: 10, total: 0, totalPages: 0 });
-
-const fetchList = async (page = 1) => {
+// 查询全部博客
+const queryBlog = async (keyword: string = '', page: number = 1, size: number = 10) => {
 	loading.value = true;
 	try {
-		const res: any = await $fetch('/api/blog/blogList', {
-			params: { page, limit: pagination.limit, keyword: keyword.value },
+		const { data } = await getBlogList({
+			keyword,
+			pageSize: size,
+			pageNumber: page,
 		});
 
-		// 支持后端返回 returnData({ data: {...} }) 或 直接返回数据
-		const payload = res?.data ?? res;
-		if (payload && payload.list) {
-			list.value = payload.list;
-			pagination.total = payload.total ?? 0;
-			pagination.page = payload.page ?? page;
-			pagination.limit = payload.limit ?? pagination.limit;
-			pagination.totalPages = payload.totalPages ?? Math.ceil(pagination.total / pagination.limit);
-		} else {
-			list.value = [];
-			pagination.total = 0;
-			pagination.totalPages = 0;
-		}
-	} catch (err) {
-		console.error('获取博客列表失败', err);
-		ElMessage.error('获取博客列表失败');
+		tableData.value = data?.records || [];
+		total.value = data?.total || 0;
+	} catch (error) {
+		ElMessage.error('查询博客失败');
 	} finally {
 		loading.value = false;
 	}
 };
 
+// 搜索博客
 const handleSearch = () => {
-	pagination.page = 1;
-	fetchList(1);
+	pageNumber.value = 1;
+	queryBlog(keyword.value, 1, pageSize.value);
 };
 
+// 添加搜索防抖
+let searchTimeout: NodeJS.Timeout;
+watch(keyword, (newValue) => {
+	clearTimeout(searchTimeout);
+	searchTimeout = setTimeout(() => {
+		pageNumber.value = 1;
+		queryBlog(newValue, 1, pageSize.value);
+	}, 300);
+});
+
+// 每页条数改变
 const handleSizeChange = (val: number) => {
-	pagination.limit = val;
-	fetchList(1);
+	pageSize.value = val;
+	pageNumber.value = 1;
+	queryBlog(keyword.value, 1, val);
 };
 
+// 当前页改变
 const handleCurrentChange = (val: number) => {
-	pagination.page = val;
-	fetchList(val);
+	pageNumber.value = val;
+	queryBlog(keyword.value, val, pageSize.value);
 };
 
 const goCreate = () => {
-	router.push('/admin/blog/add');
+	navigateTo('/admin/blog/add');
 };
 
 const goEdit = (id: number) => {
-	router.push(`/admin/blog/edit/${id}`);
+	navigateTo({ path: '/admin/blog/add', query: { id } });
 };
 
+// 删除博客
 const handleDelete = async (id: number) => {
-	try {
-		await ElMessageBox.confirm('确认删除该博客吗？', '提示', { type: 'warning' });
-		const res = await $fetch('/api/blog/blogDelete', { method: 'DELETE', body: { id } });
-		const payload = res?.data ?? res;
-		if (payload) {
-			ElMessage.success('删除成功');
-			fetchList(pagination.page);
-		} else {
-			ElMessage.error('删除失败');
+	useConfirm('删除博客', 'warning', async () => {
+		try {
+			const { data, msg } = await deleteBlog(id);
+
+			ElMessage({
+				type: data ? 'success' : 'error',
+				message: msg,
+			});
+
+			if (data) {
+				if (tableData.value.length === 1 && pageNumber.value > 1) {
+					pageNumber.value -= 1;
+				}
+				queryBlog(keyword.value, pageNumber.value, pageSize.value);
+			}
+		} catch (error) {
+			ElMessage.error('删除失败，请重试');
 		}
-	} catch (err: any) {
-		if (err === 'cancel' || (err && typeof err.message === 'string' && err.message.includes('cancel'))) return;
-		console.error('删除失败', err);
-		ElMessage.error('删除失败');
-	}
+	});
 };
 
 onMounted(() => {
-	fetchList(1);
+	nextTick(() => {
+		if (tableRefs.value) {
+			tableRefsHeight.value = tableRefs.value?.offsetHeight || 0;
+		}
+	});
 });
 </script>
 
@@ -97,15 +117,16 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<div class="w-full flex-1">
-			<ElTable v-loading="loading" :data="list" stripe class="!h-full !w-full !text-[16px]">
-				<ElTableColumn prop="id" label="ID" width="80" />
+		<div ref="tableRefs" class="w-full flex-1">
+			<ElTable v-loading="loading" :data="tableData" :height="tableRefsHeight" stripe
+				class="!w-full !text-[16px]">
+				<ElTableColumn fixed prop="id" label="ID" width="80" />
 				<ElTableColumn prop="title" label="标题" />
 				<ElTableColumn prop="subtitle" label="简介" />
 				<ElTableColumn label="标签">
 					<template #default="{ row }">
 						<template v-if="row.tags && row.tags.length">
-							<ElTag v-for="t in row.tags" :key="t.tag.id" size="small" style="margin-right: 6px">
+							<ElTag v-for="t in row.tags" :key="t.tag.id" size="small" class="!text-[14px]">
 								{{ t.tag.name }}
 							</ElTag>
 						</template>
@@ -115,10 +136,15 @@ onMounted(() => {
 				<ElTableColumn prop="created_at" label="创建时间" width="180">
 					<template #default="{ row }">{{ new Date(row.created_at).toLocaleString() }}</template>
 				</ElTableColumn>
+				<ElTableColumn prop="updated_at" label="更新时间" width="180">
+					<template #default="{ row }">{{ new Date(row.updated_at).toLocaleString() }}</template>
+				</ElTableColumn>
 				<ElTableColumn label="操作" width="200">
 					<template #default="{ row }">
-						<ElButton type="primary" size="small" @click="goEdit(row.id)">编辑</ElButton>
-						<ElButton type="danger" size="small" style="margin-left: 8px" @click="handleDelete(row.id)">
+						<ElButton link type="primary" size="small" class="!text-[16px]" @click="goEdit(row.id)">
+							编辑
+						</ElButton>
+						<ElButton link type="danger" size="small" class="!text-[16px]" @click="handleDelete(row.id)">
 							删除
 						</ElButton>
 					</template>
@@ -126,10 +152,10 @@ onMounted(() => {
 			</ElTable>
 		</div>
 
-		<div class="mt-4 flex justify-end">
-			<ElPagination :current-page="pagination.page" :page-size="pagination.limit" :total="pagination.total"
-				layout="prev, pager, next, sizes, total" :page-sizes="[10, 20, 50]" @size-change="handleSizeChange"
-				@current-change="handleCurrentChange" />
+		<div class="mt-2 flex justify-end">
+			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+				@size-change="handleSizeChange" />
 		</div>
 	</div>
 </template>
