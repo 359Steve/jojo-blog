@@ -40,20 +40,32 @@ export class BlogRepository {
 	}
 
 	// 获取博客列表
-	async getBlogList(page: number = 1, limit: number = 10, keyword?: string) {
+	async getBlogList(data: FindBlogParams) {
 		try {
-			const skip = (page - 1) * limit;
+			const { pageSize = 10, pageNumber = 1, keyword = '' } = data;
+			const skip = (pageNumber - 1) * pageSize;
 			const where = keyword
 				? {
-					OR: [{ title: { contains: keyword } }, { subtitle: { contains: keyword } }],
+					OR: [
+						{
+							title: {
+								contains: keyword,
+							},
+						},
+						{
+							subtitle: {
+								contains: keyword,
+							},
+						},
+					],
 				}
 				: {};
 
-			const [blogs, total] = await Promise.all([
+			const [records, total] = await Promise.all([
 				this.prismaClient.blog.findMany({
 					where,
-					skip,
-					take: limit,
+					skip: Number(skip),
+					take: Number(pageSize),
 					orderBy: { created_at: 'desc' },
 					include: {
 						tags: {
@@ -67,14 +79,10 @@ export class BlogRepository {
 			]);
 
 			return returnData(StatusCode.SUCCESS, '获取成功！', {
-				list: blogs,
+				records,
 				total,
-				page,
-				limit,
-				totalPages: Math.ceil(total / limit),
 			});
 		} catch (error) {
-			console.error('获取博客列表失败:', error);
 			return returnData(StatusCode.FAIL, '获取失败！', null);
 		}
 	}
@@ -85,12 +93,12 @@ export class BlogRepository {
 			const res = await this.prismaClient.$transaction(async (tx) => {
 				// 先删除博客标签关联
 				await tx.blog_tag.deleteMany({
-					where: { blog_id: id },
+					where: { blog_id: Number(id) },
 				});
 
 				// 再删除博客
 				return await tx.blog.delete({
-					where: { id },
+					where: { id: Number(id) },
 				});
 			});
 
@@ -98,8 +106,81 @@ export class BlogRepository {
 				? returnData(StatusCode.SUCCESS, '删除成功！', res)
 				: returnData(StatusCode.FAIL, '删除失败！', null);
 		} catch (error) {
-			console.error('删除博客失败:', error);
 			return returnData(StatusCode.FAIL, '删除失败！', null);
+		}
+	}
+
+	// 查询单个博客
+	async getBlogById(id: number) {
+		try {
+			const blog = await this.prismaClient.blog.findUnique({
+				where: { id: Number(id) },
+				include: {
+					tags: {
+						include: {
+							tag: true,
+						},
+					},
+				},
+			});
+
+			return blog
+				? returnData(StatusCode.SUCCESS, '获取成功！', blog)
+				: returnData(StatusCode.FAIL, '博客不存在！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '获取失败！', null);
+		}
+	}
+
+	// 更新博客
+	async updateBlog(data: CreateBlogDto) {
+		const { id, tags, ...blogData } = data;
+
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 更新博客基本信息
+				await tx.blog.update({
+					where: { id: Number(id) },
+					data: blogData,
+				});
+
+				// 处理标签关联
+				if (tags !== undefined) {
+					// 先删除所有旧的标签关联
+					await tx.blog_tag.deleteMany({
+						where: { blog_id: Number(id) },
+					});
+
+					// 如果有新标签，创建新的关联
+					if (tags.length > 0) {
+						await tx.blog_tag.createMany({
+							data: tags.map((tagId) => ({
+								blog_id: Number(id),
+								tag_id: tagId,
+							})),
+						});
+					}
+				}
+
+				// 返回包含标签的完整博客信息
+				return await tx.blog.findUnique({
+					where: { id: Number(id) },
+					include: {
+						tags: {
+							include: {
+								tag: true,
+							},
+						},
+					},
+				});
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '更新成功！', res)
+				: returnData(StatusCode.FAIL, '更新失败！', null);
+		} catch (error) {
+			console.error('更新博客失败:', error);
+			return returnData(StatusCode.FAIL, '更新失败！', null);
 		}
 	}
 }
