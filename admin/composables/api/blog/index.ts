@@ -43,3 +43,14 @@ export const getBlogById = async (id: number) => {
 
 	return handleApiResponse(res);
 };
+
+// 更新博客
+export const updateBlog = async (data: CreateBlogDto) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchPostApi<CreateBlogDto, CreateBlogDto>('/blog/blogUpdate', {
+			body: data,
+		}),
+	);
+
+	return handleApiResponse(res);
+};
