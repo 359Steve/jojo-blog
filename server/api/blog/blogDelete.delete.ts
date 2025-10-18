@@ -3,10 +3,9 @@ import { BlogService } from '~/server/services/BlogService';
 
 export default defineEventHandler(async (event) => {
 	const blogService = container.get(BlogService);
-	const body = await readBody(event);
-	const { id } = body;
+	const { id } = getQuery<{ id: number }>(event);
 
-	if (!id || typeof id !== 'number') {
+	if (!id) {
 		sendErrorWithMessage(event, 400, '缺少有效的博客ID');
 		return null;
 	}
@@ -14,7 +13,6 @@ export default defineEventHandler(async (event) => {
 	try {
 		return await blogService.deleteBlog(id);
 	} catch (error) {
-		console.error('删除博客失败:', error);
 		sendErrorWithMessage(event, 500, '删除失败！');
 		return null;
 	}
