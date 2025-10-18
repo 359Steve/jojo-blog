@@ -21,3 +21,14 @@ export const getBlogList = async (data: FindBlogParams) => {
 
 	return handleApiResponse(res);
 };
+
+// 删除博客
+export const deleteBlog = async (id: number) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchDeleteApi<{ id: number }, CreateBlogDto>('/blog/blogDelete', {
+			query: { id },
+		}),
+	);
+
+	return handleApiResponse(res);
+};
