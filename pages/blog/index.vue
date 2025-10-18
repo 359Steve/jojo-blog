@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import type { AnimationRevealOnScroll, ElInput } from '~/.nuxt/components';
+import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import { StackColor } from '~/types/com-types';
 
-const blogList = reactive<BlogList[]>([
+const blogList = reactive<CreateBlogDto[]>([
 	{
 		id: 1,
 		title: 'Aceternity',
 		description: 'A design and development studio that focuses on building quality apps.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project1')
+		url: await useLoadStaticImage('project1'),
 	},
 	{
 		id: 2,
@@ -19,9 +20,9 @@ const blogList = reactive<BlogList[]>([
 		description: 'Practice for technical interviews with hands on coding challenges.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project2')
+		url: await useLoadStaticImage('project2'),
 	},
 	{
 		id: 3,
@@ -29,9 +30,9 @@ const blogList = reactive<BlogList[]>([
 		description: 'Never write from scratch again with Moonbeam, your AI first writing tool.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project3')
+		url: await useLoadStaticImage('project3'),
 	},
 	{
 		id: 4,
@@ -40,9 +41,9 @@ const blogList = reactive<BlogList[]>([
 			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project4')
+		url: await useLoadStaticImage('project4'),
 	},
 	{
 		id: 5,
@@ -50,9 +51,9 @@ const blogList = reactive<BlogList[]>([
 		description: 'A design and development studio that focuses on building quality apps.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project1')
+		url: await useLoadStaticImage('project1'),
 	},
 	{
 		id: 6,
@@ -60,9 +61,9 @@ const blogList = reactive<BlogList[]>([
 		description: 'Practice for technical interviews with hands on coding challenges.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project2')
+		url: await useLoadStaticImage('project2'),
 	},
 	{
 		id: 7,
@@ -70,9 +71,9 @@ const blogList = reactive<BlogList[]>([
 		description: 'Never write from scratch again with Moonbeam, your AI first writing tool.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project3')
+		url: await useLoadStaticImage('project3'),
 	},
 	{
 		id: 8,
@@ -81,9 +82,9 @@ const blogList = reactive<BlogList[]>([
 			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project4')
+		url: await useLoadStaticImage('project4'),
 	},
 	{
 		id: 9,
@@ -92,10 +93,10 @@ const blogList = reactive<BlogList[]>([
 			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
 		tags: [
 			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' }
+			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
 		],
-		url: await useLoadStaticImage('project4')
-	}
+		url: await useLoadStaticImage('project4'),
+	},
 ]);
 
 const search = ref<string>('');
@@ -111,7 +112,7 @@ const controlInput = (): void => {
 	inputShow.value = !inputShow.value;
 };
 
-const toDetail = (item: BlogList): void => {
+const toDetail = (item: CreateBlogDto): void => {
 	navigateTo({ path: '/blog/detail', query: { id: item.id } });
 };
 
@@ -149,13 +150,14 @@ watch(coincidence, () => {
 <template>
 	<AnimationRevealOnScroll ref="animationEl" animation-class="animate__fadeInDown"
 		base-class="reactive mb-10 flex items-center justify-between overflow-hidden rounded-base">
-		<h1 class="bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl lg:text-4xl">What I've been working on
+		<h1 class="bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl lg:text-4xl">
+			What I've been working on
 		</h1>
 		<ElInput ref="inputEl" v-model="search" placeholder="Search" size="large"
 			:class="inputShow ? 'translate-x-0' : 'translate-x-full'" @blur="inputShow = false">
 			<template #append>
 				<i class="ri-search-eye-line bg-gradient-to-r bg-clip-text text-xl font-black text-black md:text-2xl"
-					@mousedown.prevent></i>
+					@mousedown.prevent />
 			</template>
 		</ElInput>
 		<div class="absolute right-0 flex aspect-square h-full cursor-pointer items-center justify-center rounded-base border-none shadow-none transition hover:bg-neutral-100 hover:text-black"
@@ -163,9 +165,9 @@ watch(coincidence, () => {
 				// 显示隐藏控制
 				inputShow && !coincidence ? 'hidden' : 'block',
 				// 背景色逻辑
-				inputShow || !coincidence ? 'bg-neutral-100 text-black' : ''
+				inputShow || !coincidence ? 'bg-neutral-100 text-black' : '',
 			]" @click="controlInput">
-			<i class="ri-search-eye-line bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl"></i>
+			<i class="ri-search-eye-line bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl" />
 		</div>
 	</AnimationRevealOnScroll>
 	<div class="w-full">
@@ -189,7 +191,7 @@ watch(coincidence, () => {
                     shadow-lg
                     dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]`" @click="toDetail(item)">
 				<img alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="w-full rounded-base object-cover sm:w-[200px]" :src="item.url" />
+					class="w-full rounded-base object-cover sm:w-[200px]" :src="item.url">
 				<div class="flex flex-col justify-between">
 					<div>
 						<h4
@@ -203,7 +205,7 @@ watch(coincidence, () => {
 					<div class="mt-2 flex space-x-2 md:mb-1 md:mt-0">
 						<span v-for="tag in item.tags" :key="tag.name"
 							class="text-secondary rounded-base bg-gray-100 px-2 py-1 text-xs dark:bg-gray-100/10 md:text-xs lg:text-xs">
-							<i :style="{ color: StackColor[tag.name] }" class="mr-2" :class="[tag.icon]"></i>
+							<i :style="{ color: StackColor[tag.name] }" class="mr-2" :class="[tag.icon]" />
 							{{ tag.name }}
 						</span>
 					</div>
