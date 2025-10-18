@@ -10,3 +10,14 @@ export const createBlog = async (data: CreateBlogDto) => {
 
 	return handleApiResponse(res);
 };
+
+// 查询博客列表
+export const getBlogList = async (data: FindBlogParams) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchUseGet<FindBlogParams, { records: CreateBlogDto[]; total: number }>('/blog/blogList', {
+			query: data,
+		}),
+	);
+
+	return handleApiResponse(res);
+};
