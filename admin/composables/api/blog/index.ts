@@ -32,3 +32,14 @@ export const deleteBlog = async (id: number) => {
 
 	return handleApiResponse(res);
 };
+
+// 根据ID获取单个博客
+export const getBlogById = async (id: number) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchUseGet<{ id: number }, CreateBlogDto>('/blog/blogQueryById', {
+			query: { id },
+		}),
+	);
+
+	return handleApiResponse(res);
+};
