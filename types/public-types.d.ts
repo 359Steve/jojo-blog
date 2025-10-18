@@ -53,19 +53,6 @@ declare global {
 		data: any;
 	}
 
-	declare interface Tags {
-		name: keyof typeof StackColor;
-		icon: string;
-	}
-
-	declare interface BlogList {
-		id: number;
-		title: string;
-		tags: Tags[];
-		description: string;
-		url: string;
-	}
-
 	declare interface UseBoundingClientRect {
 		top: ShallowRef<number, number>;
 		right: ShallowRef<number, number>;
