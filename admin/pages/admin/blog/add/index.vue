@@ -2,6 +2,14 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus';
 
+definePageMeta({
+	async validate(route) {
+		const res = await getBlogById(Number(route.params.id));
+
+		return true;
+	},
+});
+
 const formData = reactive<CreateBlogDto>({
 	title: '',
 	subtitle: '',
