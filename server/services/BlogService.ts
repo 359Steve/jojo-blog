@@ -15,12 +15,22 @@ export class BlogService {
 	}
 
 	// 获取博客列表
-	async getBlogList(page: number = 1, limit: number = 10, keyword?: string) {
-		return this.blogRepo.getBlogList(page, limit, keyword);
+	async getBlogList(data: FindBlogParams) {
+		return this.blogRepo.getBlogList(data);
 	}
 
 	// 删除博客
 	async deleteBlog(id: number) {
 		return this.blogRepo.deleteBlog(id);
+	}
+
+	// 查询单个博客
+	async getBlogById(id: number) {
+		return this.blogRepo.getBlogById(id);
+	}
+
+	// 更新博客
+	async updateBlog(data: CreateBlogDto) {
+		return this.blogRepo.updateBlog(data);
 	}
 }
