@@ -7,9 +7,7 @@ enum TagType {
 	PERSON = '个人',
 }
 
-const { watchTable } = storeToRefs(useAdminMenu());
 const ruleFormRef = templateRef('ruleFormRef');
-const formRef = templateRef<HTMLDivElement>('formRef');
 const formData = reactive<CreateTagDto>({
 	name: '',
 	icon: '',
@@ -19,14 +17,14 @@ const formData = reactive<CreateTagDto>({
 
 const { data } = await useAsyncData('tags', () => queryTagAll());
 const tableData = ref<CreateTagDto[]>(data.value?.data?.records || []);
-const tableRef = templateRef('tableRef');
 const tableRefs = templateRef('tableRefs');
-const tableHeight = ref<number>(0);
 const tableRefsHeight = ref<number>(0);
 const total = ref<number>(data.value?.data?.total || 0);
 const pageNumber = ref<number>(1);
+const pageSize = ref<number>(10);
 const searchTag = ref<string>('');
 const isEdit = ref<boolean>(false);
+const loading = ref<boolean>(false);
 
 const rulesText = (value: string): boolean => {
 	return /^[a-z0-9]+:[a-z0-9-_]+$/i.test(value);
@@ -58,26 +56,52 @@ const isIDisabled = computed(() => {
 	return !formData.name || !formData.icon || !formData.url || !formData.type;
 });
 
-// 查询全部标签
-const queryTag = async (name: string, n: number) => {
-	const { data } = await queryTagAll(name, n);
+// 重置表单
+const resetForm = () => {
+	formData.name = '';
+	formData.icon = '';
+	formData.url = '';
+	formData.type = 'BLOG';
+	delete formData.id;
+	isEdit.value = false;
+	ruleFormRef.value?.resetFields();
+};
 
-	watchTable.value ? (tableData.value = [...tableData.value, ...data!.records]) : (tableData.value = data!.records);
-	total.value = data!.total;
+// 查询全部标签
+const queryTag = async (name: string = '', page: number = 1) => {
+	loading.value = true;
+	try {
+		const { data } = await queryTagAll(name, page, pageSize.value);
+
+		tableData.value = data!.records;
+		total.value = data!.total;
+	} catch (error) {
+		ElMessage.error('查询标签失败');
+	} finally {
+		loading.value = false;
+	}
 };
 
 // 新增标签
 const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
-			const { data, msg } = await createTags(formData);
+			loading.value = true;
+			try {
+				const { data, msg } = await createTags(formData);
 
-			ElMessage({
-				type: data ? 'success' : 'error',
-				message: msg,
-			});
+				ElMessage({
+					type: data ? 'success' : 'error',
+					message: msg,
+				});
 
-			queryTag('', pageNumber.value);
+				if (data) {
+					resetForm();
+					queryTag(searchTag.value, pageNumber.value);
+				}
+			} finally {
+				loading.value = false;
+			}
 		}
 	});
 };
@@ -86,18 +110,26 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
-			const { data, msg } = await updateTags(formData);
+			loading.value = true;
+			try {
+				const { data, msg } = await updateTags(formData);
 
-			ElMessage({
-				type: data ? 'success' : 'error',
-				message: msg,
-			});
+				ElMessage({
+					type: data ? 'success' : 'error',
+					message: msg,
+				});
 
-			for (const item of tableData.value) {
-				if (item.id === formData.id) {
-					Object.assign(item, formData);
-					break;
+				if (data) {
+					for (const item of tableData.value) {
+						if (item.id === formData.id) {
+							Object.assign(item, formData);
+							break;
+						}
+					}
+					resetForm();
 				}
+			} finally {
+				loading.value = false;
 			}
 		}
 	});
@@ -105,8 +137,7 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 
 // 取消
 const confirmCancel = (): void => {
-	delete formData.id;
-	isEdit.value = false;
+	resetForm();
 };
 
 // 编辑
@@ -118,14 +149,24 @@ const editClick = (value: CreateTagDto): void => {
 // 删除标签
 const deleteClick = (value: CreateTagDto): void => {
 	useConfirm('删除标签', 'warning', async () => {
-		const { data, msg } = await deleteTags(value.id!);
+		try {
+			const { data, msg } = await deleteTags(value.id!);
 
-		ElMessage({
-			type: data ? 'success' : 'error',
-			message: msg,
-		});
+			ElMessage({
+				type: data ? 'success' : 'error',
+				message: msg,
+			});
 
-		queryTag('', pageNumber.value);
+			if (data) {
+				// 如果当前页只有一条数据且不是第一页，则回到上一页
+				if (tableData.value.length === 1 && pageNumber.value > 1) {
+					pageNumber.value -= 1;
+				}
+				queryTag(searchTag.value, pageNumber.value);
+			}
+		} catch (error) {
+			ElMessage.error('删除失败，请重试');
+		}
 	});
 };
 
@@ -135,41 +176,26 @@ const handleCurrentChange = (val: number): void => {
 	queryTag(searchTag.value, val);
 };
 
-watch(searchTag, async () => {
+// 每页条数改变
+const handleSizeChange = (val: number): void => {
+	pageSize.value = val;
+	pageNumber.value = 1;
 	queryTag(searchTag.value, 1);
-});
+};
 
-let stopScrollWatch: (() => void) | null = null;
+// 使用防抖优化搜索
+let searchTimeout: NodeJS.Timeout;
+watch(searchTag, (newValue) => {
+	clearTimeout(searchTimeout);
+	searchTimeout = setTimeout(() => {
+		pageNumber.value = 1;
+		queryTag(newValue, 1);
+	}, 300);
+});
 
 onMounted(() => {
 	nextTick(() => {
-		tableHeight.value = formRef.value?.offsetHeight || 0;
 		tableRefsHeight.value = tableRefs.value?.offsetHeight || 0;
-
-		watch(
-			watchTable,
-			(val) => {
-				if (val) {
-					if (tableRef.value && tableRef.value.$el) {
-						const el = tableRef.value.$el.querySelector('.el-scrollbar__wrap');
-						const { y, arrivedState } = useScroll(el);
-
-						stopScrollWatch = watch(y, () => {
-							if (arrivedState.bottom) {
-								pageNumber.value += 1;
-								queryTag(searchTag.value, pageNumber.value);
-							}
-						});
-					}
-				} else {
-					if (stopScrollWatch) {
-						stopScrollWatch();
-						stopScrollWatch = null;
-					}
-				}
-			},
-			{ immediate: true },
-		);
 	});
 });
 </script>
@@ -207,10 +233,12 @@ onMounted(() => {
 					</ElSelect>
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full sm:pr-4">
-					<ElButton v-if="!isEdit" :disabled="isIDisabled" type="primary" @click="createTag(ruleFormRef!)">
+					<ElButton v-if="!isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
+						@click="createTag(ruleFormRef!)">
 						新增
 					</ElButton>
-					<ElButton v-if="isEdit" :disabled="isIDisabled" type="primary" @click="updateTag(ruleFormRef!)">
+					<ElButton v-if="isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
+						@click="updateTag(ruleFormRef!)">
 						修改
 					</ElButton>
 					<ElButton v-if="isEdit" type="" plain @click="confirmCancel">取消</ElButton>
@@ -223,8 +251,10 @@ onMounted(() => {
 				<ElInput v-model="searchTag" placeholder="请输入名称" clearable class="!w-[200px]" />
 			</div>
 			<div ref="tableRefs" class="w-full flex-1">
-				<ElTable ref="tableRef" :data="tableData" stripe :height="tableRefsHeight" class="w-full !text-[16px]">
-					<ElTableColumn fixed prop="name" label="名称" width="100" />
+				<ElTable v-loading="loading" :data="tableData" stripe :height="tableRefsHeight"
+					class="w-full !text-[16px]">
+					<ElTableColumn fixed prop="id" label="ID" width="80" />
+					<ElTableColumn prop="name" label="名称" width="100" />
 					<ElTableColumn prop="icon" label="Icon" width="200">
 						<template #default="scope">
 							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
@@ -240,7 +270,7 @@ onMounted(() => {
 							<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
 						</template>
 					</ElTableColumn>
-					<ElTableColumn fixed="right" label="操作" min-width="120">
+					<ElTableColumn label="操作" min-width="120">
 						<template #default="scope">
 							<ElButton link type="primary" size="small" class="!text-[16px]"
 								@click="editClick(scope.row)">
@@ -254,9 +284,10 @@ onMounted(() => {
 					</ElTableColumn>
 				</ElTable>
 			</div>
-			<div class="mt-2 hidden w-full justify-end sm:flex">
-				<ElPagination background layout="prev, pager, next" :total="total" :page-size="10"
-					@current-change="handleCurrentChange" />
+			<div class="mt-2 flex w-full justify-end">
+				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+					@size-change="handleSizeChange" />
 			</div>
 		</div>
 	</div>
