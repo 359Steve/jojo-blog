@@ -11,7 +11,7 @@ export default {
 			path: '/admin/blog/add',
 			name: 'AddBlog',
 			meta: {
-				title: '新增博客',
+				title: '操作博客',
 				icon: 'tabler:file-plus',
 			},
 		},
