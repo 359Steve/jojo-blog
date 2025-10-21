@@ -4,20 +4,45 @@ import { ElFormItem, type FormInstance, type FormRules } from 'element-plus';
 
 definePageMeta({
 	async validate(route) {
-		const res = await getBlogById(Number(route.params.id));
+		if (!route.query.id) {
+			return true;
+		}
 
-		return true;
+		try {
+			const blog = await getBlogById(Number(route.query.id));
+			if (blog) {
+				useBlog().setCurrentBlog(blog.data);
+				return true;
+			} else {
+				useBlog().resetCurrentBlog();
+				return false;
+			}
+		} catch (error) {
+			useBlog().resetCurrentBlog();
+			return false;
+		}
 	},
 });
 
-const formData = reactive<CreateBlogDto>({
-	title: '',
-	subtitle: '',
-	tags: [],
-	content: '',
-});
+const { resetCurrentBlog } = useBlog();
+const { currentBlog } = storeToRefs(useBlog());
+
+const formData = reactive<CreateBlogDto>(
+	currentBlog.value?.id
+		? {
+			...currentBlog.value,
+			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
+		}
+		: {
+			title: '',
+			subtitle: '',
+			content: '',
+			tags: [],
+		},
+);
 
 const ruleFormRef = templateRef('ruleFormRef');
+const isEdit = computed(() => !!currentBlog.value?.id);
 
 const createBlogRules = reactive<FormRules>({
 	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
@@ -26,33 +51,45 @@ const createBlogRules = reactive<FormRules>({
 	content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
 });
 
-// 保存博客
+// 保存或更新博客
 const saveBlog = async (formEl: FormInstance | undefined) => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
-			const { data, msg } = await createBlog(formData);
+			let res = null;
+			if (isEdit.value) {
+				res = await updateBlog(formData);
+			} else {
+				res = await createBlog(formData);
+			}
 
 			ElMessage({
-				message: msg,
-				type: data ? 'success' : 'error',
+				message: res.msg,
+				type: res.data ? 'success' : 'error',
 			});
 		}
 	});
 };
 
+// 返回新增
+const backAdd = () => {
+	resetCurrentBlog();
+	ruleFormRef.value?.resetFields();
+	navigateTo('/admin/blog/add');
+};
+
 // 重置表单
 const resetForm = () => {
-	formData.title = '';
-	formData.subtitle = '';
-	formData.tags = [];
-	formData.content = '';
 	ruleFormRef.value?.resetFields();
 };
+
+onBeforeUnmount(() => {
+	resetCurrentBlog();
+});
 </script>
 
 <template>
 	<div class="flex h-full w-full flex-col">
-		<h3 class="mb-2 font-bold">新增博客</h3>
+		<h3 class="mb-2 font-bold">{{ isEdit ? '编辑博客' : '新增博客' }}</h3>
 		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createBlogRules" class="!w-full">
 			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
 				<ElFormItem prop="title" class="!mx-0 !w-full" label="标题：">
@@ -65,6 +102,7 @@ const resetForm = () => {
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full">
+					<ElButton v-if="isEdit" type="primary" plain @click="backAdd">新增</ElButton>
 					<ElButton type="primary" @click="saveBlog(ruleFormRef!)">保存</ElButton>
 					<ElButton type="" plain @click="resetForm">重置</ElButton>
 				</ElFormItem>
