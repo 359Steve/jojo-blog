@@ -1,4 +1,5 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
+import type { BlogTagDto } from '~/server/dto/CreateBlogTagDto';
 
 // 创建博客
 export const createBlog = async (data: CreateBlogDto) => {
@@ -36,7 +37,7 @@ export const deleteBlog = async (id: number) => {
 // 根据ID获取单个博客
 export const getBlogById = async (id: number) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<{ id: number }, CreateBlogDto>('/blog/blogQueryById', {
+		fetchUseGet<{ id: number }, BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>>('/blog/blogQueryById', {
 			query: { id },
 		}),
 	);
