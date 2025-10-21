@@ -55,43 +55,118 @@ export class TagRepository {
 
 	// 创建标签
 	async createTag(value: CreateTagDto) {
-		const res = await this.prismaClient.tag.create({
-			data: {
-				...value,
-			},
-		});
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const tag = await tx.tag.findFirst({
+					where: {
+						name: value.name,
+						type: value.type,
+					},
+				});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '创建成功！', res)
-			: returnData(StatusCode.FAIL, '创建失败！', null);
+				if (tag) {
+					throw new Error('TAG_EXISTS');
+				} else {
+					return await tx.tag.create({
+						data: {
+							...value,
+						},
+					});
+				}
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '创建成功！', res)
+				: returnData(StatusCode.FAIL, '创建失败！', null);
+		} catch (error: any) {
+			if (error.message === 'TAG_EXISTS') {
+				return returnData(StatusCode.FAIL, `标签"${value.name}"已存在！`, null);
+			}
+			return returnData(StatusCode.FAIL, '创建失败！', null);
+		}
 	}
 
 	// 修改标签
 	async updateTag(body: CreateTagDto) {
-		const res = await this.prismaClient.tag.update({
-			where: {
-				id: Number(body.id),
-			},
-			data: {
-				...body,
-			},
-		});
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const existingTag = await tx.tag.findFirst({
+					where: {
+						name: body.name,
+						type: body.type,
+						id: {
+							not: Number(body.id),
+						},
+					},
+				});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '修改成功！', res)
-			: returnData(StatusCode.FAIL, '修改失败！', null);
+				if (existingTag) {
+					throw new Error('TAG_EXISTS');
+				}
+
+				return await tx.tag.update({
+					where: {
+						id: Number(body.id),
+					},
+					data: {
+						name: body.name,
+						icon: body.icon,
+						url: body.url,
+						type: body.type,
+					},
+				});
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '修改成功！', res)
+				: returnData(StatusCode.FAIL, '修改失败！', null);
+		} catch (error: any) {
+			if (error.message === 'TAG_EXISTS') {
+				return returnData(StatusCode.FAIL, `标签"${body.name}"已存在！`, null);
+			}
+			return returnData(StatusCode.FAIL, '修改失败！', null);
+		}
 	}
 
 	// 删除标签
 	async deleteTag(id: number) {
-		const res = await this.prismaClient.tag.delete({
-			where: {
-				id: Number(id),
-			},
-		});
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const blogTagCount = await tx.blog_tag.count({
+					where: {
+						tag_id: Number(id),
+					},
+				});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '删除成功！', res)
-			: returnData(StatusCode.FAIL, '删除失败！', null);
+				if (blogTagCount > 0) {
+					throw new Error('TAG_IN_USE');
+				}
+
+				const userTagCount = await tx.user_tag.count({
+					where: {
+						tag_id: Number(id),
+					},
+				});
+
+				if (userTagCount > 0) {
+					throw new Error('TAG_IN_USE');
+				}
+
+				return await tx.tag.delete({
+					where: {
+						id: Number(id),
+					},
+				});
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '删除成功！', res)
+				: returnData(StatusCode.FAIL, '删除失败！', null);
+		} catch (error: any) {
+			if (error.message === 'TAG_IN_USE') {
+				return returnData(StatusCode.FAIL, '该标签正在被使用，无法删除！', null);
+			}
+			return returnData(StatusCode.FAIL, '删除失败！', null);
+		}
 	}
 }
