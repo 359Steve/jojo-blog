@@ -11,6 +11,7 @@ import { prisma } from '../core/prisma';
 export class UserRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
+	// 用户登录
 	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		const { user_name, password } = body;
 		const res = await this.prismaClient.user_info.findFirst({
@@ -25,6 +26,7 @@ export class UserRepository {
 			: returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
 	}
 
+	// 查询用户信息
 	async findUser(user_name: string) {
 		const res = await this.prismaClient.user_info.findFirst({
 			where: user_name ? { user_name } : undefined,
@@ -95,31 +97,39 @@ export class UserRepository {
 	// 更新信息
 	async updateUser(body: UserInfoDetail<CreateUserDto, number[]>) {
 		const { tags, ...userInfo } = body;
-		const res = await this.prismaClient.user_info.update({
-			where: {
-				id: Number(userInfo.id),
-			},
-			data: {
-				...userInfo,
-			},
-		});
 
-		await this.prismaClient.user_tag.deleteMany({
-			where: {
-				user_id: Number(userInfo.id),
-			},
-		});
-
-		if (tags && tags.length > 0) {
-			const tagNumbers = tags.map((tag_id) => ({
-				user_id: Number(userInfo.id),
-				tag_id,
-			}));
-
-			await this.prismaClient.user_tag.createMany({
-				data: tagNumbers,
+		const res = await this.prismaClient.$transaction(async (tx) => {
+			// 更新用户基本信息
+			const user = await tx.user_info.update({
+				where: {
+					id: Number(userInfo.id),
+				},
+				data: {
+					...userInfo,
+				},
 			});
-		}
+
+			// 删除旧的标签关联
+			await tx.user_tag.deleteMany({
+				where: {
+					user_id: Number(userInfo.id),
+				},
+			});
+
+			// 创建新的标签关联
+			if (tags && tags.length > 0) {
+				const tagNumbers = tags.map((tag_id) => ({
+					user_id: Number(userInfo.id),
+					tag_id,
+				}));
+
+				await tx.user_tag.createMany({
+					data: tagNumbers,
+				});
+			}
+
+			return user;
+		});
 
 		return res
 			? returnData(StatusCode.SUCCESS, '修改成功！', res)
