@@ -15,9 +15,12 @@ export const createBlog = async (data: CreateBlogDto) => {
 // 查询博客列表
 export const getBlogList = async (data: FindBlogParams) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<FindBlogParams, { records: CreateBlogDto[]; total: number }>('/blog/blogList', {
-			query: data,
-		}),
+		fetchUseGet<FindBlogParams, { records: BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>[]; total: number }>(
+			'/blog/blogList',
+			{
+				query: data,
+			},
+		),
 	);
 
 	return handleApiResponse(res);
@@ -48,7 +51,7 @@ export const getBlogById = async (id: number) => {
 // 更新博客
 export const updateBlog = async (data: CreateBlogDto) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<CreateBlogDto, CreateBlogDto>('/blog/blogUpdate', {
+		fetchPostApi<CreateBlogDto, BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>>('/blog/blogUpdate', {
 			body: data,
 		}),
 	);

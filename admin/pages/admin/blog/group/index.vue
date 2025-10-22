@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
+import type { BlogTagDto } from '~/server/dto/CreateBlogTagDto';
 
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
@@ -9,7 +10,7 @@ const { data } = await useAsyncData('queryBlogList', () =>
 		pageSize: pageSize.value,
 	}),
 );
-const tableData = ref<CreateBlogDto[]>(data.value?.data?.records || []);
+const tableData = ref<BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>[]>(data.value?.data?.records || []);
 const total = ref<number>(data.value?.data?.total || 0);
 const loading = ref<boolean>(false);
 const keyword = ref<string>('');
