@@ -1,5 +1,4 @@
 import { container } from '~/server/core/container';
-import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { type CreateUserDto, CreateUserSchema } from '~/server/dto/CreateUserDto';
 import { UserService } from '~/server/services/UserService';
 
