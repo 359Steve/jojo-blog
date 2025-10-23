@@ -5,7 +5,7 @@ import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 export const useVueStarport = defineStore(
 	'vueStarport',
 	() => {
-		const userInfo = reactive<UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]>>({
+		const userInfo = reactive<UserWithTagsRep<Omit<CreateUserDto, 'password'>, CreateTagDto, 'tags'>>({
 			user_name: '',
 			pet_name: '',
 			sign: '',
@@ -23,13 +23,11 @@ export const useVueStarport = defineStore(
 			isRound.value = value;
 		};
 
-		const getUserInfo = (): UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]> => {
+		const getUserInfo = (): UserWithTagsRep<Omit<CreateUserDto, 'password'>, CreateTagDto, 'tags'> => {
 			return userInfo;
 		};
 
-		const setUserInfo = (
-			value: UserInfoDetail<Omit<CreateUserDto, 'password'>, UserTags<CreateTagDto>[]>,
-		): void => {
+		const setUserInfo = (value: UserWithTagsRep<Omit<CreateUserDto, 'password'>, CreateTagDto, 'tags'>): void => {
 			Object.assign(userInfo, value);
 		};
 
