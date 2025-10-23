@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
-import { ElFormItem, type FormInstance, type FormRules } from 'element-plus';
+import { ElFormItem, type FormInstance, type FormRules, type UploadFile, type UploadFiles } from 'element-plus';
 
 definePageMeta({
 	async validate(route) {
