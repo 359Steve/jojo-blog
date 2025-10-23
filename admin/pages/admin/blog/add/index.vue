@@ -26,6 +26,8 @@ definePageMeta({
 
 const { resetCurrentBlog } = useBlog();
 const { currentBlog } = storeToRefs(useBlog());
+const frontImage = ref<FormData | null>(null);
+const upload = templateRef('upload');
 const formData = reactive<CreateBlogDto>(
 	currentBlog.value?.id
 		? {
@@ -34,6 +36,7 @@ const formData = reactive<CreateBlogDto>(
 		}
 		: {
 			title: '',
+			front_cover: '',
 			subtitle: '',
 			content: '',
 			tags: [],
@@ -44,8 +47,17 @@ const ruleFormRef = templateRef('ruleFormRef');
 const isEdit = computed(() => !!currentBlog.value?.id);
 const loading = ref(false);
 
+// 计算封面按钮文本
+const coverButtonText = computed(() => {
+	if (isEdit.value) {
+		return frontImage.value ? '重新选择封面' : '更换封面';
+	}
+	return formData.front_cover ? '重新选择' : '上传封面';
+});
+
 const createBlogRules = reactive<FormRules>({
 	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+	front_cover: [{ required: true, message: '请上传封面', trigger: 'blur' }],
 	subtitle: [{ required: true, message: '请输入简介', trigger: 'blur' }],
 	tags: [{ type: 'array', required: true, message: '请选择标签', trigger: 'change' }],
 	content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
@@ -150,6 +162,41 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 	}
 };
 
+// 上传封面
+const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
+	// 验证文件类型
+	const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+	const maxSize = 5 * 1024 * 1024; // 5MB
+
+	if (!uploadFile.raw) {
+		ElMessage.error('文件上传失败');
+		return;
+	}
+
+	// 验证文件类型
+	if (!allowedTypes.includes(uploadFile.raw.type)) {
+		ElMessage.error('只能上传 JPG、PNG、GIF、WebP 格式的图片');
+		upload.value?.clearFiles();
+		return;
+	}
+
+	// 验证文件大小
+	if (uploadFile.raw.size > maxSize) {
+		ElMessage.error('图片大小不能超过 5MB');
+		upload.value?.clearFiles();
+		return;
+	}
+
+	// 更新显示的文件名（显示选择的新文件名）
+	formData.front_cover = uploadFile.name || '';
+
+	// 准备上传的 FormData
+	frontImage.value = new FormData();
+	frontImage.value.append('file', uploadFile.raw);
+
+	ElMessage.success(`封面选择成功${isEdit.value ? '，保存时将替换原封面' : '，保存时将自动上传'}`);
+};
+
 // 返回新增
 const backAdd = () => {
 	resetCurrentBlog();
@@ -161,9 +208,14 @@ const backAdd = () => {
 const resetForm = () => {
 	ruleFormRef.value?.resetFields();
 	formData.title = '';
+	formData.front_cover = '';
 	formData.subtitle = '';
 	formData.content = '';
 	formData.tags = [];
+	frontImage.value = null;
+
+	upload.value?.clearFiles();
+	ElMessage.success('表单已重置');
 };
 
 onBeforeUnmount(() => {
@@ -176,6 +228,29 @@ onBeforeUnmount(() => {
 		<h3 class="mb-2 font-bold">{{ isEdit ? '编辑博客' : '新增博客' }}</h3>
 		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createBlogRules" class="!w-full">
 			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
+				<ElFormItem label="封面：" prop="front_cover">
+					<div class="flex w-full items-center gap-2">
+						<ElUpload ref="upload" action="#" :auto-upload="false" :show-file-list="false" :limit="1"
+							:disabled="loading" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+							:on-change="handleAvatarSuccess">
+							<template #trigger>
+								<ElButton type="primary" :disabled="loading">
+									{{ coverButtonText }}
+								</ElButton>
+							</template>
+						</ElUpload>
+						<div class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[16px]">
+							<span v-if="formData.front_cover" class="text-gray-700">
+								{{ isEdit && !frontImage ? '当前封面: ' : '已选择: ' }}
+								<span class="text-blue-600">{{ formData.front_cover }}</span>
+							</span>
+							<span v-else class="text-gray-500">请选择封面图片</span>
+						</div>
+						<div v-if="isEdit && !frontImage" class="whitespace-nowrap text-[16px] text-gray-400">
+							不选择新文件将保持原封面
+						</div>
+					</div>
+				</ElFormItem>
 				<ElFormItem prop="title" class="!mx-0 !w-full" label="标题：">
 					<ElInput v-model="formData.title" placeholder="请输入标题" clearable />
 				</ElFormItem>
