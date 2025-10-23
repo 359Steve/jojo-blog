@@ -196,14 +196,17 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 					<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>
 				</ElFormItem>
 			</div>
-			<div class="w-full flex-1">
-				<ElFormItem label="简介：" class="!mx-0 !mb-0 h-full w-full" prop="describe">
-					<ClientOnly>
-						<MdEditor v-model="formData.describe" :preview="false"
-							:theme="useJojoColorMode().darkMode.preference" :toolbars="toolbars" />
-					</ClientOnly>
-				</ElFormItem>
-			</div>
+			<MdEditHeight>
+				<template #default="{ height }">
+					<ElFormItem label="简介：" class="!mx-0 !mb-0 h-full w-full" prop="describe">
+						<ClientOnly>
+							<MdEditor v-model="formData.describe" :preview="false"
+								:theme="useJojoColorMode().darkMode.preference" :toolbars="toolbars"
+								:style="{ height: `${height}px` }" />
+						</ClientOnly>
+					</ElFormItem>
+				</template>
+			</MdEditHeight>
 		</ElForm>
 	</div>
 </template>
@@ -239,25 +242,5 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 :deep(.el-image) {
 	@apply h-full w-full object-cover;
-}
-
-:deep(.md-editor) {
-	@apply h-full w-full;
-}
-
-:deep(.md-editor-content) {
-	@apply h-full;
-}
-
-:deep(.md-editor-content-wrapper) {
-	@apply h-full;
-}
-
-:deep(.md-editor-input-wrapper) {
-	@apply h-full;
-}
-
-:deep(.md-editor-input) {
-	@apply h-full;
 }
 </style>

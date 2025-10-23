@@ -26,11 +26,6 @@ definePageMeta({
 
 const { resetCurrentBlog } = useBlog();
 const { currentBlog } = storeToRefs(useBlog());
-
-const mdItem = useTemplateRef<HTMLDivElement>('MdItem');
-const mdHeight = computed(() => {
-	return mdItem.value ? mdItem.value.offsetHeight : 0;
-});
 const formData = reactive<CreateBlogDto>(
 	currentBlog.value?.id
 		? {
@@ -196,14 +191,16 @@ onBeforeUnmount(() => {
 					<ElButton type="" plain @click="resetForm">重置</ElButton>
 				</ElFormItem>
 			</div>
-			<div ref="MdItem" class="w-full flex-1">
-				<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="content">
-					<ClientOnly>
-						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference"
-							:style="{ height: `${mdHeight}px` }" @on-upload-img="mdEditorUpload" />
-					</ClientOnly>
-				</ElFormItem>
-			</div>
+			<MdEditHeight>
+				<template #default="{ height }">
+					<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="content">
+						<ClientOnly>
+							<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference"
+								:style="{ height: `${height}px` }" @on-upload-img="mdEditorUpload" />
+						</ClientOnly>
+					</ElFormItem>
+				</template>
+			</MdEditHeight>
 		</ElForm>
 	</div>
 </template>
