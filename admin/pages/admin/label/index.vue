@@ -17,8 +17,6 @@ const formData = reactive<CreateTagDto>({
 
 const { data } = await useAsyncData('tags', () => queryTagAll());
 const tableData = ref<CreateTagDto[]>(data.value?.data?.records || []);
-const tableRefs = templateRef('tableRefs');
-const tableRefsHeight = ref<number>(0);
 const total = ref<number>(data.value?.data?.total || 0);
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(10);
@@ -192,12 +190,6 @@ watch(searchTag, (newValue) => {
 		queryTag(newValue, 1);
 	}, 300);
 });
-
-onMounted(() => {
-	nextTick(() => {
-		tableRefsHeight.value = tableRefs.value?.offsetHeight || 0;
-	});
-});
 </script>
 
 <template>
@@ -250,40 +242,41 @@ onMounted(() => {
 				<h3>标签列表</h3>
 				<ElInput v-model="searchTag" placeholder="请输入名称" clearable class="!w-[200px]" />
 			</div>
-			<div ref="tableRefs" class="w-full flex-1">
-				<ElTable v-loading="loading" :data="tableData" stripe :height="tableRefsHeight"
-					class="w-full !text-[16px]">
-					<ElTableColumn fixed prop="id" label="ID" width="80" />
-					<ElTableColumn prop="name" label="名称" width="100" />
-					<ElTableColumn prop="icon" label="Icon" width="200">
-						<template #default="scope">
-							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
-						</template>
-					</ElTableColumn>
-					<ElTableColumn prop="url" label="链接" width="400">
-						<template #default="scope">
-							<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-						</template>
-					</ElTableColumn>
-					<ElTableColumn prop="type" label="类型" width="200">
-						<template #default="scope">
-							<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
-						</template>
-					</ElTableColumn>
-					<ElTableColumn label="操作" min-width="120">
-						<template #default="scope">
-							<ElButton link type="primary" size="small" class="!text-[16px]"
-								@click="editClick(scope.row)">
-								编辑
-							</ElButton>
-							<ElButton link type="danger" class="!text-[16px]" size="small"
-								@click="deleteClick(scope.row)">
-								删除
-							</ElButton>
-						</template>
-					</ElTableColumn>
-				</ElTable>
-			</div>
+			<TableHeight>
+				<template #default="{ height }">
+					<ElTable v-loading="loading" :data="tableData" stripe :height="height" class="w-full !text-[16px]">
+						<ElTableColumn fixed prop="id" label="ID" />
+						<ElTableColumn prop="name" label="名称" />
+						<ElTableColumn prop="icon" label="Icon">
+							<template #default="scope">
+								<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
+							</template>
+						</ElTableColumn>
+						<ElTableColumn prop="url" label="链接" width="1000">
+							<template #default="scope">
+								<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+							</template>
+						</ElTableColumn>
+						<ElTableColumn prop="type" label="类型">
+							<template #default="scope">
+								<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
+							</template>
+						</ElTableColumn>
+						<ElTableColumn label="操作">
+							<template #default="scope">
+								<ElButton link type="primary" size="small" class="!text-[16px]"
+									@click="editClick(scope.row)">
+									编辑
+								</ElButton>
+								<ElButton link type="danger" class="!text-[16px]" size="small"
+									@click="deleteClick(scope.row)">
+									删除
+								</ElButton>
+							</template>
+						</ElTableColumn>
+					</ElTable>
+				</template>
+			</TableHeight>
 			<div class="mt-2 flex w-full justify-end">
 				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
 					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"

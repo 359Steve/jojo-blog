@@ -14,8 +14,6 @@ const tableData = ref<BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>[]>(data
 const total = ref<number>(data.value?.data?.total || 0);
 const loading = ref<boolean>(false);
 const keyword = ref<string>('');
-const tableRefs = useTemplateRef<HTMLDivElement>('tableRefs');
-const tableRefsHeight = ref<number>(0);
 
 // 查询全部博客
 const queryBlog = async (keyword: string = '', page: number = 1, size: number = 10) => {
@@ -95,14 +93,6 @@ const handleDelete = async (id: number) => {
 		}
 	});
 };
-
-onMounted(() => {
-	nextTick(() => {
-		if (tableRefs.value) {
-			tableRefsHeight.value = tableRefs.value?.offsetHeight || 0;
-		}
-	});
-});
 </script>
 
 <template>
@@ -118,40 +108,45 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<div ref="tableRefs" class="w-full flex-1">
-			<ElTable v-loading="loading" :data="tableData" :height="tableRefsHeight" stripe
-				class="!w-full !text-[16px]">
-				<ElTableColumn fixed prop="id" label="ID" width="80" />
-				<ElTableColumn prop="title" label="标题" />
-				<ElTableColumn prop="subtitle" label="简介" />
-				<ElTableColumn label="标签">
-					<template #default="{ row }">
-						<template v-if="row.tags && row.tags.length">
-							<ElTag v-for="t in row.tags" :key="t.tag.id" size="small" class="!text-[14px]">
-								{{ t.tag.name }}
-							</ElTag>
+		<TableHeight>
+			<template #default="{ height }">
+				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
+					<ElTableColumn fixed prop="id" label="ID" width="80" />
+					<ElTableColumn prop="title" label="标题" />
+					<ElTableColumn prop="subtitle" label="简介" />
+					<ElTableColumn label="标签" width="200">
+						<template #default="{ row }">
+							<template v-if="row.tags && row.tags.length">
+								<div class="flex flex-wrap items-center gap-1 overflow-hidden">
+									<ElTag v-for="t in row.tags" :key="t.tag.id" size="small"
+										class="max-w-[80px] truncate !text-[12px]" :title="t.tag.name">
+										{{ t.tag.name }}
+									</ElTag>
+								</div>
+							</template>
+							<template v-else>—</template>
 						</template>
-						<template v-else>—</template>
-					</template>
-				</ElTableColumn>
-				<ElTableColumn prop="created_at" label="创建时间" width="180">
-					<template #default="{ row }">{{ new Date(row.created_at).toLocaleString() }}</template>
-				</ElTableColumn>
-				<ElTableColumn prop="updated_at" label="更新时间" width="180">
-					<template #default="{ row }">{{ new Date(row.updated_at).toLocaleString() }}</template>
-				</ElTableColumn>
-				<ElTableColumn label="操作" width="200">
-					<template #default="{ row }">
-						<ElButton link type="primary" size="small" class="!text-[16px]" @click="goEdit(row.id)">
-							编辑
-						</ElButton>
-						<ElButton link type="danger" size="small" class="!text-[16px]" @click="handleDelete(row.id)">
-							删除
-						</ElButton>
-					</template>
-				</ElTableColumn>
-			</ElTable>
-		</div>
+					</ElTableColumn>
+					<ElTableColumn prop="created_at" label="创建时间" width="180">
+						<template #default="{ row }">{{ new Date(row.created_at).toLocaleString() }}</template>
+					</ElTableColumn>
+					<ElTableColumn prop="updated_at" label="更新时间" width="180">
+						<template #default="{ row }">{{ new Date(row.updated_at).toLocaleString() }}</template>
+					</ElTableColumn>
+					<ElTableColumn label="操作" width="200">
+						<template #default="{ row }">
+							<ElButton link type="primary" size="small" class="!text-[16px]" @click="goEdit(row.id)">
+								编辑
+							</ElButton>
+							<ElButton link type="danger" size="small" class="!text-[16px]"
+								@click="handleDelete(row.id)">
+								删除
+							</ElButton>
+						</template>
+					</ElTableColumn>
+				</ElTable>
+			</template>
+		</TableHeight>
 
 		<div class="mt-2 flex justify-end">
 			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
