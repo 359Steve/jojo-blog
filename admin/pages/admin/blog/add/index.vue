@@ -68,6 +68,7 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 					});
 			}
 
+				if (res.data) {
 			ElMessage({
 				message: res.msg,
 				type: res.data ? 'success' : 'error',
