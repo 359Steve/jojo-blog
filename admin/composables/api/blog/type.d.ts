@@ -7,7 +7,7 @@ interface FindBlogParams {
 // 博客标签复合返回值
 interface BlogWithTagsDto<T> {
 	blog_id: number;
-	tag: T[];
+	tag: T;
 	tag_id: number;
 }
 
