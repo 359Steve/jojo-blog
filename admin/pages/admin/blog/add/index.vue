@@ -43,6 +43,7 @@ const formData = reactive<CreateBlogDto>(
 
 const ruleFormRef = templateRef('ruleFormRef');
 const isEdit = computed(() => !!currentBlog.value?.id);
+const loading = ref(false);
 
 const createBlogRules = reactive<FormRules>({
 	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
@@ -55,6 +56,8 @@ const createBlogRules = reactive<FormRules>({
 const saveBlog = async (formEl: FormInstance | undefined) => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
+			loading.value = true;
+			try {
 			let res = null;
 			if (isEdit.value) {
 				res = await updateBlog(formData);
