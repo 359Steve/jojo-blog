@@ -1,10 +1,10 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
-import type { BlogTagDto } from '~/server/dto/CreateBlogTagDto';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
 export const useBlog = defineStore('useBlog', () => {
-	const currentBlog = ref<BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'> | null>(null);
+	const currentBlog = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'> | null>(null);
 
-	const setCurrentBlog = (blog: BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'> | null) => {
+	const setCurrentBlog = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'> | null) => {
 		currentBlog.value = blog;
 	};
 
