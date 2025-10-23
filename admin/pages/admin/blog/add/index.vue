@@ -27,6 +27,10 @@ definePageMeta({
 const { resetCurrentBlog } = useBlog();
 const { currentBlog } = storeToRefs(useBlog());
 
+const mdItem = useTemplateRef<HTMLDivElement>('MdItem');
+const mdHeight = computed(() => {
+	return mdItem.value ? mdItem.value.offsetHeight : 0;
+});
 const formData = reactive<CreateBlogDto>(
 	currentBlog.value?.id
 		? {
