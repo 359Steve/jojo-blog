@@ -31,7 +31,7 @@ export class UserService {
 	}
 
 	// 更新信息
-	async updateUser(body: UserInfoDetail<CreateUserDto, number[]>) {
+	async updateUser(body: CreateUserDto & { tags: number[] }) {
 		return await this.userRepo.updateUser(body);
 	}
 }
