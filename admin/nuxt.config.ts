@@ -22,6 +22,12 @@ export default defineNuxtConfig({
 		},
 	},
 	imports: {
-		dirs: ['composables', 'composables/api/tag', 'composables/api/user', 'composables/api/blog'],
+		dirs: [
+			'composables',
+			'composables/api/tag',
+			'composables/api/user',
+			'composables/api/blog',
+			'composables/api/md',
+		],
 	},
 });
