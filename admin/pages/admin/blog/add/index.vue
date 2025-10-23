@@ -95,19 +95,62 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 // markdown编辑器图片上传
 const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void) => {
 	try {
+		// 验证文件类型 - 只允许图片格式
+		const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+		const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+
+		const validFiles = files.filter((file, index) => {
+			// 检查 MIME 类型
+			const isValidMimeType = allowedTypes.includes(file.type);
+
+			// 检查文件扩展名
+			const fileName = file.name.toLowerCase();
+			const fileExtension = fileName.split('.').pop() || '';
+			const isValidExtension = allowedExtensions.includes(fileExtension);
+
+			// 检查文件大小 (限制5MB)
+			const maxSize = 5 * 1024 * 1024; // 5MB
+			const isValidSize = file.size <= maxSize;
+
+			if (!isValidMimeType || !isValidExtension) {
+				ElMessage.warning(`第${index + 1}张不是有效图片`);
+				return false;
+			}
+
+			if (!isValidSize) {
+				ElMessage.warning(`第${index + 1}张超过5MB大小限制`);
+				return false;
+			}
+
+			return true;
+		});
+
+		if (validFiles.length === 0) {
+			ElMessage.error('没有有效的图片文件可上传');
+			callback([]);
+			return;
+		}
+
+		if (validFiles.length < files.length) {
+			ElMessage.warning(`已过滤 ${files.length - validFiles.length} 张文件`);
+		}
+
 		const formData = new FormData();
-		files.forEach((file) => {
+		validFiles.forEach((file) => {
 			formData.append('files', file);
 		});
 
 		const res = await mdUploadImage(formData);
 
 		if (res.data) {
-			ElMessage.success('图片上传成功');
+			ElMessage.success(`成功上传 ${validFiles.length} 张图片文件`);
 			callback(res.data.urls);
+		} else {
+			throw new Error(res.msg || '上传失败');
 		}
 	} catch (error) {
-		ElMessage.error('图片上传失败，请重试');
+		const errorMessage = error instanceof Error ? error.message : '图片上传失败，请重试';
+		ElMessage.error(errorMessage);
 		callback([]);
 	}
 };
