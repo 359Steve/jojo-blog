@@ -36,7 +36,7 @@ export default defineNuxtConfig({
 		payloadExtraction: false,
 	},
 	imports: {
-		dirs: ['composables', 'composables/api/user'],
+		dirs: ['composables', 'composables/api/user', 'composables/api/blog'],
 	},
 	plugins: [
 		'~/plugins/vue-starport.ts',
