@@ -98,6 +98,10 @@ const backAdd = () => {
 // 重置表单
 const resetForm = () => {
 	ruleFormRef.value?.resetFields();
+	formData.title = '';
+	formData.subtitle = '';
+	formData.content = '';
+	formData.tags = [];
 };
 
 onBeforeUnmount(() => {
