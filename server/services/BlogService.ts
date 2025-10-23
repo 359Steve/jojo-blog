@@ -33,4 +33,9 @@ export class BlogService {
 	async updateBlog(data: CreateBlogDto) {
 		return this.blogRepo.updateBlog(data);
 	}
+
+	// 上传封面
+	async uploadfrontCover(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+		return await this.blogRepo.uploadfrontCover(files);
+	}
 }
