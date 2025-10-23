@@ -1,5 +1,5 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
-import type { BlogTagDto } from '~/server/dto/CreateBlogTagDto';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
 // 创建博客
 export const createBlog = async (data: CreateBlogDto) => {
@@ -15,7 +15,7 @@ export const createBlog = async (data: CreateBlogDto) => {
 // 查询博客列表
 export const getBlogList = async (data: FindBlogParams) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<FindBlogParams, { records: BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>[]; total: number }>(
+		fetchUseGet<FindBlogParams, { records: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]; total: number }>(
 			'/blog/blogList',
 			{
 				query: data,
@@ -40,7 +40,7 @@ export const deleteBlog = async (id: number) => {
 // 根据ID获取单个博客
 export const getBlogById = async (id: number) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<{ id: number }, BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>>('/blog/blogQueryById', {
+		fetchUseGet<{ id: number }, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>('/blog/blogQueryById', {
 			query: { id },
 		}),
 	);
@@ -51,7 +51,7 @@ export const getBlogById = async (id: number) => {
 // 更新博客
 export const updateBlog = async (data: CreateBlogDto) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<CreateBlogDto, BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>>('/blog/blogUpdate', {
+		fetchPostApi<CreateBlogDto, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>('/blog/blogUpdate', {
 			body: data,
 		}),
 	);
