@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 export const CreateBlogSchema = z.object({
 	id: z.number().optional(),
+	front_cover: z
+		.string()
+		.refine((val) => typeof val === 'string', { message: '封面必须为字符串' })
+		.min(1, '封面不能为空'),
 	title: z
 		.string()
 		.refine((val) => typeof val === 'string', { message: '标题必须为字符串' })
