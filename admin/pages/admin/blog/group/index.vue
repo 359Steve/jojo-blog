@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
-import type { BlogTagDto } from '~/server/dto/CreateBlogTagDto';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
@@ -10,7 +10,7 @@ const { data } = await useAsyncData('queryBlogList', () =>
 		pageSize: pageSize.value,
 	}),
 );
-const tableData = ref<BlogWithTagsRep<CreateBlogDto, BlogTagDto, 'tags'>[]>(data.value?.data?.records || []);
+const tableData = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
 const total = ref<number>(data.value?.data?.total || 0);
 const loading = ref<boolean>(false);
 const keyword = ref<string>('');
@@ -112,8 +112,8 @@ const handleDelete = async (id: number) => {
 			<template #default="{ height }">
 				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
 					<ElTableColumn fixed prop="id" label="ID" width="80" />
-					<ElTableColumn prop="title" label="标题" />
-					<ElTableColumn prop="subtitle" label="简介" />
+					<ElTableColumn prop="title" label="标题" width="200" show-overflow-tooltip />
+					<ElTableColumn prop="subtitle" label="简介" width="250" show-overflow-tooltip />
 					<ElTableColumn label="标签" width="200">
 						<template #default="{ row }">
 							<template v-if="row.tags && row.tags.length">
