@@ -92,6 +92,26 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 	});
 };
 
+// markdown编辑器图片上传
+const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void) => {
+	try {
+		const formData = new FormData();
+		files.forEach((file) => {
+			formData.append('files', file);
+		});
+
+		const res = await mdUploadImage(formData);
+
+		if (res.data) {
+			ElMessage.success('图片上传成功');
+			callback(res.data.urls);
+		}
+	} catch (error) {
+		ElMessage.error('图片上传失败，请重试');
+		callback([]);
+	}
+};
+
 // 返回新增
 const backAdd = () => {
 	resetCurrentBlog();
