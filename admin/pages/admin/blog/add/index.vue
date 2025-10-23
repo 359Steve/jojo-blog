@@ -65,36 +65,68 @@ const createBlogRules = reactive<FormRules>({
 
 // 保存或更新博客
 const saveBlog = async (formEl: FormInstance | undefined) => {
-	formEl?.validate(async (valid) => {
-		if (valid) {
-			loading.value = true;
-			try {
-				let res = null;
-				if (isEdit.value) {
-					res = await updateBlog(formData);
-				} else {
-					const { id, ...rest } = formData;
-					res = await createBlog({
-						...rest,
-					});
+	if (!formEl) {
+		ElMessage.error('表单验证失败');
+		return;
+	}
+
+	formEl.validate(async (valid) => {
+		if (!valid) {
+			ElMessage.warning('请检查表单信息');
+			return;
+		}
+
+		loading.value = true;
+		try {
+			// 如果有新的封面文件需要上传
+			if (frontImage.value && frontImage.value.has('file')) {
+				const coverUploadResult = await uploadBlogCover(frontImage.value);
+
+				if (!coverUploadResult.data?.url) {
+					ElMessage.error(coverUploadResult.msg || '封面上传失败，请重试');
+					return;
 				}
 
-				if (res.data) {
-					ElMessage({
-						message: res.msg,
-						type: res.data ? 'success' : 'error',
-					});
-				}
-
-				if (res.data) {
-					// 保存成功后返回博客管理页面
-					await navigateTo('/admin/blog/group');
-				}
-			} catch (error) {
-				ElMessage.error('保存失败，请重试');
-			} finally {
-				loading.value = false;
+				formData.front_cover = coverUploadResult.data.url;
+				ElMessage.success('封面上传成功');
 			}
+
+			// 验证必要字段 - 编辑模式下如果没有选择新文件，使用原有封面
+			if (!formData.front_cover) {
+				if (isEdit.value) {
+					ElMessage.error('编辑时封面信息丢失，请重新选择封面');
+				} else {
+					ElMessage.error('请上传封面图片');
+				}
+				return;
+			}
+
+			let res = null;
+
+			// 执行保存或更新操作
+			if (isEdit.value) {
+				res = await updateBlog(formData);
+			} else {
+				const { id, ...blogDataWithoutId } = formData;
+				res = await createBlog(blogDataWithoutId);
+			}
+
+			// 处理响应结果
+			if (res?.data) {
+				ElMessage.success(res.msg || (isEdit.value ? '更新成功' : '创建成功'));
+
+				// 成功后清理状态并跳转
+				resetCurrentBlog();
+				isEdit.value ? await navigateTo('/admin/blog/add') : await navigateTo('/admin/blog/group');
+			} else {
+				ElMessage.error(res?.msg || (isEdit.value ? '更新失败' : '创建失败'));
+			}
+		} catch (error) {
+			console.error('保存博客失败:', error);
+			const errorMessage = error instanceof Error ? error.message : '操作失败，请重试';
+			ElMessage.error(errorMessage);
+		} finally {
+			loading.value = false;
 		}
 	});
 };
@@ -260,10 +292,12 @@ onBeforeUnmount(() => {
 				<ElFormItem class="!mx-0 !w-full" prop="subtitle" label="简介：">
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full">
+				<ElFormItem class="last col-span-1 !mx-0 !w-full sm:col-span-2">
 					<ElButton v-if="isEdit" type="primary" plain @click="backAdd">新增</ElButton>
-					<ElButton type="primary" @click="saveBlog(ruleFormRef!)">保存</ElButton>
-					<ElButton type="" plain @click="resetForm">重置</ElButton>
+					<ElButton type="primary" :loading="loading" :disabled="loading" @click="saveBlog(ruleFormRef!)">
+						{{ loading ? (isEdit ? '更新中...' : '保存中...') : isEdit ? '更新' : '保存' }}
+					</ElButton>
+					<ElButton type="" plain :disabled="loading" @click="resetForm">重置</ElButton>
 				</ElFormItem>
 			</div>
 			<MdEditHeight>
@@ -286,11 +320,15 @@ onBeforeUnmount(() => {
 }
 
 :deep(.el-form-item__content) {
-	@apply flex h-full w-full justify-end;
+	@apply flex h-full w-full;
 }
 
 :deep(.el-form-item .el-form-item__content) {
 	@apply h-full;
+}
+
+:deep(.last .el-form-item__content) {
+	@apply justify-end;
 }
 
 :deep(.el-form-item__label) {
