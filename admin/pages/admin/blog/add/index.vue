@@ -189,24 +189,4 @@ onBeforeUnmount(() => {
 :deep(.el-select__wrapper) {
 	@apply h-[34px] text-[14px];
 }
-
-:deep(.md-editor) {
-	@apply h-full w-full;
-}
-
-:deep(.md-editor-content) {
-	@apply h-full;
-}
-
-:deep(.md-editor-content-wrapper) {
-	@apply h-full;
-}
-
-:deep(.md-editor-input-wrapper) {
-	@apply h-full;
-}
-
-:deep(.md-editor-input) {
-	@apply h-full;
-}
 </style>
