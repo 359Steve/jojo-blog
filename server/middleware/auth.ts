@@ -1,4 +1,9 @@
-const whitelist = ['/api/user/userPublicQuery', '/api/user/user-login', '/api/user/user-register'];
+const whitelist = [
+	'/api/user/userPublicQuery',
+	'/api/blog/blogPublicQuery',
+	'/api/user/user-login',
+	'/api/user/user-register',
+];
 
 export default defineEventHandler((event) => {
 	let realToken = '';
