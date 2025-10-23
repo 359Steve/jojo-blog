@@ -153,10 +153,11 @@ onBeforeUnmount(() => {
 					<ElButton type="" plain @click="resetForm">重置</ElButton>
 				</ElFormItem>
 			</div>
-			<div class="w-full flex-1">
+			<div ref="MdItem" class="w-full flex-1">
 				<ElFormItem label="内容：" class="!mx-0 !mb-0 h-full w-full" prop="content">
 					<ClientOnly>
-						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference" />
+						<MdEditor v-model="formData.content" :theme="useJojoColorMode().darkMode.preference"
+							:style="{ height: `${mdHeight}px` }" @on-upload-img="mdEditorUpload" />
 					</ClientOnly>
 				</ElFormItem>
 			</div>
