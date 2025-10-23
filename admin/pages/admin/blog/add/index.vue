@@ -74,6 +74,17 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				type: res.data ? 'success' : 'error',
 			});
 		}
+
+				if (res.data) {
+					// 保存成功后返回博客管理页面
+					await navigateTo('/admin/blog/group');
+				}
+			} catch (error) {
+				ElMessage.error('保存失败，请重试');
+			} finally {
+				loading.value = false;
+			}
+		}
 	});
 };
 
