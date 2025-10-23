@@ -2,6 +2,11 @@ import type { PrismaClient } from '@prisma/client';
 import { prisma } from '../core/prisma';
 import type { CreateBlogDto } from '../dto/CreateBlogDto';
 import { StatusCode } from '~/types/com-types';
+import { writeFile } from 'node:fs/promises';
+import { join, extname } from 'node:path';
+import process from 'node:process';
+import { randomUUID } from 'node:crypto';
+import fs from 'node:fs';
 
 export class BlogRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
@@ -181,6 +186,58 @@ export class BlogRepository {
 		} catch (error) {
 			console.error('更新博客失败:', error);
 			return returnData(StatusCode.FAIL, '更新失败！', null);
+		}
+	}
+
+	// 上传封面
+	async uploadfrontCover(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+		try {
+			if (!files || files.length === 0) {
+				return returnData(StatusCode.FAIL, '没有上传文件！', null);
+			}
+
+			const file = files[0];
+
+			// 验证文件
+			if (!file.data || !file.filename) {
+				return returnData(StatusCode.FAIL, '文件数据无效！', null);
+			}
+
+			// 验证文件类型
+			const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+			const fileExtension = extname(file.filename).toLowerCase();
+
+			if (!allowedExtensions.includes(fileExtension)) {
+				return returnData(StatusCode.FAIL, '不支持的文件格式，只允许 JPG、PNG、GIF、WebP 格式！', null);
+			}
+
+			// 验证文件大小 (限制5MB)
+			const maxSize = 5 * 1024 * 1024; // 5MB
+			if (file.data.length > maxSize) {
+				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB！', null);
+			}
+
+			// 生成安全的文件名
+			const timestamp = Date.now();
+			const uuid = randomUUID().replace(/-/g, '').substring(0, 8);
+			const safeFileName = `frontcover_${timestamp}_${uuid}${fileExtension}`;
+
+			// 确保目录存在
+			const uploadDir = join(process.cwd(), 'public/frontcover');
+			if (!fs.existsSync(uploadDir)) {
+				fs.mkdirSync(uploadDir, { recursive: true });
+			}
+
+			const savePath = join(uploadDir, safeFileName);
+
+			// 保存文件
+			await writeFile(savePath, file.data);
+
+			// 返回文件访问路径
+			return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/frontcover/${safeFileName}` });
+		} catch (error) {
+			console.error('上传封面失败:', error);
+			return returnData(StatusCode.FAIL, '上传失败！', null);
 		}
 	}
 }
