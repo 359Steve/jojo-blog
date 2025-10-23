@@ -58,3 +58,14 @@ export const updateBlog = async (data: CreateBlogDto) => {
 
 	return handleApiResponse(res);
 };
+
+// 上传博客封面
+export const uploadBlogCover = async (formData: FormData) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchPostApi<FormData, { url: string }>('/blog/blogUpload', {
+			body: formData,
+		}),
+	);
+
+	return handleApiResponse(res);
+};
