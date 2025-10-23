@@ -95,7 +95,7 @@ export class UserRepository {
 	}
 
 	// 更新信息
-	async updateUser(body: UserInfoDetail<CreateUserDto, number[]>) {
+	async updateUser(body: CreateUserDto & { tags: number[] }) {
 		const { tags, ...userInfo } = body;
 
 		const res = await this.prismaClient.$transaction(async (tx) => {
