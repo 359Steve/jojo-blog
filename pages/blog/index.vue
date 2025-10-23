@@ -1,104 +1,18 @@
 <script lang="ts" setup>
 import type { AnimationRevealOnScroll, ElInput } from '~/.nuxt/components';
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
+import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { StackColor } from '~/types/com-types';
 
-const blogList = reactive<CreateBlogDto[]>([
-	{
-		id: 1,
-		title: 'Aceternity',
-		description: 'A design and development studio that focuses on building quality apps.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project1'),
-	},
-	{
-		id: 2,
-		title: 'Algochurn',
-		description: 'Practice for technical interviews with hands on coding challenges.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project2'),
-	},
-	{
-		id: 3,
-		title: 'Moonbeam',
-		description: 'Never write from scratch again with Moonbeam, your AI first writing tool.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project3'),
-	},
-	{
-		id: 4,
-		title: 'Tailwind Master Kit',
-		description:
-			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project4'),
-	},
-	{
-		id: 5,
-		title: 'Aceternity',
-		description: 'A design and development studio that focuses on building quality apps.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project1'),
-	},
-	{
-		id: 6,
-		title: 'Algochurn',
-		description: 'Practice for technical interviews with hands on coding challenges.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project2'),
-	},
-	{
-		id: 7,
-		title: 'Moonbeam',
-		description: 'Never write from scratch again with Moonbeam, your AI first writing tool.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project3'),
-	},
-	{
-		id: 8,
-		title: 'Tailwind Master Kit',
-		description:
-			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project4'),
-	},
-	{
-		id: 9,
-		title: 'Tailwind Master Kit',
-		description:
-			'A beautiful and comprehensive Tailwind CSS components library for building modern websites and applications.',
-		tags: [
-			{ name: 'TailwindCSS', icon: 'ri-tailwind-css-fill' },
-			{ name: 'Nuxt', icon: 'ri-vuejs-fill' },
-		],
-		url: await useLoadStaticImage('project4'),
-	},
-]);
-
+const pageSize = ref<number>(20);
+const pageNumber = ref<number>(1);
+const { data } = await useAsyncData('publicQueryBlogList', () =>
+	getPublicBlogList({
+		pageNumber: pageNumber.value,
+		pageSize: pageSize.value,
+	}),
+);
+const blogList = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
 const search = ref<string>('');
 const inputShow = ref<boolean>(false);
 const inputEl = ref<InstanceType<typeof ElInput> | null>(null);
@@ -112,8 +26,8 @@ const controlInput = (): void => {
 	inputShow.value = !inputShow.value;
 };
 
-const toDetail = (item: CreateBlogDto): void => {
-	navigateTo({ path: '/blog/detail', query: { id: item.id } });
+const toDetail = (id: number): void => {
+	navigateTo({ path: '/blog/detail', query: { id } });
 };
 
 const isLeftAligned = computed(() => {
@@ -189,9 +103,9 @@ watch(coincidence, () => {
                     duration-200
                     p-2
                     shadow-lg
-                    dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]`" @click="toDetail(item)">
+                    dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]`" @click="toDetail(item.id!)">
 				<img alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="w-full rounded-base object-cover sm:w-[200px]" :src="item.url">
+					class="w-full rounded-base object-cover sm:w-[200px]" :src="item.front_cover">
 				<div class="flex flex-col justify-between">
 					<div>
 						<h4
@@ -199,14 +113,14 @@ watch(coincidence, () => {
 							{{ item.title }}
 						</h4>
 						<p class="text-secondary mt-2 max-w-xl text-sm font-normal md:text-sm lg:text-sm">
-							{{ item.description }}
+							{{ item.subtitle }}
 						</p>
 					</div>
 					<div class="mt-2 flex space-x-2 md:mb-1 md:mt-0">
-						<span v-for="tag in item.tags" :key="tag.name"
+						<span v-for="tag in item.tags" :key="tag.tag.id"
 							class="text-secondary rounded-base bg-gray-100 px-2 py-1 text-xs dark:bg-gray-100/10 md:text-xs lg:text-xs">
-							<i :style="{ color: StackColor[tag.name] }" class="mr-2" :class="[tag.icon]" />
-							{{ tag.name }}
+							<Icon :icon="tag.tag.icon" />
+							{{ tag.tag.name }}
 						</span>
 					</div>
 				</div>
