@@ -27,6 +27,10 @@ const tagsOptions = ref<TagsOptions[]>(
 	allTags.value?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [],
 );
 
+watchEffect(() => {
+	values.value = props.tags;
+});
+
 watch(allTags, (newTags) => {
 	tagsOptions.value = newTags?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [];
 });
