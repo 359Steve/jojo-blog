@@ -42,13 +42,14 @@ model tag {
 }
 
 model blog {
-    id         Int        @id @default(autoincrement())
-    title      String
-    subtitle   String
-    content    String     @db.Text
-    created_at DateTime   @default(now())
-    updated_at DateTime   @updatedAt
-    tags       blog_tag[]
+    id          Int        @id @default(autoincrement())
+    title       String
+    front_cover String     @db.VarChar(255)
+    subtitle    String
+    content     String     @db.Text
+    created_at  DateTime   @default(now())
+    updated_at  DateTime   @updatedAt
+    tags        blog_tag[]
 }
 
 model blog_tag {
