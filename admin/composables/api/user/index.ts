@@ -13,9 +13,9 @@ export const uploadAvatar = async (file: FormData) => {
 };
 
 // 更新信息
-export const updataUserInfo = async (body: UserInfoDetail<CreateUserDto, number[]>) => {
+export const updataUserInfo = async (body: CreateUserDto & { tags: number[] }) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<UserInfoDetail<CreateUserDto, number[]>, CreateUserDto>('/user/userUpdate', {
+		fetchPostApi<CreateUserDto & { tags: number[] }, CreateUserDto>('/user/userUpdate', {
 			body,
 		}),
 	);
@@ -29,7 +29,7 @@ export const findUser = async (user_name?: string) => {
 		user_name,
 	};
 
-	const res = await fetchUseGet<{ user_name?: string }, UserInfoDetail<CreateUserDto, UserTags<CreateTagDto>[]>>(
+	const res = await fetchUseGet<{ user_name?: string }, UserWithTagsRep<CreateUserDto, CreateTagDto, 'tags'>>(
 		'/user/userQuery',
 		{
 			query: queryParams,
