@@ -62,7 +62,10 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 			if (isEdit.value) {
 				res = await updateBlog(formData);
 			} else {
-				res = await createBlog(formData);
+					const { id, ...rest } = formData;
+					res = await createBlog({
+						...rest,
+					});
 			}
 
 			ElMessage({
