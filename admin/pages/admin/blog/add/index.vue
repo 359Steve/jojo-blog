@@ -58,22 +58,22 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 		if (valid) {
 			loading.value = true;
 			try {
-			let res = null;
-			if (isEdit.value) {
-				res = await updateBlog(formData);
-			} else {
+				let res = null;
+				if (isEdit.value) {
+					res = await updateBlog(formData);
+				} else {
 					const { id, ...rest } = formData;
 					res = await createBlog({
 						...rest,
 					});
-			}
+				}
 
 				if (res.data) {
-			ElMessage({
-				message: res.msg,
-				type: res.data ? 'success' : 'error',
-			});
-		}
+					ElMessage({
+						message: res.msg,
+						type: res.data ? 'success' : 'error',
+					});
+				}
 
 				if (res.data) {
 					// 保存成功后返回博客管理页面
