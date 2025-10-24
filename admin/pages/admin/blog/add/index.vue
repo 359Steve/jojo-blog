@@ -28,20 +28,24 @@ const { resetCurrentBlog } = useBlog();
 const { currentBlog } = storeToRefs(useBlog());
 const frontImage = ref<FormData | null>(null);
 const upload = templateRef('upload');
-const formData = reactive<CreateBlogDto>(
-	currentBlog.value?.id
-		? {
+// 初始化表单数据
+const initFormData = () => {
+	if (currentBlog.value?.id) {
+		return {
 			...currentBlog.value,
 			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
-		}
-		: {
-			title: '',
-			front_cover: '',
-			subtitle: '',
-			content: '',
-			tags: [],
-		},
-);
+		};
+	}
+	return {
+		title: '',
+		front_cover: '',
+		subtitle: '',
+		content: '',
+		tags: [],
+	};
+};
+
+const formData = reactive<CreateBlogDto>(initFormData());
 
 const ruleFormRef = templateRef('ruleFormRef');
 const isEdit = computed(() => !!currentBlog.value?.id);
@@ -117,7 +121,7 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 
 				// 成功后清理状态并跳转
 				resetCurrentBlog();
-				isEdit.value ? await navigateTo('/admin/blog/add') : await navigateTo('/admin/blog/group');
+				await navigateTo('/admin/blog/group');
 			} else {
 				ElMessage.error(res?.msg || (isEdit.value ? '更新失败' : '创建失败'));
 			}
@@ -147,7 +151,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 			const fileExtension = fileName.split('.').pop() || '';
 			const isValidExtension = allowedExtensions.includes(fileExtension);
 
-			// 检查文件大小 (限制5MB)
+			// 检查文件大小
 			const maxSize = 5 * 1024 * 1024; // 5MB
 			const isValidSize = file.size <= maxSize;
 
@@ -219,7 +223,7 @@ const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) 
 		return;
 	}
 
-	// 更新显示的文件名（显示选择的新文件名）
+	// 更新显示的文件名
 	formData.front_cover = uploadFile.name || '';
 
 	// 准备上传的 FormData
@@ -231,23 +235,55 @@ const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) 
 
 // 返回新增
 const backAdd = () => {
+	// 清理当前博客状态
 	resetCurrentBlog();
+
+	// 重置表单验证状态
 	ruleFormRef.value?.resetFields();
+
+	// 清空表单数据
+	Object.assign(formData, {
+		title: '',
+		front_cover: '',
+		subtitle: '',
+		content: '',
+		tags: [],
+	});
+
+	// 清理上传状态
+	frontImage.value = null;
+	upload.value?.clearFiles();
+
+	// 跳转到新增页面
 	navigateTo('/admin/blog/add');
 };
 
 // 重置表单
 const resetForm = () => {
+	// 重置表单验证状态
 	ruleFormRef.value?.resetFields();
-	formData.title = '';
-	formData.front_cover = '';
-	formData.subtitle = '';
-	formData.content = '';
-	formData.tags = [];
-	frontImage.value = null;
 
+	// 重置表单数据
+	if (isEdit.value && currentBlog.value) {
+		// 编辑模式恢复到原始博客数据
+		Object.assign(formData, {
+			...currentBlog.value,
+			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
+		});
+	} else {
+		// 新增模式清空所有数据
+		Object.assign(formData, {
+			title: '',
+			front_cover: '',
+			subtitle: '',
+			content: '',
+			tags: [],
+		});
+	}
+
+	// 清理上传相关状态
+	frontImage.value = null;
 	upload.value?.clearFiles();
-	ElMessage.success('表单已重置');
 };
 
 onBeforeUnmount(() => {
