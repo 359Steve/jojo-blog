@@ -69,29 +69,39 @@ export class UserRepository {
 
 	// 上传头像
 	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
-		if (!files || files.length === 0) {
-			return returnData(StatusCode.FAIL, '没有上传文件！', null);
-		}
+		try {
+			if (!files || files.length === 0) {
+				return returnData(StatusCode.FAIL, '没有上传文件！', null);
+			}
 
-		const file = files[0];
-		const fileName = file.filename || 'avatar.png';
+			const file = files[0];
+			const fileName = file.filename || 'avatar.png';
 
-		// 判断当前文件是否已经存在
-		const filePath = join(process.cwd(), 'public/avatar', fileName);
-		if (fs.existsSync(filePath)) {
-			fs.unlinkSync(filePath); // 删除旧文件，准备覆盖
-		}
+			// 判断当前文件是否已经存在
+			const filePath = join(process.cwd(), 'public/avatar', fileName);
+			if (fs.existsSync(filePath)) {
+				fs.unlinkSync(filePath); // 删除旧文件，准备覆盖
+			}
 
-		const savePath = join(process.cwd(), 'public/avatar', fileName);
+			// 确保目录存在
+			const dirPath = join(process.cwd(), 'public/avatar');
+			if (!fs.existsSync(dirPath)) {
+				fs.mkdirSync(dirPath, { recursive: true });
+			}
 
-		if (!file.data) {
+			const savePath = join(dirPath, fileName);
+
+			if (!file.data) {
+				return returnData(StatusCode.FAIL, '上传失败！', null);
+			}
+
+			await writeFile(savePath, file.data);
+
+			// 返回文件访问路径
+			return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/avatar/${fileName}` });
+		} catch (error) {
 			return returnData(StatusCode.FAIL, '上传失败！', null);
 		}
-
-		await writeFile(savePath, file.data);
-
-		// 返回文件访问路径
-		return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/avatar/${fileName}` });
 	}
 
 	// 更新信息
