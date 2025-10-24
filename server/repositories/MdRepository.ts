@@ -10,7 +10,7 @@ import { returnData } from '../utils/public';
 export class MdRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
-	// 验证图片文件头（魔数）
+	// 验证图片文件头
 	private validateImageFileHeader(fileData: Buffer, extension: string): boolean {
 		if (!fileData || fileData.length < 8) {
 			return false;
