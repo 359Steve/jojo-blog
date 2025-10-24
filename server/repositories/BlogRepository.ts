@@ -211,7 +211,7 @@ export class BlogRepository {
 				return returnData(StatusCode.FAIL, '不支持的文件格式，只允许 JPG、PNG、GIF、WebP 格式！', null);
 			}
 
-			// 验证文件大小 (限制5MB)
+			// 验证文件大小
 			const maxSize = 5 * 1024 * 1024; // 5MB
 			if (file.data.length > maxSize) {
 				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB！', null);
@@ -236,7 +236,6 @@ export class BlogRepository {
 			// 返回文件访问路径
 			return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/frontcover/${safeFileName}` });
 		} catch (error) {
-			console.error('上传封面失败:', error);
 			return returnData(StatusCode.FAIL, '上传失败！', null);
 		}
 	}
