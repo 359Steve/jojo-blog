@@ -5,6 +5,9 @@ const whitelist = [
 	'/api/user/user-register',
 ];
 
+// 白名单路径模式
+const whitelistPatterns = [/^\/api\/blog\/blogPublicDetail(\/\d+)?(\?.*)?$/];
+
 export default defineEventHandler((event) => {
 	let realToken = '';
 	const path = event.node.req.url || '';
@@ -13,8 +16,12 @@ export default defineEventHandler((event) => {
 	const realPath = path.split('?')[0];
 
 	if (!path.startsWith('/api')) return;
+
 	// 如果是白名单接口，跳过校验
 	if (whitelist.includes(realPath)) return;
+
+	// 检查白名单模式
+	if (whitelistPatterns.some((pattern) => pattern.test(path))) return;
 
 	if (import.meta.server) {
 		const token: TokenCookie = parseCookies(event) as any;
