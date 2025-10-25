@@ -104,23 +104,27 @@ watch(coincidence, () => {
                     duration-200
                     p-2
                     shadow-lg
-                    dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]`" @click="toDetail(item.id!)">
+                    dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]
+                    h-auto
+                    max-h-[280px]`" @click="toDetail(item)">
 				<img alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="w-full rounded-base object-cover sm:w-[200px]" :src="item.front_cover">
-				<div class="flex flex-col justify-between">
-					<div>
+					class="aspect-square w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:w-[200px]"
+					:src="item.front_cover">
+				<div class="flex min-h-0 flex-1 flex-col justify-between overflow-hidden">
+					<div class="min-h-0 flex-1">
 						<h4
-							class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-lg font-black md:text-lg lg:text-lg">
+							class="from-primary to-secondary mb-2 line-clamp-2 bg-gradient-to-r bg-clip-text text-lg font-black md:text-lg lg:text-lg">
 							{{ item.title }}
 						</h4>
-						<p class="text-secondary mt-2 max-w-xl text-sm font-normal md:text-sm lg:text-sm">
+						<p class="text-secondary line-clamp-3 max-w-xl text-sm font-normal md:text-sm lg:text-sm">
 							{{ item.subtitle }}
 						</p>
 					</div>
-					<div class="mt-2 flex space-x-2 md:mb-1 md:mt-0">
-						<span v-for="tag in item.tags" :key="tag.tag.id"
-							class="text-secondary rounded-base bg-gray-100 px-2 py-1 text-xs dark:bg-gray-100/10 md:text-xs lg:text-xs">
-							<Icon :icon="tag.tag.icon" />
+					<div class="mt-2 flex flex-wrap gap-2 md:mb-1">
+						<span v-for="tag in item.tags" :key="tag.tag.id" :style="{
+							color: StackColor[tag.tag.name as keyof typeof StackColor] ?? '#409eff',
+						}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-2 py-1 text-xs shadow-sm dark:bg-gray-100/10 md:text-xs lg:text-xs">
+							<Icon :icon="tag.tag.icon" width="24" />
 							{{ tag.tag.name }}
 						</span>
 					</div>
