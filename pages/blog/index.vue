@@ -26,8 +26,9 @@ const controlInput = (): void => {
 	inputShow.value = !inputShow.value;
 };
 
-const toDetail = (id: number): void => {
-	navigateTo({ path: '/blog/detail', query: { id } });
+const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): void => {
+	useBlog().setCurrentBlog(blog);
+	navigateTo({ path: '/blog/detail', query: { id: blog.id } });
 };
 
 const isLeftAligned = computed(() => {
