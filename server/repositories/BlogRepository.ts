@@ -146,7 +146,10 @@ export class BlogRepository {
 				// 更新博客基本信息
 				await tx.blog.update({
 					where: { id: Number(id) },
-					data: blogData,
+					data: {
+						...blogData,
+						updated_at: new Date(),
+					},
 				});
 
 				// 处理标签关联
