@@ -22,3 +22,15 @@ export const getPublicBlogList = async (data: FindBlogParams) => {
 
 	return handleApiResponse(res);
 };
+
+// 查询博客详情
+export const getPublicBlogDetail = async (id: number) => {
+	const res = await jojoLoadingIndicator(() => {
+		if (import.meta.server) {
+			return useGet<null, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`);
+		}
+		return fetchUseGet<null, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`);
+	});
+
+	return handleApiResponse(res);
+};
