@@ -25,16 +25,19 @@ const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 		const radius = Math.hypot(Math.max(clientX, innerWidth - clientX), Math.max(clientY, innerHeight - clientY));
 
 		// 开始动画
-		const clipPath = [`circle(0% at ${clientX}px ${clientY}px)`, `circle(${radius}px at ${clientX}px ${clientY}px)`];
+		const clipPath = [
+			`circle(0% at ${clientX}px ${clientY}px)`,
+			`circle(${radius}px at ${clientX}px ${clientY}px)`,
+		];
 		document.documentElement.animate(
 			{
-				clipPath: isDark ? clipPath.reverse() : clipPath
+				clipPath: isDark ? clipPath.reverse() : clipPath,
 			},
 			// 设置时间，已经目标伪元素
 			{
 				duration: 500,
-				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)'
-			}
+				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+			},
 		);
 	});
 
@@ -44,7 +47,7 @@ const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 onMounted(() => {
 	nextTick(() => {
 		if (jojoMain.value) {
-			useResizeObserver(jojoMain, entries => {
+			useResizeObserver(jojoMain, (entries) => {
 				const [{ inlineSize: width, blockSize: _height }] = entries[0].borderBoxSize;
 				windWidth.value = width;
 			});
@@ -56,25 +59,26 @@ onMounted(() => {
 <template>
 	<div ref="jojoMain" class="relative h-full w-full">
 		<ClientOnly>
-			<RecordBackground v-if="windWidth > 640" class-name="w-full h-[100dvh] fixed inset-0 z-[-1]">
-			</RecordBackground>
-			<BgcanvasBranchCanvas v-else></BgcanvasBranchCanvas>
+			<RecordBackground v-if="windWidth > 640" class-name="w-full h-[100dvh] fixed inset-0 z-[-1]" />
+			<BgcanvasBranchCanvas v-else />
 		</ClientOnly>
 		<ElBacktop :right="50" :bottom="100">
-			<i class="ri-arrow-up-line"></i>
+			<i class="ri-arrow-up-line" />
 		</ElBacktop>
-		<div class="h-full w-full">
+		<div class="flex h-full min-h-screen w-full flex-col">
 			<!-- 导航栏 -->
-			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme"></HeaderBox>
+			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme" />
 			<NuxtLoadingIndicator color="#A3AAB6" />
-			<NuxtLayout name="mainbox">
-				<template #childPage>
-					<StarportCarrier>
-						<slot name="page" />
-					</StarportCarrier>
-				</template>
-			</NuxtLayout>
-			<FooterBox></FooterBox>
+			<div class="flex-1">
+				<NuxtLayout name="mainbox">
+					<template #childPage>
+						<StarportCarrier>
+							<slot name="page" />
+						</StarportCarrier>
+					</template>
+				</NuxtLayout>
+			</div>
+			<FooterBox />
 		</div>
 	</div>
 </template>
