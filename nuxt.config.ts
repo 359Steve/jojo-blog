@@ -39,9 +39,9 @@ export default defineNuxtConfig({
 		dirs: ['composables', 'composables/api/user', 'composables/api/blog'],
 	},
 	plugins: [
-		'~/plugins/vue-starport.ts',
+		'~/plugins/vueStarport.ts',
 		'~/plugins/iconify.ts',
-		'~/plugins/md-editor.ts',
+		'~/plugins/mdEditor.ts',
 		'~/plugins/preventDefault.client.ts',
 	],
 	pages: true,
