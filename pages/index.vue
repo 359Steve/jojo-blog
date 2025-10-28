@@ -105,7 +105,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex min-h-[calc(100dvh-5rem)] w-full flex-col gap-6">
+	<div class="flex w-full flex-col gap-6">
 		<!-- 介绍 -->
 		<div class="mx-auto w-full sm:w-[75%]">
 			<div class="h-full w-full pb-4 pt-8 sm:pb-8">
@@ -144,12 +144,10 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="mb-8 grid h-full w-full grid-cols-1 justify-center text-sm sm:mb-0">
-				<AnimationRevealOnScroll>
-					<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData"
-						@detail-record="detailRecord" />
-					<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData"
-						@detail-record="detailRecord" />
-				</AnimationRevealOnScroll>
+				<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData"
+					@detail-record="detailRecord" />
+				<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData"
+					@detail-record="detailRecord" />
 			</div>
 		</div>
 	</div>
