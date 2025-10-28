@@ -14,57 +14,69 @@ export class UserRepository {
 	// 用户登录
 	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
 		const { user_name, password } = body;
-		const res = await this.prismaClient.user_info.findFirst({
-			where: {
-				user_name,
-				password,
-			},
-		});
+		try {
+			const res = await this.prismaClient.user_info.findFirst({
+				where: {
+					user_name,
+					password,
+				},
+			});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) })
-			: returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+			return res
+				? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) })
+				: returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+		}
 	}
 
 	// 查询用户信息
 	async findUser(user_name: string) {
-		const res = await this.prismaClient.user_info.findFirst({
-			where: user_name ? { user_name } : undefined,
-			include: {
-				tags: {
-					include: {
-						tag: true, // 查询标签详情
+		try {
+			const res = await this.prismaClient.user_info.findFirst({
+				where: user_name ? { user_name } : undefined,
+				include: {
+					tags: {
+						include: {
+							tag: true, // 查询标签详情
+						},
 					},
 				},
-			},
-		});
+			});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '查询成功！', user_name ? res : { ...res, password: '' })
-			: returnData(StatusCode.FAIL, '查询失败！', null);
+			return res
+				? returnData(StatusCode.SUCCESS, '查询成功！', user_name ? res : { ...res, password: '' })
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
 	}
 
 	// 查询用户公共信息
 	async getPublicUserInfo() {
-		const res = await this.prismaClient.user_info.findFirst({
-			select: {
-				id: true,
-				user_name: true,
-				avatar_url: true,
-				pet_name: true,
-				sign: true,
-				describe: true,
-				tags: {
-					include: {
-						tag: true, // 查询标签详情
+		try {
+			const res = await this.prismaClient.user_info.findFirst({
+				select: {
+					id: true,
+					user_name: true,
+					avatar_url: true,
+					pet_name: true,
+					sign: true,
+					describe: true,
+					tags: {
+						include: {
+							tag: true, // 查询标签详情
+						},
 					},
 				},
-			},
-		});
+			});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '查询成功！', res)
-			: returnData(StatusCode.FAIL, '查询失败！', null);
+			return res
+				? returnData(StatusCode.SUCCESS, '查询成功！', res)
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
 	}
 
 	// 上传头像
@@ -108,41 +120,45 @@ export class UserRepository {
 	async updateUser(body: CreateUserDto & { tags: number[] }) {
 		const { tags, ...userInfo } = body;
 
-		const res = await this.prismaClient.$transaction(async (tx) => {
-			// 更新用户基本信息
-			const user = await tx.user_info.update({
-				where: {
-					id: Number(userInfo.id),
-				},
-				data: {
-					...userInfo,
-				},
-			});
-
-			// 删除旧的标签关联
-			await tx.user_tag.deleteMany({
-				where: {
-					user_id: Number(userInfo.id),
-				},
-			});
-
-			// 创建新的标签关联
-			if (tags && tags.length > 0) {
-				const tagNumbers = tags.map((tag_id) => ({
-					user_id: Number(userInfo.id),
-					tag_id,
-				}));
-
-				await tx.user_tag.createMany({
-					data: tagNumbers,
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 更新用户基本信息
+				const user = await tx.user_info.update({
+					where: {
+						id: Number(userInfo.id),
+					},
+					data: {
+						...userInfo,
+					},
 				});
-			}
 
-			return user;
-		});
+				// 删除旧的标签关联
+				await tx.user_tag.deleteMany({
+					where: {
+						user_id: Number(userInfo.id),
+					},
+				});
 
-		return res
-			? returnData(StatusCode.SUCCESS, '修改成功！', res)
-			: returnData(StatusCode.FAIL, '修改失败！', null);
+				// 创建新的标签关联
+				if (tags && tags.length > 0) {
+					const tagNumbers = tags.map((tag_id) => ({
+						user_id: Number(userInfo.id),
+						tag_id,
+					}));
+
+					await tx.user_tag.createMany({
+						data: tagNumbers,
+					});
+				}
+
+				return user;
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '修改成功！', res)
+				: returnData(StatusCode.FAIL, '修改失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '修改失败！', null);
+		}
 	}
 }

@@ -11,46 +11,54 @@ export class TagRepository {
 	async findAllTag(query: FindAllReq) {
 		const { name, pageNumber, pageSize } = query;
 
-		const [records, total] = await Promise.all([
-			this.prismaClient.tag.findMany({
-				skip: (Number(pageNumber) - 1) * Number(pageSize),
-				take: Number(pageSize),
-				where: {
-					name: {
-						contains: name,
+		try {
+			const [records, total] = await Promise.all([
+				this.prismaClient.tag.findMany({
+					skip: (Number(pageNumber) - 1) * Number(pageSize),
+					take: Number(pageSize),
+					where: {
+						name: {
+							contains: name,
+						},
 					},
-				},
-			}),
-			this.prismaClient.tag.count({
-				where: {
-					name: {
-						contains: name,
+				}),
+				this.prismaClient.tag.count({
+					where: {
+						name: {
+							contains: name,
+						},
 					},
-				},
-			}),
-		]);
+				}),
+			]);
 
-		return records
-			? returnData(StatusCode.SUCCESS, '查询成功！', {
-				records,
-				total,
-			})
-			: returnData(StatusCode.FAIL, '查询失败！', null);
+			return records
+				? returnData(StatusCode.SUCCESS, '查询成功！', {
+					records,
+					total,
+				})
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
 	}
 
 	// 分类型查询标签
 	async findTag(query: FindReq) {
 		const { type } = query;
 
-		const records = await this.prismaClient.tag.findMany({
-			where: {
-				type,
-			},
-		});
+		try {
+			const records = await this.prismaClient.tag.findMany({
+				where: {
+					type,
+				},
+			});
 
-		return records
-			? returnData(StatusCode.SUCCESS, '查询成功！', records)
-			: returnData(StatusCode.FAIL, '查询失败！', null);
+			return records
+				? returnData(StatusCode.SUCCESS, '查询成功！', records)
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
 	}
 
 	// 创建标签
