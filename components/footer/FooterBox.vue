@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import BiliIcon from './utils/bilibili';
 
+const { userInfo } = storeToRefs(useBlogUserInfo());
 const nowYear = computed(() => new Date().getFullYear());
 </script>
 
@@ -17,7 +18,7 @@ const nowYear = computed(() => new Date().getFullYear());
 				rel="noopener noreferrer" class="mr-4 flex items-center gap-2">
 				<BiliIcon icon-class="hidden sm:block" text-class="hidden sm:block text-xs" />
 			</a>
-			<span class="text-xs">Copyright © {{ nowYear }} Josef Joestar</span>
+			<span class="text-xs">Copyright © {{ nowYear }} {{ userInfo?.pet_name }}</span>
 		</div>
 	</div>
 </template>
