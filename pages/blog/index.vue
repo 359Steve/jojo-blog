@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { AnimationRevealOnScroll, ElInput } from '~/.nuxt/components';
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { StackColor } from '~/types/com-types';
@@ -14,17 +13,12 @@ const { data } = await useAsyncData('publicQueryBlogList', () =>
 );
 const blogList = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
 const search = ref<string>('');
-const inputShow = ref<boolean>(false);
-const inputEl = ref<InstanceType<typeof ElInput> | null>(null);
-const animationEl = ref<InstanceType<typeof AnimationRevealOnScroll> | null>(null);
+const inputEl = ref<any>(null);
+const animationEl = ref<any>(null);
 const coincidence = ref<boolean>(true);
 
 let parentBounds: ReturnType<typeof useElementBounding>;
 let childBounds: ReturnType<typeof useElementBounding>;
-
-const controlInput = (): void => {
-	inputShow.value = !inputShow.value;
-};
 
 const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): void => {
 	useBlog().setCurrentBlog(blog);
@@ -64,26 +58,8 @@ watch(coincidence, () => {
 
 <template>
 	<AnimationRevealOnScroll ref="animationEl" animation-class="animate__fadeInDown"
-		base-class="reactive mb-10 flex items-center justify-between overflow-hidden rounded-base">
-		<h1 class="bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl lg:text-4xl">
-			What I've been working on
-		</h1>
-		<ElInput ref="inputEl" v-model="search" placeholder="Search" size="large"
-			:class="inputShow ? 'translate-x-0' : 'translate-x-full'" @blur="inputShow = false">
-			<template #append>
-				<i class="ri-search-eye-line bg-gradient-to-r bg-clip-text text-xl font-black text-black md:text-2xl"
-					@mousedown.prevent />
-			</template>
-		</ElInput>
-		<div class="absolute right-0 flex aspect-square h-full cursor-pointer items-center justify-center rounded-base border-none shadow-none transition hover:bg-neutral-100 hover:text-black"
-			:class="[
-				// 显示隐藏控制
-				inputShow && !coincidence ? 'hidden' : 'block',
-				// 背景色逻辑
-				inputShow || !coincidence ? 'bg-neutral-100 text-black' : '',
-			]" @click="controlInput">
-			<i class="ri-search-eye-line bg-gradient-to-r bg-clip-text text-xl font-black md:text-2xl" />
-		</div>
+		base-class="reactive mb-4 flex items-center justify-between overflow-hidden rounded-base">
+		<ElInput id="elinput" ref="inputEl" v-model="search" placeholder="请输入搜索关键字" size="large" />
 	</AnimationRevealOnScroll>
 	<div class="w-full">
 		<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
@@ -136,7 +112,7 @@ watch(coincidence, () => {
 
 <style lang="postcss" scoped>
 :deep(.el-input) {
-	@apply absolute left-0 top-0 h-full w-full transition-all delay-100;
+	@apply h-full w-full;
 }
 
 :deep(.el-input-group__append) {
