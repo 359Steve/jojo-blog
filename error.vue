@@ -5,7 +5,6 @@ const { error } = defineProps({
 	error: Object as () => NuxtError,
 });
 
-console.log(error);
 const name = ref<string>('');
 const email = ref<string>('');
 const content = ref<string>('');
