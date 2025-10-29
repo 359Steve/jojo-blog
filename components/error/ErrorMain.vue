@@ -1,10 +1,10 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div class="w-full">
-		<section class="flex h-[100vh] w-full items-center justify-center font-serif">
+	<div class="h-full w-full">
+		<section class="flex h-full w-full justify-center font-serif">
 			<div class="container mx-auto">
-				<div class="flex justify-center">
+				<div class="flex h-full items-center justify-center">
 					<slot name="error" />
 				</div>
 			</div>
