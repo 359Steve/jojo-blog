@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const userInfo = reactive(useVueStarport().getUserInfo());
+const { userInfo } = storeToRefs(useBlogUserInfo());
 </script>
 
 <template>
@@ -20,10 +20,10 @@ const userInfo = reactive(useVueStarport().getUserInfo());
 				</AnimationRevealOnScroll>
 				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'"
 					base-class="'flex items-center text-sm lg:text-base font-normal text-secondary mt-4'">
-					<span>{{ userInfo.sign }}</span>
+					<span>{{ userInfo?.sign }}</span>
 				</AnimationRevealOnScroll>
 				<div class="mt-4 flex w-full items-center gap-2">
-					<AnimationRevealOnScroll v-for="item in userInfo.tags" :key="item.tag_id"
+					<AnimationRevealOnScroll v-for="item in userInfo?.tags" :key="item.tag_id"
 						animation-class="'animate__fadeInDown'" base-class="'w-fit'">
 						<a :href="item.tag.url" target="_blank" rel="noopener noreferrer" class="button">
 							<ElButton size="default">

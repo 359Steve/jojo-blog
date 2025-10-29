@@ -4,6 +4,7 @@ const rect = ref<DOMRect>();
 const theta = ref<number>(0);
 const directionClass = ref<string>('');
 const isSm = ref<boolean>(false);
+const { getBlogUserInfo } = useBlogUserInfo();
 
 const timelineData = reactive<Timeline[]>([
 	{
@@ -36,9 +37,8 @@ const timelineData = reactive<Timeline[]>([
 	},
 ]);
 
-const { data: user } = await useAsyncData('user', () => findPublicUser());
 const userInfo = reactive(
-	user.value?.data ?? {
+	getBlogUserInfo() ?? {
 		user_name: '',
 		avatar_url: '',
 		pet_name: '',
@@ -92,7 +92,6 @@ const detailRecord = async (_item: Timeline) => {
 
 onMounted(() => {
 	nextTick(() => {
-		useVueStarport().setUserInfo(userInfo);
 		// 获取页面宽度
 		const el = document.documentElement.getBoundingClientRect();
 		isSm.value = el.width <= 640;
