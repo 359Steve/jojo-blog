@@ -42,6 +42,7 @@ export default defineNuxtConfig({
 		'~/plugins/vueStarport.ts',
 		'~/plugins/iconify.ts',
 		'~/plugins/mdEditor.ts',
+		'~/plugins/getUser.ts',
 		'~/plugins/preventDefault.client.ts',
 	],
 	pages: true,
