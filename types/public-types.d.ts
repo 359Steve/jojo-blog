@@ -28,7 +28,8 @@ declare global {
 	}
 
 	declare interface Summary {
-		id: string;
+		id: number;
+		groupId: number;
 		icon: string;
 		title: string;
 		summary: string;
@@ -36,7 +37,7 @@ declare global {
 	}
 
 	declare interface RecordSummary {
-		id: string;
+		id: number;
 		timeRange: string;
 		title: string;
 		role: string;
