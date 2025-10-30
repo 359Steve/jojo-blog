@@ -69,3 +69,33 @@ model user_tag {
 
     @@id([user_id, tag_id])
 }
+
+model record_group {
+    id         Int      @id @default(autoincrement())
+    time_range Int      @unique
+    title      String   @db.VarChar(255)
+    role       String   @db.VarChar(255)
+    summary    String   @db.Text
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    details record_detail[]
+
+    @@map("record_groups")
+}
+
+model record_detail {
+    id         Int      @id @default(autoincrement())
+    group_id   Int
+    title      String   @db.VarChar(100)
+    summary    String   @db.Text
+    time_range String   @db.VarChar(20)
+    image_url  String   @db.VarChar(500)
+    image_alt  String   @db.VarChar(200)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    group record_group @relation(fields: [group_id], references: [id], onDelete: Cascade)
+
+    @@map("record_details")
+}
