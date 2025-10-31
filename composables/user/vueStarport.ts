@@ -1,23 +1,17 @@
-export const useVueStarport = defineStore(
-	'vueStarport',
-	() => {
-		const isRound = ref<boolean>(false);
+export const useVueStarport = defineStore('vueStarport', () => {
+	const isRound = ref<boolean>(false);
 
-		const getIsRound = (): boolean => {
-			return isRound.value;
-		};
+	const getIsRound = (): boolean => {
+		return isRound.value;
+	};
 
-		const setIsRound = (value: boolean): void => {
-			isRound.value = value;
-		};
+	const setIsRound = (value: boolean): void => {
+		isRound.value = value;
+	};
 
-		return {
-			isRound,
-			setIsRound,
-			getIsRound,
-		};
-	},
-	{
-		persist: true,
-	},
-);
+	return {
+		isRound,
+		setIsRound,
+		getIsRound,
+	};
+});
