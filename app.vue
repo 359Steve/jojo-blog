@@ -15,6 +15,7 @@ onBeforeUnmount(() => {
 	window.removeEventListener('scroll', handleScroll);
 	// 还原数据
 	useAdminMenu().reset();
+	useVueStarport().setIsRound(false);
 });
 </script>
 
