@@ -11,21 +11,21 @@ definePageMeta({
 		try {
 			const blog = await getBlogById(Number(route.query.id));
 			if (blog) {
-				useBlog().setCurrentBlog(blog.data);
+				useAdminBlog().setCurrentBlog(blog.data);
 				return true;
 			} else {
-				useBlog().resetCurrentBlog();
+				useAdminBlog().resetCurrentBlog();
 				return false;
 			}
 		} catch (error) {
-			useBlog().resetCurrentBlog();
+			useAdminBlog().resetCurrentBlog();
 			return false;
 		}
 	},
 });
 
-const { resetCurrentBlog } = useBlog();
-const { currentBlog } = storeToRefs(useBlog());
+const { resetCurrentBlog } = useAdminBlog();
+const { currentBlog } = storeToRefs(useAdminBlog());
 const frontImage = ref<FormData | null>(null);
 const upload = templateRef('upload');
 // 初始化表单数据
