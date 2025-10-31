@@ -1,7 +1,7 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
-export const useBlog = defineStore('useBlog', () => {
+export const useAdminBlog = defineStore('useAdminBlog', () => {
 	const currentBlog = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'> | null>(null);
 
 	const setCurrentBlog = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'> | null) => {
