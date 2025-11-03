@@ -35,3 +35,14 @@ export const updateGroup = async (data: CreateGroupDto) => {
 
 	return handleApiResponse(res);
 };
+
+// 删除分组
+export const deleteGroup = async (id: number) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchDeleteApi<{ id: number }, CreateGroupDto>('/record/group/groupDelete', {
+			body: { id },
+		}),
+	);
+
+	return handleApiResponse(res);
+};
