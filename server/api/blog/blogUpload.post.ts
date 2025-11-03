@@ -2,9 +2,8 @@ import { container } from '~/server/core/container';
 import { BlogService } from '~/server/services/BlogService';
 
 export default defineEventHandler(async (event) => {
-	const blogService = container.get(BlogService);
-
 	try {
+		const blogService = container.get(BlogService);
 		const files = await readMultipartFormData(event);
 
 		if (!files || files.length === 0) {

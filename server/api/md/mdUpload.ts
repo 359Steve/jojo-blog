@@ -2,9 +2,8 @@ import { container } from '~/server/core/container';
 import { MdService } from '~/server/services/MdService';
 
 export default defineEventHandler(async (event) => {
-	const mdService = container.get(MdService);
-
 	try {
+		const mdService = container.get(MdService);
 		const files = await readMultipartFormData(event);
 
 		if (!files || files.length === 0) {

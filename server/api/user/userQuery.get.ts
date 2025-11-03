@@ -3,11 +3,11 @@ import { UserService } from '../../services/UserService';
 import { sendErrorWithMessage } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-	const userService = container.get(UserService);
 	// 读取qeruy参数
 	const { user_name } = getQuery<{ user_name: string }>(event);
 
 	try {
+		const userService = container.get(UserService);
 		// 查询用户信息
 		return await userService.findUser(user_name);
 	} catch {

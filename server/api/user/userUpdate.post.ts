@@ -3,7 +3,6 @@ import { type CreateUserDto, CreateUserSchema } from '~/server/dto/CreateUserDto
 import { UserService } from '~/server/services/UserService';
 
 export default defineEventHandler(async (event) => {
-	const userService = container.get(UserService);
 	const body = await readBody<CreateUserDto & { tags: number[] }>(event);
 
 	const result = validateData(CreateUserSchema, body, (value: string) => {
@@ -12,6 +11,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
+		const userService = container.get(UserService);
 		return await userService.updateUser({ ...result, tags: body.tags });
 	} catch {
 		sendErrorWithMessage(event, 500, '更新失败');

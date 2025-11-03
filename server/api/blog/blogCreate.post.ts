@@ -4,7 +4,6 @@ import { CreateBlogSchema } from '~/server/dto/CreateBlogDto';
 import { BlogService } from '~/server/services/BlogService';
 
 export default defineEventHandler(async (event) => {
-	const blogService = container.get(BlogService);
 	const body = await readBody<CreateBlogDto>(event);
 
 	const result = validateData(CreateBlogSchema, body, (value: string) => {
@@ -13,6 +12,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
+		const blogService = container.get(BlogService);
 		return await blogService.createBlog(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '创建失败！');
