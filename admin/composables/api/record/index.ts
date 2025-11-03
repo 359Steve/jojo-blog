@@ -24,3 +24,14 @@ export const createGroup = async (data: CreateGroupDto) => {
 
 	return handleApiResponse(res);
 };
+
+// 修改分组
+export const updateGroup = async (data: CreateGroupDto) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchPostApi<CreateGroupDto, CreateGroupDto>('/record/group/groupUpdate', {
+			body: data,
+		}),
+	);
+
+	return handleApiResponse(res);
+};
