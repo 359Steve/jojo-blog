@@ -11,4 +11,9 @@ export class GroupService {
 	async createGroup(data: CreateGroupDto) {
 		return await this.groupRepo.createGroup(data);
 	}
+
+	// 查询全部分组
+	async getAllGroups(query: Omit<FindAllReq, 'name'>) {
+		return await this.groupRepo.getAllGroups(query);
+	}
 }
