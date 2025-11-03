@@ -16,4 +16,10 @@ export class GroupService {
 	async getAllGroups(query: Omit<FindAllReq, 'name'>) {
 		return await this.groupRepo.getAllGroups(query);
 	}
+
+	// 更新分组
+	async updateGroup(data: Partial<CreateGroupDto>) {
+		return await this.groupRepo.updateGroup(data);
+	}
+
 }
