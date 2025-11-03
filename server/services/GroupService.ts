@@ -22,4 +22,8 @@ export class GroupService {
 		return await this.groupRepo.updateGroup(data);
 	}
 
+	// 删除分组
+	async deleteGroup(id: number) {
+		return await this.groupRepo.deleteGroup(id);
+	}
 }
