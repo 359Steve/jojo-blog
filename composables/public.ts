@@ -96,3 +96,36 @@ export const handleApiResponse = <T>(res: NewResponse<T>): { data: T | null; msg
 		msg: res?.msg || '请求失败',
 	};
 };
+
+// 封装不同环境请求
+export const chooseCondition = <Req, Rep>(endpoint: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET') => {
+	return async (data?: Req) => {
+		const res = await jojoLoadingIndicator(() => {
+			if (import.meta.server) {
+				switch (method) {
+					case 'GET':
+						return useGet<Req, Rep>(endpoint, { query: data });
+					case 'POST':
+						return postApi<Req, Rep>(endpoint, { body: data });
+					case 'DELETE':
+						return deleteApi<Req, Rep>(endpoint, { body: data });
+					default:
+						return useGet<Req, Rep>(endpoint, { query: data });
+				}
+			} else {
+				switch (method) {
+					case 'GET':
+						return fetchUseGet<Req, Rep>(endpoint, { query: data });
+					case 'POST':
+						return fetchPostApi<Req, Rep>(endpoint, { body: data });
+					case 'DELETE':
+						return fetchDeleteApi<Req, Rep>(endpoint, { body: data });
+					default:
+						return fetchUseGet<Req, Rep>(endpoint, { query: data });
+				}
+			}
+		});
+
+		return handleApiResponse(res);
+	};
+};
