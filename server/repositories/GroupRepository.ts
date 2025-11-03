@@ -47,8 +47,9 @@ export class GroupRepository {
 	}
 
 	// 更新分组
-	async updateGroup(id: number, data: Partial<CreateGroupDto>) {
+	async updateGroup(data: Partial<CreateGroupDto>) {
 		try {
+			const { id } = data;
 			const res = await this.prismaClient.record_group.update({
 				where: { id },
 				data,
