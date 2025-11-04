@@ -1,5 +1,15 @@
 <script lang="ts" setup>
 import type { CreateGroupDto } from '~/server/dto/CreateGroupDto';
+import { ElFormItem, type FormRules } from 'element-plus';
+
+const pageSize = ref<number>(10);
+const pageNumber = ref<number>(1);
+const loading = ref<boolean>(false);
+const isEdit = ref<boolean>(false);
+const ruleFormRef = templateRef('ruleFormRef');
+const { data } = await useAsyncData('recordGroups', () => queryGroupAll(pageNumber.value, pageSize.value));
+const tableData = ref<CreateGroupDto[]>(data.value?.data?.records || []);
+const total = ref<number>(data.value?.data?.total || 0);
 
 const formData = reactive<CreateGroupDto>({
 	time_range: '',
@@ -8,15 +18,106 @@ const formData = reactive<CreateGroupDto>({
 	summary: '',
 });
 
-const saveGroup = async () => {
-	const res = await createGroup(formData);
-	console.log('创建分组结果：', res);
+const createRules = reactive<FormRules>({
+	time_range: [{ required: true, message: '请选择年份', trigger: 'blur' }],
+	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+	role: [{ required: true, message: '请输入角色/简介', trigger: 'blur' }],
+	summary: [{ required: true, message: '请输入描述', trigger: 'blur' }],
+});
+
+// 重置表单
+const resetForm = () => {
+	isEdit.value = false;
+	formData.id = undefined;
+	formData.time_range = '';
+	formData.title = '';
+	formData.role = '';
+	formData.summary = '';
+	ruleFormRef.value?.resetFields?.();
 };
 
+// 查询函数
+const queryGroups = async (page = 1, size = 10) => {
+	loading.value = true;
+	try {
+		const res = await queryGroupAll(page, size);
+		tableData.value = res.data?.records || [];
+		total.value = res.data?.total || 0;
+	} catch (err) {
+		ElMessage.error('查询分组失败');
+	} finally {
+		loading.value = false;
+	}
+};
+
+const handleSizeChange = (val: number) => {
+	pageSize.value = val;
+	pageNumber.value = 1;
+	queryGroups(1, val);
+};
+
+// 分页
+const handleCurrentChange = (val: number) => {
+	pageNumber.value = val;
+	queryGroups(val, pageSize.value);
+};
+
+// 编辑分组
+const goEdit = (row: CreateGroupDto) => {
+	isEdit.value = true;
+	formData.id = row.id;
+	formData.time_range = row.time_range;
+	formData.title = row.title;
+	formData.role = row.role;
+	formData.summary = row.summary;
+};
+
+// 新增/修改
+const saveGroup = async (formEl: any) => {
+	formEl?.validate(async (valid: boolean) => {
+		if (valid) {
+			loading.value = true;
+			try {
+				if (isEdit.value && formData.id) {
+					const res = await updateGroup(formData);
+					ElMessage({ type: res.data ? 'success' : 'error', message: res.msg });
+					if (res.data) {
+						resetForm();
+						queryGroups(pageNumber.value, pageSize.value);
+					}
+				} else {
+					const res = await createGroup(formData);
+					ElMessage({ type: res.data ? 'success' : 'error', message: res.msg });
+					if (res.data) {
+						resetForm();
+						queryGroups(pageNumber.value, pageSize.value);
+					}
+				}
+			} finally {
+				loading.value = false;
+			}
+		}
+	});
+};
+
+// 删除分组
+const handleDelete = async (id: number) => {
+	useConfirm('删除分组', 'warning', async () => {
+		const res = await deleteGroup(id);
+		if (res.data) {
+			ElMessage.success('删除成功');
+			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
+			queryGroups(pageNumber.value, pageSize.value);
+		} else {
+			ElMessage.error(res.msg || '删除失败');
+		}
+	});
+};
+
+// 格式化年份
 const handleDateChange = (value: string) => {
-	const date = new Date(value);
-	const year = date.getFullYear();
-	formData.time_range = year.toString();
+	const year = new Date(value).getFullYear().toString();
+	formData.time_range = year;
 };
 </script>
 
@@ -24,26 +125,69 @@ const handleDateChange = (value: string) => {
 	<div class="flex h-full w-full flex-col">
 		<div class="w-full">
 			<h3 class="mb-2 font-bold">分组管理</h3>
-			<ElForm ref="ruleFormRef" :model="formData" :inline="true" class="!w-full">
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="name" label="日期：">
+			<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="createRules" class="!w-full">
+				<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
 					<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
 						@change="handleDateChange" />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="icon" label="标题：">
-					<ElInput v-model="formData.title" placeholder="请输入标题" clearable />
+				<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
+					<ElInput v-model="formData.title" placeholder="请输入标题" />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="url" label="简介：">
-					<ElInput v-model="formData.summary" placeholder="请输入简介" clearable />
+				<ElFormItem prop="role" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="简介：">
+					<ElInput v-model="formData.role" placeholder="请输入简介" />
 				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="type" label="描述：">
-					<ElInput v-model="formData.role" placeholder="请输入描述" clearable />
+				<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="描述：">
+					<ElInput v-model="formData.summary" placeholder="请输入描述" />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full sm:pr-4">
-					<ElButton type="primary" @click="saveGroup">新增</ElButton>
-					<ElButton type="primary">修改</ElButton>
-					<ElButton plain>取消</ElButton>
+					<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">
+						新增
+					</ElButton>
+					<ElButton v-else :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">修改</ElButton>
+					<ElButton v-if="isEdit" plain @click="resetForm">取消</ElButton>
 				</ElFormItem>
 			</ElForm>
+		</div>
+
+		<div class="flex min-h-0 w-full flex-1 flex-col">
+			<div class="mb-2 flex w-full items-center justify-between font-bold">
+				<h3>分组列表</h3>
+			</div>
+			<TableHeight>
+				<template #default="{ height }">
+					<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
+						<ElTableColumn fixed prop="id" label="ID" width="80" />
+						<ElTableColumn prop="time_range" label="年份" width="120" />
+						<ElTableColumn prop="title" label="标题" show-overflow-tooltip />
+						<ElTableColumn prop="role" label="简介" show-overflow-tooltip />
+						<ElTableColumn prop="summary" label="描述" show-overflow-tooltip />
+						<ElTableColumn label="数量" width="120">
+							<template #default="{ row }">
+								<template v-if="row._count">
+									{{ row._count.details }}
+								</template>
+								<template v-else>—</template>
+							</template>
+						</ElTableColumn>
+						<ElTableColumn label="操作" width="220">
+							<template #default="{ row }">
+								<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
+									编辑
+								</ElButton>
+								<ElButton link class="!text-[16px]" type="danger" size="small"
+									@click="handleDelete(row.id)">
+									删除
+								</ElButton>
+							</template>
+						</ElTableColumn>
+					</ElTable>
+				</template>
+			</TableHeight>
+			<div class="mt-2 flex w-full justify-end">
+				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+					@size-change="handleSizeChange" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -53,7 +197,23 @@ const handleDateChange = (value: string) => {
 	@apply flex w-full justify-end;
 }
 
+:deep(.el-form-item__label) {
+	@apply pr-0 text-[16px];
+}
+
+:deep(.el-input__wrapper) {
+	@apply h-[34px] text-[14px];
+}
+
+:deep(.el-select__wrapper) {
+	@apply h-[34px] text-[14px];
+}
+
+:deep(.el-table__inner-wrapper::before) {
+	@apply hidden;
+}
+
 :deep(.el-date-editor) {
-	@apply !w-full;
+	@apply w-full;
 }
 </style>
