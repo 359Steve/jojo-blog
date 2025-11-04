@@ -67,7 +67,7 @@ export class GroupRepository {
 	async deleteGroup(id: number) {
 		try {
 			const res = await this.prismaClient.record_group.delete({
-				where: { id },
+				where: { id: Number(id) },
 			});
 
 			return res
