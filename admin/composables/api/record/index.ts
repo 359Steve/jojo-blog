@@ -40,7 +40,7 @@ export const updateGroup = async (data: CreateGroupDto) => {
 export const deleteGroup = async (id: number) => {
 	const res = await jojoLoadingIndicator(() =>
 		fetchDeleteApi<{ id: number }, CreateGroupDto>('/record/group/groupDelete', {
-			body: { id },
+			query: { id },
 		}),
 	);
 
