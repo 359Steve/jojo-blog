@@ -34,8 +34,18 @@ export class GroupRepository {
 	// 新增分组
 	async createGroup(data: CreateGroupDto) {
 		try {
-			const res = await this.prismaClient.record_group.create({
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 判断当前是否存在同一年份的分组
+				const existingGroup = await tx.record_group.findFirst({
+					where: { time_range: data.time_range },
+				});
+
+				if (existingGroup) {
+					throw new Error('已存在相同年份的分组');
+				}
+				return tx.record_group.create({
 				data,
+				});
 			});
 
 			return res
