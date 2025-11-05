@@ -14,6 +14,13 @@ export class GroupRepository {
 		try {
 			const [records, total] = await Promise.all([
 				this.prismaClient.record_group.findMany({
+					include: {
+						_count: {
+							select: {
+								details: true,
+							},
+						},
+					},
 					skip: (Number(pageNumber) - 1) * Number(pageSize),
 					take: Number(pageSize),
 				}),
@@ -44,7 +51,7 @@ export class GroupRepository {
 					throw new Error('已存在相同年份的分组');
 				}
 				return tx.record_group.create({
-				data,
+					data,
 				});
 			});
 
@@ -85,6 +92,27 @@ export class GroupRepository {
 				: returnData(StatusCode.FAIL, '删除失败！', null);
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '删除失败！', null);
+		}
+	}
+
+	// 查询分组时间范围
+	async getGroupTimeRanges() {
+		try {
+			const records = await this.prismaClient.record_group.findMany({
+				select: {
+					id: true,
+					time_range: true,
+				},
+				orderBy: {
+					time_range: 'desc',
+				},
+			});
+
+			return records
+				? returnData(StatusCode.SUCCESS, '查询成功！', records)
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
 		}
 	}
 }
