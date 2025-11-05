@@ -46,3 +46,12 @@ export const deleteGroup = async (id: number) => {
 
 	return handleApiResponse(res);
 };
+
+// 查询分组时间范围
+export const queryGroupTimeRanges = async () => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchUseGet<null, { id: number; time_range: string }[]>('/record/group/groupQueryTime'),
+	);
+
+	return handleApiResponse(res);
+};
