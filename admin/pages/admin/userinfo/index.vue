@@ -155,10 +155,9 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 <template>
 	<div class="flex h-full w-full flex-col">
 		<h3 class="mb-2 font-bold">个人信息</h3>
-		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" label-width="auto"
-			class="flex flex-1 flex-col">
-			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
-				<ElFormItem label="头像：" prop="avatar_url">
+		<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="updateUserRules" label-width="auto">
+			<div class="w-full">
+				<ElFormItem label="头像：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="avatar_url">
 					<ElUpload ref="upload" class="relative" action="#" list-type="picture-card" :auto-upload="false"
 						:show-file-list="false" :limit="1" :on-change="handleAvatarSuccess">
 						<!-- 上传后显示图片 -->
@@ -177,25 +176,26 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 						</template>
 					</ElUpload>
 				</ElFormItem>
-				<ElFormItem label="名字：" class="flex items-start" prop="user_name">
+				<ElFormItem label="名字：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="user_name">
 					<ElInput v-model="formData.user_name" placeholder="请输入名字" clearable />
 				</ElFormItem>
-				<ElFormItem label="昵称：" prop="pet_name" class="w-full">
+				<ElFormItem label="昵称：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="pet_name">
 					<ElInput v-model="formData.pet_name" placeholder="请输入昵称" clearable />
 				</ElFormItem>
-				<ElFormItem label="新密码：" prop="password" class="w-full">
+				<ElFormItem label="新密码：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="password">
 					<ElInput v-model="formData.password" type="password" placeholder="请输入新密码" clearable />
 				</ElFormItem>
-				<ElFormItem label="签名：" prop="sign" class="w-full">
+				<ElFormItem label="签名：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="sign">
 					<ElInput v-model="formData.sign" placeholder="请输入签名" clearable />
 				</ElFormItem>
-				<ElFormItem label="标签：" prop="tags" class="w-full">
+				<ElFormItem label="标签：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="tags">
 					<SelectTag :tags="formData.tags" type="PERSON" @tag-change="formData.tags = $event" />
 				</ElFormItem>
-				<ElFormItem class="save col-span-1 sm:col-span-2">
+				<ElFormItem class="save !mx-0 !w-full sm:pr-4">
 					<ElButton type="primary" @click="updateUser(ruleFormRef!)">保存</ElButton>
 				</ElFormItem>
 			</div>
+
 			<MdEditHeight>
 				<template #default="{ height }">
 					<ElFormItem label="简介：" class="!mx-0 !mb-0 h-full w-full" prop="describe">
@@ -242,5 +242,9 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 :deep(.el-image) {
 	@apply h-full w-full object-cover;
+}
+
+:deep(.el-form-item__label-wrap) {
+	@apply !h-full;
 }
 </style>
