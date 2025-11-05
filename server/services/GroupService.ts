@@ -26,4 +26,9 @@ export class GroupService {
 	async deleteGroup(id: number) {
 		return await this.groupRepo.deleteGroup(id);
 	}
+
+	// 查询分组时间范围
+	async getGroupTimeRanges() {
+		return await this.groupRepo.getGroupTimeRanges();
+	}
 }
