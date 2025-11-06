@@ -3,6 +3,7 @@ const whitelist = [
 	'/api/blog/blogPublicQuery',
 	'/api/user/user-login',
 	'/api/user/user-register',
+	'/api/record/recordPublicQuery',
 ];
 
 // 白名单路径模式
