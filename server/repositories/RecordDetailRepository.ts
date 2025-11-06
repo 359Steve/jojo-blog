@@ -76,8 +76,22 @@ export class RecordDetailRepository {
 	// 删除记录详情
 	async deleteRecordDetail(id: number) {
 		try {
-			const res = await this.prismaClient.record_detail.delete({
-				where: { id: Number(id) },
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const currentDelete = await tx.record_detail.delete({
+					where: { id: Number(id) },
+				});
+
+				// 删除记录详情图片
+				const imageUrl = currentDelete.image_url;
+				if (imageUrl) {
+					const relativePath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+					const imagePath = join(process.cwd(), 'public', relativePath);
+					if (fs.existsSync(imagePath)) {
+						fs.unlinkSync(imagePath);
+					}
+				}
+
+				return currentDelete;
 			});
 
 			return res
