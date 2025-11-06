@@ -87,8 +87,8 @@ const saveGroup = async (formEl: any) => {
 					}
 				} else {
 					const res = await createGroup(formData);
-					ElMessage({ type: res.data ? 'success' : 'error', message: res.msg });
 					if (res.data) {
+						ElMessage(res.msg);
 						resetForm();
 						queryGroups(pageNumber.value, pageSize.value);
 					}

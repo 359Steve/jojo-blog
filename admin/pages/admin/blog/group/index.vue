@@ -85,7 +85,7 @@ const handleDelete = async (id: number) => {
 				queryBlog(keyword.value, pageNumber.value, pageSize.value);
 			}
 		} catch (error) {
-			ElMessage.error('删除失败，请重试');
+			console.log(error);
 		}
 	});
 };

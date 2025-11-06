@@ -119,12 +119,9 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				// 成功后清理状态并跳转
 				resetCurrentBlog();
 				await navigateTo('/admin/blog/group');
-			} else {
-				ElMessage.error(res?.msg || (isEdit.value ? '更新失败' : '创建失败'));
 			}
 		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : '操作失败，请重试';
-			ElMessage.error(errorMessage);
+			console.log(error);
 		} finally {
 			loading.value = false;
 		}
@@ -184,12 +181,8 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 		if (res.data) {
 			ElMessage.success(`成功上传 ${validFiles.length} 张图片文件`);
 			callback(res.data.urls);
-		} else {
-			throw new Error(res.msg || '上传失败');
 		}
 	} catch (error) {
-		const errorMessage = error instanceof Error ? error.message : '图片上传失败，请重试';
-		ElMessage.error(errorMessage);
 		callback([]);
 	}
 };

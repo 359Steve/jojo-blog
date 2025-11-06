@@ -127,13 +127,6 @@ const handleImageSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) =
 	ElMessage.success('图片选择成功');
 };
 
-// 格式化日期
-const handelTiemchange = (value: string) => {
-	const date = new Date(value);
-	const year = date.getFullYear();
-	formData.time_range = year.toString();
-};
-
 // 保存
 const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
@@ -141,22 +134,13 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 			try {
 				// 如果有新的图片文件需要上传
 				if (imageFile.value && imageFile.value.has('file')) {
-					const { data, msg } = await uploadRecordDetailImage(imageFile.value);
+					const { data } = await uploadRecordDetailImage(imageFile.value);
 
 					if (!data) {
-						ElMessage({
-							type: 'error',
-							message: msg,
-						});
 						return;
 					}
 
 					formData.image_url = data.url;
-				}
-
-				// 处理时间范围
-				if (typeof formData.time_range !== 'string' && formData.time_range) {
-					formData.time_range = new Date(formData.time_range).getFullYear().toString();
 				}
 
 				let res;
@@ -168,12 +152,8 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 					res = await createRecordDetail(formData);
 				}
 
-				ElMessage({
-					type: res.data ? 'success' : 'error',
-					message: res.msg,
-				});
-
 				if (res.data) {
+					ElMessage(res.msg);
 					// 重置表单
 					resetForm();
 					// 刷新列表
@@ -253,6 +233,15 @@ const handleDelete = async (id: number) => {
 	});
 };
 
+// 格式化日期
+const handleDateChange = (value: string) => {
+	const newDate = new Date(value);
+	formData.time_range = `${newDate.getFullYear().toString()}-${(newDate.getMonth() + 1).toString().padStart(2, '0')}-${newDate
+		.getDate()
+		.toString()
+		.padStart(2, '0')}`;
+};
+
 // 取消编辑
 const handleCancel = () => {
 	resetForm();
@@ -303,8 +292,7 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 				<ElInput v-model="formData.image_alt" placeholder="请输入图片描述" />
 			</ElFormItem>
 			<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
-				<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
-					@change="handelTiemchange" />
+				<ElDatePicker v-model="formData.time_range" placeholder="请选择年份" @change="handleDateChange" />
 			</ElFormItem>
 			<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
 				<ElInput v-model="formData.title" placeholder="请输入标题" />
@@ -327,7 +315,7 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
 					<ElTableColumn fixed prop="id" label="ID" width="80" />
 					<ElTableColumn prop="title" label="标题" width="150" show-overflow-tooltip />
-					<ElTableColumn prop="time_range" label="年份" width="100" />
+					<ElTableColumn prop="time_range" label="日期" width="130" />
 					<ElTableColumn label="分组" width="120">
 						<template #default="{ row }">
 							<template v-if="row.group">

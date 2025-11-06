@@ -70,7 +70,7 @@ const queryTag = async (name: string = '', page: number = 1) => {
 		tableData.value = data?.records || [];
 		total.value = data?.total || 0;
 	} catch (error) {
-		ElMessage.error('查询标签失败');
+		console.log(error);
 	} finally {
 		loading.value = false;
 	}
@@ -84,12 +84,8 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 			try {
 				const { data, msg } = await createTags(formData);
 
-				ElMessage({
-					type: data ? 'success' : 'error',
-					message: msg,
-				});
-
 				if (data) {
+					ElMessage(msg);
 					resetForm();
 					queryTag(searchTag.value, pageNumber.value);
 				}
@@ -108,12 +104,8 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 			try {
 				const { data, msg } = await updateTags(formData);
 
-				ElMessage({
-					type: data ? 'success' : 'error',
-					message: msg,
-				});
-
 				if (data) {
+					ElMessage(msg);
 					for (const item of tableData.value) {
 						if (item.id === formData.id) {
 							Object.assign(item, formData);

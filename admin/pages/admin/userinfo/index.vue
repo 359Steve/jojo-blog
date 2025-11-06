@@ -119,13 +119,9 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
 			if (imageFile.value && imageFile.value.has('file')) {
-				const { data, msg } = await uploadAvatar(imageFile.value);
+				const { data } = await uploadAvatar(imageFile.value);
 
 				if (!data) {
-					ElMessage({
-						type: 'error',
-						message: msg,
-					});
 					return;
 				}
 
@@ -134,12 +130,8 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 			const { data: resData, msg: resMsg } = await updataUserInfo(formData);
 
-			ElMessage({
-				type: resData ? 'success' : 'error',
-				message: resMsg,
-			});
-
 			if (resData) {
+				ElMessage(resMsg);
 				const user_name = useCookie('user_name');
 				user_name.value = resData.user_name;
 				useUserinfo().setUserInfo({
