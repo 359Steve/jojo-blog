@@ -57,24 +57,14 @@ export const queryGroupTimeRanges = async () => {
 	return handleApiResponse(res);
 };
 
-// ==== Record Detail APIs ====
-
 // 查询全部记录详情
-export const queryRecordDetailAll = async (page: number = 1, size: number = 10, group_id?: number) => {
-	const queryParams: { pageNumber: number; pageSize: number; group_id?: number } = {
-		pageNumber: page,
-		pageSize: size,
-	};
-	if (group_id) {
-		queryParams.group_id = group_id;
-	}
-
+export const queryRecordDetailAll = async (page: number = 1, size: number = 10) => {
 	const res = await jojoLoadingIndicator(() =>
 		fetchUseGet<
-			{ pageNumber: number; pageSize: number; group_id?: number },
-			{ records: CreateRecordDetailDto[]; total: number }
+			{ pageNumber: number; pageSize: number },
+			{ records: GroupWithDetail<CreateRecordDetailDto>[]; total: number }
 		>('/record/detail/detailQueryAll', {
-			query: queryParams,
+			query: { pageNumber: page, pageSize: size },
 		}),
 	);
 
