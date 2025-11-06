@@ -176,11 +176,9 @@ const handleDateChange = (value: string) => {
 				</ElTable>
 			</template>
 		</TableHeight>
-		<div class="mt-2 flex w-full justify-end">
-			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-				@size-change="handleSizeChange" />
-		</div>
+
+		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
 

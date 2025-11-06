@@ -77,12 +77,8 @@ const handleDelete = async (id: number) => {
 		try {
 			const { data, msg } = await deleteBlog(id);
 
-			ElMessage({
-				type: data ? 'success' : 'error',
-				message: msg,
-			});
-
 			if (data) {
+				ElMessage.success(msg);
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
 					pageNumber.value -= 1;
 				}
@@ -147,11 +143,8 @@ const handleDelete = async (id: number) => {
 			</template>
 		</TableHeight>
 
-		<div class="mt-2 flex justify-end">
-			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-				@size-change="handleSizeChange" />
-		</div>
+		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
 

@@ -50,10 +50,6 @@ const createTagRules = reactive<FormRules>({
 	type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
 });
 
-const isIDisabled = computed(() => {
-	return !formData.name || !formData.icon || !formData.url || !formData.type;
-});
-
 // 重置表单
 const resetForm = () => {
 	formData.name = '';
@@ -71,8 +67,8 @@ const queryTag = async (name: string = '', page: number = 1) => {
 	try {
 		const { data } = await queryTagAll(name, page, pageSize.value);
 
-		tableData.value = data!.records;
-		total.value = data!.total;
+		tableData.value = data?.records || [];
+		total.value = data?.total || 0;
 	} catch (error) {
 		ElMessage.error('查询标签失败');
 	} finally {
@@ -149,14 +145,8 @@ const deleteClick = (value: CreateTagDto): void => {
 	useConfirm('删除标签', 'warning', async () => {
 		try {
 			const { data, msg } = await deleteTags(value.id!);
-
-			ElMessage({
-				type: data ? 'success' : 'error',
-				message: msg,
-			});
-
 			if (data) {
-				// 如果当前页只有一条数据且不是第一页，则回到上一页
+				ElMessage(msg);
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
 					pageNumber.value -= 1;
 				}
@@ -267,11 +257,9 @@ watch(searchTag, (newValue) => {
 				</ElTable>
 			</template>
 		</TableHeight>
-		<div class="mt-2 flex w-full justify-end">
-			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-				@size-change="handleSizeChange" />
-		</div>
+
+		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
 

@@ -242,6 +242,7 @@ const goEdit = (row: any) => {
 const handleDelete = async (id: number) => {
 	useConfirm('删除记录详情', 'warning', async () => {
 		const res = await deleteRecordDetail(id);
+
 		if (res.data) {
 			ElMessage.success('删除成功');
 			if (tableData.value.length === 1 && pageNumber.value > 1) {
@@ -359,11 +360,9 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 				</ElTable>
 			</template>
 		</TableHeight>
-		<div class="mt-2 flex w-full justify-end">
-			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-				@size-change="handleSizeChange" />
-		</div>
+
+		<AdminFormPagination :total="detailData?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
 
