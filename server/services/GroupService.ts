@@ -31,4 +31,9 @@ export class GroupService {
 	async getGroupTimeRanges() {
 		return await this.groupRepo.getGroupTimeRanges();
 	}
+
+	// 查询公共分组数据
+	async getPublicGroups(keyword?: string) {
+		return await this.groupRepo.getPublicGroups(keyword);
+	}
 }
