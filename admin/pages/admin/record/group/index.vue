@@ -122,74 +122,66 @@ const handleDateChange = (value: string) => {
 </script>
 
 <template>
-	<div class="flex h-full w-full flex-col">
-		<div class="w-full">
-			<h3 class="mb-2 font-bold">分组管理</h3>
-			<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="createRules" class="!w-full">
-				<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
-					<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
-						@change="handleDateChange" />
-				</ElFormItem>
-				<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
-					<ElInput v-model="formData.title" placeholder="请输入标题" />
-				</ElFormItem>
-				<ElFormItem prop="role" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="简介：">
-					<ElInput v-model="formData.role" placeholder="请输入简介" />
-				</ElFormItem>
-				<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="描述：">
-					<ElInput v-model="formData.summary" placeholder="请输入描述" />
-				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:pr-4">
-					<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">
-						新增
-					</ElButton>
-					<ElButton v-else :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">修改</ElButton>
-					<ElButton v-if="isEdit" plain @click="resetForm">取消</ElButton>
-				</ElFormItem>
-			</ElForm>
-		</div>
+	<AdminFormMain title="分组管理">
+		<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="createRules" class="!w-full">
+			<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
+				<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
+					@change="handleDateChange" />
+			</ElFormItem>
+			<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
+				<ElInput v-model="formData.title" placeholder="请输入标题" />
+			</ElFormItem>
+			<ElFormItem prop="role" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="简介：">
+				<ElInput v-model="formData.role" placeholder="请输入简介" />
+			</ElFormItem>
+			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="描述：">
+				<ElInput v-model="formData.summary" placeholder="请输入描述" />
+			</ElFormItem>
+			<ElFormItem class="!mx-0 !w-full sm:pr-4">
+				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">
+					新增
+				</ElButton>
+				<ElButton v-else :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">修改</ElButton>
+				<ElButton v-if="isEdit" plain @click="resetForm">取消</ElButton>
+			</ElFormItem>
+		</ElForm>
 
-		<div class="flex min-h-0 w-full flex-1 flex-col">
-			<div class="mb-2 flex w-full items-center justify-between font-bold">
-				<h3>分组列表</h3>
-			</div>
-			<TableHeight>
-				<template #default="{ height }">
-					<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
-						<ElTableColumn fixed prop="id" label="ID" width="80" />
-						<ElTableColumn prop="time_range" label="年份" width="120" />
-						<ElTableColumn prop="title" label="标题" show-overflow-tooltip />
-						<ElTableColumn prop="role" label="简介" show-overflow-tooltip />
-						<ElTableColumn prop="summary" label="描述" show-overflow-tooltip />
-						<ElTableColumn label="数量" width="120">
-							<template #default="{ row }">
-								<template v-if="row._count">
-									{{ row._count.details }}
-								</template>
-								<template v-else>—</template>
+		<TableHeight>
+			<template #default="{ height }">
+				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
+					<ElTableColumn fixed prop="id" label="ID" width="80" />
+					<ElTableColumn prop="time_range" label="年份" width="120" />
+					<ElTableColumn prop="title" label="标题" show-overflow-tooltip />
+					<ElTableColumn prop="role" label="简介" show-overflow-tooltip />
+					<ElTableColumn prop="summary" label="描述" show-overflow-tooltip />
+					<ElTableColumn label="数量" width="120">
+						<template #default="{ row }">
+							<template v-if="row._count">
+								{{ row._count.details }}
 							</template>
-						</ElTableColumn>
-						<ElTableColumn label="操作" width="220">
-							<template #default="{ row }">
-								<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
-									编辑
-								</ElButton>
-								<ElButton link class="!text-[16px]" type="danger" size="small"
-									@click="handleDelete(row.id)">
-									删除
-								</ElButton>
-							</template>
-						</ElTableColumn>
-					</ElTable>
-				</template>
-			</TableHeight>
-			<div class="mt-2 flex w-full justify-end">
-				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-					@size-change="handleSizeChange" />
-			</div>
+							<template v-else>—</template>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn label="操作" width="220">
+						<template #default="{ row }">
+							<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
+								编辑
+							</ElButton>
+							<ElButton link class="!text-[16px]" type="danger" size="small"
+								@click="handleDelete(row.id)">
+								删除
+							</ElButton>
+						</template>
+					</ElTableColumn>
+				</ElTable>
+			</template>
+		</TableHeight>
+		<div class="mt-2 flex w-full justify-end">
+			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+				@size-change="handleSizeChange" />
 		</div>
-	</div>
+	</AdminFormMain>
 </template>
 
 <style lang="postcss" scoped>

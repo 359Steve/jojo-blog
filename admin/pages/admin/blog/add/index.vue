@@ -288,8 +288,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<div class="flex h-full w-full flex-col">
-		<h3 class="mb-2 font-bold">{{ isEdit ? '编辑博客' : '新增博客' }}</h3>
+	<AdminFormMain :title="isEdit ? '编辑博客' : '新增博客'">
 		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createBlogRules" class="!w-full">
 			<div class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
 				<ElFormItem label="封面：" prop="front_cover">
@@ -343,7 +342,7 @@ onBeforeUnmount(() => {
 				</template>
 			</MdEditHeight>
 		</ElForm>
-	</div>
+	</AdminFormMain>
 </template>
 
 <style lang="postcss" scoped>

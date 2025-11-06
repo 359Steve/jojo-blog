@@ -272,104 +272,99 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 </script>
 
 <template>
-	<div class="flex h-full w-full flex-col">
-		<div class="w-full">
-			<h3 class="mb-2 font-bold">文章管理</h3>
-			<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" :inline="true" class="!w-full"
-				label-width="100px">
-				<ElFormItem prop="image_url" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="照片：">
-					<ElUpload ref="upload" class="relative" action="#" list-type="picture-card"
-						:on-change="handleImageSuccess" :auto-upload="false" :show-file-list="false" :limit="1"
-						accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
-						<!-- 上传后显示图片 -->
-						<template v-if="formData.image_url">
-							<div class="group absolute h-full w-full" @click.stop>
-								<ElImage :src="formData.image_url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-									:preview-src-list="[formData.image_url]" show-progress fit="cover" />
-								<Icon
-									class="absolute right-1 top-1 cursor-pointer text-[20px] text-admin-tag-active-text transition sm:opacity-0 sm:group-hover:text-admin-tag-active-text sm:group-hover:opacity-100"
-									icon="mdi:close" @click="handleRemove" />
-							</div>
-						</template>
-						<!-- 上传前显示加号 -->
-						<template v-else>
-							<Icon class="text-[40px] text-gray-400" icon="mdi:add" />
-						</template>
-					</ElUpload>
-				</ElFormItem>
-				<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="详情：">
-					<ElInput v-model="formData.summary" type="textarea" :rows="6" placeholder="请输入详情" />
-				</ElFormItem>
-				<ElFormItem prop="image_alt" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="图片描述：">
-					<ElInput v-model="formData.image_alt" placeholder="请输入图片描述" />
-				</ElFormItem>
-				<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
-					<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
-						@change="handelTiemchange" />
-				</ElFormItem>
-				<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
-					<ElInput v-model="formData.title" placeholder="请输入标题" />
-				</ElFormItem>
-				<ElFormItem prop="group_id" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="汇总：">
-					<ElSelect v-model="groupId" placeholder="请选择汇总" @change="(event) => (formData.group_id = event)">
-						<ElOption v-for="item in selectData" :key="item.id" :label="item.time_range" :value="item.id" />
-					</ElSelect>
-				</ElFormItem>
-				<ElFormItem class="button-end !mx-0 !w-full sm:pr-4">
-					<ElButton type="primary" @click="saveArticle(ruleFormRef!)">
-						{{ isEdit ? '修改' : '新增' }}
-					</ElButton>
-					<ElButton v-if="isEdit" plain @click="handleCancel">取消</ElButton>
-				</ElFormItem>
-			</ElForm>
-		</div>
+	<AdminFormMain title="文章管理">
+		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" :inline="true" class="!w-full"
+			label-width="100px">
+			<ElFormItem prop="image_url" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="照片：">
+				<ElUpload ref="upload" class="relative" action="#" list-type="picture-card"
+					:on-change="handleImageSuccess" :auto-upload="false" :show-file-list="false" :limit="1"
+					accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+					<!-- 上传后显示图片 -->
+					<template v-if="formData.image_url">
+						<div class="group absolute h-full w-full" @click.stop>
+							<ElImage :src="formData.image_url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+								:preview-src-list="[formData.image_url]" show-progress fit="cover" />
+							<Icon
+								class="absolute right-1 top-1 cursor-pointer text-[20px] text-admin-tag-active-text transition sm:opacity-0 sm:group-hover:text-admin-tag-active-text sm:group-hover:opacity-100"
+								icon="mdi:close" @click="handleRemove" />
+						</div>
+					</template>
+					<!-- 上传前显示加号 -->
+					<template v-else>
+						<Icon class="text-[40px] text-gray-400" icon="mdi:add" />
+					</template>
+				</ElUpload>
+			</ElFormItem>
+			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="详情：">
+				<ElInput v-model="formData.summary" type="textarea" :rows="6" placeholder="请输入详情" />
+			</ElFormItem>
+			<ElFormItem prop="image_alt" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="图片描述：">
+				<ElInput v-model="formData.image_alt" placeholder="请输入图片描述" />
+			</ElFormItem>
+			<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
+				<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
+					@change="handelTiemchange" />
+			</ElFormItem>
+			<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
+				<ElInput v-model="formData.title" placeholder="请输入标题" />
+			</ElFormItem>
+			<ElFormItem prop="group_id" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="汇总：">
+				<ElSelect v-model="groupId" placeholder="请选择汇总" @change="(event) => (formData.group_id = event)">
+					<ElOption v-for="item in selectData" :key="item.id" :label="item.time_range" :value="item.id" />
+				</ElSelect>
+			</ElFormItem>
+			<ElFormItem class="button-end !mx-0 !w-full sm:pr-4">
+				<ElButton type="primary" @click="saveArticle(ruleFormRef!)">
+					{{ isEdit ? '修改' : '新增' }}
+				</ElButton>
+				<ElButton v-if="isEdit" plain @click="handleCancel">取消</ElButton>
+			</ElFormItem>
+		</ElForm>
 
-		<div class="flex min-h-0 w-full flex-1 flex-col">
-			<TableHeight>
-				<template #default="{ height }">
-					<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
-						<ElTableColumn fixed prop="id" label="ID" width="80" />
-						<ElTableColumn prop="title" label="标题" width="150" show-overflow-tooltip />
-						<ElTableColumn prop="time_range" label="年份" width="100" />
-						<ElTableColumn label="分组" width="120">
-							<template #default="{ row }">
-								<template v-if="row.group">
-									{{ row.group.time_range }}
-								</template>
-								<template v-else>—</template>
+		<TableHeight>
+			<template #default="{ height }">
+				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
+					<ElTableColumn fixed prop="id" label="ID" width="80" />
+					<ElTableColumn prop="title" label="标题" width="150" show-overflow-tooltip />
+					<ElTableColumn prop="time_range" label="年份" width="100" />
+					<ElTableColumn label="分组" width="120">
+						<template #default="{ row }">
+							<template v-if="row.group">
+								{{ row.group.time_range }}
 							</template>
-						</ElTableColumn>
-						<ElTableColumn prop="summary" label="详情" show-overflow-tooltip />
-						<ElTableColumn label="图片" width="100">
-							<template #default="{ row }">
-								<template v-if="row.image_url">
-									<ElImage :src="row.image_url" fit="cover" class="!h-10 !w-10 rounded" />
-								</template>
-								<template v-else>—</template>
+							<template v-else>—</template>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn prop="summary" label="详情" show-overflow-tooltip />
+					<ElTableColumn label="图片" width="100">
+						<template #default="{ row }">
+							<template v-if="row.image_url">
+								<ElImage :src="row.image_url" fit="cover" class="!h-10 !w-10 rounded" />
 							</template>
-						</ElTableColumn>
-						<ElTableColumn prop="image_alt" label="图片描述" width="120" show-overflow-tooltip />
-						<ElTableColumn label="操作" width="160" fixed="right">
-							<template #default="{ row }">
-								<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
-									编辑
-								</ElButton>
-								<ElButton link class="!text-[16px]" type="danger" size="small"
-									@click="handleDelete(row.id)">
-									删除
-								</ElButton>
-							</template>
-						</ElTableColumn>
-					</ElTable>
-				</template>
-			</TableHeight>
-			<div class="mt-2 flex w-full justify-end">
-				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-					@size-change="handleSizeChange" />
-			</div>
+							<template v-else>—</template>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn prop="image_alt" label="图片描述" width="120" show-overflow-tooltip />
+					<ElTableColumn label="操作" width="160" fixed="right">
+						<template #default="{ row }">
+							<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
+								编辑
+							</ElButton>
+							<ElButton link class="!text-[16px]" type="danger" size="small"
+								@click="handleDelete(row.id)">
+								删除
+							</ElButton>
+						</template>
+					</ElTableColumn>
+				</ElTable>
+			</template>
+		</TableHeight>
+		<div class="mt-2 flex w-full justify-end">
+			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+				@size-change="handleSizeChange" />
 		</div>
-	</div>
+	</AdminFormMain>
 </template>
 
 <style lang="postcss" scoped>

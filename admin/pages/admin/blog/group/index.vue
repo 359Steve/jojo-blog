@@ -96,8 +96,7 @@ const handleDelete = async (id: number) => {
 </script>
 
 <template>
-	<div class="flex h-full w-full flex-col">
-		<h3 class="mb-2 font-bold">博客管理</h3>
+	<AdminFormMain title="博客管理">
 		<div class="mb-2 flex items-center justify-between gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3">
 			<div class="flex items-center gap-2 sm:gap-4">
 				<ElInput v-model="keyword" placeholder="搜索标题或简介" clearable @keyup.enter="handleSearch" />
@@ -153,7 +152,7 @@ const handleDelete = async (id: number) => {
 				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
 				@size-change="handleSizeChange" />
 		</div>
-	</div>
+	</AdminFormMain>
 </template>
 
 <style lang="postcss" scoped>

@@ -193,97 +193,88 @@ watch(searchTag, (newValue) => {
 </script>
 
 <template>
-	<div class="flex h-full w-full flex-col">
-		<div class="w-full">
-			<h3 class="mb-2 font-bold">新增标签</h3>
-			<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules" class="!w-full">
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="name" label="名称：">
-					<ElInput v-model="formData.name" placeholder="请输入标签" clearable />
-				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="icon" label="图标：">
-					<ElInput v-model="formData.icon" placeholder="请输入图标" clearable>
-						<template #prefix>
-							<Icon class="cursor-pointer text-[20px]"
-								:icon="formData.icon || 'mdi:emoticon-kiss-outline'" />
+	<AdminFormMain title="新增标签">
+		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules" class="!w-full">
+			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="name" label="名称：">
+				<ElInput v-model="formData.name" placeholder="请输入标签" clearable />
+			</ElFormItem>
+			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="icon" label="图标：">
+				<ElInput v-model="formData.icon" placeholder="请输入图标" clearable>
+					<template #prefix>
+						<Icon class="cursor-pointer text-[20px]" :icon="formData.icon || 'mdi:emoticon-kiss-outline'" />
+					</template>
+					<template #suffix>
+						<ElPopover content="参考 https://iconify.design/" placement="right">
+							<template #reference>
+								<Icon class="cursor-pointer text-[20px]" icon="ri:question-line" />
+							</template>
+						</ElPopover>
+					</template>
+				</ElInput>
+			</ElFormItem>
+			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="url" label="链接：">
+				<ElInput v-model="formData.url" placeholder="请输入链接" clearable />
+			</ElFormItem>
+			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="type" label="类型：">
+				<ElSelect v-model="formData.type" placeholder="请选择" class="!w-full" clearable>
+					<ElOption label="博客" value="BLOG" />
+					<ElOption label="个人" value="PERSON" />
+				</ElSelect>
+			</ElFormItem>
+			<ElFormItem class="!mx-0 !w-full sm:pr-4">
+				<ElButton v-if="!isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
+					@click="createTag(ruleFormRef!)">
+					新增
+				</ElButton>
+				<ElButton v-if="isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
+					@click="updateTag(ruleFormRef!)">
+					修改
+				</ElButton>
+				<ElButton v-if="isEdit" type="" plain @click="confirmCancel">取消</ElButton>
+			</ElFormItem>
+		</ElForm>
+
+		<TableHeight>
+			<template #default="{ height }">
+				<ElTable v-loading="loading" :data="tableData" stripe :height="height" class="w-full !text-[16px]">
+					<ElTableColumn fixed prop="id" label="ID" />
+					<ElTableColumn prop="name" label="名称" />
+					<ElTableColumn prop="icon" label="Icon">
+						<template #default="scope">
+							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
 						</template>
-						<template #suffix>
-							<ElPopover content="参考 https://iconify.design/" placement="right">
-								<template #reference>
-									<Icon class="cursor-pointer text-[20px]" icon="ri:question-line" />
-								</template>
-							</ElPopover>
+					</ElTableColumn>
+					<ElTableColumn prop="url" label="链接" width="1000">
+						<template #default="scope">
+							<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
 						</template>
-					</ElInput>
-				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="url" label="链接：">
-					<ElInput v-model="formData.url" placeholder="请输入链接" clearable />
-				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="type" label="类型：">
-					<ElSelect v-model="formData.type" placeholder="请选择" class="!w-full" clearable>
-						<ElOption label="博客" value="BLOG" />
-						<ElOption label="个人" value="PERSON" />
-					</ElSelect>
-				</ElFormItem>
-				<ElFormItem class="!mx-0 !w-full sm:pr-4">
-					<ElButton v-if="!isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
-						@click="createTag(ruleFormRef!)">
-						新增
-					</ElButton>
-					<ElButton v-if="isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
-						@click="updateTag(ruleFormRef!)">
-						修改
-					</ElButton>
-					<ElButton v-if="isEdit" type="" plain @click="confirmCancel">取消</ElButton>
-				</ElFormItem>
-			</ElForm>
+					</ElTableColumn>
+					<ElTableColumn prop="type" label="类型">
+						<template #default="scope">
+							<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
+						</template>
+					</ElTableColumn>
+					<ElTableColumn label="操作">
+						<template #default="scope">
+							<ElButton link type="primary" size="small" class="!text-[16px]"
+								@click="editClick(scope.row)">
+								编辑
+							</ElButton>
+							<ElButton link type="danger" class="!text-[16px]" size="small"
+								@click="deleteClick(scope.row)">
+								删除
+							</ElButton>
+						</template>
+					</ElTableColumn>
+				</ElTable>
+			</template>
+		</TableHeight>
+		<div class="mt-2 flex w-full justify-end">
+			<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+				:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+				@size-change="handleSizeChange" />
 		</div>
-		<div class="flex min-h-0 w-full flex-1 flex-col">
-			<div class="mb-2 flex w-full items-center justify-between font-bold">
-				<h3>标签列表</h3>
-				<ElInput v-model="searchTag" placeholder="请输入名称" clearable class="!w-[200px]" />
-			</div>
-			<TableHeight>
-				<template #default="{ height }">
-					<ElTable v-loading="loading" :data="tableData" stripe :height="height" class="w-full !text-[16px]">
-						<ElTableColumn fixed prop="id" label="ID" />
-						<ElTableColumn prop="name" label="名称" />
-						<ElTableColumn prop="icon" label="Icon">
-							<template #default="scope">
-								<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
-							</template>
-						</ElTableColumn>
-						<ElTableColumn prop="url" label="链接" width="1000">
-							<template #default="scope">
-								<el-link underline :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-							</template>
-						</ElTableColumn>
-						<ElTableColumn prop="type" label="类型">
-							<template #default="scope">
-								<span>{{ TagType[scope.row.type as keyof typeof TagType] }}</span>
-							</template>
-						</ElTableColumn>
-						<ElTableColumn label="操作">
-							<template #default="scope">
-								<ElButton link type="primary" size="small" class="!text-[16px]"
-									@click="editClick(scope.row)">
-									编辑
-								</ElButton>
-								<ElButton link type="danger" class="!text-[16px]" size="small"
-									@click="deleteClick(scope.row)">
-									删除
-								</ElButton>
-							</template>
-						</ElTableColumn>
-					</ElTable>
-				</template>
-			</TableHeight>
-			<div class="mt-2 flex w-full justify-end">
-				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
-					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
-					@size-change="handleSizeChange" />
-			</div>
-		</div>
-	</div>
+	</AdminFormMain>
 </template>
 
 <style lang="postcss" scoped>
