@@ -87,18 +87,15 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				const coverUploadResult = await uploadBlogCover(frontImage.value);
 
 				if (!coverUploadResult.data?.url) {
-					ElMessage.error(coverUploadResult.msg || '封面上传失败，请重试');
 					return;
 				}
 
 				formData.front_cover = coverUploadResult.data.url;
-				ElMessage.success('封面上传成功');
 			}
 
-			// 验证必要字段 - 编辑模式下如果没有选择新文件，使用原有封面
 			if (!formData.front_cover) {
 				if (isEdit.value) {
-					ElMessage.error('编辑时封面信息丢失，请重新选择封面');
+					ElMessage.error('请重新选择封面');
 				} else {
 					ElMessage.error('请上传封面图片');
 				}
@@ -126,7 +123,6 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				ElMessage.error(res?.msg || (isEdit.value ? '更新失败' : '创建失败'));
 			}
 		} catch (error) {
-			console.error('保存博客失败:', error);
 			const errorMessage = error instanceof Error ? error.message : '操作失败，请重试';
 			ElMessage.error(errorMessage);
 		} finally {
