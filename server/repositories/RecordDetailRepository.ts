@@ -61,7 +61,7 @@ export class RecordDetailRepository {
 		try {
 			const { id, ...updateData } = data;
 			const res = await this.prismaClient.record_detail.update({
-				where: { id },
+				where: { id: Number(id) },
 				data: updateData,
 			});
 
