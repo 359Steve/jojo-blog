@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CreateRecordDetailSchema } from './CreateArticleDto';
 
 export const CreateGroupSchema = z.object({
 	id: z.number().optional(),
