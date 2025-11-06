@@ -115,4 +115,51 @@ export class GroupRepository {
 			return returnData(StatusCode.FAIL, '查询失败！', null);
 		}
 	}
+
+	// 查询公共分组数据
+	async getPublicGroups(keyword?: string) {
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const where = keyword
+					? {
+						title: {
+							contains: keyword,
+						},
+					}
+					: {};
+
+				return tx.record_group.findMany({
+					where: {
+						...where,
+						details: {
+							some: {},
+						},
+					},
+					orderBy: {
+						time_range: 'desc',
+					},
+					include: {
+						details: {
+							select: {
+								id: true,
+								title: true,
+								image_url: true,
+								image_alt: true,
+							},
+							orderBy: {
+								time_range: 'desc',
+							},
+							take: 5,
+						},
+					},
+				});
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '获取成功！', res)
+				: returnData(StatusCode.FAIL, '获取失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '获取失败！', null);
+		}
+	}
 }
