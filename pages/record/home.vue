@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { CSSProperties } from 'vue';
 
+const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery());
+console.log('data', data.value);
 const recordText = ref<HTMLDivElement[] | null>();
 const summaryList = reactive<RecordSummary[]>([
 	{
