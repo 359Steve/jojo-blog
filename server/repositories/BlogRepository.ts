@@ -102,9 +102,21 @@ export class BlogRepository {
 				});
 
 				// 再删除博客
-				return await tx.blog.delete({
+				const currentDelete = await tx.blog.delete({
 					where: { id: Number(id) },
 				});
+
+				// 删除博客封面图片
+				const frontcover = currentDelete.front_cover;
+				if (frontcover) {
+					const relativePath = frontcover.startsWith('/') ? frontcover.substring(1) : frontcover;
+					const frontcoverPath = join(process.cwd(), 'public', relativePath);
+					if (fs.existsSync(frontcoverPath)) {
+						fs.unlinkSync(frontcoverPath);
+					}
+				}
+
+				return currentDelete;
 			});
 
 			return res
@@ -143,6 +155,25 @@ export class BlogRepository {
 
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 如果更新封面，先获取旧封面路径并删除
+				if (blogData.front_cover) {
+					const oldBlog = await tx.blog.findUnique({
+						where: { id: Number(id) },
+						select: { front_cover: true },
+					});
+
+					if (oldBlog?.front_cover && oldBlog.front_cover !== blogData.front_cover) {
+						// 删除旧封面文件
+						const relativePath = oldBlog.front_cover.startsWith('/')
+							? oldBlog.front_cover.substring(1)
+							: oldBlog.front_cover;
+						const oldCoverPath = join(process.cwd(), 'public', relativePath);
+						if (fs.existsSync(oldCoverPath)) {
+							fs.unlinkSync(oldCoverPath);
+						}
+					}
+				}
+
 				// 更新博客基本信息
 				await tx.blog.update({
 					where: { id: Number(id) },
