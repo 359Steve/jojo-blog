@@ -22,6 +22,13 @@ export class RecordDetailRepository {
 					orderBy: { created_at: 'desc' },
 					skip: offset,
 					take: pageSize,
+					include: {
+						group: {
+							select: {
+								time_range: true,
+							},
+						},
+					},
 				}),
 				this.prismaClient.record_detail.count(),
 			]);
