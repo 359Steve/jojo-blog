@@ -3,7 +3,7 @@ import { type CreateUserDto, CreateUserSchema } from '~/server/dto/CreateUserDto
 import { UserService } from '~/server/services/UserService';
 
 export default defineEventHandler(async (event) => {
-	const body = await readBody<CreateUserDto & { tags: number[] }>(event);
+	const body = await readBody<Partial<CreateUserDto & { tags: number[] }>>(event);
 
 	const result = validateData(CreateUserSchema, body, (value: string) => {
 		sendErrorWithMessage(event, 400, value);

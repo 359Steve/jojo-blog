@@ -4,7 +4,7 @@ import { container } from '~/server/core/container';
 import { TagService } from '~/server/services/TagService';
 
 export default defineEventHandler(async (event) => {
-	const body = await readBody<CreateTagDto>(event);
+	const body = await readBody<Partial<CreateTagDto>>(event);
 
 	const result = validateData(CreateTagSchema, body, (value: string) => {
 		sendErrorWithMessage(event, 400, value);

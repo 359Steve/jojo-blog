@@ -95,7 +95,7 @@ export class TagRepository {
 	}
 
 	// 修改标签
-	async updateTag(body: CreateTagDto) {
+	async updateTag(body: Partial<CreateTagDto>) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
 				const existingTag = await tx.tag.findFirst({

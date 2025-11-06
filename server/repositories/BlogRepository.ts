@@ -138,7 +138,7 @@ export class BlogRepository {
 	}
 
 	// 更新博客
-	async updateBlog(data: CreateBlogDto) {
+	async updateBlog(data: Partial<CreateBlogDto>) {
 		const { id, tags, ...blogData } = data;
 
 		try {

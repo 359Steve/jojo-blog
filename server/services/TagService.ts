@@ -25,7 +25,7 @@ export class TagService {
 	}
 
 	// 修改标签
-	async updateTag(body: CreateTagDto) {
+	async updateTag(body: Partial<CreateTagDto>) {
 		return await this.tagRepo.updateTag(body);
 	}
 

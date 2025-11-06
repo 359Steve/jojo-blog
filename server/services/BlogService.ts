@@ -30,7 +30,7 @@ export class BlogService {
 	}
 
 	// 更新博客
-	async updateBlog(data: CreateBlogDto) {
+	async updateBlog(data: Partial<CreateBlogDto>) {
 		return this.blogRepo.updateBlog(data);
 	}
 

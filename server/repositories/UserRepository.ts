@@ -117,7 +117,7 @@ export class UserRepository {
 	}
 
 	// 更新信息
-	async updateUser(body: CreateUserDto & { tags: number[] }) {
+	async updateUser(body: Partial<CreateUserDto> & { tags?: number[] }) {
 		const { tags, ...userInfo } = body;
 
 		try {
