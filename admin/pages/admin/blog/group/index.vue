@@ -113,7 +113,7 @@ const handleDelete = async (id: number) => {
 				<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
 					<ElTableColumn fixed prop="id" label="ID" width="80" />
 					<ElTableColumn prop="title" label="标题" width="200" show-overflow-tooltip />
-					<ElTableColumn prop="subtitle" label="简介" width="250" show-overflow-tooltip />
+					<ElTableColumn prop="subtitle" label="简介" show-overflow-tooltip />
 					<ElTableColumn label="标签" width="200">
 						<template #default="{ row }">
 							<template v-if="row.tags && row.tags.length">
