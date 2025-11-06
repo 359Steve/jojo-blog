@@ -155,8 +155,4 @@ const handleDelete = async (id: number) => {
 	</AdminFormMain>
 </template>
 
-<style lang="postcss" scoped>
-:deep(.el-input__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-</style>
+<style lang="postcss" scoped></style>

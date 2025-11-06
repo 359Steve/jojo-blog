@@ -323,7 +323,7 @@ onBeforeUnmount(() => {
 				<ElFormItem class="!mx-0 !w-full" prop="subtitle" label="简介：">
 					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
-				<ElFormItem class="last col-span-1 !mx-0 !w-full sm:col-span-2">
+				<ElFormItem class="save col-span-1 !mx-0 !w-full sm:col-span-2">
 					<ElButton v-if="isEdit" type="primary" plain @click="backAdd">新增</ElButton>
 					<ElButton type="primary" :loading="loading" :disabled="loading" @click="saveBlog(ruleFormRef!)">
 						{{ loading ? (isEdit ? '更新中...' : '保存中...') : isEdit ? '更新' : '保存' }}
@@ -356,21 +356,5 @@ onBeforeUnmount(() => {
 
 :deep(.el-form-item .el-form-item__content) {
 	@apply h-full;
-}
-
-:deep(.last .el-form-item__content) {
-	@apply justify-end;
-}
-
-:deep(.el-form-item__label) {
-	@apply pr-0 text-[16px];
-}
-
-:deep(.el-input__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-select__wrapper) {
-	@apply h-[34px] text-[14px];
 }
 </style>

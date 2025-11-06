@@ -221,13 +221,11 @@ watch(searchTag, (newValue) => {
 					<ElOption label="个人" value="PERSON" />
 				</ElSelect>
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:pr-4">
-				<ElButton v-if="!isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
-					@click="createTag(ruleFormRef!)">
+			<ElFormItem class="save !mx-0 !w-full">
+				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="createTag(ruleFormRef!)">
 					新增
 				</ElButton>
-				<ElButton v-if="isEdit" :disabled="isIDisabled || loading" :loading="loading" type="primary"
-					@click="updateTag(ruleFormRef!)">
+				<ElButton v-if="isEdit" :loading="loading" type="primary" @click="updateTag(ruleFormRef!)">
 					修改
 				</ElButton>
 				<ElButton v-if="isEdit" type="" plain @click="confirmCancel">取消</ElButton>
@@ -277,24 +275,4 @@ watch(searchTag, (newValue) => {
 	</AdminFormMain>
 </template>
 
-<style lang="postcss" scoped>
-:deep(.el-form-item__content) {
-	@apply flex w-full justify-end;
-}
-
-:deep(.el-form-item__label) {
-	@apply pr-0 text-[16px];
-}
-
-:deep(.el-input__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-select__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-table__inner-wrapper::before) {
-	@apply hidden;
-}
-</style>
+<style lang="postcss" scoped></style>

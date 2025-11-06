@@ -137,7 +137,7 @@ const handleDateChange = (value: string) => {
 			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="描述：">
 				<ElInput v-model="formData.summary" placeholder="请输入描述" />
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:pr-4">
+			<ElFormItem class="save !mx-0 !w-full">
 				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">
 					新增
 				</ElButton>
@@ -185,27 +185,7 @@ const handleDateChange = (value: string) => {
 </template>
 
 <style lang="postcss" scoped>
-:deep(.el-form-item__content) {
-	@apply flex w-full justify-end;
-}
-
-:deep(.el-form-item__label) {
-	@apply pr-0 text-[16px];
-}
-
-:deep(.el-input__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-select__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-table__inner-wrapper::before) {
-	@apply hidden;
-}
-
 :deep(.el-date-editor) {
-	@apply w-full;
+	@apply !w-full;
 }
 </style>

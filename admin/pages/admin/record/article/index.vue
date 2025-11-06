@@ -313,7 +313,7 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 					<ElOption v-for="item in selectData" :key="item.id" :label="item.time_range" :value="item.id" />
 				</ElSelect>
 			</ElFormItem>
-			<ElFormItem class="button-end !mx-0 !w-full sm:pr-4">
+			<ElFormItem class="save !mx-0 !w-full">
 				<ElButton type="primary" @click="saveArticle(ruleFormRef!)">
 					{{ isEdit ? '修改' : '新增' }}
 				</ElButton>
@@ -368,39 +368,7 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 </template>
 
 <style lang="postcss" scoped>
-:deep(.el-form-item__label) {
-	@apply pr-0 text-[16px];
-}
-
-:deep(.el-input__wrapper) {
-	@apply h-[34px] text-[14px];
-}
-
-:deep(.el-select__wrapper) {
-	@apply min-h-[34px] w-full text-[14px];
-}
-
-:deep(.el-upload-dragger) {
-	@apply h-[200px] w-[200px];
-}
-
-:deep(.save .el-form-item__content) {
-	@apply flex justify-end;
-}
-
-:deep(.el-image) {
-	@apply h-full w-full object-cover;
-}
-
-:deep(.el-form-item__label-wrap) {
-	@apply !h-full;
-}
-
 :deep(.el-date-editor) {
-	@apply w-full;
-}
-
-:deep(.button-end .el-form-item__content) {
-	@apply flex w-full justify-end;
+	@apply !w-full;
 }
 </style>
