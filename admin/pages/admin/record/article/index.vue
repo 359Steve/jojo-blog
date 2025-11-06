@@ -4,6 +4,18 @@ import type { FormInstance, FormRules, UploadFile, UploadFiles } from 'element-p
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
 const selectData = ref<{ id: number; time_range: string }[]>(data.value?.data || []);
+
+// 分页和表格数据
+const pageSize = ref<number>(10);
+const pageNumber = ref<number>(1);
+const loading = ref<boolean>(false);
+
+// 获取记录详情数据
+const { data: detailData } = await useAsyncData('recordArticleDetails', () =>
+	queryRecordDetailAll(pageNumber.value, pageSize.value),
+);
+const total = ref<number>(detailData.value?.data?.total || 0);
+const tableData = ref<GroupWithDetail<CreateRecordDetailDto>[]>(detailData.value?.data?.records || []);
 const groupId = ref<number>();
 const formData = reactive<CreateRecordDetailDto>({
 	group_id: groupId.value!,
@@ -192,8 +204,52 @@ const resetForm = () => {
 
 // 刷新数据
 const refreshData = async () => {
-	// 这里可以添加刷新列表的逻辑
-	console.log('数据已保存，可以在这里刷新列表');
+	await queryArticles(pageNumber.value, pageSize.value);
+};
+
+// 查询记录详情
+const queryArticles = async (page = 1, size = 10) => {
+	loading.value = true;
+	try {
+		const res = await queryRecordDetailAll(page, size);
+		tableData.value = res.data?.records || [];
+		total.value = res.data?.total || 0;
+	} catch (err) {
+		ElMessage.error('查询记录详情失败');
+	} finally {
+		loading.value = false;
+	}
+};
+
+// 分页处理
+const handleSizeChange = (val: number) => {
+	pageSize.value = val;
+	pageNumber.value = 1;
+	queryArticles(1, val);
+};
+
+const handleCurrentChange = (val: number) => {
+	pageNumber.value = val;
+	queryArticles(val, pageSize.value);
+};
+
+// 编辑操作
+const goEdit = (row: any) => {
+	handleEdit(row);
+};
+
+// 删除操作
+const handleDelete = async (id: number) => {
+	useConfirm('删除记录详情', 'warning', async () => {
+		const res = await deleteRecordDetail(id);
+		if (res.data) {
+			ElMessage.success('删除成功');
+			if (tableData.value.length === 1 && pageNumber.value > 1) {
+				pageNumber.value -= 1;
+			}
+			await queryArticles(pageNumber.value, pageSize.value);
+		}
+	});
 };
 
 // 取消编辑
@@ -202,10 +258,11 @@ const handleCancel = () => {
 };
 
 // 编辑记录详情
-const handleEdit = (row: CreateRecordDetailDto) => {
+const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
+	const { group, ...rest } = row;
 	isEdit.value = true;
 	// 复制数据到表单
-	Object.assign(formData, { ...row });
+	Object.assign(formData, { ...rest });
 	groupId.value = row.group_id;
 
 	if (row.image_url) {
@@ -219,7 +276,7 @@ const handleEdit = (row: CreateRecordDetailDto) => {
 		<div class="w-full">
 			<h3 class="mb-2 font-bold">文章管理</h3>
 			<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" :inline="true" class="!w-full"
-				label-width="auto">
+				label-width="100px">
 				<ElFormItem prop="image_url" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="照片：">
 					<ElUpload ref="upload" class="relative" action="#" list-type="picture-card"
 						:on-change="handleImageSuccess" :auto-upload="false" :show-file-list="false" :limit="1"
@@ -239,9 +296,6 @@ const handleEdit = (row: CreateRecordDetailDto) => {
 							<Icon class="text-[40px] text-gray-400" icon="mdi:add" />
 						</template>
 					</ElUpload>
-					<div v-if="isEdit && formData.image_url" class="mt-2 text-sm text-gray-500">
-						编辑模式：保持原图片或选择新图片替换
-					</div>
 				</ElFormItem>
 				<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="详情：">
 					<ElInput v-model="formData.summary" type="textarea" :rows="6" placeholder="请输入详情" />
@@ -271,16 +325,54 @@ const handleEdit = (row: CreateRecordDetailDto) => {
 		</div>
 
 		<div class="flex min-h-0 w-full flex-1 flex-col">
-			<!-- 文章列表待实现 -->
+			<TableHeight>
+				<template #default="{ height }">
+					<ElTable v-loading="loading" :data="tableData" :height="height" stripe class="!w-full !text-[16px]">
+						<ElTableColumn fixed prop="id" label="ID" width="80" />
+						<ElTableColumn prop="title" label="标题" width="150" show-overflow-tooltip />
+						<ElTableColumn prop="time_range" label="年份" width="100" />
+						<ElTableColumn label="分组" width="120">
+							<template #default="{ row }">
+								<template v-if="row.group">
+									{{ row.group.time_range }}
+								</template>
+								<template v-else>—</template>
+							</template>
+						</ElTableColumn>
+						<ElTableColumn prop="summary" label="详情" show-overflow-tooltip />
+						<ElTableColumn label="图片" width="100">
+							<template #default="{ row }">
+								<template v-if="row.image_url">
+									<ElImage :src="row.image_url" fit="cover" class="!h-10 !w-10 rounded" />
+								</template>
+								<template v-else>—</template>
+							</template>
+						</ElTableColumn>
+						<ElTableColumn prop="image_alt" label="图片描述" width="120" show-overflow-tooltip />
+						<ElTableColumn label="操作" width="160" fixed="right">
+							<template #default="{ row }">
+								<ElButton link class="!text-[16px]" type="primary" size="small" @click="goEdit(row)">
+									编辑
+								</ElButton>
+								<ElButton link class="!text-[16px]" type="danger" size="small"
+									@click="handleDelete(row.id)">
+									删除
+								</ElButton>
+							</template>
+						</ElTableColumn>
+					</ElTable>
+				</template>
+			</TableHeight>
+			<div class="mt-2 flex w-full justify-end">
+				<ElPagination background layout="total, sizes, prev, pager, next" :total="total" :page-size="pageSize"
+					:current-page="pageNumber" :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange"
+					@size-change="handleSizeChange" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="postcss" scoped>
-:deep(.el-select) {
-	@apply w-full;
-}
-
 :deep(.el-form-item__label) {
 	@apply pr-0 text-[16px];
 }
