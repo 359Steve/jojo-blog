@@ -226,4 +226,22 @@ export class RecordDetailRepository {
 			return returnData(StatusCode.FAIL, '查询失败！', null);
 		}
 	}
+
+	// 查询首页推荐的记录详情
+	async getRecordHomeLine() {
+		try {
+			// 随机查询四条记录
+			const records: CreateRecordDetailDto[] = await this.prismaClient.$queryRaw`
+				SELECT * FROM record_details
+				ORDER BY RAND()
+				LIMIT 4
+			`;
+
+			return records
+				? returnData(StatusCode.SUCCESS, '查询成功！', records)
+				: returnData(StatusCode.FAIL, '查询失败！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
+	}
 }
