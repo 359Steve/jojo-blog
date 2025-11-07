@@ -27,12 +27,14 @@ export class GroupRepository {
 				this.prismaClient.record_group.count(),
 			]);
 
-			return records
-				? returnData(StatusCode.SUCCESS, '查询成功！', {
-					records,
-					total,
-				})
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+			if (!records || !total) {
+				return returnData(StatusCode.FAIL, '查询失败！', null);
+			}
+
+			return returnData(StatusCode.SUCCESS, '查询成功！', {
+				records,
+				total,
+			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '查询失败！', null);
 		}

@@ -83,6 +83,10 @@ export class BlogRepository {
 				this.prismaClient.blog.count({ where }),
 			]);
 
+			if (!records || !total) {
+				return returnData(StatusCode.FAIL, '获取失败！', null);
+			}
+
 			return returnData(StatusCode.SUCCESS, '获取成功！', {
 				records,
 				total,
