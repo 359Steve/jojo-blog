@@ -68,7 +68,9 @@ onMounted(() => {
 		<div class="flex h-full min-h-screen w-full flex-col">
 			<!-- 导航栏 -->
 			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme" />
-			<NuxtLoadingIndicator color="#A3AAB6" />
+			<ClientOnly>
+				<NuxtLoadingIndicator color="#A3AAB6" />
+			</ClientOnly>
 			<div class="flex-1">
 				<NuxtLayout name="mainbox">
 					<template #childPage>
