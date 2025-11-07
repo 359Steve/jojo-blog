@@ -31,4 +31,9 @@ export class RecordDetailService {
 	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		return await this.recordDetailRepo.uploadRecordDetailImage(files);
 	}
+
+	// 查询单个记录详情
+	async getPublicRecordDetail(parentId: number, id: number) {
+		return await this.recordDetailRepo.getPublicRecordDetail(parentId, id);
+	}
 }
