@@ -152,4 +152,78 @@ export class RecordDetailRepository {
 			return returnData(StatusCode.FAIL, '上传失败！', null);
 		}
 	}
+
+	// 查询单个记录详情
+	async getPublicRecordDetail(parentId: number, id: number) {
+		try {
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const currentDetail = await tx.record_detail.findUnique({
+					where: {
+						id: Number(id),
+					},
+				});
+
+				const imageAll = await tx.record_detail.findMany({
+					select: {
+						id: true,
+						image_url: true,
+						image_alt: true,
+					},
+					where: {
+						group_id: Number(parentId),
+					},
+					orderBy: {
+						time_range: 'desc',
+					},
+				});
+
+				const prev = await tx.record_detail.findFirst({
+					where: {
+						group_id: Number(parentId),
+						id: {
+							lt: Number(id),
+						},
+					},
+					orderBy: {
+						id: 'desc',
+					},
+					select: {
+						id: true,
+					},
+				});
+
+				const next = await tx.record_detail.findFirst({
+					where: {
+						group_id: Number(parentId),
+						id: {
+							gt: Number(id),
+						},
+					},
+					orderBy: {
+						id: 'asc',
+					},
+					select: {
+						id: true,
+					},
+				});
+
+				if (!currentDetail || !imageAll) {
+					return null;
+				}
+
+				return {
+					...currentDetail,
+					imageAll,
+					prev,
+					next,
+				};
+			});
+
+			return res
+				? returnData(StatusCode.SUCCESS, '查询成功！', res)
+				: returnData(StatusCode.FAIL, '记录不存在！', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '查询失败！', null);
+		}
+	}
 }
