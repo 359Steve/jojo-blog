@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+const { data } = await useAsyncData('queryRecordHomeLine', () => queryRecordHomeLine());
+
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
@@ -6,36 +8,15 @@ const directionClass = ref<string>('');
 const isSm = ref<boolean>(false);
 const { getBlogUserInfo } = useBlogUserInfo();
 
-const timelineData = reactive<Timeline[]>([
-	{
-		id: '1-1',
-		timestamp: '2021年9月',
-		title: '入学',
-		description: '开始学习前端基础',
-		url: await useLoadStaticImage(1),
-	},
-	{
-		id: '1-2',
-		timestamp: '2022年3月',
-		title: '完成第一个项目',
-		description: 'React博客系统',
-		url: await useLoadStaticImage(2),
-	},
-	{
-		id: '1-3',
-		timestamp: '2022年10月',
-		title: '加入开发团队',
-		description: '学院官网项目开发',
-		url: await useLoadStaticImage(3),
-	},
-	{
-		id: '1-4',
-		timestamp: '2023年6月',
-		title: '发布MiniMycc',
-		description: '使用Electron构建桌面应用',
-		url: await useLoadStaticImage(4),
-	},
-]);
+const timelineData = computed(() => {
+	return (
+		data.value?.data?.slice().sort((a, b) => {
+			const timeA = new Date(a.time_range).getTime();
+			const timeB = new Date(b.time_range).getTime();
+			return timeB - timeA;
+		}) || []
+	);
+});
 
 const userInfo = reactive(
 	getBlogUserInfo() ?? {
@@ -84,10 +65,6 @@ const onMouseleave = (e: MouseEvent): void => {
 
 const toRecord = () => {
 	navigateTo('/record/home');
-};
-
-const detailRecord = async (_item: Timeline) => {
-	navigateTo({ path: '/record/home' });
 };
 
 onMounted(() => {
@@ -143,10 +120,8 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="mb-8 grid h-full w-full grid-cols-1 justify-center text-sm sm:mb-0">
-				<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData"
-					@detail-record="detailRecord" />
-				<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData"
-					@detail-record="detailRecord" />
+				<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData" />
+				<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData" />
 			</div>
 		</div>
 	</div>
