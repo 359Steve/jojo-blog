@@ -15,7 +15,7 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'">
 					<h1
 						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-base font-black sm:text-xl md:text-2xl lg:text-4xl">
-						我的简历
+						{{ userInfo?.pet_name }}
 					</h1>
 				</AnimationRevealOnScroll>
 				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'"
