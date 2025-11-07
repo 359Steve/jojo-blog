@@ -26,10 +26,7 @@ const { data, pending, error } = await useAsyncData('publicQueryBlogDetail', asy
 			data: currentBlog.value,
 		};
 	}
-	const response = await getPublicBlogDetail(Number(id.value));
-	return {
-		data: response.data,
-	};
+	return getPublicBlogDetail(Number(id.value));
 });
 
 const blogItem = ref(data.value?.data || null);
@@ -74,12 +71,12 @@ onBeforeUnmount(() => {
 		<div v-else-if="blogItem">
 			<!-- 返回按钮 -->
 			<div class="mb-6">
-				<button
-					class="hover:text-primary flex items-center gap-2 text-sm text-gray-600 transition-colors duration-200"
+				<ElButton link
+					class="hover:text-primary flex items-center gap-2 !text-sm text-gray-600 transition-colors duration-200"
 					@click="goBack">
 					<Icon icon="ri:arrow-left-line" />
 					返回博客列表
-				</button>
+				</ElButton>
 			</div>
 
 			<!-- 博客头部 -->
