@@ -8,5 +8,5 @@ export const getPublicBlogList = chooseCondition<
 >('/blog/blogPublicQuery');
 
 // 查询博客详情
-export const getPublicBlogDetail = async (id: number) =>
-	chooseCondition<null, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`);
+export const getPublicBlogDetail = (id: number) =>
+	chooseCondition<null, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`)();
