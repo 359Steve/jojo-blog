@@ -36,4 +36,9 @@ export class RecordDetailService {
 	async getPublicRecordDetail(parentId: number, id: number) {
 		return await this.recordDetailRepo.getPublicRecordDetail(parentId, id);
 	}
+
+	// 查询首页推荐的记录详情
+	async getRecordHomeLine() {
+		return await this.recordDetailRepo.getRecordHomeLine();
+	}
 }
