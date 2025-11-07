@@ -2,7 +2,18 @@
 import { StackColor } from '~/types/com-types';
 
 definePageMeta({
-	middleware: ['blog'],
+	validate(route) {
+		if (!route.query.id) {
+			createError({
+				statusCode: 500,
+				statusMessage: 'Error',
+				data: {
+					message: '出错了！',
+				},
+			});
+		}
+		return true;
+	},
 });
 
 const { currentBlog } = storeToRefs(useBlog());
