@@ -4,6 +4,7 @@ const whitelist = [
 	'/api/user/user-login',
 	'/api/user/user-register',
 	'/api/record/recordPublicQuery',
+	'/api/record/recordPublicDetail',
 ];
 
 // 白名单路径模式
