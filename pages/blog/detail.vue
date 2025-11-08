@@ -6,7 +6,6 @@ definePageMeta({
 		if (!route.query.id) {
 			createError({
 				statusCode: 500,
-				statusMessage: 'Error',
 				data: {
 					message: '出错了！',
 				},
@@ -51,7 +50,7 @@ const goBack = () => {
 if (error.value) {
 	throw createError({
 		statusCode: 404,
-		statusMessage: '博客不存在',
+		message: '博客不存在',
 	});
 }
 
