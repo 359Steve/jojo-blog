@@ -1,7 +1,7 @@
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
 export const useUserinfo = defineStore('userinfo', () => {
-	const userinfo = ref<CreateUserDto | { tags: number[] } | null>(null);
+	const userinfo = ref<(CreateUserDto & { tags: number[] }) | null>(null);
 
 	const setUserInfo = (value: CreateUserDto & { tags: number[] }) => {
 		userinfo.value = value;
