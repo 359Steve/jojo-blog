@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 		strict: true,
 	},
 	compatibilityDate: '2024-11-01',
-	devtools: { enabled: true },
+	devtools: { enabled: false },
 	components: [
 		{
 			path: './components',
