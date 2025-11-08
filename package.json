@@ -22,6 +22,7 @@
 		"@prisma/client": "^6.9.0",
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^22.15.3",
+		"@vue/devtools-api": "^8.0.3",
 		"@vue/runtime-core": "^3.5.13",
 		"@vueuse/core": "^13.1.0",
 		"@vueuse/motion": "^3.0.3",
