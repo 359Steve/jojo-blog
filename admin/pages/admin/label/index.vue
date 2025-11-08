@@ -85,7 +85,10 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 				const { data, msg } = await createTags(formData);
 
 				if (data) {
-					ElMessage(msg);
+					ElMessage({
+						type: 'success',
+						message: msg,
+					});
 					resetForm();
 					queryTag(searchTag.value, pageNumber.value);
 				}
@@ -105,7 +108,10 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 				const { data, msg } = await updateTags(formData);
 
 				if (data) {
-					ElMessage(msg);
+					ElMessage({
+						type: 'success',
+						message: msg,
+					});
 					for (const item of tableData.value) {
 						if (item.id === formData.id) {
 							Object.assign(item, formData);
@@ -138,7 +144,10 @@ const deleteClick = (value: CreateTagDto): void => {
 		try {
 			const { data, msg } = await deleteTags(value.id!);
 			if (data) {
-				ElMessage(msg);
+				ElMessage({
+					type: 'success',
+					message: msg,
+				});
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
 					pageNumber.value -= 1;
 				}

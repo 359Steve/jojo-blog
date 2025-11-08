@@ -153,7 +153,10 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 				}
 
 				if (res.data) {
-					ElMessage(res.msg);
+					ElMessage({
+						type: 'success',
+						message: isEdit.value ? '修改成功' : '新增成功',
+					});
 					// 重置表单
 					resetForm();
 					// 刷新列表
