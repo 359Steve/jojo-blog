@@ -4,7 +4,6 @@ definePageMeta({
 		if (!route.params.parentId && !route.params.id) {
 			throw createError({
 				statusCode: 500,
-				statusMessage: 'Error',
 				data: {
 					message: '出错了！',
 				},
@@ -26,7 +25,7 @@ const { data, error, refresh } = await useAsyncData(
 if (error.value) {
 	throw createError({
 		statusCode: 404,
-		statusMessage: '记录不存在',
+		message: '记录不存在',
 	});
 }
 
