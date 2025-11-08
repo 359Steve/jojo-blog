@@ -5,7 +5,6 @@ export const sendErrorWithMessage = (event: H3Event, statusCode: number, message
 		event,
 		createError({
 			statusCode,
-			statusMessage: 'Error',
 			data: {
 				message,
 			},
