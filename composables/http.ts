@@ -44,7 +44,6 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 					nuxtApp.runWithContext(() => {
 						showError({
 							statusCode: error.code || 500,
-							statusMessage: '服务端错误',
 							message: error.msg || error.data.message || '请求出错！',
 							data: error.data,
 						});
@@ -67,7 +66,6 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 				nuxtApp.runWithContext(() => {
 					showError({
 						statusCode: error.code || 500,
-						statusMessage: '服务端错误',
 						message: error.msg || error.data.message || '请求出错！',
 						data: error.data,
 					});
