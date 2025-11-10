@@ -83,7 +83,7 @@ export class BlogRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '博客列表获取失败', null);
+				return returnData(StatusCode.SUCCESS, '博客列表到底了', null);
 			}
 
 			return returnData(StatusCode.SUCCESS, '博客列表获取成功', {
