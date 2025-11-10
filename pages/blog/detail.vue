@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { StackColor } from '~/types/com-types';
-
 definePageMeta({
 	validate(route) {
 		if (!route.query.id) {
@@ -116,7 +114,7 @@ onBeforeUnmount(() => {
 				<!-- 标签 -->
 				<div v-if="blogItem.tags && blogItem.tags.length > 0" class="mt-8 flex flex-wrap gap-2">
 					<span v-for="tag in blogItem.tags" :key="tag.tag.id" :style="{
-						color: StackColor[tag.tag.name as keyof typeof StackColor] ?? '#409eff',
+						color: tag.tag.color,
 					}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-3 py-1 text-sm shadow-sm dark:bg-gray-100/10">
 						<Icon :icon="tag.tag.icon" width="24" />
 						{{ tag.tag.name }}
