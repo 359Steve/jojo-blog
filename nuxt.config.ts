@@ -31,6 +31,16 @@ export default defineNuxtConfig({
 			jwtSecret: 'jojo-blog',
 			accessTokenExpiresIn: '7d',
 			expiresin: 604800,
+			// 配置邮件服务
+			email: {
+				host: '2075313210@qq.com',
+				port: 465,
+				secure: true,
+				auth: {
+					user: '2075313210@qq.com',
+					pass: 'uudttqgftlgvfdeb',
+				},
+			},
 		},
 	},
 	experimental: {
