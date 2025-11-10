@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { REGEXP_PWD } from '~/composables/public';
 
 export const CreateUserSchema = z.object({
 	id: z.number().optional(),
@@ -12,6 +13,7 @@ export const CreateUserSchema = z.object({
 		.string()
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '密码必须为字符串' })
+		.regex(REGEXP_PWD, '密码长度在6到20之间，且包含大写字母、小写字母、数字和特殊字符')
 		.min(6, '密码长度在6到20之间')
 		.max(20, '密码长度在6到20之间'),
 	avatar_url: z
