@@ -11,6 +11,8 @@ import { GroupService } from '../services/GroupService';
 import { GroupRepository } from '../repositories/GroupRepository';
 import { RecordDetailService } from '../services/RecordDetailService';
 import { RecordDetailRepository } from '../repositories/RecordDetailRepository';
+import { ErrorService } from '../services/ErrorService';
+import { ErrorRepository } from '../repositories/ErrorRepository';
 
 const container = new Container();
 container.bind(UserRepository).toSelf();
@@ -25,5 +27,7 @@ container.bind(GroupService).toSelf();
 container.bind(GroupRepository).toSelf();
 container.bind(RecordDetailService).toSelf();
 container.bind(RecordDetailRepository).toSelf();
+container.bind(ErrorService).toSelf();
+container.bind(ErrorRepository).toSelf();
 
 export { container };
