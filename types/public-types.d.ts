@@ -1,5 +1,4 @@
 import type { ShallowRef } from 'vue';
-import type { StackColor } from '~/types/com-types';
 
 declare global {
 	declare interface Timeline {
