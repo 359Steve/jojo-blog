@@ -10,8 +10,8 @@
 				</div>
 
 				<div class="mt-[-50px]">
-					<h3 class="mb-4 text-2xl font-bold sm:text-3xl">Look like you're lost</h3>
-					<p class="mb-6 sm:mb-5">The page you are looking for is not available!</p>
+					<h3 class="mb-4 text-2xl font-bold sm:text-3xl">哎呀，页面跑丢了！</h3>
+					<p class="mb-6 sm:mb-5">这个页面可能去度假了，或者是被藏进了山里！</p>
 				</div>
 			</div>
 		</template>
