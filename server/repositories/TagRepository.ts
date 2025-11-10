@@ -125,6 +125,7 @@ export class TagRepository {
 						icon: body.icon,
 						url: body.url,
 						type: body.type,
+						color: body.color,
 					},
 				});
 			});
