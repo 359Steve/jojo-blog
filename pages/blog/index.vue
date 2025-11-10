@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
-import { StackColor } from '~/types/com-types';
 
 const pageSize = ref<number>(20);
 const pageNumber = ref<number>(1);
@@ -11,6 +10,7 @@ const { data } = await useAsyncData('publicQueryBlogList', () =>
 		pageSize: pageSize.value,
 	}),
 );
+
 const blogList = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
 const search = ref<string>('');
 const isLoading = ref<boolean>(false);
@@ -152,7 +152,7 @@ onMounted(() => {
 					</div>
 					<div class="mt-2 flex flex-wrap gap-2 md:mb-1">
 						<span v-for="tag in item.tags" :key="tag.tag.id" :style="{
-							color: StackColor[tag.tag.name as keyof typeof StackColor] ?? '#409eff',
+							color: tag.tag.color,
 						}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-2 py-1 text-xs shadow-sm dark:bg-gray-100/10 md:text-xs lg:text-xs">
 							<Icon :icon="tag.tag.icon" width="24" />
 							{{ tag.tag.name }}
