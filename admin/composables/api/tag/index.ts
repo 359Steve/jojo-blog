@@ -19,7 +19,7 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 		}),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 分类型查询标签
@@ -34,7 +34,7 @@ export const queryTagByType = async (type: keyof typeof TagType) => {
 		}),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 创建标签

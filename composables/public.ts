@@ -83,9 +83,14 @@ export const jojoLoadingIndicator = async <T>(fn: () => Promise<T>): Promise<T> 
 };
 
 // 封装请求返回方法
-export const handleApiResponse = <T>(res: NewResponse<T>): { data: T | null; msg: string } => {
+export const handleApiResponse = <T>(
+	res: NewResponse<T>,
+	showMessage: boolean = true,
+): { data: T | null; msg: string } => {
 	if (res?.code === StatusCode.SUCCESS) {
-		ElMessage.success(res.msg);
+		if (showMessage) {
+			ElMessage.success(res.msg);
+		}
 		return {
 			data: res.data,
 			msg: res.msg,
@@ -127,6 +132,6 @@ export const chooseCondition = <Req, Rep>(endpoint: string, method: 'GET' | 'POS
 			}
 		});
 
-		return handleApiResponse(res);
+		return handleApiResponse(res, false);
 	};
 };

@@ -23,7 +23,7 @@ export const getBlogList = async (data: FindBlogParams) => {
 		),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 删除博客

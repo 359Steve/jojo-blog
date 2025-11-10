@@ -36,5 +36,5 @@ export const findUser = async (user_name?: string) => {
 		},
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };

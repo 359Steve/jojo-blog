@@ -12,7 +12,7 @@ export const queryGroupAll = async (page: number = 1, size: number = 10) => {
 		),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 新增分组
@@ -54,7 +54,7 @@ export const queryGroupTimeRanges = async () => {
 		fetchUseGet<null, { id: number; time_range: string }[]>('/record/group/groupQueryTime'),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 查询全部记录详情
@@ -68,7 +68,7 @@ export const queryRecordDetailAll = async (page: number = 1, size: number = 10) 
 		}),
 	);
 
-	return handleApiResponse(res);
+	return handleApiResponse(res, false);
 };
 
 // 新增记录详情
