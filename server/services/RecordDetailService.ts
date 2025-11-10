@@ -1,10 +1,11 @@
+import { container } from '../core/container';
 import type { CreateRecordDetailDto } from '../dto/CreateArticleDto';
 import { RecordDetailRepository } from '../repositories/RecordDetailRepository';
 
 export class RecordDetailService {
 	private recordDetailRepo: RecordDetailRepository;
 	constructor() {
-		this.recordDetailRepo = new RecordDetailRepository();
+		this.recordDetailRepo = container.get(RecordDetailRepository);
 	}
 
 	// 新增记录详情
