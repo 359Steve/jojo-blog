@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { NuxtError } from 'nuxt/app';
-import { ca } from 'zod/v4/locales';
 import type { CreateErrorMessageDto } from './server/dto/CreateErrorMessageDto';
 
 const { error } = defineProps({
