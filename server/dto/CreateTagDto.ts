@@ -8,6 +8,13 @@ export const CreateTagSchema = z.object({
 		.refine((val) => typeof val === 'string', { message: '名字必须为字符串' })
 		.min(2, '名字长度在2到50之间')
 		.max(50, '名字长度在2到50之间'),
+	color: z
+		.string()
+		.trim()
+		.refine((val) => typeof val === 'string', { message: '颜色必须为字符串' })
+		.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, '颜色格式不正确')
+		.min(2, '颜色长度在2到20之间')
+		.max(20, '颜色长度在2到20之间'),
 	icon: z
 		.string()
 		.trim()
