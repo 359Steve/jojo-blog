@@ -54,7 +54,7 @@ const updateUserRules = reactive<FormRules>({
 				if (value === '') {
 					callback(new Error('请输入密码'));
 				} else if (!REGEXP_PWD.test(value)) {
-					callback(new Error('密码格式应为8-18位数字、字母、符号的任意两种组合'));
+					callback(new Error('密码长度在6到20之间，且包含大写字母、小写字母、数字和特殊字符'));
 				} else {
 					callback();
 				}
@@ -128,7 +128,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 				formData.avatar_url = data.url;
 			}
 
-			const { data: resData, msg: resMsg } = await updataUserInfo(formData);
+			const { data: resData } = await updataUserInfo(formData);
 
 			if (resData) {
 				const user_name = useCookie('user_name');
