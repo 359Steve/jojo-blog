@@ -1,17 +1,36 @@
 <script lang="ts" setup>
 import type { NuxtError } from 'nuxt/app';
+import { ca } from 'zod/v4/locales';
+import type { CreateErrorMessageDto } from './server/dto/CreateErrorMessageDto';
 
 const { error } = defineProps({
 	error: Object as () => NuxtError,
 });
 
-const name = ref<string>('');
-const email = ref<string>('');
-const content = ref<string>('');
+const formData = reactive<CreateErrorMessageDto>({
+	name: '',
+	email: '',
+	content: '',
+});
 
 const disabled = computed(() => {
-	return !name.value || !email.value || !content.value;
+	return !formData.name || !formData.email || !formData.content;
 });
+
+const sendEmail = async () => {
+	try {
+		const res = await sendErrorEmail(formData);
+
+		if (res.data?.messageId) {
+			ElMessage.success('问题已提交，我会尽快处理！');
+			formData.name = '';
+			formData.email = '';
+			formData.content = '';
+		}
+	} catch (err) {
+		console.error('发送邮件失败:', err);
+	}
+};
 </script>
 
 <template>
@@ -30,18 +49,18 @@ const disabled = computed(() => {
 						</p>
 						<form class="form">
 							<div class="flex flex-col justify-between gap-5 md:flex-row">
-								<input v-model="name" placeholder="你的名字"
+								<input v-model="formData.name" placeholder="你的名字"
 									class="w-full rounded-md border bg-neutral-100 px-2 py-2 text-sm text-neutral-700 focus:border-emerald-500 focus:outline-none dark:border-gray-100/20 dark:bg-gray-100/10 dark:text-[white] dark:focus:border-emerald-500"
 									type="text">
-								<input v-model="email" placeholder="你的邮箱"
+								<input v-model="formData.email" placeholder="你的邮箱"
 									class="block w-full rounded-md border bg-neutral-100 px-2 py-2 text-sm text-neutral-700 invalid:border-red-500 invalid:text-red-600 focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 dark:border-gray-100/20 dark:bg-gray-100/10 dark:text-[white] dark:invalid:border-red-500 dark:invalid:text-red-600 dark:focus:border-emerald-500 dark:focus:invalid:border-red-500 dark:focus:invalid:ring-red-500"
 									type="email">
 							</div>
 							<div>
-								<textarea v-model="content" placeholder="你的问题"
+								<textarea v-model="formData.content" placeholder="你的问题"
 									class="mt-4 h-[9em] w-full rounded-md border bg-neutral-100 px-2 py-2 text-sm text-neutral-700 focus:border-emerald-500 focus:outline-none dark:border-gray-100/20 dark:bg-gray-100/10 dark:text-[white] dark:focus:border-emerald-500 sm:h-[15em]" />
 							</div>
-							<ElButton :disabled="disabled" type="primary">
+							<ElButton :disabled="disabled" type="primary" @click="sendEmail">
 								<span class="text-sm font-bold text-neutral-500">提交</span>
 							</ElButton>
 						</form>
