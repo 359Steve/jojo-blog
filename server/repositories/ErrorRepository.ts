@@ -65,10 +65,10 @@ export class ErrorRepository {
 			const result = await transporter.sendMail(mailOptions);
 
 			return result.messageId
-				? returnData(StatusCode.SUCCESS, '邮件发送成功！', result)
-				: returnData(StatusCode.FAIL, '邮件发送失败！', null);
+				? returnData(StatusCode.SUCCESS, '问题已提交，我会尽快处理', result)
+				: returnData(StatusCode.FAIL, '邮件发送失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '邮件发送失败！', null);
+			return returnData(StatusCode.FAIL, '邮件发送失败', null);
 		}
 	}
 }

@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 		const blogService = container.get(BlogService);
 		return await blogService.createBlog(result);
 	} catch {
-		sendErrorWithMessage(event, 500, '创建失败！');
+		sendErrorWithMessage(event, 500, '博客创建失败');
 		return null;
 	}
 });

@@ -45,7 +45,7 @@ export class MdRepository {
 	// 上传图片
 	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		if (!files || files.length === 0) {
-			return returnData(StatusCode.FAIL, '没有上传文件！', null);
+			return returnData(StatusCode.FAIL, '没有上传文件', null);
 		}
 
 		try {
@@ -115,12 +115,12 @@ export class MdRepository {
 				return returnData(StatusCode.FAIL, '没有有效的图片文件上传！请确保文件为图片格式且小于5MB', null);
 			}
 
-			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件！`, {
+			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
 				files: uploadResults,
 				urls: uploadResults.map((item) => item.url),
 			});
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '上传失败，请重试！', null);
+			return returnData(StatusCode.FAIL, '上传失败，请重试', null);
 		}
 	}
 }

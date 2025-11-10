@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 			pageSize: Number(query.pageSize) || 10,
 		});
 	} catch {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '分组列表查询失败');
 		return null;
 	}
 });

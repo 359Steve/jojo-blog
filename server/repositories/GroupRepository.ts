@@ -28,15 +28,15 @@ export class GroupRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '查询失败！', null);
+				return returnData(StatusCode.FAIL, '分组列表查询失败', null);
 			}
 
-			return returnData(StatusCode.SUCCESS, '查询成功！', {
+			return returnData(StatusCode.SUCCESS, '分组列表查询成功', {
 				records,
 				total,
 			});
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '分组列表查询失败', null);
 		}
 	}
 
@@ -50,7 +50,7 @@ export class GroupRepository {
 				});
 
 				if (existingGroup) {
-					throw new Error('已存在相同年份的分组');
+					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
 				}
 				return tx.record_group.create({
 					data,
@@ -58,10 +58,10 @@ export class GroupRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '创建成功！', res)
-				: returnData(StatusCode.FAIL, '创建失败！', null);
+				? returnData(StatusCode.SUCCESS, '分组创建成功', res)
+				: returnData(StatusCode.FAIL, '分组创建失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '创建失败！', null);
+			return returnData(StatusCode.FAIL, '分组创建失败', null);
 		}
 	}
 
@@ -69,16 +69,27 @@ export class GroupRepository {
 	async updateGroup(data: Partial<CreateGroupDto>) {
 		try {
 			const { id } = data;
-			const res = await this.prismaClient.record_group.update({
-				where: { id },
-				data,
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 判断当前是否存在同一年份的分组
+				const existingGroup = await tx.record_group.findFirst({
+					where: { time_range: data.time_range },
+				});
+
+				if (existingGroup) {
+					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
+				}
+
+				return await this.prismaClient.record_group.update({
+					where: { id },
+					data,
+				});
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '更新成功！', res)
-				: returnData(StatusCode.FAIL, '更新失败！', null);
+				? returnData(StatusCode.SUCCESS, '分组更新成功', res)
+				: returnData(StatusCode.FAIL, '分组更新失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '更新失败！', null);
+			return returnData(StatusCode.FAIL, '分组更新失败', null);
 		}
 	}
 
@@ -90,10 +101,10 @@ export class GroupRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '删除成功！', res)
-				: returnData(StatusCode.FAIL, '删除失败！', null);
+				? returnData(StatusCode.SUCCESS, '分组删除成功', res)
+				: returnData(StatusCode.FAIL, '分组删除失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '删除失败！', null);
+			return returnData(StatusCode.FAIL, '分组删除失败', null);
 		}
 	}
 
@@ -111,10 +122,10 @@ export class GroupRepository {
 			});
 
 			return records
-				? returnData(StatusCode.SUCCESS, '查询成功！', records)
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				? returnData(StatusCode.SUCCESS, '分组时间范围查询成功', records)
+				: returnData(StatusCode.FAIL, '分组时间范围查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '分组时间范围查询失败', null);
 		}
 	}
 
@@ -158,10 +169,10 @@ export class GroupRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '获取成功！', res)
-				: returnData(StatusCode.FAIL, '获取失败！', null);
+				? returnData(StatusCode.SUCCESS, '分组列表查询成功', res)
+				: returnData(StatusCode.FAIL, '分组列表查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '获取失败！', null);
+			return returnData(StatusCode.FAIL, '分组列表查询失败', null);
 		}
 	}
 }

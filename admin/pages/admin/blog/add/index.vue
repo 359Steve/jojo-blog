@@ -114,9 +114,6 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 
 			// 处理响应结果
 			if (res?.data) {
-				ElMessage.success(res.msg || (isEdit.value ? '更新成功' : '创建成功'));
-
-				// 成功后清理状态并跳转
 				resetCurrentBlog();
 				await navigateTo('/admin/blog/group');
 			}
@@ -179,7 +176,6 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 		const res = await mdUploadImage(formData);
 
 		if (res.data) {
-			ElMessage.success(`成功上传 ${validFiles.length} 张图片文件`);
 			callback(res.data.urls);
 		}
 	} catch (error) {

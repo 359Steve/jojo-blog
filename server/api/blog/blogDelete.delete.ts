@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		const blogService = container.get(BlogService);
 		return await blogService.deleteBlog(id);
 	} catch (error) {
-		sendErrorWithMessage(event, 500, '删除失败！');
+		sendErrorWithMessage(event, 500, '博客删除失败');
 		return null;
 	}
 });

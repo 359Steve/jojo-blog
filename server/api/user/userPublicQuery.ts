@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 		const userService = container.get(UserService);
 		return await userService.getPublicUserInfo();
 	} catch (error) {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '用户信息查询失败');
 		return null;
 	}
 });

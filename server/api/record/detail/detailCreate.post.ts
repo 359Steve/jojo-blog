@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 		const recordDetailService = container.get(RecordDetailService);
 		return await recordDetailService.createRecordDetail(result);
 	} catch {
-		sendErrorWithMessage(event, 500, '创建失败！');
+		sendErrorWithMessage(event, 500, '记录创建失败');
 		return null;
 	}
 });

@@ -153,10 +153,6 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 				}
 
 				if (res.data) {
-					ElMessage({
-						type: 'success',
-						message: isEdit.value ? '修改成功' : '新增成功',
-					});
 					// 重置表单
 					resetForm();
 					// 刷新列表
@@ -197,8 +193,6 @@ const queryArticles = async (page = 1, size = 10) => {
 		const res = await queryRecordDetailAll(page, size);
 		tableData.value = res.data?.records || [];
 		total.value = res.data?.total || 0;
-	} catch (err) {
-		ElMessage.error('查询记录详情失败');
 	} finally {
 		loading.value = false;
 	}
@@ -227,7 +221,6 @@ const handleDelete = async (id: number) => {
 		const res = await deleteRecordDetail(id);
 
 		if (res.data) {
-			ElMessage.success('删除成功');
 			if (tableData.value.length === 1 && pageNumber.value > 1) {
 				pageNumber.value -= 1;
 			}

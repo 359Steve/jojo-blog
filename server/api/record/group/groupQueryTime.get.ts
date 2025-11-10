@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 		const groupService = container.get(GroupService);
 		return await groupService.getGroupTimeRanges();
 	} catch {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '分组时间范围查询失败');
 		return null;
 	}
 });

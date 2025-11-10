@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 		const userService = container.get(UserService);
 		return await userService.updateUser({ ...result, tags: body.tags });
 	} catch {
-		sendErrorWithMessage(event, 500, '更新失败');
+		sendErrorWithMessage(event, 500, '用户更新失败');
 		return null;
 	}
 });

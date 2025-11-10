@@ -85,6 +85,7 @@ export const jojoLoadingIndicator = async <T>(fn: () => Promise<T>): Promise<T> 
 // 封装请求返回方法
 export const handleApiResponse = <T>(res: NewResponse<T>): { data: T | null; msg: string } => {
 	if (res?.code === StatusCode.SUCCESS) {
+		ElMessage.success(res.msg);
 		return {
 			data: res.data,
 			msg: res.msg,

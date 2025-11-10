@@ -36,11 +36,10 @@ export class BlogRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '创建成功！', res)
-				: returnData(StatusCode.FAIL, '创建失败！', null);
+				? returnData(StatusCode.SUCCESS, '博客创建成功', res)
+				: returnData(StatusCode.FAIL, '博客创建失败', null);
 		} catch (error) {
-			console.error('创建博客失败:', error);
-			return returnData(StatusCode.FAIL, '创建失败！', null);
+			return returnData(StatusCode.FAIL, '博客创建失败', null);
 		}
 	}
 
@@ -84,15 +83,15 @@ export class BlogRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '获取失败！', null);
+				return returnData(StatusCode.FAIL, '博客列表获取失败', null);
 			}
 
-			return returnData(StatusCode.SUCCESS, '获取成功！', {
+			return returnData(StatusCode.SUCCESS, '博客列表获取成功', {
 				records,
 				total,
 			});
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '获取失败！', null);
+			return returnData(StatusCode.FAIL, '博客列表获取失败', null);
 		}
 	}
 
@@ -124,10 +123,10 @@ export class BlogRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '删除成功！', res)
-				: returnData(StatusCode.FAIL, '删除失败！', null);
+				? returnData(StatusCode.SUCCESS, '博客删除成功', res)
+				: returnData(StatusCode.FAIL, '博客删除失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '删除失败！', null);
+			return returnData(StatusCode.FAIL, '博客删除失败', null);
 		}
 	}
 
@@ -146,10 +145,10 @@ export class BlogRepository {
 			});
 
 			return blog
-				? returnData(StatusCode.SUCCESS, '获取成功！', blog)
-				: returnData(StatusCode.FAIL, '博客不存在！', null);
+				? returnData(StatusCode.SUCCESS, '博客获取成功', blog)
+				: returnData(StatusCode.FAIL, '博客不存在', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '获取失败！', null);
+			return returnData(StatusCode.FAIL, '博客获取失败', null);
 		}
 	}
 
@@ -219,11 +218,10 @@ export class BlogRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '更新成功！', res)
-				: returnData(StatusCode.FAIL, '更新失败！', null);
+				? returnData(StatusCode.SUCCESS, '博客更新成功', res)
+				: returnData(StatusCode.FAIL, '博客更新失败', null);
 		} catch (error) {
-			console.error('更新博客失败:', error);
-			return returnData(StatusCode.FAIL, '更新失败！', null);
+			return returnData(StatusCode.FAIL, '博客更新失败', null);
 		}
 	}
 

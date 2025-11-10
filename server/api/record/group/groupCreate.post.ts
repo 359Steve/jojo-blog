@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 		const groupService = container.get(GroupService);
 		return await groupService.createGroup(result);
 	} catch {
-		sendErrorWithMessage(event, 500, '创建失败！');
+		sendErrorWithMessage(event, 500, '分组创建失败');
 		return null;
 	}
 });

@@ -43,8 +43,6 @@ const queryGroups = async (page = 1, size = 10) => {
 		const res = await queryGroupAll(page, size);
 		tableData.value = res.data?.records || [];
 		total.value = res.data?.total || 0;
-	} catch (err) {
-		ElMessage.error('查询分组失败');
 	} finally {
 		loading.value = false;
 	}
@@ -80,7 +78,7 @@ const saveGroup = async (formEl: any) => {
 			try {
 				if (isEdit.value && formData.id) {
 					const res = await updateGroup(formData);
-					ElMessage({ type: res.data ? 'success' : 'error', message: res.msg });
+
 					if (res.data) {
 						resetForm();
 						queryGroups(pageNumber.value, pageSize.value);
@@ -88,7 +86,6 @@ const saveGroup = async (formEl: any) => {
 				} else {
 					const res = await createGroup(formData);
 					if (res.data) {
-						ElMessage({ type: 'success', message: res.msg });
 						resetForm();
 						queryGroups(pageNumber.value, pageSize.value);
 					}
@@ -105,11 +102,8 @@ const handleDelete = async (id: number) => {
 	useConfirm('删除分组', 'warning', async () => {
 		const res = await deleteGroup(id);
 		if (res.data) {
-			ElMessage.success('删除成功');
 			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
 			queryGroups(pageNumber.value, pageSize.value);
-		} else {
-			ElMessage.error(res.msg || '删除失败');
 		}
 	});
 };

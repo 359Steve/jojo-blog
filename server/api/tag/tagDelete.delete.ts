@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 		const tagService = container.get(TagService);
 		return await tagService.deleteTag(id);
 	} catch {
-		sendErrorWithMessage(event, 500, '删除失败');
+		sendErrorWithMessage(event, 500, '标签删除失败');
 		return null;
 	}
 });

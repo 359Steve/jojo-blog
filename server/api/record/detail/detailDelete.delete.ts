@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 		const recordDetailService = container.get(RecordDetailService);
 		return await recordDetailService.deleteRecordDetail(id);
 	} catch {
-		sendErrorWithMessage(event, 500, '删除失败！');
+		sendErrorWithMessage(event, 500, '记录删除失败');
 		return null;
 	}
 });

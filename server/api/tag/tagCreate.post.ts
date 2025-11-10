@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 		const tagService = container.get(TagService);
 		return await tagService.createTag(result);
 	} catch {
-		sendErrorWithMessage(event, 500, '创建失败！');
+		sendErrorWithMessage(event, 500, '标签创建失败');
 		return null;
 	}
 });

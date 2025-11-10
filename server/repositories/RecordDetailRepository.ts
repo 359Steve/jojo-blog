@@ -33,9 +33,13 @@ export class RecordDetailRepository {
 				this.prismaClient.record_detail.count(),
 			]);
 
-			return returnData(StatusCode.SUCCESS, '查询成功！', { records, total });
+			if (!records || !total) {
+				return returnData(StatusCode.FAIL, '记录列表查询失败', null);
+			}
+
+			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records, total });
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '记录列表查询失败', null);
 		}
 	}
 
@@ -49,10 +53,10 @@ export class RecordDetailRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '创建成功！', res)
-				: returnData(StatusCode.FAIL, '创建失败！', null);
+				? returnData(StatusCode.SUCCESS, '记录创建成功', res)
+				: returnData(StatusCode.FAIL, '记录创建失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '创建失败！', null);
+			return returnData(StatusCode.FAIL, '创建失败', null);
 		}
 	}
 
@@ -66,10 +70,10 @@ export class RecordDetailRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '更新成功！', res)
-				: returnData(StatusCode.FAIL, '更新失败！', null);
+				? returnData(StatusCode.SUCCESS, '记录更新成功', res)
+				: returnData(StatusCode.FAIL, '记录更新失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '更新失败！', null);
+			return returnData(StatusCode.FAIL, '记录更新失败', null);
 		}
 	}
 
@@ -95,10 +99,10 @@ export class RecordDetailRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '删除成功！', res)
-				: returnData(StatusCode.FAIL, '删除失败！', null);
+				? returnData(StatusCode.SUCCESS, '记录删除成功', res)
+				: returnData(StatusCode.FAIL, '记录删除失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '删除失败！', null);
+			return returnData(StatusCode.FAIL, '记录删除失败', null);
 		}
 	}
 
@@ -106,14 +110,14 @@ export class RecordDetailRepository {
 	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		try {
 			if (!files || files.length === 0) {
-				return returnData(StatusCode.FAIL, '没有上传文件！', null);
+				return returnData(StatusCode.FAIL, '没有上传文件', null);
 			}
 
 			const file = files[0];
 
 			// 验证文件
 			if (!file.data || !file.filename) {
-				return returnData(StatusCode.FAIL, '文件数据无效！', null);
+				return returnData(StatusCode.FAIL, '文件数据无效', null);
 			}
 
 			// 验证文件类型
@@ -127,7 +131,7 @@ export class RecordDetailRepository {
 			// 验证文件大小
 			const maxSize = 5 * 1024 * 1024; // 5MB
 			if (file.data.length > maxSize) {
-				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB！', null);
+				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB', null);
 			}
 
 			// 生成安全的文件名
@@ -147,9 +151,9 @@ export class RecordDetailRepository {
 			await writeFile(savePath, file.data);
 
 			// 返回文件访问路径
-			return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/recorddetail/${safeFileName}` });
+			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/recorddetail/${safeFileName}` });
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '上传失败！', null);
+			return returnData(StatusCode.FAIL, '上传失败', null);
 		}
 	}
 
@@ -220,10 +224,10 @@ export class RecordDetailRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '查询成功！', res)
-				: returnData(StatusCode.FAIL, '记录不存在！', null);
+				? returnData(StatusCode.SUCCESS, '记录详情查询成功', res)
+				: returnData(StatusCode.FAIL, '记录详情不存在', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '记录详情查询失败', null);
 		}
 	}
 
@@ -238,10 +242,10 @@ export class RecordDetailRepository {
 			`;
 
 			return records
-				? returnData(StatusCode.SUCCESS, '查询成功！', records)
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				? returnData(StatusCode.SUCCESS, '首页记录线查询成功', records)
+				: returnData(StatusCode.FAIL, '首页记录线查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '首页记录线查询失败', null);
 		}
 	}
 }

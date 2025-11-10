@@ -131,10 +131,6 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 			const { data: resData, msg: resMsg } = await updataUserInfo(formData);
 
 			if (resData) {
-				ElMessage({
-					type: 'success',
-					message: resMsg,
-				});
 				const user_name = useCookie('user_name');
 				user_name.value = resData.user_name;
 				useUserinfo().setUserInfo({

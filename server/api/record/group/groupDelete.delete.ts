@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 		const groupService = container.get(GroupService);
 		return await groupService.deleteGroup(id);
 	} catch {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '分组删除失败');
 		return null;
 	}
 });

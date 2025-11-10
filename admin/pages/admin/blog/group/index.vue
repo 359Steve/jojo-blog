@@ -27,8 +27,6 @@ const queryBlog = async (keyword: string = '', page: number = 1, size: number = 
 
 		tableData.value = data?.records || [];
 		total.value = data?.total || 0;
-	} catch (error) {
-		ElMessage.error('查询博客失败');
 	} finally {
 		loading.value = false;
 	}
@@ -78,7 +76,6 @@ const handleDelete = async (id: number) => {
 			const { data, msg } = await deleteBlog(id);
 
 			if (data) {
-				ElMessage.success(msg);
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
 					pageNumber.value -= 1;
 				}

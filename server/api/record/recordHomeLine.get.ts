@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 		const recordDetailService = container.get(RecordDetailService);
 		return await recordDetailService.getRecordHomeLine();
 	} catch {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '首页记录线查询失败');
 		return null;
 	}
 });

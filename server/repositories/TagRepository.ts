@@ -31,14 +31,18 @@ export class TagRepository {
 				}),
 			]);
 
+			if (!records || !total) {
+				return returnData(StatusCode.FAIL, '标签列表查询失败', null);
+			}
+
 			return records
-				? returnData(StatusCode.SUCCESS, '查询成功！', {
+				? returnData(StatusCode.SUCCESS, '标签列表查询成功', {
 					records,
 					total,
 				})
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				: returnData(StatusCode.FAIL, '标签列表查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '标签列表查询失败', null);
 		}
 	}
 
@@ -54,10 +58,10 @@ export class TagRepository {
 			});
 
 			return records
-				? returnData(StatusCode.SUCCESS, '查询成功！', records)
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				? returnData(StatusCode.SUCCESS, '标签列表查询成功', records)
+				: returnData(StatusCode.FAIL, '标签列表查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '标签列表查询失败', null);
 		}
 	}
 
@@ -84,13 +88,13 @@ export class TagRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '创建成功！', res)
-				: returnData(StatusCode.FAIL, '创建失败！', null);
+				? returnData(StatusCode.SUCCESS, '标签创建成功', res)
+				: returnData(StatusCode.FAIL, '标签创建失败', null);
 		} catch (error: any) {
 			if (error.message === 'TAG_EXISTS') {
-				return returnData(StatusCode.FAIL, `标签"${value.name}"已存在！`, null);
+				return returnData(StatusCode.FAIL, `标签"${value.name}"已存在`, null);
 			}
-			return returnData(StatusCode.FAIL, '创建失败！', null);
+			return returnData(StatusCode.FAIL, '标签创建失败', null);
 		}
 	}
 
@@ -126,13 +130,13 @@ export class TagRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '修改成功！', res)
-				: returnData(StatusCode.FAIL, '修改失败！', null);
+				? returnData(StatusCode.SUCCESS, '标签修改成功', res)
+				: returnData(StatusCode.FAIL, '标签修改失败', null);
 		} catch (error: any) {
 			if (error.message === 'TAG_EXISTS') {
-				return returnData(StatusCode.FAIL, `标签"${body.name}"已存在！`, null);
+				return returnData(StatusCode.FAIL, `标签"${body.name}"已存在`, null);
 			}
-			return returnData(StatusCode.FAIL, '修改失败！', null);
+			return returnData(StatusCode.FAIL, '标签修改失败', null);
 		}
 	}
 
@@ -168,13 +172,13 @@ export class TagRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '删除成功！', res)
-				: returnData(StatusCode.FAIL, '删除失败！', null);
+				? returnData(StatusCode.SUCCESS, '标签删除成功', res)
+				: returnData(StatusCode.FAIL, '标签删除失败', null);
 		} catch (error: any) {
 			if (error.message === 'TAG_IN_USE') {
 				return returnData(StatusCode.FAIL, '该标签正在被使用，无法删除！', null);
 			}
-			return returnData(StatusCode.FAIL, '删除失败！', null);
+			return returnData(StatusCode.FAIL, '标签删除失败', null);
 		}
 	}
 }

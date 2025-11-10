@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 		const blogService = container.get(BlogService);
 		return await blogService.getBlogList(query);
 	} catch (error) {
-		sendErrorWithMessage(event, 500, '获取失败！');
+		sendErrorWithMessage(event, 500, '博客列表获取失败');
 		return null;
 	}
 });

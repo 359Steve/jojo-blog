@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 		const groupService = container.get(GroupService);
 		return await groupService.getPublicGroups(query.keyword);
 	} catch (error) {
-		sendErrorWithMessage(event, 500, '获取失败！');
+		sendErrorWithMessage(event, 500, '分组列表查询失败');
 		return null;
 	}
 });

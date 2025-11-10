@@ -45,10 +45,10 @@ export class UserRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '查询成功！', user_name ? res : { ...res, password: '' })
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				? returnData(StatusCode.SUCCESS, '用户信息查询成功', user_name ? res : { ...res, password: '' })
+				: returnData(StatusCode.FAIL, '用户信息查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '用户信息查询失败', null);
 		}
 	}
 
@@ -72,10 +72,10 @@ export class UserRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '查询成功！', res)
-				: returnData(StatusCode.FAIL, '查询失败！', null);
+				? returnData(StatusCode.SUCCESS, '用户信息查询成功', res)
+				: returnData(StatusCode.FAIL, '用户信息查询失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '查询失败！', null);
+			return returnData(StatusCode.FAIL, '用户信息查询失败', null);
 		}
 	}
 
@@ -83,7 +83,7 @@ export class UserRepository {
 	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		try {
 			if (!files || files.length === 0) {
-				return returnData(StatusCode.FAIL, '没有上传文件！', null);
+				return returnData(StatusCode.FAIL, '没有上传文件', null);
 			}
 
 			const file = files[0];
@@ -104,15 +104,15 @@ export class UserRepository {
 			const savePath = join(dirPath, fileName);
 
 			if (!file.data) {
-				return returnData(StatusCode.FAIL, '上传失败！', null);
+				return returnData(StatusCode.FAIL, '上传失败', null);
 			}
 
 			await writeFile(savePath, file.data);
 
 			// 返回文件访问路径
-			return returnData(StatusCode.SUCCESS, '上传成功！', { url: `/avatar/${fileName}` });
+			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/avatar/${fileName}` });
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '上传失败！', null);
+			return returnData(StatusCode.FAIL, '上传失败', null);
 		}
 	}
 
@@ -155,10 +155,10 @@ export class UserRepository {
 			});
 
 			return res
-				? returnData(StatusCode.SUCCESS, '修改成功！', res)
-				: returnData(StatusCode.FAIL, '修改失败！', null);
+				? returnData(StatusCode.SUCCESS, '用户信息更新成功', res)
+				: returnData(StatusCode.FAIL, '用户信息更新失败', null);
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '修改失败！', null);
+			return returnData(StatusCode.FAIL, '用户信息更新失败', null);
 		}
 	}
 }

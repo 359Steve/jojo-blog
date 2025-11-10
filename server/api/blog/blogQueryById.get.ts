@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		const blogService = container.get(BlogService);
 		return await blogService.getBlogById(id);
 	} catch (error) {
-		sendErrorWithMessage(event, 500, '获取失败！');
+		sendErrorWithMessage(event, 500, '博客获取失败');
 		return null;
 	}
 });

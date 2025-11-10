@@ -85,10 +85,6 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 				const { data, msg } = await createTags(formData);
 
 				if (data) {
-					ElMessage({
-						type: 'success',
-						message: msg,
-					});
 					resetForm();
 					queryTag(searchTag.value, pageNumber.value);
 				}
@@ -108,10 +104,6 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 				const { data, msg } = await updateTags(formData);
 
 				if (data) {
-					ElMessage({
-						type: 'success',
-						message: msg,
-					});
 					for (const item of tableData.value) {
 						if (item.id === formData.id) {
 							Object.assign(item, formData);
@@ -142,19 +134,15 @@ const editClick = (value: CreateTagDto): void => {
 const deleteClick = (value: CreateTagDto): void => {
 	useConfirm('删除标签', 'warning', async () => {
 		try {
-			const { data, msg } = await deleteTags(value.id!);
+			const { data } = await deleteTags(value.id!);
 			if (data) {
-				ElMessage({
-					type: 'success',
-					message: msg,
-				});
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
 					pageNumber.value -= 1;
 				}
 				queryTag(searchTag.value, pageNumber.value);
 			}
-		} catch (error) {
-			ElMessage.error('删除失败，请重试');
+		} finally {
+			loading.value = false;
 		}
 	});
 };

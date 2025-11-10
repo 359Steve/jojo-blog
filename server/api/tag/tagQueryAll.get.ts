@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 		// 查询标签数据
 		return await tagService.findAllTag(query);
 	} catch {
-		sendErrorWithMessage(event, 500, '查询失败！');
+		sendErrorWithMessage(event, 500, '标签列表查询失败');
 		return null;
 	}
 });

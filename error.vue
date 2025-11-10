@@ -21,7 +21,6 @@ const sendEmail = async () => {
 		const res = await sendErrorEmail(formData);
 
 		if (res.data?.messageId) {
-			ElMessage.success('问题已提交，我会尽快处理！');
 			formData.name = '';
 			formData.email = '';
 			formData.content = '';
