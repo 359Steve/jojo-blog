@@ -82,7 +82,7 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 		if (valid) {
 			loading.value = true;
 			try {
-				const { data, msg } = await createTags(formData);
+				const { data } = await createTags(formData);
 
 				if (data) {
 					resetForm();
@@ -101,7 +101,7 @@ const updateTag = async (formEl: FormInstance | undefined): Promise<void> => {
 		if (valid) {
 			loading.value = true;
 			try {
-				const { data, msg } = await updateTags(formData);
+				const { data } = await updateTags(formData);
 
 				if (data) {
 					for (const item of tableData.value) {
