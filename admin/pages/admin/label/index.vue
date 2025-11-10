@@ -11,6 +11,7 @@ const ruleFormRef = templateRef('ruleFormRef');
 const formData = reactive<CreateTagDto>({
 	name: '',
 	icon: '',
+	color: '#000000',
 	url: '',
 	type: 'BLOG',
 });
@@ -46,6 +47,21 @@ const createTagRules = reactive<FormRules>({
 			trigger: 'blur',
 		},
 	],
+	color: [
+		{
+			required: false,
+			validator: (_rule: any, value: string, callback: any) => {
+				if (!value) {
+					callback();
+				} else if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value)) {
+					callback();
+				} else {
+					callback(new Error('颜色值格式不正确'));
+				}
+			},
+			trigger: 'blur',
+		},
+	],
 	url: [{ required: true, message: '请输入链接地址', trigger: 'blur' }],
 	type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
 });
@@ -54,6 +70,7 @@ const createTagRules = reactive<FormRules>({
 const resetForm = () => {
 	formData.name = '';
 	formData.icon = '';
+	formData.color = '#000000';
 	formData.url = '';
 	formData.type = 'BLOG';
 	delete formData.id;
@@ -69,8 +86,6 @@ const queryTag = async (name: string = '', page: number = 1) => {
 
 		tableData.value = data?.records || [];
 		total.value = data?.total || 0;
-	} catch (error) {
-		console.log(error);
 	} finally {
 		loading.value = false;
 	}
@@ -200,7 +215,14 @@ watch(searchTag, (newValue) => {
 					<ElOption label="个人" value="PERSON" />
 				</ElSelect>
 			</ElFormItem>
-			<ElFormItem class="save !mx-0 !w-full">
+			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="color" label="颜色：">
+				<ElInput v-model="formData.color" class="color" placeholder="请输入颜色值，如 #409eff" clearable>
+					<template #prefix>
+						<el-color-picker v-model="formData.color" class="!border-none" />
+					</template>
+				</ElInput>
+			</ElFormItem>
+			<ElFormItem class="save !mx-0 !w-full sm:!w-[50%]">
 				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="createTag(ruleFormRef!)">
 					新增
 				</ElButton>
@@ -252,4 +274,12 @@ watch(searchTag, (newValue) => {
 	</AdminFormMain>
 </template>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+:deep(.el-color-picker__trigger) {
+	@apply !p-0;
+}
+
+:deep(.color .el-input__wrapper) {
+	@apply pl-0;
+}
+</style>
