@@ -54,6 +54,7 @@ export default defineNuxtConfig({
 			'composables/blog',
 			'composables/user',
 			'composables/api/record',
+			'composables/api/error',
 		],
 	},
 	plugins: [
