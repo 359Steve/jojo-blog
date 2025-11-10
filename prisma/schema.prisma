@@ -23,6 +23,7 @@ model tag {
     id       Int        @id @default(autoincrement())
     name     String     @db.VarChar(50)
     icon     String     @db.VarChar(255)
+    color    String     @db.VarChar(20)
     url      String     @db.VarChar(255)
     type     TagType    @default(BLOG)
     blog_tag blog_tag[]
