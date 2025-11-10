@@ -1,7 +1,10 @@
 import { z } from 'zod';
 
 export const CreateBlogSchema = z.object({
-	id: z.number().optional(),
+	id: z
+		.number()
+		.optional()
+		.refine((val) => typeof val === 'number', { message: 'ID必须为数字' }),
 	front_cover: z
 		.string()
 		.trim()

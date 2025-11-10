@@ -1,8 +1,14 @@
 import { z } from 'zod';
 
 export const CreateRecordDetailSchema = z.object({
-	id: z.number().optional(),
-	group_id: z.number().min(1, '分组ID不能为空'),
+	id: z
+		.number()
+		.optional()
+		.refine((val) => typeof val === 'number', { message: 'ID必须为数字' }),
+	group_id: z
+		.number()
+		.min(1, '分组ID不能为空')
+		.refine((val) => typeof val === 'number', { message: '分组ID必须为数字' }),
 	title: z.string().min(1, '标题不能为空'),
 	summary: z.string().min(1, '摘要不能为空'),
 	time_range: z.string().min(1, '时间范围不能为空'),
