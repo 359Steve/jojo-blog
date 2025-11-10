@@ -32,7 +32,7 @@ export class TagRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '标签列表查询失败', null);
+				return returnData(StatusCode.SUCCESS, '标签列表到底了', null);
 			}
 
 			return records

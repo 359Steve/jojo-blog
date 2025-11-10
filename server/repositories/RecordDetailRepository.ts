@@ -34,7 +34,7 @@ export class RecordDetailRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '记录列表查询失败', null);
+				return returnData(StatusCode.SUCCESS, '记录列表到底了', null);
 			}
 
 			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records, total });

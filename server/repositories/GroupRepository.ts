@@ -28,7 +28,7 @@ export class GroupRepository {
 			]);
 
 			if (!records || !total) {
-				return returnData(StatusCode.FAIL, '分组列表查询失败', null);
+				return returnData(StatusCode.SUCCESS, '分组列表到底了', null);
 			}
 
 			return returnData(StatusCode.SUCCESS, '分组列表查询成功', {
