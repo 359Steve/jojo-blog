@@ -1,10 +1,11 @@
+import { container } from '../core/container';
 import type { CreateGroupDto } from '../dto/CreateGroupDto';
 import { GroupRepository } from '../repositories/GroupRepository';
 
 export class GroupService {
 	private groupRepo: GroupRepository;
 	constructor() {
-		this.groupRepo = new GroupRepository();
+		this.groupRepo = container.get(GroupRepository);
 	}
 
 	// 新增分组
