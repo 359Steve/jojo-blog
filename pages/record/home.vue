@@ -82,34 +82,35 @@ onMounted(() => {
 					<div class="w-full">
 						<div class="flex w-full items-center justify-between">
 							<h5
-								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-emerald-500 md:text-lg lg:text-lg">
+								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-rose-500 md:text-lg lg:text-lg">
 								{{ item.title }}
 							</h5>
 							<h5
-								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-emerald-500 md:text-lg lg:text-lg">
+								class="from-primary to-secondary bg-gradient-to-r bg-clip-text text-base font-semibold tracking-wider text-rose-500 md:text-lg lg:text-lg">
 								{{ getItemTime(index) }}
 							</h5>
 						</div>
 
-						<p
-							class="from-primary text-secondary font-semibold leading-relaxed tracking-wider sm:text-base">
-							{{ item.role }}
-						</p>
-						<p class="from-primary text-secondary mb-4 text-sm font-normal leading-relaxed tracking-wider">
-							{{ item.summary }}
-						</p>
+						<div class="mb-6 space-y-3">
+							<p class="text-lg font-medium leading-relaxed text-gray-800 dark:text-gray-200">
+								{{ item.role }}
+							</p>
+							<p class="leading-relaxed text-gray-600 dark:text-gray-400">
+								{{ item.summary }}
+							</p>
+						</div>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2"
 							:class="[index % 2 === 0 ? '' : 'sm:flex-row-reverse']">
 							<div ref="recordText" class="aaaaa h-fit w-full"
 								:class="[index % 2 === 0 ? 'sm:order-1' : 'sm:order-2']">
 								<div v-if="item.details && item.details.length > 0">
 									<div v-for="demo in item.details" :key="demo.id"
-										class="group my-2 flex w-full cursor-pointer grid-cols-1 items-start space-x-1 sm:grid-cols-2"
+										class="group my-2 flex w-full cursor-pointer grid-cols-1 items-start space-x-2 sm:grid-cols-2"
 										@click="toDetail(item.id!, demo.id!)">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 											viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 											stroke-linecap="round" stroke-linejoin="round"
-											class="mt-1 h-3 w-4 text-neutral-300">
+											class="mt-1 h-4 w-4 flex-shrink-0 text-neutral-300">
 											<path
 												d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
 												fill="currentColor" stroke-width="0" />
