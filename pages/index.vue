@@ -1,22 +1,20 @@
 <script lang="ts" setup>
-const { data } = await useAsyncData('queryRecordHomeLine', () => queryRecordHomeLine());
+import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
 
+const { data } = await useAsyncData('indexRecordPictures', () =>
+	findRecordPictures({
+		pageNumber: 1,
+		pageSize: 4,
+		random: true,
+	}),
+);
+
+const pictureList = ref<Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[]>(data.value?.data || []);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
-const directionClass = ref<string>('');
 const isSm = ref<boolean>(false);
 const { getBlogUserInfo } = useBlogUserInfo();
-
-const timelineData = computed(() => {
-	return (
-		data.value?.data?.slice().sort((a, b) => {
-			const timeA = new Date(a.time_range).getTime();
-			const timeB = new Date(b.time_range).getTime();
-			return timeB - timeA;
-		}) || []
-	);
-});
 
 const userInfo = reactive(
 	getBlogUserInfo() ?? {
@@ -28,40 +26,6 @@ const userInfo = reactive(
 		tags: [],
 	},
 );
-
-const onMouseenter = (e: MouseEvent): void => {
-	if (isSm.value) return;
-	const w = e.offsetX - rect.value!.width / 2;
-	const h = rect.value!.height / 2 - e.offsetY;
-	const currentTheta = Math.atan2(h, w);
-
-	if (currentTheta < theta.value && currentTheta >= -theta.value) {
-		directionClass.value = 'translate-x-[100%] opacity-100 animate-rightEnter';
-	} else if (currentTheta >= theta.value && currentTheta <= Math.PI - theta.value) {
-		directionClass.value = 'translate-y-[-100%] opacity-100 animate-topEnter';
-	} else if (currentTheta <= -theta.value && currentTheta >= -Math.PI + theta.value) {
-		directionClass.value = 'translate-y-[100%] opacity-100 animate-bottomEnter';
-	} else {
-		directionClass.value = 'translate-x-[-100%] opacity-100 animate-leftEnter';
-	}
-};
-
-const onMouseleave = (e: MouseEvent): void => {
-	if (isSm.value) return;
-	const w = e.offsetX - rect.value!.width / 2;
-	const h = rect.value!.height / 2 - e.offsetY;
-	const currentTheta = Math.atan2(h, w);
-
-	if (currentTheta < theta.value && currentTheta >= -theta.value) {
-		directionClass.value = 'opacity-100 animate-rightLeave';
-	} else if (currentTheta >= theta.value && currentTheta <= Math.PI - theta.value) {
-		directionClass.value = 'opacity-100 animate-topLeave';
-	} else if (currentTheta <= -theta.value && currentTheta >= -Math.PI + theta.value) {
-		directionClass.value = 'opacity-100 animate-bottomLeave';
-	} else {
-		directionClass.value = 'opacity-100 animate-leftLeave';
-	}
-};
 
 const toRecord = () => {
 	navigateTo('/record/home');
@@ -81,47 +45,57 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex w-full flex-col gap-6">
-		<!-- 介绍 -->
-		<div class="mx-auto w-full sm:w-[75%]">
-			<div class="h-full w-full pb-4 pt-8 sm:pb-8">
-				<AnimationRevealOnScroll>
-					<h1 class="text-center text-[2.25em] font-extralight">{{ userInfo.pet_name }}</h1>
-				</AnimationRevealOnScroll>
-				<AnimationRevealOnScroll>
-					<div class="mt-4 text-center">{{ userInfo.describe }}</div>
-				</AnimationRevealOnScroll>
+	<div class="grid w-full grid-cols-1 items-center gap-8 pt-8 sm:pt-12 md:grid-cols-2">
+		<div>
+			<div class="mb-4 block text-xs font-medium text-rose-500 opacity-100 backdrop-blur-0 md:text-sm">
+				{{ userInfo.pet_name }}
+			</div>
+			<div class="text-4xl font-semibold tracking-tight opacity-100 backdrop-blur-0 md:text-[2.4rem]">
+				{{ userInfo.sign }}
+			</div>
+			<div
+				class="my-4 line-clamp-5 indent-10 text-base text-slate-700 opacity-100 backdrop-blur-0 dark:text-slate-50 md:my-6 md:text-lg">
+				{{ userInfo.describe }}
+			</div>
+			<div class="opacity-100 backdrop-blur-0">
+				<button
+					class="ring-offset-background focus-visible:ring-ring text-primary-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-rose-500 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					@click="toRecord">
+					欢迎浏览
+				</button>
 			</div>
 		</div>
-		<div class="mx-auto grid w-full grid-cols-1 gap-8 sm:w-[75%] md:w-[90%] md:grid-cols-2 md:gap-4">
-			<div class="w-full">
-				<div class="relative flex h-full w-full items-center py-0 md:py-4">
-					<div
-						class="absolute z-[-1] h-[calc(100%-1rem)] w-[50%] rounded-base bg-half-gray sm:h-full md:h-[calc(100%-2rem)]" />
-					<div
-						class="ml-4 h-fit w-[calc(100%-1rem)] rounded-base bg-white p-4 shadow-md sm:h-[calc(100%-2rem)]">
-						<div ref="indexBg" class="relative h-full w-full cursor-pointer overflow-hidden"
-							@mouseenter="onMouseenter" @mouseleave="onMouseleave">
-							<Starport id="record-image-my-id" port="my-id"
-								class="aspect-[3/2] max-h-full w-full md:h-full">
-								<RecordImage class="transition-all duration-1000"
-									:class="[useVueStarport().isRound ? 'rounded-[50%]' : 'rounded-none']" />
-							</Starport>
 
-							<div class="absolute top-0 flex h-full w-full items-end bg-white/40 backdrop-blur-sm dark:bg-black/40"
-								:class="[directionClass, isSm ? 'opacity-100' : 'opacity-0']" @click="toRecord">
-								<div class="grid grid-cols-1 gap-2 p-4 text-[0.8rem]">
-									<div>点击查看我的个人履历！</div>
-									<div>您将了解到我的学习背景、技能特长和经历</div>
-								</div>
-							</div>
-						</div>
-					</div>
+		<div class="relative">
+			<div class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
+				<div class="relative col-start-2 col-end-3 row-start-1 row-end-3 overflow-hidden rounded-xl shadow-xl"
+					style="opacity: 1">
+					<img class="size-full object-cover object-center" width="100%" height="100%"
+						:alt="pictureList[0]?.image_alt || ''" :src="pictureList[0]?.image_url ||
+							'https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&amp;w=2338&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+							" />
 				</div>
-			</div>
-			<div class="mb-8 grid h-full w-full grid-cols-1 justify-center text-sm sm:mb-0">
-				<IndexBasicTime class="block md:hidden lg:block" :timeline-data="timelineData" />
-				<IndexMdToLgTime class="hidden md:block lg:hidden" :timeline-data="timelineData" />
+				<div class="relative col-start-1 col-end-2 row-start-2 row-end-4 overflow-hidden rounded-xl shadow-xl"
+					style="opacity: 1">
+					<img class="size-full object-cover object-center" width="100%" height="100%"
+						:alt="pictureList[1]?.image_alt || ''" :src="pictureList[1]?.image_url ||
+							'https://images.unsplash.com/photo-1733680958774-39a0e8a64a54?q=80&amp;w=2487&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+							" />
+				</div>
+				<div class="relative col-start-1 col-end-2 row-start-4 row-end-6 overflow-hidden rounded-xl shadow-xl"
+					style="opacity: 1">
+					<img class="size-full object-cover object-center" width="100%" height="100%"
+						:alt="pictureList[2]?.image_alt || ''" :src="pictureList[2]?.image_url ||
+							'https://images.unsplash.com/photo-1548783307-f63adc3f200b?q=80&amp;w=2487&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+							" />
+				</div>
+				<div class="relative col-start-2 col-end-3 row-start-3 row-end-5 overflow-hidden rounded-xl shadow-xl"
+					style="opacity: 1">
+					<img class="size-full object-cover object-center" width="100%" height="100%"
+						:alt="pictureList[3]?.image_alt || ''" :src="pictureList[3]?.image_url ||
+							'https://images.unsplash.com/photo-1703622377707-29bc9409aaf2?q=80&amp;w=2400&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+							" />
+				</div>
 			</div>
 		</div>
 	</div>
