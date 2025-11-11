@@ -18,7 +18,7 @@ export class RecordDetailRepository {
 			const offset = (pageNumber - 1) * pageSize;
 
 			const [records, total] = await Promise.all([
-				this.prismaClient.record_detail.findMany({
+				this.prismaClient.record_details.findMany({
 					orderBy: { created_at: 'desc' },
 					skip: offset,
 					take: pageSize,
@@ -30,7 +30,7 @@ export class RecordDetailRepository {
 						},
 					},
 				}),
-				this.prismaClient.record_detail.count(),
+				this.prismaClient.record_details.count(),
 			]);
 
 			if (!records || !total) {
@@ -46,7 +46,7 @@ export class RecordDetailRepository {
 	// 新增记录详情
 	async createRecordDetail(data: CreateRecordDetailDto) {
 		try {
-			const res = await this.prismaClient.record_detail.create({
+			const res = await this.prismaClient.record_details.create({
 				data: {
 					...data,
 				},
@@ -64,7 +64,7 @@ export class RecordDetailRepository {
 	async updateRecordDetail(data: Partial<CreateRecordDetailDto>) {
 		try {
 			const { id, ...updateData } = data;
-			const res = await this.prismaClient.record_detail.update({
+			const res = await this.prismaClient.record_details.update({
 				where: { id: Number(id) },
 				data: updateData,
 			});
@@ -81,7 +81,7 @@ export class RecordDetailRepository {
 	async deleteRecordDetail(id: number) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
-				const currentDelete = await tx.record_detail.delete({
+				const currentDelete = await tx.record_details.delete({
 					where: { id: Number(id) },
 				});
 
@@ -161,13 +161,13 @@ export class RecordDetailRepository {
 	async getPublicRecordDetail(parentId: number, id: number) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
-				const currentDetail = await tx.record_detail.findUnique({
+				const currentDetail = await tx.record_details.findUnique({
 					where: {
 						id: Number(id),
 					},
 				});
 
-				const imageAll = await tx.record_detail.findMany({
+				const imageAll = await tx.record_details.findMany({
 					select: {
 						id: true,
 						image_url: true,
@@ -181,7 +181,7 @@ export class RecordDetailRepository {
 					},
 				});
 
-				const prev = await tx.record_detail.findFirst({
+				const prev = await tx.record_details.findFirst({
 					where: {
 						group_id: Number(parentId),
 						id: {
@@ -196,7 +196,7 @@ export class RecordDetailRepository {
 					},
 				});
 
-				const next = await tx.record_detail.findFirst({
+				const next = await tx.record_details.findFirst({
 					where: {
 						group_id: Number(parentId),
 						id: {
