@@ -1,98 +1,98 @@
 generator client {
-    provider      = "prisma-client-js"
-    binaryTargets = ["native", "rhel-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.1.x"]
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model user_info {
-    id         Int        @id @default(autoincrement())
-    user_name  String     @db.VarChar(10)
-    password   String     @db.VarChar(20)
-    avatar_url String     @db.VarChar(255)
-    pet_name   String     @db.VarChar(20)
-    describe   String     @db.Text
-    sign       String     @db.Text
-    tags       user_tag[]
+  id         Int        @id @default(autoincrement())
+  user_name  String     @db.VarChar(10)
+  password   String     @db.VarChar(20)
+  avatar_url String     @db.VarChar(255)
+  pet_name   String     @db.VarChar(20)
+  describe   String     @db.Text
+  sign       String     @db.Text
+  tags       user_tag[]
 }
 
 model tag {
-    id       Int        @id @default(autoincrement())
-    name     String     @db.VarChar(50)
-    icon     String     @db.VarChar(255)
-    color    String     @db.VarChar(20)
-    url      String     @db.VarChar(255)
-    type     TagType    @default(BLOG)
-    blog_tag blog_tag[]
-    users    user_tag[]
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(50)
+  icon     String     @db.VarChar(255)
+  url      String     @db.VarChar(255)
+  type     TagType    @default(BLOG)
+  color    String     @default("#000000") @db.VarChar(20)
+  blog_tag blog_tag[]
+  users    user_tag[]
 
-    @@unique([name, type], map: "uk_name_type")
+  @@unique([name, type], map: "uk_name_type")
 }
 
 model blog {
-    id          Int        @id @default(autoincrement())
-    title       String
-    subtitle    String
-    created_at  DateTime   @default(now())
-    updated_at  DateTime   @updatedAt
-    content     String     @db.Text
-    front_cover String     @db.VarChar(255)
-    tags        blog_tag[]
+  id          Int        @id @default(autoincrement())
+  title       String
+  subtitle    String
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  content     String     @db.Text
+  front_cover String     @db.VarChar(255)
+  tags        blog_tag[]
 }
 
 model blog_tag {
-    blog_id Int
-    tag_id  Int
-    blog    blog @relation(fields: [blog_id], references: [id])
-    tag     tag  @relation(fields: [tag_id], references: [id])
+  blog_id Int
+  tag_id  Int
+  blog    blog @relation(fields: [blog_id], references: [id])
+  tag     tag  @relation(fields: [tag_id], references: [id])
 
-    @@id([blog_id, tag_id])
-    @@index([tag_id], map: "blog_tag_tag_id_fkey")
+  @@id([blog_id, tag_id])
+  @@index([tag_id], map: "blog_tag_tag_id_fkey")
 }
 
 model user_tag {
-    user_id Int
-    tag_id  Int
-    tag     tag       @relation(fields: [tag_id], references: [id])
-    user    user_info @relation(fields: [user_id], references: [id])
+  user_id Int
+  tag_id  Int
+  tag     tag       @relation(fields: [tag_id], references: [id])
+  user    user_info @relation(fields: [user_id], references: [id])
 
-    @@id([user_id, tag_id])
-    @@index([tag_id], map: "user_tag_tag_id_fkey")
+  @@id([user_id, tag_id])
+  @@index([tag_id], map: "user_tag_tag_id_fkey")
 }
 
-model record_group {
-    id         Int             @id @default(autoincrement())
-    time_range String          @unique @db.VarChar(255)
-    title      String          @db.VarChar(255)
-    role       String          @db.VarChar(255)
-    summary    String          @db.Text
-    created_at DateTime        @default(now())
-    updated_at DateTime        @updatedAt
-    details    record_detail[]
+model record_groups {
+  id         Int              @id @default(autoincrement())
+  time_range String           @unique @db.VarChar(255)
+  title      String           @db.VarChar(255)
+  role       String           @db.VarChar(255)
+  summary    String           @db.Text
+  created_at DateTime         @default(now())
+  updated_at DateTime         @updatedAt
+  details    record_details[]
 
-    @@map("record_groups")
+  @@map("record_groups")
 }
 
-model record_detail {
-    id         Int          @id @default(autoincrement())
-    group_id   Int
-    title      String       @db.VarChar(100)
-    summary    String       @db.Text
-    time_range String       @db.VarChar(20)
-    image_url  String       @db.VarChar(500)
-    image_alt  String       @db.VarChar(200)
-    created_at DateTime     @default(now())
-    updated_at DateTime     @updatedAt
-    group      record_group @relation(fields: [group_id], references: [id], onDelete: Cascade)
+model record_details {
+  id         Int           @id @default(autoincrement())
+  group_id   Int
+  title      String        @db.VarChar(100)
+  summary    String        @db.Text
+  time_range String        @db.VarChar(20)
+  image_url  String        @db.VarChar(500)
+  image_alt  String        @db.VarChar(200)
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  group      record_groups @relation(fields: [group_id], references: [id], onDelete: Cascade)
 
-    @@index([group_id], map: "record_details_group_id_fkey")
-    @@map("record_details")
+  @@index([group_id], map: "record_details_group_id_fkey")
+  @@map("record_details")
 }
 
 enum TagType {
-    BLOG
-    PERSON
+  BLOG
+  PERSON
 }
