@@ -8,5 +8,8 @@ export const findPublicUser = chooseCondition<
 	UserWithTagsRep<Omit<CreateUserDto, 'password'>, CreateTagDto, 'tags'>
 >('/user/userPublicQuery');
 
-// 查询首页推荐的记录详情
-export const queryRecordHomeLine = chooseCondition<any, CreateRecordDetailDto[]>('/record/recordHomeLine');
+// 查询照片
+export const findRecordPictures = (query: FindPictureRequest) =>
+	chooseCondition<FindPictureRequest, Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[]>(
+		'/record/recordPublicPic',
+	)(query);
