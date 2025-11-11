@@ -13,7 +13,7 @@ export class GroupRepository {
 
 		try {
 			const [records, total] = await Promise.all([
-				this.prismaClient.record_group.findMany({
+				this.prismaClient.record_groups.findMany({
 					include: {
 						_count: {
 							select: {
@@ -24,7 +24,7 @@ export class GroupRepository {
 					skip: (Number(pageNumber) - 1) * Number(pageSize),
 					take: Number(pageSize),
 				}),
-				this.prismaClient.record_group.count(),
+				this.prismaClient.record_groups.count(),
 			]);
 
 			if (!records || !total) {
@@ -45,14 +45,14 @@ export class GroupRepository {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
 				// 判断当前是否存在同一年份的分组
-				const existingGroup = await tx.record_group.findFirst({
+				const existingGroup = await tx.record_groups.findFirst({
 					where: { time_range: data.time_range },
 				});
 
 				if (existingGroup) {
 					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
 				}
-				return tx.record_group.create({
+				return tx.record_groups.create({
 					data,
 				});
 			});
@@ -71,7 +71,7 @@ export class GroupRepository {
 			const { id } = data;
 			const res = await this.prismaClient.$transaction(async (tx) => {
 				// 判断当前是否存在同一年份的分组
-				const existingGroup = await tx.record_group.findFirst({
+				const existingGroup = await tx.record_groups.findFirst({
 					where: { time_range: data.time_range },
 				});
 
@@ -79,7 +79,7 @@ export class GroupRepository {
 					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
 				}
 
-				return await this.prismaClient.record_group.update({
+				return await this.prismaClient.record_groups.update({
 					where: { id },
 					data,
 				});
@@ -96,7 +96,7 @@ export class GroupRepository {
 	// 删除分组
 	async deleteGroup(id: number) {
 		try {
-			const res = await this.prismaClient.record_group.delete({
+			const res = await this.prismaClient.record_groups.delete({
 				where: { id: Number(id) },
 			});
 
@@ -111,7 +111,7 @@ export class GroupRepository {
 	// 查询分组时间范围
 	async getGroupTimeRanges() {
 		try {
-			const records = await this.prismaClient.record_group.findMany({
+			const records = await this.prismaClient.record_groups.findMany({
 				select: {
 					id: true,
 					time_range: true,
@@ -141,7 +141,7 @@ export class GroupRepository {
 					}
 					: {};
 
-				return tx.record_group.findMany({
+				return tx.record_groups.findMany({
 					where: {
 						...where,
 						details: {
