@@ -38,8 +38,8 @@ export class RecordDetailService {
 		return await this.recordDetailRepo.getPublicRecordDetail(parentId, id);
 	}
 
-	// 查询首页推荐的记录详情
-	async getRecordHomeLine() {
-		return await this.recordDetailRepo.getRecordHomeLine();
+	// 查询照片
+	async getPublicRecordPictures(query: FindPictureRequest) {
+		return await this.recordDetailRepo.getPublicRecordPictures(query);
 	}
 }
