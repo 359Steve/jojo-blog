@@ -231,21 +231,42 @@ export class RecordDetailRepository {
 		}
 	}
 
-	// 查询首页推荐的记录详情
-	async getRecordHomeLine() {
+	// 查询照片
+	async getPublicRecordPictures(query: FindPictureRequest) {
 		try {
-			// 随机查询四条记录
-			const records: CreateRecordDetailDto[] = await this.prismaClient.$queryRaw`
-				SELECT * FROM record_details
-				ORDER BY RAND()
-				LIMIT 4
-			`;
+			const { pageNumber, pageSize, random } = query;
+			const offset = (Number(pageNumber) - 1) * Number(pageSize);
 
-			return records
-				? returnData(StatusCode.SUCCESS, '首页记录线查询成功', records)
-				: returnData(StatusCode.FAIL, '首页记录线查询失败', null);
+			if (random) {
+				// 随机查询四张照片
+				const records: Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[] = await this.prismaClient
+					.$queryRaw`SELECT id, image_url, image_alt FROM record_details WHERE image_url != '' ORDER BY RAND() LIMIT 4`;
+
+				return returnData(StatusCode.SUCCESS, '照片列表查询成功', records);
+			} else {
+				// 正常查询分页照片
+				const records = await this.prismaClient.record_details.findMany({
+					where: {
+						image_url: {
+							not: '',
+						},
+					},
+					skip: offset,
+					take: Number(pageSize),
+					orderBy: {
+						created_at: 'desc',
+					},
+					select: {
+						id: true,
+						image_url: true,
+						image_alt: true,
+					},
+				});
+
+				return returnData(StatusCode.SUCCESS, '照片列表查询成功', records);
+			}
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '首页记录线查询失败', null);
+			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
 		}
 	}
 }
