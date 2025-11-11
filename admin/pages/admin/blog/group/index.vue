@@ -73,7 +73,7 @@ const goEdit = (id: number) => {
 const handleDelete = async (id: number) => {
 	useConfirm('删除博客', 'warning', async () => {
 		try {
-			const { data, msg } = await deleteBlog(id);
+			const { data } = await deleteBlog(id);
 
 			if (data) {
 				if (tableData.value.length === 1 && pageNumber.value > 1) {
