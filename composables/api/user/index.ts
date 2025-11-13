@@ -10,6 +10,4 @@ export const findPublicUser = chooseCondition<
 
 // 查询照片
 export const findRecordPictures = (query: FindPictureRequest) =>
-	chooseCondition<FindPictureRequest, Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[]>(
-		'/record/recordPublicPic',
-	)(query);
+	chooseCondition<FindPictureRequest, HomePicResponse<CreateRecordDetailDto>[]>('/record/recordPublicPic')(query);
