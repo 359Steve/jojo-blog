@@ -76,7 +76,7 @@ const getById = async (recordId: number) => {
 
 <template>
 	<div class="w-full">
-		<RecordHeader />
+		<RecordHeader class="sm:mb-20" />
 		<div class="mb-6 flex w-full items-center justify-between">
 			<ElButton link
 				class="hover:text-primary flex items-center gap-2 !text-sm text-gray-600 transition-colors duration-200"
@@ -86,7 +86,7 @@ const getById = async (recordId: number) => {
 			</ElButton>
 			<span class="text-sm text-gray-600">{{ date }}</span>
 		</div>
-		<Starport :id="`record-image-my-id${parentId}`" :port="`my-id${parentId}`"
+		<Starport :id="`record-image-my-id${id}`" :port="`my-id${id}`"
 			class="relative flex h-[10rem] cursor-pointer items-center justify-center overflow-hidden rounded-base sm:h-[12rem] md:h-[14rem] lg:h-[16rem] xl:h-[16rem] 2xl:h-[16rem]">
 			<RecordDetailImage :img_url="currentData?.image_url || ''" :img_alt="currentData?.image_alt"
 				class="duration-1200 transition-all" />
