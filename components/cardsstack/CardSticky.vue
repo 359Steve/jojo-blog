@@ -1,6 +1,5 @@
 <template>
-	<div ref="cardRef" class="sticky" :class="className" :style="{
-		top: `${index * incrementY}px`,
+	<div ref="cardRef" class="sticky top-[5rem] sm:top-[6rem]" :class="className" :style="{
 		zIndex: index * incrementZ,
 		backfaceVisibility: 'hidden',
 		transform: `translateZ(${index * incrementZ}px)`,
@@ -15,7 +14,6 @@ import type { CSSProperties } from 'vue';
 
 const {
 	index,
-	incrementY = 10,
 	incrementZ = 10,
 	className,
 	style,
