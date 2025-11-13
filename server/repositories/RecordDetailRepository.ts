@@ -239,8 +239,8 @@ export class RecordDetailRepository {
 
 			if (random) {
 				// 随机查询四张照片
-				const records: Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[] = await this.prismaClient
-					.$queryRaw`SELECT id, image_url, image_alt FROM record_details WHERE image_url != '' ORDER BY RAND() LIMIT 4`;
+				const records: HomePicResponse<CreateRecordDetailDto>[] = await this.prismaClient
+					.$queryRaw`SELECT id, group_id as parent_id, image_url, image_alt FROM record_details WHERE image_url != '' ORDER BY RAND() LIMIT 4`;
 
 				return returnData(StatusCode.SUCCESS, '照片列表查询成功', records);
 			} else {
@@ -258,12 +258,22 @@ export class RecordDetailRepository {
 					},
 					select: {
 						id: true,
+						group_id: true,
 						image_url: true,
 						image_alt: true,
 					},
 				});
 
-				return returnData(StatusCode.SUCCESS, '照片列表查询成功', records);
+				return returnData(
+					StatusCode.SUCCESS,
+					'照片列表查询成功',
+					records.map((item) => {
+						return {
+							...item,
+							parent_id: item.group_id,
+						};
+					}),
+				);
 			}
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
