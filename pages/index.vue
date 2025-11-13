@@ -9,12 +9,27 @@ const { data } = await useAsyncData('indexRecordPictures', () =>
 	}),
 );
 
-const pictureList = ref<Pick<CreateRecordDetailDto, 'id' | 'image_url' | 'image_alt'>[]>(data.value?.data || []);
+const pictureList = ref<Awaited<ReturnType<typeof findRecordPictures>>['data']>(data.value?.data || []);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
 const isSm = ref<boolean>(false);
 const { getBlogUserInfo } = useBlogUserInfo();
+// 定义每个格子的位置
+const gridPositions = ref([
+	{ colStart: 2, colEnd: 3, rowStart: 1, rowEnd: 3 },
+	{ colStart: 1, colEnd: 2, rowStart: 2, rowEnd: 4 },
+	{ colStart: 1, colEnd: 2, rowStart: 4, rowEnd: 6 },
+	{ colStart: 2, colEnd: 3, rowStart: 3, rowEnd: 5 },
+]);
+
+// 默认图片列表
+const defaultImages = ref([
+	'https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3',
+	'https://images.unsplash.com/photo-1733680958774-39a0e8a64a54?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3',
+	'https://images.unsplash.com/photo-1548783307-f63adc3f200b?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3',
+	'https://images.unsplash.com/photo-1703622377707-29bc9409aaf2?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.0.3',
+]);
 
 const userInfo = reactive(
 	getBlogUserInfo() ?? {
@@ -31,6 +46,10 @@ const toRecord = () => {
 	navigateTo('/record/home');
 };
 
+const toRecordDetail = (item: HomePicResponse<CreateRecordDetailDto>) => {
+	navigateTo({ path: `/record/detail/${item.parent_id}/${item.id}` });
+};
+
 onMounted(() => {
 	nextTick(() => {
 		// 获取页面宽度
@@ -45,7 +64,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="grid w-full grid-cols-1 items-center gap-8 pt-8 sm:pt-12 md:grid-cols-2">
+	<div class="grid w-full grid-cols-1 items-center gap-8 pt-8 md:grid-cols-2 md:pt-0">
 		<div>
 			<div class="mb-4 block text-xs font-medium text-rose-500 opacity-100 backdrop-blur-0 md:text-sm">
 				{{ userInfo.pet_name }}
@@ -67,34 +86,18 @@ onMounted(() => {
 		</div>
 
 		<div class="relative">
-			<div class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
-				<div class="relative col-start-2 col-end-3 row-start-1 row-end-3 overflow-hidden rounded-xl shadow-xl"
-					style="opacity: 1">
+			<div v-if="pictureList" class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
+				<div v-for="(pos, index) in gridPositions" :key="index"
+					class="relative cursor-pointer overflow-hidden rounded-xl shadow-xl" :style="{
+						gridColumnStart: pos.colStart,
+						gridColumnEnd: pos.colEnd,
+						gridRowStart: pos.rowStart,
+						gridRowEnd: pos.rowEnd,
+						opacity: 1,
+					}" @click="toRecordDetail(pictureList[index])">
 					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[0]?.image_alt || ''" :src="pictureList[0]?.image_url ||
-							'https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&amp;w=2338&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-							" />
-				</div>
-				<div class="relative col-start-1 col-end-2 row-start-2 row-end-4 overflow-hidden rounded-xl shadow-xl"
-					style="opacity: 1">
-					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[1]?.image_alt || ''" :src="pictureList[1]?.image_url ||
-							'https://images.unsplash.com/photo-1733680958774-39a0e8a64a54?q=80&amp;w=2487&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-							" />
-				</div>
-				<div class="relative col-start-1 col-end-2 row-start-4 row-end-6 overflow-hidden rounded-xl shadow-xl"
-					style="opacity: 1">
-					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[2]?.image_alt || ''" :src="pictureList[2]?.image_url ||
-							'https://images.unsplash.com/photo-1548783307-f63adc3f200b?q=80&amp;w=2487&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-							" />
-				</div>
-				<div class="relative col-start-2 col-end-3 row-start-3 row-end-5 overflow-hidden rounded-xl shadow-xl"
-					style="opacity: 1">
-					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[3]?.image_alt || ''" :src="pictureList[3]?.image_url ||
-							'https://images.unsplash.com/photo-1703622377707-29bc9409aaf2?q=80&amp;w=2400&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMJA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-							" />
+						:alt="pictureList[index]?.image_alt || ''"
+						:src="pictureList[index]?.image_url || defaultImages[index]">
 				</div>
 			</div>
 		</div>
