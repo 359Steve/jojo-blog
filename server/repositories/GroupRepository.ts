@@ -130,18 +130,22 @@ export class GroupRepository {
 	}
 
 	// 查询公共分组数据
-	async getPublicGroups(keyword?: string) {
+	async getPublicGroups(query: { id?: number; keyword?: string }) {
+		const { id, keyword } = query;
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
-				const where = keyword
-					? {
-						title: {
-							contains: keyword,
-						},
-					}
-					: {};
+				const where = {
+					...(id && { id: Number(id) }),
+					...(keyword && {
+						OR: [
+							{ title: { contains: keyword } },
+							{ summary: { contains: keyword } },
+							{ time_range: { contains: keyword } },
+						],
+					}),
+				};
 
-				return tx.record_groups.findMany({
+				const currentRecord = await tx.record_groups.findFirst({
 					where: {
 						...where,
 						details: {
@@ -156,6 +160,7 @@ export class GroupRepository {
 							select: {
 								id: true,
 								title: true,
+								time_range: true,
 								image_url: true,
 								image_alt: true,
 							},
@@ -166,6 +171,52 @@ export class GroupRepository {
 						},
 					},
 				});
+
+				if (!currentRecord) {
+					return null;
+				}
+
+				// 查找上一条有 details 的记录
+				const prev = await tx.record_groups.findFirst({
+					where: {
+						id: {
+							lt: Number(currentRecord.id),
+						},
+						details: {
+							some: {},
+						},
+					},
+					orderBy: {
+						id: 'desc',
+					},
+					select: {
+						id: true,
+					},
+				});
+
+				// 查找下一条有 details 的记录
+				const next = await tx.record_groups.findFirst({
+					where: {
+						id: {
+							gt: Number(currentRecord.id),
+						},
+						details: {
+							some: {},
+						},
+					},
+					orderBy: {
+						id: 'asc',
+					},
+					select: {
+						id: true,
+					},
+				});
+
+				return {
+					...currentRecord,
+					prev,
+					next,
+				};
 			});
 
 			return res
