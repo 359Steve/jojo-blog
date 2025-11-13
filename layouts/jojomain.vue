@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const route = useRoute();
 const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
 const jojoMain = useTemplateRef('jojoMain');
 const windWidth = ref<number>(0);
@@ -71,7 +72,7 @@ onMounted(() => {
 			<ClientOnly>
 				<NuxtLoadingIndicator color="#A3AAB6" />
 			</ClientOnly>
-			<div class="flex-1">
+			<div class="flex-1" :class="[route.path === '/' ? 'flex items-center justify-center' : '']">
 				<NuxtLayout name="mainbox">
 					<template #childPage>
 						<StarportCarrier>
