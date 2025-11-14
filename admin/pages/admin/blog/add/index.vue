@@ -41,6 +41,7 @@ const initFormData = () => {
 		front_cover: '',
 		subtitle: '',
 		content: '',
+		date_path: '',
 		tags: [],
 	};
 };
@@ -50,6 +51,7 @@ const formData = reactive<CreateBlogDto>(initFormData());
 const ruleFormRef = templateRef('ruleFormRef');
 const isEdit = computed(() => !!currentBlog.value?.id);
 const loading = ref(false);
+const currentMdPics = ref<string[]>([]);
 
 // 计算封面按钮文本
 const coverButtonText = computed(() => {
@@ -168,14 +170,17 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 			ElMessage.warning(`已过滤 ${files.length - validFiles.length} 张文件`);
 		}
 
-		const formData = new FormData();
+		const fileData = new FormData();
+		fileData.append('datePath', formData.date_path);
 		validFiles.forEach((file) => {
-			formData.append('files', file);
+			fileData.append('files', file);
 		});
 
-		const res = await mdUploadImage(formData);
+		const res = await mdUploadImage(fileData);
 
 		if (res.data) {
+			formData.date_path = res.data.datePath;
+			currentMdPics.value = res.data.urls;
 			callback(res.data.urls);
 		}
 	} catch (error) {
@@ -218,22 +223,37 @@ const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) 
 	ElMessage.success(`封面选择成功${isEdit.value ? '，保存时将替换原封面' : '，保存时将自动上传'}`);
 };
 
-// 返回新增
-const backAdd = () => {
-	// 清理当前博客状态
-	resetCurrentBlog();
+// 删除已上传的markdown图片但未保存到当前博客的图片
+const mdDeleteImage = async () => {
+	if (currentMdPics.value.length > 0) {
+		await mdDeleteImageDir({
+			datePath: formData.date_path,
+			fileNames: currentMdPics.value.map((item) => item.split('/').pop() || ''),
+		});
+		currentMdPics.value = [];
+	}
+};
 
-	// 重置表单验证状态
+// 重置表单
+const resetFormData = () => {
 	ruleFormRef.value?.resetFields();
-
-	// 清空表单数据
 	Object.assign(formData, {
 		title: '',
 		front_cover: '',
 		subtitle: '',
 		content: '',
+		date_path: '',
 		tags: [],
 	});
+};
+
+// 返回新增
+const backAdd = async () => {
+	// 清理当前博客状态
+	resetCurrentBlog();
+	await mdDeleteImage();
+	// 清空表单数据
+	resetFormData();
 
 	// 清理上传状态
 	frontImage.value = null;
@@ -244,26 +264,17 @@ const backAdd = () => {
 };
 
 // 重置表单
-const resetForm = () => {
-	// 重置表单验证状态
-	ruleFormRef.value?.resetFields();
+const resetForm = async () => {
+	await mdDeleteImage();
 
 	// 重置表单数据
 	if (isEdit.value && currentBlog.value) {
-		// 编辑模式恢复到原始博客数据
 		Object.assign(formData, {
 			...currentBlog.value,
 			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
 		});
 	} else {
-		// 新增模式清空所有数据
-		Object.assign(formData, {
-			title: '',
-			front_cover: '',
-			subtitle: '',
-			content: '',
-			tags: [],
-		});
+		resetFormData();
 	}
 
 	// 清理上传相关状态
