@@ -87,6 +87,19 @@ export class UserRepository {
 			}
 
 			const file = files[0];
+
+			// 验证文件大小（最大 5MB）
+			const maxFileSize = 5 * 1024 * 1024;
+			if (file.data && file.data.length > maxFileSize) {
+				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB', null);
+			}
+
+			// 验证文件类型
+			const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+			if (file.type && !allowedTypes.includes(file.type.toLowerCase())) {
+				return returnData(StatusCode.FAIL, '只支持上传图片文件（jpg、png、gif、webp）', null);
+			}
+
 			const fileName = file.filename || 'avatar.png';
 
 			// 判断当前文件是否已经存在
