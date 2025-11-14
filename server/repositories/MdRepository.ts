@@ -10,40 +10,18 @@ import { returnData } from '../utils/public';
 export class MdRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
-	// 验证图片文件头
-	private validateImageFileHeader(fileData: Buffer, extension: string): boolean {
-		if (!fileData || fileData.length < 8) {
-			return false;
-		}
-
-		// 获取文件头字节
-		const header = fileData.subarray(0, 8);
-
-		switch (extension.toLowerCase()) {
-			case 'jpg':
-			case 'jpeg':
-				// JPEG: FF D8 FF
-				return header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
-
-			case 'png':
-				// PNG: 89 50 4E 47 0D 0A 1A 0A
-				return header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4e && header[3] === 0x47;
-
-			case 'gif':
-				// GIF: 47 49 46 38 (GIF8)
-				return header[0] === 0x47 && header[1] === 0x49 && header[2] === 0x46 && header[3] === 0x38;
-
-			case 'webp':
-				// WebP: 52 49 46 46 ... 57 45 42 50
-				return header[0] === 0x52 && header[1] === 0x49 && header[2] === 0x46 && header[3] === 0x46;
-
-			default:
-				return false;
-		}
-	}
-
 	// 上传图片
-	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+		const dateTime = new Date();
+		const newDatePath =
+			datePath ||
+			`${dateTime.getFullYear()}-${(dateTime.getMonth() + 1)
+				.toString()
+				.padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}` +
+			`-${dateTime.getHours().toString().padStart(2, '0')}` +
+			`${dateTime.getMinutes().toString().padStart(2, '0')}` +
+			`${dateTime.getSeconds().toString().padStart(2, '0')}`;
+
 		if (!files || files.length === 0) {
 			throw new Error('没有上传文件！');
 		}
@@ -79,19 +57,13 @@ export class MdRepository {
 					continue;
 				}
 
-				// 验证文件头
-				const isValidImage = this.validateImageFileHeader(file.data, fileExtension);
-				if (!isValidImage) {
-					continue;
-				}
-
 				// 生成安全的文件名
 				const timestamp = Date.now();
 				const randomStr = Math.random().toString(36).substring(2, 8);
 				const safeFileName = `md_${timestamp}_${randomStr}.${fileExtension}`;
 
 				// 确保文件夹存在
-				const uploadDir = join(process.cwd(), 'public/mdfile');
+				const uploadDir = join(process.cwd(), 'public/mdfile', newDatePath);
 				if (!fs.existsSync(uploadDir)) {
 					fs.mkdirSync(uploadDir, { recursive: true });
 				}
@@ -105,7 +77,7 @@ export class MdRepository {
 				uploadResults.push({
 					originalName: file.filename,
 					fileName: safeFileName,
-					url: `/mdfile/${safeFileName}`,
+					url: `/mdfile/${newDatePath}/${safeFileName}`,
 					size: file.data.length,
 					type: file.type || `image/${fileExtension}`,
 				});
@@ -118,6 +90,47 @@ export class MdRepository {
 			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
 				files: uploadResults,
 				urls: uploadResults.map((item) => item.url),
+				datePath: newDatePath,
+			});
+		} catch (error) {
+			return returnData(StatusCode.FAIL, (error as Error).message, null);
+		}
+	}
+
+	// 删除指定目录下的图片
+	async deleteMdPicture(picPath: string, fileNames: string[] | string) {
+		try {
+			const fullDirPath = join(process.cwd(), 'public', 'mdfile', picPath);
+
+			if (!fs.existsSync(fullDirPath)) {
+				return returnData(StatusCode.FAIL, '指定目录不存在', null);
+			}
+
+			if (!Array.isArray(fileNames)) {
+				fileNames = [fileNames];
+			}
+
+			const deletedFiles: string[] = [];
+			const notFoundFiles: string[] = [];
+
+			for (const fileName of fileNames) {
+				const filePath = join(fullDirPath, fileName);
+				if (fs.existsSync(filePath)) {
+					const stats = fs.statSync(filePath);
+					if (stats.isFile()) {
+						fs.unlinkSync(filePath);
+						deletedFiles.push(fileName);
+					} else {
+						notFoundFiles.push(fileName);
+					}
+				} else {
+					notFoundFiles.push(fileName);
+				}
+			}
+
+			return returnData(StatusCode.SUCCESS, '图片删除完成', {
+				deletedFiles,
+				notFoundFiles,
 			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, (error as Error).message, null);
