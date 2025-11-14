@@ -119,6 +119,14 @@ export class BlogRepository {
 					}
 				}
 
+				// 删除文章里的所有图片
+				const datePath = currentDelete.date_path;
+				const uploadDir = join(process.cwd(), 'public', 'mdfile', datePath);
+
+				if (fs.existsSync(uploadDir)) {
+					fs.rmSync(uploadDir, { recursive: true, force: true });
+				}
+
 				return currentDelete;
 			});
 
