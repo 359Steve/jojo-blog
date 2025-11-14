@@ -1,10 +1,7 @@
 import { z } from 'zod';
 
 export const CreateRecordDetailSchema = z.object({
-	id: z
-		.number()
-		.optional()
-		.refine((val) => typeof val === 'number', { message: 'ID必须为数字' }),
+	id: z.number().optional(),
 	group_id: z
 		.number()
 		.min(1, '分组ID不能为空')
