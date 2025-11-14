@@ -8,3 +8,14 @@ export const mdUploadImage = async (value: FormData) => {
 
 	return handleApiResponse(res);
 };
+
+// 删除指定目录下的图片
+export const mdDeleteImageDir = async (query: MdDeleteImageDirRequest) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchDeleteApi<MdDeleteImageDirRequest, MdDeleteImageDirResponse>('/md/mdDelPic', {
+			query,
+		}),
+	);
+
+	return handleApiResponse(res);
+};
