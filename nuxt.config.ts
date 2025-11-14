@@ -1,10 +1,33 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const meta: Meta[] = [
+	// 基础信息
 	{ charset: 'utf-8' },
 	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 	{ name: 'format-detection', content: 'telephone=no' },
-	{ hid: 'keywords', name: 'keywords', content: 'nuxt3' },
+	{ name: 'google-site-verification', content: 'pixBrjqAVBmn9ObEtLR4qdsb7zhOhrW9NcEqKpZrIDw' },
+
+	// SEO
+	{ hid: 'description', name: 'description', content: 'Jojo的个人博客，分享技术文章、生活记录和项目经验' },
+	{ hid: 'keywords', name: 'keywords', content: 'jojo,博客,技术,前端,Vue,Nuxt,JavaScript,TypeScript,编程' },
+	{ hid: 'author', name: 'author', content: 'Jojo' },
+	{ name: 'robots', content: 'index,follow' },
+
+	// Open Graph
+	{ property: 'og:type', content: 'website' },
+	{ property: 'og:title', content: 'Jojo Blog - 个人博客' },
+	{ property: 'og:description', content: 'Jojo的个人博客，分享技术文章、生活记录和项目经验' },
+	{ property: 'og:site_name', content: 'Jojo Blog' },
+	{ property: 'og:image', content: '/logo.svg' },
+	{ property: 'og:url', content: 'https://www.polnareff.me' },
+
+	// 微信、QQ、微博
+	{ property: 'weibo:title', content: 'Jojo Blog - 个人博客' },
+	{ property: 'weibo:description', content: 'Jojo的个人博客，分享技术文章、生活记录和项目经验' },
+	{ property: 'weibo:image', content: '/logo.svg' },
+	{ property: 'wechat:title', content: 'Jojo Blog - 个人博客' },
+	{ property: 'wechat:description', content: 'Jojo的个人博客，分享技术文章、生活记录和项目经验' },
+	{ property: 'wechat:image', content: '/logo.svg' },
 ];
 
 export default defineNuxtConfig({
@@ -28,6 +51,8 @@ export default defineNuxtConfig({
 	],
 	runtimeConfig: {
 		public: {
+			siteUrl: 'https://www.polnareff.me',
+			siteName: 'Jojo Blog',
 			jwtSecret: 'jojo-blog',
 			accessTokenExpiresIn: '7d',
 			expiresin: 604800,
