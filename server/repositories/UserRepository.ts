@@ -83,7 +83,7 @@ export class UserRepository {
 	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		try {
 			if (!files || files.length === 0) {
-				return returnData(StatusCode.FAIL, '没有上传文件', null);
+				throw new Error('没有上传文件！');
 			}
 
 			const file = files[0];
@@ -91,13 +91,13 @@ export class UserRepository {
 			// 验证文件大小（最大 5MB）
 			const maxFileSize = 5 * 1024 * 1024;
 			if (file.data && file.data.length > maxFileSize) {
-				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB', null);
+				throw new Error('文件大小不能超过 5MB');
 			}
 
 			// 验证文件类型
 			const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 			if (file.type && !allowedTypes.includes(file.type.toLowerCase())) {
-				return returnData(StatusCode.FAIL, '只支持上传图片文件（jpg、png、gif、webp）', null);
+				throw new Error('只支持上传图片文件（jpg、png、gif、webp）');
 			}
 
 			const fileName = file.filename || 'avatar.png';
@@ -117,7 +117,7 @@ export class UserRepository {
 			const savePath = join(dirPath, fileName);
 
 			if (!file.data) {
-				return returnData(StatusCode.FAIL, '上传失败', null);
+				throw new Error('文件数据无效');
 			}
 
 			await writeFile(savePath, file.data);
@@ -125,7 +125,7 @@ export class UserRepository {
 			// 返回文件访问路径
 			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/avatar/${fileName}` });
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '上传失败', null);
+			return returnData(StatusCode.FAIL, (error as Error).message, null);
 		}
 	}
 

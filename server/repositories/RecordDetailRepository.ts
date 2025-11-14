@@ -110,14 +110,14 @@ export class RecordDetailRepository {
 	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
 		try {
 			if (!files || files.length === 0) {
-				return returnData(StatusCode.FAIL, '没有上传文件', null);
+				throw new Error('没有上传文件');
 			}
 
 			const file = files[0];
 
 			// 验证文件
 			if (!file.data || !file.filename) {
-				return returnData(StatusCode.FAIL, '文件数据无效', null);
+				throw new Error('文件数据无效');
 			}
 
 			// 验证文件类型
@@ -125,13 +125,13 @@ export class RecordDetailRepository {
 			const fileExtension = extname(file.filename).toLowerCase();
 
 			if (!allowedExtensions.includes(fileExtension)) {
-				return returnData(StatusCode.FAIL, '不支持的文件格式，只允许 JPG、PNG、GIF、WebP 格式！', null);
+				throw new Error('不支持的文件格式，只允许 JPG、PNG、GIF、WebP 格式！');
 			}
 
 			// 验证文件大小
 			const maxSize = 5 * 1024 * 1024; // 5MB
 			if (file.data.length > maxSize) {
-				return returnData(StatusCode.FAIL, '文件大小不能超过 5MB', null);
+				throw new Error('文件大小不能超过 5MB');
 			}
 
 			// 生成安全的文件名
@@ -153,7 +153,7 @@ export class RecordDetailRepository {
 			// 返回文件访问路径
 			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/recorddetail/${safeFileName}` });
 		} catch (error) {
-			return returnData(StatusCode.FAIL, '上传失败', null);
+			return returnData(StatusCode.FAIL, (error as Error).message, null);
 		}
 	}
 
