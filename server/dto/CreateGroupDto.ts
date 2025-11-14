@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { CreateRecordDetailSchema } from './CreateArticleDto';
 
 export const CreateGroupSchema = z.object({
-	id: z
-		.number()
-		.optional()
-		.refine((val) => typeof val === 'number', { message: 'ID必须为数字' }),
+	id: z.number().optional(),
 	time_range: z.string().trim().min(1, '年份不能为空！').max(255),
 	title: z.string().trim().min(1, '标题不能为空！').max(100),
 	role: z.string().trim().min(1, '简介不能为空！').max(100),
