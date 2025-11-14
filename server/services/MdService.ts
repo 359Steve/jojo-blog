@@ -9,7 +9,12 @@ export class MdService {
 	}
 
 	// 上传图片
-	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
-		return await this.mdRepo.uploadImage(files);
+	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+		return await this.mdRepo.uploadImage(files, datePath);
+	}
+
+	// 删除指定目录下的图片
+	async deleteMdPicture(picPath: string, fileNames: string[]) {
+		return await this.mdRepo.deleteMdPicture(picPath, fileNames);
 	}
 }
