@@ -92,13 +92,12 @@ const getById = async (recordId: number) => {
 				class="duration-1200 transition-all" />
 		</Starport>
 		<div class="w-full py-4 sm:py-8">
-			<AnimationRevealOnScroll animation-class="animate__fadeInDown"
-				base-class="mb-4 sm:mb-6 text-center font-extrabold text-lg text-gray-500">
+			<div class="mb-4 text-center text-lg font-extrabold text-gray-500 sm:mb-6">
 				{{ currentData?.title }}
-			</AnimationRevealOnScroll>
-			<AnimationRevealOnScroll animation-class="animate__fadeInDown" base-class="text-center text-gray-400">
+			</div>
+			<div class="text-center text-gray-400">
 				{{ currentData?.summary }}
-			</AnimationRevealOnScroll>
+			</div>
 		</div>
 		<div class="mt-4 w-full py-8">
 			<div class="m-auto flex w-[80%] items-center sm:w-[60%]">
