@@ -2,7 +2,7 @@ import { container } from '~/server/core/container';
 import { GroupService } from '~/server/services/GroupService';
 
 export default defineEventHandler(async (event) => {
-	const query = getQuery<{ id?: number; keyword?: string }>(event);
+	const query = getQuery<{ id?: number }>(event);
 
 	try {
 		const groupService = container.get(GroupService);
