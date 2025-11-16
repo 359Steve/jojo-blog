@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery());
 const summaryList = ref<Awaited<ReturnType<typeof recordPublicQuery>>['data'] | null>(data.value?.data || null);
+const total = ref<number>(data.value?.data?._count.details || 0);
 const cardRef = templateRef('cardRef');
 const cardCount = computed(() => {
 	return summaryList.value ? summaryList.value.details.length : 0;
@@ -9,6 +10,8 @@ const cardMinHeight = ref<number>(0);
 const containerMinHeight = computed(() => {
 	return (cardCount.value - 1) * cardMinHeight.value;
 });
+const pageNumber = ref<number>(2);
+const pageSize = ref<number>(5);
 
 // 获取卡片最大高度
 const getCardMaxHeight = () => {
@@ -36,6 +39,27 @@ const toDetail = (parentId: number, id: number): void => {
 onMounted(() => {
 	nextTick(() => {
 		cardMinHeight.value = getCardMaxHeight();
+
+		const { arrivedState } = useWindowScroll();
+
+		watch(arrivedState, async (newValue) => {
+			if (newValue.bottom) {
+				if (total.value <= (summaryList.value?.details.length || 0)) {
+					return;
+				}
+				const res = await recordDetailsQuery({
+					parentId: summaryList.value?.id || 0,
+					pageNumber: pageNumber.value,
+					pageSize: pageSize.value,
+				});
+
+				if (res.data?.records && res.data.records.length > 0) {
+					summaryList.value?.details.push(...res.data.records);
+					pageNumber.value += 1;
+					cardMinHeight.value = getCardMaxHeight();
+				}
+			}
+		});
 	});
 });
 </script>
@@ -76,7 +100,7 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<CardsstackContainerScroll :class-name="`space-y-8 sm:mt-0 mt-8`"
+				<CardsstackContainerScroll :class-name="`space-y-8 mt-6`"
 					:style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
 					<CardsstackCardSticky v-for="(phase, index) in summaryList?.details" ref="cardRef" :key="phase.id"
 						:index="index" class-name="rounded-2xl border p-4 shadow-md backdrop-blur-md"
