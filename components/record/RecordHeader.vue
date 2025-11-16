@@ -18,19 +18,17 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 				</Starport>
 			</div>
 			<div class="grid">
-				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'">
+				<div>
 					<h1
 						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-base font-black text-rose-500 sm:text-xl md:text-2xl lg:text-3xl">
 						{{ userInfo?.pet_name }}
 					</h1>
-				</AnimationRevealOnScroll>
-				<AnimationRevealOnScroll animation-class="'animate__fadeInDown'"
-					base-class="'flex items-center text-sm lg:text-base font-normal text-secondary mt-4'">
+				</div>
+				<div class="text-secondary mt-4 flex items-center text-sm font-normal lg:text-base">
 					<span>{{ userInfo?.sign }}</span>
-				</AnimationRevealOnScroll>
+				</div>
 				<div class="mt-4 flex w-full items-center gap-2">
-					<AnimationRevealOnScroll v-for="item in userInfo?.tags" :key="item.tag_id"
-						animation-class="'animate__fadeInDown'" base-class="'w-fit'">
+					<div v-for="item in userInfo?.tags" :key="item.tag_id" class="w-fit">
 						<a :href="item.tag.url" target="_blank" rel="noopener noreferrer" class="button">
 							<ElButton size="default" class="!text-black dark:!text-white">
 								<template #icon>
@@ -41,7 +39,7 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 								<span>{{ item.tag.name }}</span>
 							</ElButton>
 						</a>
-					</AnimationRevealOnScroll>
+					</div>
 				</div>
 			</div>
 		</div>
