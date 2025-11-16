@@ -34,7 +34,7 @@ export class GroupService {
 	}
 
 	// 查询公共分组数据
-	async getPublicGroups(query: { id?: number; keyword?: string }) {
+	async getPublicGroups(query: { id?: number }) {
 		return await this.groupRepo.getPublicGroups(query);
 	}
 }
