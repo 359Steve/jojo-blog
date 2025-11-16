@@ -111,11 +111,22 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				res = await updateBlog(formData);
 			} else {
 				const { id, ...blogDataWithoutId } = formData;
-				res = await createBlog(blogDataWithoutId);
+				const dateTime = new Date();
+				const dataPath =
+					`${dateTime.getFullYear()}-${(dateTime.getMonth() + 1)
+						.toString()
+						.padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}` +
+					`-${dateTime.getHours().toString().padStart(2, '0')}` +
+					`${dateTime.getMinutes().toString().padStart(2, '0')}` +
+					`${dateTime.getSeconds().toString().padStart(2, '0')}`;
+				res = await createBlog({
+					...blogDataWithoutId,
+					date_path: formData.date_path || dataPath,
+				});
 			}
 
 			// 处理响应结果
-			if (res?.data) {
+			if (res?.data?.id) {
 				resetCurrentBlog();
 				await navigateTo('/admin/blog/group');
 			}
