@@ -279,4 +279,45 @@ export class RecordDetailRepository {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
 		}
 	}
+
+	// 分页查询记录详情
+	async getPublicRecordDetails(query: RecordQueryParams) {
+		try {
+			const { pageNumber, pageSize, parentId } = query;
+			const offset = (pageNumber - 1) * pageSize;
+
+			const [records, total] = await Promise.all([
+				this.prismaClient.record_details.findMany({
+					where: {
+						group_id: Number(parentId),
+					},
+					select: {
+						id: true,
+						title: true,
+						time_range: true,
+						image_url: true,
+						image_alt: true,
+					},
+					orderBy: {
+						time_range: 'desc',
+					},
+					skip: offset,
+					take: Number(pageSize),
+				}),
+				this.prismaClient.record_details.count({
+					where: {
+						group_id: Number(parentId),
+					},
+				}),
+			]);
+
+			if (!records || !total) {
+				return returnData(StatusCode.SUCCESS, '记录列表到底了', null);
+			}
+
+			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records, total });
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '记录列表查询失败', null);
+		}
+	}
 }
