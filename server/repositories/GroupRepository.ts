@@ -130,19 +130,12 @@ export class GroupRepository {
 	}
 
 	// 查询公共分组数据
-	async getPublicGroups(query: { id?: number; keyword?: string }) {
-		const { id, keyword } = query;
+	async getPublicGroups(query: { id?: number }) {
+		const { id } = query;
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
 				const where = {
 					...(id && { id: Number(id) }),
-					...(keyword && {
-						OR: [
-							{ title: { contains: keyword } },
-							{ summary: { contains: keyword } },
-							{ time_range: { contains: keyword } },
-						],
-					}),
 				};
 
 				const currentRecord = await tx.record_groups.findFirst({
@@ -168,6 +161,11 @@ export class GroupRepository {
 								time_range: 'desc',
 							},
 							take: 5,
+						},
+						_count: {
+							select: {
+								details: true,
+							},
 						},
 					},
 				});
