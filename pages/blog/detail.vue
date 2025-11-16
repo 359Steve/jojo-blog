@@ -77,8 +77,7 @@ onBeforeUnmount(() => {
 			</div>
 
 			<!-- 博客头部 -->
-			<AnimationRevealOnScroll ref="animationEl" animation-class="animate__fadeInDown"
-				base-class="reactive mb-10">
+			<div class="reactive mb-10">
 				<div class="mb-6">
 					<img v-if="blogItem.front_cover" :src="blogItem.front_cover" :alt="blogItem.title"
 						class="mb-6 h-64 w-full rounded-base object-cover md:h-80">
@@ -104,7 +103,7 @@ onBeforeUnmount(() => {
 						更新于 {{ formatDate(blogItem.updated_at) }}
 					</span>
 				</div>
-			</AnimationRevealOnScroll>
+			</div>
 
 			<!-- 博客内容 -->
 			<div class="prose prose-lg dark:prose-invert max-w-none">
