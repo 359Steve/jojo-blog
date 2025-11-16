@@ -42,4 +42,9 @@ export class RecordDetailService {
 	async getPublicRecordPictures(query: FindPictureRequest) {
 		return await this.recordDetailRepo.getPublicRecordPictures(query);
 	}
+
+	// 分页查询记录详情
+	async getPublicRecordDetails(query: RecordQueryParams) {
+		return await this.recordDetailRepo.getPublicRecordDetails(query);
+	}
 }
