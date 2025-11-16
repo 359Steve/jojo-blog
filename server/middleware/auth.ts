@@ -5,6 +5,7 @@ const whitelist = [
 	'/api/user/user-register',
 	'/api/record/recordPublicQuery',
 	'/api/record/recordPublicDetail',
+	'/api/record/recordPublicDetails',
 	'/api/record/recordPublicPic',
 ];
 
