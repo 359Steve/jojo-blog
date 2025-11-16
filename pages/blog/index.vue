@@ -111,34 +111,16 @@ onMounted(() => {
 </script>
 
 <template>
-	<AnimationRevealOnScroll animation-class="animate__fadeInDown"
-		base-class="mb-4 sm:mb-8 overflow-hidden rounded-base">
-		<ElInput v-model="search" placeholder="请输入搜索关键字" size="large" />
-	</AnimationRevealOnScroll>
+	<div class="mb-4 overflow-hidden rounded-base shadow-md backdrop-blur-md sm:mb-8">
+		<ElInput v-model="search" placeholder="请输入搜索关键字" size="large" clearable />
+	</div>
 	<div class="w-full">
 		<div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
-			<AnimationRevealOnScroll v-for="item in blogList" :key="item.id" animation-class="'animate__fadeInDown'"
-				base-class="`
-                    cursor-pointer
-                    group
-                    flex
-                    flex-col
-                    sm:flex-row
-                    space-y-4
-                    sm:space-y-0
-                    sm:space-x-4
-                    hover:bg-gray-50
-                    dark:hover:bg-gray-100/10
-                    rounded-base
-                    transition
-                    duration-200
-                    p-2
-                    shadow-lg
-                    dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)]
-                    h-auto
-                    max-h-[280px]`" @click="toDetail(item)">
+			<div v-for="item in blogList" :key="item.id"
+				class="` max-h-[280px]` group flex h-auto cursor-pointer flex-col space-y-4 rounded-base p-2 shadow-lg transition duration-200 hover:bg-gray-50 dark:shadow-[0_4px_20px_rgba(255,255,255,0.05)] dark:hover:bg-gray-100/10 sm:flex-row sm:space-x-4 sm:space-y-0"
+				@click="toDetail(item)">
 				<img alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="aspect-square w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:w-[200px]"
+					class="aspect-video w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:w-[200px]"
 					:src="item.front_cover">
 				<div class="flex min-h-0 flex-1 flex-col justify-between overflow-hidden">
 					<div class="min-h-0 flex-1">
@@ -159,7 +141,7 @@ onMounted(() => {
 						</span>
 					</div>
 				</div>
-			</AnimationRevealOnScroll>
+			</div>
 		</div>
 	</div>
 </template>
@@ -170,7 +152,7 @@ onMounted(() => {
 }
 
 :deep(.el-input__wrapper) {
-	@apply rounded-base bg-white px-3 py-2 shadow-lg dark:bg-gray-100/10 sm:shadow-none;
+	@apply rounded-base bg-white px-3 py-2 shadow-none dark:bg-gray-100/10;
 }
 
 :deep(.el-input__inner) {
