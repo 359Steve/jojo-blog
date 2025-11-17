@@ -27,7 +27,9 @@ const getCardMaxHeight = () => {
 const changeRecord = async (id: number) => {
 	const res = await recordPublicQuery(id);
 	if (res.data?.id) {
+		pageNumber.value = 2;
 		summaryList.value = res.data;
+		total.value = res.data._count.details || 0;
 		cardMinHeight.value = getCardMaxHeight();
 	}
 };
