@@ -58,6 +58,8 @@ onMounted(() => {
 				if (res.data?.records && res.data.records.length > 0) {
 					summaryList.value?.details.push(...res.data.records);
 					pageNumber.value += 1;
+
+					await nextTick();
 					cardMinHeight.value = getCardMaxHeight();
 				}
 			}
