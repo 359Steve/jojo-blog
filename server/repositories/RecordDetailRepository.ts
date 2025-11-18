@@ -183,7 +183,7 @@ export class RecordDetailRepository {
 			// 定义允许的图片类型和扩展名
 			const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-			const maxFileSize = 5 * 1024 * 1024; // 5MB
+			const maxFileSize = 10 * 1024 * 1024; // 10MB
 
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
@@ -235,7 +235,7 @@ export class RecordDetailRepository {
 			}
 
 			if (uploadResults.length === 0) {
-				throw new Error('没有有效的图片文件上传！请确保文件为图片格式且小于5MB');
+				throw new Error('没有有效的图片文件上传！请确保文件为图片格式且小于10MB');
 			}
 
 			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {

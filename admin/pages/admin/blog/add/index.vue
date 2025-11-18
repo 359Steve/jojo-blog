@@ -155,7 +155,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 			const isValidExtension = allowedExtensions.includes(fileExtension);
 
 			// 检查文件大小
-			const maxSize = 5 * 1024 * 1024; // 5MB
+			const maxSize = 10 * 1024 * 1024; // 10MB
 			const isValidSize = file.size <= maxSize;
 
 			if (!isValidMimeType || !isValidExtension) {
@@ -164,7 +164,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 			}
 
 			if (!isValidSize) {
-				ElMessage.warning(`第${index + 1}张超过5MB大小限制`);
+				ElMessage.warning(`第${index + 1}张超过10MB大小限制`);
 				return false;
 			}
 
@@ -203,7 +203,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
 	// 验证文件类型
 	const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-	const maxSize = 5 * 1024 * 1024; // 5MB
+	const maxSize = 10 * 1024 * 1024; // 10MB
 
 	if (!uploadFile.raw) {
 		ElMessage.error('文件上传失败');
@@ -219,7 +219,7 @@ const handleAvatarSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) 
 
 	// 验证文件大小
 	if (uploadFile.raw.size > maxSize) {
-		ElMessage.error('图片大小不能超过 5MB');
+		ElMessage.error('图片大小不能超过 10MB');
 		upload.value?.clearFiles();
 		return;
 	}

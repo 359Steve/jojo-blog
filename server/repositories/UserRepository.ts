@@ -88,10 +88,10 @@ export class UserRepository {
 
 			const file = files[0];
 
-			// 验证文件大小（最大 5MB）
-			const maxFileSize = 5 * 1024 * 1024;
+			// 验证文件大小（最大 10MB）
+			const maxFileSize = 10 * 1024 * 1024;
 			if (file.data && file.data.length > maxFileSize) {
-				throw new Error('文件大小不能超过 5MB');
+				throw new Error('文件大小不能超过 10MB');
 			}
 
 			// 验证文件类型

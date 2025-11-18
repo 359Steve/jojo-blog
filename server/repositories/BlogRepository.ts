@@ -254,9 +254,9 @@ export class BlogRepository {
 			}
 
 			// 验证文件大小
-			const maxSize = 5 * 1024 * 1024; // 5MB
+			const maxSize = 10 * 1024 * 1024; // 10MB
 			if (file.data.length > maxSize) {
-				throw new Error('文件大小不能超过 5MB！');
+				throw new Error('文件大小不能超过 10MB！');
 			}
 
 			// 生成安全的文件名
