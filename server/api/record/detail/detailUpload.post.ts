@@ -7,10 +7,13 @@ export default defineEventHandler(async (event) => {
 		const recordDetailService = container.get(RecordDetailService);
 		const files = await readMultipartFormData(event);
 
+		let datePath = '';
 		const fileList: MultiPartData[] = [];
 
 		files?.forEach((item) => {
-			if (item.name === 'files') {
+			if (item.name === 'datePath') {
+				datePath = item.data.toString();
+			} else if (item.name === 'files') {
 				fileList.push(item);
 			}
 		});
@@ -19,7 +22,7 @@ export default defineEventHandler(async (event) => {
 			return sendErrorWithMessage(event, 400, '没有上传文件');
 		}
 
-		return await recordDetailService.uploadRecordDetailImage(fileList);
+		return await recordDetailService.uploadRecordDetailImage(fileList, datePath);
 	} catch (err) {
 		return sendErrorWithMessage(event, 500, '上传失败');
 	}
