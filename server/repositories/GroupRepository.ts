@@ -245,9 +245,7 @@ export class GroupRepository {
 				};
 			});
 
-			return res
-				? returnData(StatusCode.SUCCESS, '分组列表查询成功', res)
-				: returnData(StatusCode.FAIL, '分组列表查询失败', null);
+			return returnData(StatusCode.SUCCESS, res ? '分组列表查询成功' : '暂无更多数据', res);
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '分组列表查询失败', null);
 		}
