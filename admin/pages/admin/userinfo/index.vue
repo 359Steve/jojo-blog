@@ -26,7 +26,7 @@ const formData = reactive(
 	data.value?.data
 		? {
 			...data.value.data,
-			tags: data.value.data.tags.map((item) => item.tag_id),
+			tags: data.value.data.tags.map((item) => item.tag_id).filter(Boolean),
 		}
 		: {
 			user_name: '',

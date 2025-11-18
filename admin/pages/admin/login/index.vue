@@ -59,7 +59,7 @@ const onLogin = (): void => {
 				data &&
 					useUserinfo().setUserInfo({
 						...data,
-						tags: data.tags.map((item) => item.tag_id),
+						tags: data.tags.map((item) => item.tag_id).filter(Boolean),
 					});
 				// 跳转到首页
 				navigateTo('/admin/');

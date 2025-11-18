@@ -16,7 +16,7 @@ const pageSize = ref<number>(5);
 // 获取卡片最大高度
 const getCardMaxHeight = () => {
 	if (cardRef.value) {
-		const cardHeights: number[] = cardRef.value.map((item) => item?.$el.offsetHeight);
+		const cardHeights: number[] = cardRef.value.map((item) => item?.$el.offsetHeight).filter(Boolean);
 		return Math.max(...cardHeights);
 	}
 
@@ -114,7 +114,7 @@ onMounted(() => {
 						</div>
 						<Starport :id="`record-image-my-id${phase?.id}`" :port="`my-id${phase?.id}`"
 							class="relative flex h-[280px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-base object-cover">
-							<RecordDetailImage :img_url="phase.image_url || ''" :img_alt="phase.image_alt || ''"
+							<RecordDetailImage :img_url="phase.images[0] || ''" :img_alt="phase.image_alt || ''"
 								class="duration-1200 transition-all" />
 						</Starport>
 					</CardsstackCardSticky>

@@ -9,7 +9,7 @@ const findUsers = async () => {
 	data &&
 		useUserinfo().setUserInfo({
 			...data,
-			tags: data.tags.map((item) => item.tag_id),
+			tags: data.tags.map((item) => item.tag_id).filter(Boolean),
 		});
 };
 

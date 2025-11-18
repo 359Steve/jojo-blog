@@ -33,7 +33,7 @@ const initFormData = () => {
 	if (currentBlog.value?.id) {
 		return {
 			...currentBlog.value,
-			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
+			tags: currentBlog.value.tags.map((tag) => tag.tag_id).filter(Boolean),
 		};
 	}
 	return {
@@ -239,7 +239,7 @@ const mdDeleteImage = async () => {
 	if (currentMdPics.value.length > 0) {
 		await mdDeleteImageDir({
 			datePath: formData.date_path,
-			fileNames: currentMdPics.value.map((item) => item.split('/').pop() || ''),
+			fileNames: currentMdPics.value.map((item) => item.split('/').pop() || '').filter(Boolean),
 		});
 		currentMdPics.value = [];
 	}
@@ -282,7 +282,7 @@ const resetForm = async () => {
 	if (isEdit.value && currentBlog.value) {
 		Object.assign(formData, {
 			...currentBlog.value,
-			tags: currentBlog.value.tags.map((tag) => tag.tag_id),
+			tags: currentBlog.value.tags.map((tag) => tag.tag_id).filter(Boolean),
 		});
 	} else {
 		resetFormData();
