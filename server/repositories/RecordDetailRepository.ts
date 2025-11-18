@@ -139,26 +139,16 @@ export class RecordDetailRepository {
 	async deleteRecordDetail(id: number) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
-				// 删除记录详情图片
-				const detailsImages = await tx.record_images.findMany({
-					where: {
-						record_detail_id: Number(id),
-					},
-				});
-
-				detailsImages.forEach((item) => {
-					if (item) {
-						const relativePath = item.url.startsWith('/') ? item.url.substring(1) : item.url;
-						const imagePath = join(process.cwd(), 'public', relativePath);
-						if (fs.existsSync(imagePath)) {
-							fs.unlinkSync(imagePath);
-						}
-					}
-				});
-
 				const currentDelete = await tx.record_details.delete({
 					where: { id: Number(id) },
 				});
+
+				const datePath = currentDelete.date_path;
+				const uploadDir = join(process.cwd(), 'public', 'recorddetail', datePath);
+
+				if (fs.existsSync(uploadDir)) {
+					fs.rmSync(uploadDir, { recursive: true, force: true });
+				}
 
 				return currentDelete;
 			});
@@ -172,7 +162,7 @@ export class RecordDetailRepository {
 	}
 
 	// 上传记录详情图片
-	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
 		if (!files || files.length === 0) {
 			throw new Error('没有上传文件！');
 		}
@@ -214,7 +204,7 @@ export class RecordDetailRepository {
 				const safeFileName = `recorddetail_${timestamp}_${randomStr}.${fileExtension}`;
 
 				// 确保文件夹存在
-				const uploadDir = join(process.cwd(), 'public/recorddetail');
+				const uploadDir = join(process.cwd(), 'public/recorddetail', datePath);
 				if (!fs.existsSync(uploadDir)) {
 					fs.mkdirSync(uploadDir, { recursive: true });
 				}
@@ -228,7 +218,7 @@ export class RecordDetailRepository {
 				uploadResults.push({
 					originalName: file.filename,
 					fileName: safeFileName,
-					url: `/recorddetail/${safeFileName}`,
+					url: `/recorddetail/${datePath}/${safeFileName}`,
 					size: file.data.length,
 					type: file.type || `image/${fileExtension}`,
 				});
