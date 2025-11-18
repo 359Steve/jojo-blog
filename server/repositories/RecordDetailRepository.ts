@@ -3,9 +3,8 @@ import type { CreateRecordDetailDto } from '../dto/CreateArticleDto';
 import { prisma } from '../core/prisma';
 import { returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
-import { extname, join } from 'path';
+import { join } from 'path';
 import { writeFile } from 'fs/promises';
-import { randomUUID } from 'crypto';
 import fs from 'fs';
 
 export class RecordDetailRepository {
@@ -17,7 +16,7 @@ export class RecordDetailRepository {
 			const { pageNumber, pageSize } = query;
 			const offset = (pageNumber - 1) * pageSize;
 
-			const [records, total] = await Promise.all([
+			const [records, total] = await this.prismaClient.$transaction([
 				this.prismaClient.record_details.findMany({
 					orderBy: { created_at: 'desc' },
 					skip: offset,
@@ -28,6 +27,7 @@ export class RecordDetailRepository {
 								time_range: true,
 							},
 						},
+						images: true,
 					},
 				}),
 				this.prismaClient.record_details.count(),
@@ -49,6 +49,15 @@ export class RecordDetailRepository {
 			const res = await this.prismaClient.record_details.create({
 				data: {
 					...data,
+					images: {
+						create: data.images
+							.map((item) => {
+								return {
+									url: item,
+								};
+							})
+							.filter(Boolean),
+					},
 				},
 			});
 
@@ -63,10 +72,59 @@ export class RecordDetailRepository {
 	// 更新记录详情
 	async updateRecordDetail(data: Partial<CreateRecordDetailDto>) {
 		try {
-			const { id, ...updateData } = data;
-			const res = await this.prismaClient.record_details.update({
-				where: { id: Number(id) },
-				data: updateData,
+			const { id, images, ...updateData } = data;
+
+			const res = await this.prismaClient.$transaction(async (tx) => {
+				const updatedRecord = await tx.record_details.update({
+					where: { id: Number(id) },
+					data: updateData,
+				});
+
+				if (updatedRecord) {
+					// 处理图片更新
+					if (images) {
+						const dbImages = await tx.record_images.findMany({
+							where: { record_detail_id: Number(id) },
+							select: { url: true },
+						});
+						const dbUrls = dbImages.map((item) => item.url).filter(Boolean);
+
+						const toAdd = images.filter((url) => !dbUrls.includes(url));
+						const toDelete = dbUrls.filter((url) => !images.includes(url));
+
+						if (toAdd.length > 0) {
+							await tx.record_images.createMany({
+								data: toAdd
+									.map((url) => ({
+										record_detail_id: Number(id),
+										url,
+									}))
+									.filter(Boolean),
+							});
+						}
+
+						if (toDelete.length > 0) {
+							await tx.record_images.deleteMany({
+								where: {
+									record_detail_id: Number(id),
+									url: { in: toDelete },
+								},
+							});
+						}
+
+						toDelete.forEach((img) => {
+							if (img) {
+								const relativePath = img.startsWith('/') ? img.substring(1) : img;
+								const imagePath = join(process.cwd(), 'public', relativePath);
+								if (fs.existsSync(imagePath)) {
+									fs.unlinkSync(imagePath);
+								}
+							}
+						});
+					}
+				}
+
+				return updatedRecord;
 			});
 
 			return res
@@ -81,19 +139,26 @@ export class RecordDetailRepository {
 	async deleteRecordDetail(id: number) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
+				// 删除记录详情图片
+				const detailsImages = await tx.record_images.findMany({
+					where: {
+						record_detail_id: Number(id),
+					},
+				});
+
+				detailsImages.forEach((item) => {
+					if (item) {
+						const relativePath = item.url.startsWith('/') ? item.url.substring(1) : item.url;
+						const imagePath = join(process.cwd(), 'public', relativePath);
+						if (fs.existsSync(imagePath)) {
+							fs.unlinkSync(imagePath);
+						}
+					}
+				});
+
 				const currentDelete = await tx.record_details.delete({
 					where: { id: Number(id) },
 				});
-
-				// 删除记录详情图片
-				const imageUrl = currentDelete.image_url;
-				if (imageUrl) {
-					const relativePath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
-					const imagePath = join(process.cwd(), 'public', relativePath);
-					if (fs.existsSync(imagePath)) {
-						fs.unlinkSync(imagePath);
-					}
-				}
 
 				return currentDelete;
 			});
@@ -108,50 +173,74 @@ export class RecordDetailRepository {
 
 	// 上传记录详情图片
 	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+		if (!files || files.length === 0) {
+			throw new Error('没有上传文件！');
+		}
+
 		try {
-			if (!files || files.length === 0) {
-				throw new Error('没有上传文件');
+			const uploadResults = [];
+
+			// 定义允许的图片类型和扩展名
+			const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+			const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+
+				if (!file.data || !file.filename) {
+					continue;
+				}
+
+				// 验证文件大小
+				if (file.data.length > maxFileSize) {
+					continue;
+				}
+
+				// 验证文件扩展名
+				const fileExtension = file.filename.split('.').pop()?.toLowerCase();
+				if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+					continue;
+				}
+
+				// 验证MIME类型
+				if (file.type && !allowedMimeTypes.includes(file.type.toLowerCase())) {
+					continue;
+				}
+
+				// 生成安全的文件名
+				const timestamp = Date.now();
+				const randomStr = Math.random().toString(36).substring(2, 8);
+				const safeFileName = `recorddetail_${timestamp}_${randomStr}.${fileExtension}`;
+
+				// 确保文件夹存在
+				const uploadDir = join(process.cwd(), 'public/recorddetail');
+				if (!fs.existsSync(uploadDir)) {
+					fs.mkdirSync(uploadDir, { recursive: true });
+				}
+
+				const filePath = join(uploadDir, safeFileName);
+
+				// 写入文件
+				await writeFile(filePath, file.data);
+
+				// 添加到结果数组
+				uploadResults.push({
+					originalName: file.filename,
+					fileName: safeFileName,
+					url: `/recorddetail/${safeFileName}`,
+					size: file.data.length,
+					type: file.type || `image/${fileExtension}`,
+				});
 			}
 
-			const file = files[0];
-
-			// 验证文件
-			if (!file.data || !file.filename) {
-				throw new Error('文件数据无效');
+			if (uploadResults.length === 0) {
+				throw new Error('没有有效的图片文件上传！请确保文件为图片格式且小于5MB');
 			}
 
-			// 验证文件类型
-			const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-			const fileExtension = extname(file.filename).toLowerCase();
-
-			if (!allowedExtensions.includes(fileExtension)) {
-				throw new Error('不支持的文件格式，只允许 JPG、PNG、GIF、WebP 格式！');
-			}
-
-			// 验证文件大小
-			const maxSize = 5 * 1024 * 1024; // 5MB
-			if (file.data.length > maxSize) {
-				throw new Error('文件大小不能超过 5MB');
-			}
-
-			// 生成安全的文件名
-			const timestamp = Date.now();
-			const uuid = randomUUID().replace(/-/g, '').substring(0, 8);
-			const safeFileName = `recorddetail_${timestamp}_${uuid}${fileExtension}`;
-
-			// 确保目录存在
-			const uploadDir = join(process.cwd(), 'public/recorddetail');
-			if (!fs.existsSync(uploadDir)) {
-				fs.mkdirSync(uploadDir, { recursive: true });
-			}
-
-			const savePath = join(uploadDir, safeFileName);
-
-			// 保存文件
-			await writeFile(savePath, file.data);
-
-			// 返回文件访问路径
-			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/recorddetail/${safeFileName}` });
+			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
+				urls: uploadResults.map((item) => item.url).filter(Boolean),
+			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, (error as Error).message, null);
 		}
@@ -165,13 +254,16 @@ export class RecordDetailRepository {
 					where: {
 						id: Number(id),
 					},
+					include: {
+						images: true,
+					},
 				});
 
 				const imageAll = await tx.record_details.findMany({
 					select: {
 						id: true,
-						image_url: true,
 						image_alt: true,
+						images: true,
 					},
 					where: {
 						group_id: Number(parentId),
@@ -217,7 +309,15 @@ export class RecordDetailRepository {
 
 				return {
 					...currentDetail,
-					imageAll,
+					images: currentDetail.images.map((item) => item.url).filter(Boolean),
+					imageAll: imageAll
+						.map((item) => {
+							return {
+								...item,
+								images: item.images.map((img) => img.url).filter(Boolean),
+							};
+						})
+						.filter(Boolean),
 					prev,
 					next,
 				};
@@ -238,42 +338,51 @@ export class RecordDetailRepository {
 			const offset = (Number(pageNumber) - 1) * Number(pageSize);
 
 			if (random) {
-				// 随机查询四张照片
-				const records: HomePicResponse<CreateRecordDetailDto>[] = await this.prismaClient
-					.$queryRaw`SELECT id, group_id as parent_id, image_url, image_alt FROM record_details WHERE image_url != '' ORDER BY RAND() LIMIT 4`;
+				// 随机查询照片
+				const randomImages: RecordDetailImages[] = await this.prismaClient
+					.$queryRaw`SELECT * FROM record_images WHERE url != '' ORDER BY RAND() LIMIT 4`;
 
-				return returnData(StatusCode.SUCCESS, '照片列表查询成功', records);
+				const randomImagesWithGroup = await Promise.all(
+					randomImages
+						.map(async (item) => {
+							const record = await this.prismaClient.record_details.findUnique({
+								select: {
+									group_id: true,
+								},
+								where: { id: item.record_detail_id },
+							});
+
+							return {
+								...item,
+								group_id: record?.group_id || null,
+							};
+						})
+						.filter(Boolean),
+				);
+
+				return returnData(StatusCode.SUCCESS, '照片列表查询成功', randomImagesWithGroup);
 			} else {
 				// 正常查询分页照片
-				const records = await this.prismaClient.record_details.findMany({
+				const records = await this.prismaClient.record_images.findMany({
 					where: {
-						image_url: {
+						url: {
 							not: '',
 						},
 					},
 					skip: offset,
 					take: Number(pageSize),
 					orderBy: {
-						created_at: 'desc',
-					},
-					select: {
-						id: true,
-						group_id: true,
-						image_url: true,
-						image_alt: true,
+						id: 'desc',
 					},
 				});
 
-				return returnData(
-					StatusCode.SUCCESS,
-					'照片列表查询成功',
-					records.map((item) => {
-						return {
-							...item,
-							parent_id: item.group_id,
-						};
-					}),
-				);
+				return records
+					? returnData(
+						StatusCode.SUCCESS,
+						'照片列表查询成功',
+						records.map((item) => item.url).filter(Boolean),
+					)
+					: returnData(StatusCode.SUCCESS, '照片列表到底了', null);
 			}
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
@@ -286,7 +395,7 @@ export class RecordDetailRepository {
 			const { pageNumber, pageSize, parentId } = query;
 			const offset = (pageNumber - 1) * pageSize;
 
-			const [records, total] = await Promise.all([
+			const [records, total] = await this.prismaClient.$transaction([
 				this.prismaClient.record_details.findMany({
 					where: {
 						group_id: Number(parentId),
@@ -295,7 +404,7 @@ export class RecordDetailRepository {
 						id: true,
 						title: true,
 						time_range: true,
-						image_url: true,
+						images: true,
 						image_alt: true,
 					},
 					orderBy: {
@@ -315,7 +424,17 @@ export class RecordDetailRepository {
 				return returnData(StatusCode.SUCCESS, '记录列表到底了', null);
 			}
 
-			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records, total });
+			return returnData(StatusCode.SUCCESS, '记录列表查询成功', {
+				records: records
+					.map((item) => {
+						return {
+							...item,
+							images: item.images.map((img) => img.url).filter(Boolean),
+						};
+					})
+					.filter(Boolean),
+				total,
+			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '记录列表查询失败', null);
 		}
