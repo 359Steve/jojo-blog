@@ -44,11 +44,15 @@ watch([parentId, id], async () => {
 });
 
 const srcList = computed(() => {
-	if (!currentData.value?.imageAll) return [];
-	return currentData.value.imageAll.map((item) => item.image_url).filter(Boolean);
+	if (!currentData.value?.images) return [];
+	return currentData.value.images;
 });
-
+const srcListAll = computed(() => {
+	if (!currentData.value?.imageAll) return [];
+	return currentData.value.imageAll.flatMap((item) => item.images).filter(Boolean);
+});
 const stableSrcList = ref<string[]>([]);
+const stableSrcListAll = ref<string[]>([]);
 
 watch(
 	srcList,
@@ -60,12 +64,30 @@ watch(
 	{ immediate: true },
 );
 
+watch(
+	srcListAll,
+	(newList) => {
+		if (newList.length > 0 && JSON.stringify(newList) !== JSON.stringify(stableSrcListAll.value)) {
+			stableSrcListAll.value = [...newList];
+		}
+	},
+	{ immediate: true },
+);
+
 const date = computed(() => {
 	if (!currentData.value?.created_at) {
 		return '';
 	}
 	const d = new Date(currentData.value.created_at);
 	return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+});
+
+// 照片墙切换状态
+const photoWallMode = ref<'current' | 'all'>('current');
+
+// 当前显示的图片列表
+const currentDisplayImages = computed(() => {
+	return photoWallMode.value === 'current' ? stableSrcList.value : stableSrcListAll.value;
 });
 
 // 查询上下条数据
@@ -88,7 +110,7 @@ const getById = async (recordId: number) => {
 		</div>
 		<Starport :id="`record-image-my-id${id}`" :port="`my-id${id}`"
 			class="relative flex h-[10rem] cursor-pointer items-center justify-center overflow-hidden rounded-base sm:h-[12rem] md:h-[14rem] lg:h-[16rem] xl:h-[16rem] 2xl:h-[16rem]">
-			<RecordDetailImage :img_url="currentData?.image_url || ''" :img_alt="currentData?.image_alt"
+			<RecordDetailImage :img_url="currentData?.images[0] || ''" :img_alt="currentData?.image_alt"
 				class="duration-1200 transition-all" />
 		</Starport>
 		<div class="w-full py-4 sm:py-8">
@@ -100,17 +122,35 @@ const getById = async (recordId: number) => {
 			</div>
 		</div>
 		<div class="mt-4 w-full py-8">
-			<div class="m-auto flex w-[80%] items-center sm:w-[60%]">
+			<div class="m-auto flex items-center gap-2 sm:gap-4">
 				<div class="h-px flex-1 flex-grow bg-gray-300" />
-				<span class="mx-4 text-sm text-gray-500">
-					照片墙 ({{ stableSrcList.length }}{{ stableSrcList.length > 4 ? '张，点击查看全部' : '张' }})
-				</span>
+				<div class="flex cursor-pointer items-center justify-center rounded-full px-2 py-1 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm"
+					:class="[
+						photoWallMode === 'current'
+							? 'scale-105 transform bg-rose-500 text-white shadow-lg'
+							: 'border border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
+					]" @click="photoWallMode = 'current'">
+					<Icon :icon="photoWallMode === 'current' ? 'ri:image-fill' : 'ri:image-line'"
+						class="mr-1 text-sm sm:mr-2 sm:text-base" />
+					<span>当日 ({{ stableSrcList.length }})</span>
+				</div>
+				<div class="flex cursor-pointer items-center justify-center rounded-full px-2 py-1 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm"
+					:class="[
+						photoWallMode === 'all'
+							? 'scale-105 transform bg-rose-500 text-white shadow-lg'
+							: 'border border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
+					]" @click="photoWallMode = 'all'">
+					<Icon :icon="photoWallMode === 'all' ? 'ri:gallery-fill' : 'ri:gallery-line'"
+						class="mr-1 text-sm sm:mr-2 sm:text-base" />
+					<span>全年 ({{ stableSrcListAll.length }})</span>
+				</div>
 				<div class="h-px flex-1 flex-grow bg-gray-300" />
 			</div>
-			<ElScrollbar v-if="stableSrcList.length > 0">
+			<ElScrollbar v-if="currentDisplayImages.length > 0">
 				<div
 					class="scroll-wrap mt-4 flex flex-row gap-4 sm:mt-8 sm:grid sm:aspect-video sm:grid-cols-4 sm:grid-rows-2">
-					<div v-for="(item, index) in stableSrcList.slice(0, 4)" :key="`img-${index}-${parentId}`"
+					<div v-for="(item, index) in currentDisplayImages.slice(0, 4)"
+						:key="`img-${index}-${parentId}-${photoWallMode}`"
 						class="relative h-48 w-36 flex-shrink-0 overflow-hidden rounded-base sm:row-span-1 sm:h-auto sm:w-full"
 						:class="[
 							'sm:' + (index < 2 ? 'col-span-2' : 'row-start-2'),
@@ -119,12 +159,13 @@ const getById = async (recordId: number) => {
 							index === 3 ? 'sm:col-start-2' : '',
 						]">
 						<ElImage :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-							:preview-src-list="stableSrcList" show-progress fit="cover" :preview-teleported="true" />
+							:preview-src-list="currentDisplayImages" show-progress fit="cover"
+							:preview-teleported="true" />
 
-						<div v-if="index === 3 && stableSrcList.length > 4"
+						<div v-if="index === 3 && currentDisplayImages.length > 4"
 							class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
 							<div class="text-center">
-								<div class="text-lg font-bold">+{{ stableSrcList.length - 4 }}</div>
+								<div class="text-lg font-bold">+{{ currentDisplayImages.length - 4 }}</div>
 								<div class="text-xs">更多</div>
 							</div>
 						</div>
