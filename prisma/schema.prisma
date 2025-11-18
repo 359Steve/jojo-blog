@@ -86,6 +86,7 @@ model record_details {
   image_alt  String          @db.VarChar(200)
   created_at DateTime        @default(now())
   updated_at DateTime        @updatedAt
+  date_path  String          @default("1997-01-01-103523") @db.VarChar(255)
   group      record_groups   @relation(fields: [group_id], references: [id], onDelete: Cascade)
   images     record_images[]
 
