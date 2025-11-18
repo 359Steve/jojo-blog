@@ -12,7 +12,7 @@ export class TagRepository {
 		const { name, pageNumber, pageSize } = query;
 
 		try {
-			const [records, total] = await Promise.all([
+			const [records, total] = await this.prismaClient.$transaction([
 				this.prismaClient.tag.findMany({
 					skip: (Number(pageNumber) - 1) * Number(pageSize),
 					take: Number(pageSize),
