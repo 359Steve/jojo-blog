@@ -75,11 +75,11 @@ onMounted(() => {
 				<div class="flex items-start">
 					<div class="sticky top-[5rem] sm:top-[6rem]">
 						<RecordHeader :sm="false" :space="false" />
-						<h5 class="text-xs uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
+						<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
 						<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
 							{{ summaryList?.title }}
 						</h2>
-						<p class="max-w-prose text-sm">
+						<p class="max-w-prose indent-7 text-sm sm:indent-0">
 							{{ summaryList?.summary }}
 						</p>
 

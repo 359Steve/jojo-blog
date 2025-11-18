@@ -114,11 +114,13 @@ const getById = async (recordId: number) => {
 				class="duration-1200 transition-all" />
 		</Starport>
 		<div class="w-full py-4 sm:py-8">
-			<div class="mb-4 text-center text-lg font-extrabold text-gray-500 sm:mb-6">
+			<div class="mb-4 text-center text-lg font-semibold text-black sm:mb-6">
 				{{ currentData?.title }}
 			</div>
-			<div class="text-center text-gray-400">
-				{{ currentData?.summary }}
+			<div class="text-gray-500">
+				<p v-for="(line, index) in currentData?.summary.split('\n')" :key="index" class="mb-2 indent-8">
+					{{ line }}
+				</p>
 			</div>
 		</div>
 		<div class="mt-4 w-full py-8">

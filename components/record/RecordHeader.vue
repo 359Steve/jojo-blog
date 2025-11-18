@@ -20,11 +20,11 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 			<div class="grid">
 				<div>
 					<h1
-						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-base font-black text-rose-500 sm:text-xl md:text-2xl lg:text-3xl">
+						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-[16px] font-black text-rose-500 sm:text-xl md:text-2xl lg:text-3xl">
 						{{ userInfo?.pet_name }}
 					</h1>
 				</div>
-				<div class="text-secondary mt-4 flex items-center text-sm font-normal lg:text-base">
+				<div class="text-secondary mt-4 flex items-center text-[15px] font-normal lg:text-base">
 					<span>{{ userInfo?.sign }}</span>
 				</div>
 				<div class="mt-4 flex w-full items-center gap-2">

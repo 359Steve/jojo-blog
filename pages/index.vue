@@ -71,7 +71,7 @@ onMounted(() => {
 				{{ userInfo.sign }}
 			</div>
 			<div
-				class="my-4 line-clamp-5 indent-10 text-base text-slate-700 opacity-100 backdrop-blur-0 dark:text-slate-50 md:my-6 md:text-lg">
+				class="my-4 line-clamp-5 indent-8 text-base text-slate-700 opacity-100 backdrop-blur-0 dark:text-slate-50 md:my-6 md:text-lg">
 				{{ userInfo.describe }}
 			</div>
 			<div class="opacity-100 backdrop-blur-0">
