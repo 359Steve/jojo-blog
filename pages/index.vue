@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
-
 const { data } = await useAsyncData('indexRecordPictures', () =>
 	findRecordPictures({
 		pageNumber: 1,
@@ -46,8 +44,8 @@ const toRecord = () => {
 	navigateTo('/record/home');
 };
 
-const toRecordDetail = (item: HomePicResponse<CreateRecordDetailDto>) => {
-	navigateTo({ path: `/record/detail/${item.parent_id}/${item.id}` });
+const toRecordDetail = (item: HomePicResponse<RecordDetailImages>) => {
+	navigateTo({ path: `/record/detail/${item.group_id}/${item.record_detail_id}` });
 };
 
 onMounted(() => {
@@ -96,8 +94,7 @@ onMounted(() => {
 						opacity: 1,
 					}" @click="toRecordDetail(pictureList[index])">
 					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.image_alt || ''"
-						:src="pictureList[index]?.image_url || defaultImages[index]">
+						:alt="pictureList[index]?.url || ''" :src="pictureList[index]?.url || defaultImages[index]">
 				</div>
 			</div>
 		</div>
