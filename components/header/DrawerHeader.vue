@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import Bilibili from '../footer/utils/bilibili';
-
 const { drawer } = storeToRefs(useJojoHeader());
 </script>
 
@@ -16,9 +14,10 @@ const { drawer } = storeToRefs(useJojoHeader());
 					<ul>
 						<li class="h-16 w-full p-4">
 							<div class="flex h-full w-full items-center justify-center">
-								<LogoBasicLogo></LogoBasicLogo>
-								<span class="overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-bold">·Josef
-									Joestar</span>
+								<LogoBasicLogo />
+								<span class="overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-bold">
+									·Josef Joestar
+								</span>
 							</div>
 						</li>
 						<li class="p-2 text-center">
@@ -27,12 +26,15 @@ const { drawer } = storeToRefs(useJojoHeader());
 						</li>
 					</ul>
 				</div>
-				<div></div>
+				<div />
 				<div class="py-4">
-					<HeaderMenuList></HeaderMenuList>
+					<HeaderMenuList />
 				</div>
 				<div class="absolute bottom-0 left-0 flex h-10 w-full items-center justify-center gap-2 py-2">
-					<Bilibili />
+					<a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer"
+						class="flex items-center gap-2 text-xs">
+						蜀ICP备2025171383号
+					</a>
 				</div>
 			</ElDrawer>
 		</div>
