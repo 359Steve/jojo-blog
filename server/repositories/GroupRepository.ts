@@ -12,7 +12,7 @@ export class GroupRepository {
 		const { pageNumber, pageSize } = query;
 
 		try {
-			const [records, total] = await Promise.all([
+			const [records, total] = await this.prismaClient.$transaction([
 				this.prismaClient.record_groups.findMany({
 					include: {
 						_count: {
@@ -52,7 +52,7 @@ export class GroupRepository {
 				if (existingGroup) {
 					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
 				}
-				return tx.record_groups.create({
+				return await tx.record_groups.create({
 					data,
 				});
 			});
@@ -79,7 +79,7 @@ export class GroupRepository {
 					returnData(StatusCode.FAIL, '已存在相同年份的分组', null);
 				}
 
-				return await this.prismaClient.record_groups.update({
+				return await tx.record_groups.update({
 					where: { id },
 					data,
 				});
@@ -154,7 +154,7 @@ export class GroupRepository {
 								id: true,
 								title: true,
 								time_range: true,
-								image_url: true,
+								images: true,
 								image_alt: true,
 							},
 							orderBy: {
@@ -212,6 +212,14 @@ export class GroupRepository {
 
 				return {
 					...currentRecord,
+					details: currentRecord.details
+						.map((item) => {
+							return {
+								...item,
+								images: item.images.map((img) => img.url).filter(Boolean),
+							};
+						})
+						.filter(Boolean),
 					prev,
 					next,
 				};
