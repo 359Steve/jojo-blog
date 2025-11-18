@@ -8,8 +8,6 @@ interface MdUploadImageFile {
 
 interface MdUploadImageResponse {
 	urls: string[];
-	files: MdUploadImageFile[];
-	datePath: string;
 }
 
 // 删除指定目录下的图片返回值类型
