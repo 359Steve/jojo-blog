@@ -1,4 +1,3 @@
-import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import type { CreateUserDto } from '~/server/dto/CreateUserDto';
 
@@ -10,4 +9,4 @@ export const findPublicUser = chooseCondition<
 
 // 查询照片
 export const findRecordPictures = (query: FindPictureRequest) =>
-	chooseCondition<FindPictureRequest, HomePicResponse<CreateRecordDetailDto>[]>('/record/recordPublicPic')(query);
+	chooseCondition<FindPictureRequest, HomePicResponse<RecordDetailImages>[]>('/record/recordPublicPic')(query);
