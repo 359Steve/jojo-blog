@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
-import type { FormInstance, FormRules, UploadFile, UploadFiles } from 'element-plus';
+import type { FormInstance, FormRules, UploadFile, UploadFiles, UploadUserFile } from 'element-plus';
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
 const selectData = ref<{ id: number; time_range: string }[]>(data.value?.data || []);
@@ -15,14 +15,14 @@ const { data: detailData } = await useAsyncData('recordArticleDetails', () =>
 	queryRecordDetailAll(pageNumber.value, pageSize.value),
 );
 const total = ref<number>(detailData.value?.data?.total || 0);
-const tableData = ref<GroupWithDetail<CreateRecordDetailDto>[]>(detailData.value?.data?.records || []);
+const tableData = ref<GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[]>(detailData.value?.data?.records || []);
 const groupId = ref<number>();
 const formData = reactive<CreateRecordDetailDto>({
 	group_id: groupId.value!,
 	title: '',
 	summary: '',
 	time_range: '',
-	image_url: '',
+	images: [],
 	image_alt: '',
 });
 const ruleFormRef = templateRef('ruleFormRef');
@@ -36,10 +36,10 @@ const updateUserRules = reactive<FormRules>({
 			trigger: 'blur',
 		},
 	],
-	image_url: [
+	images: [
 		{
 			required: true,
-			message: '请上传图片',
+			message: '请上传照片',
 			trigger: 'blur',
 		},
 	],
@@ -73,27 +73,36 @@ const updateUserRules = reactive<FormRules>({
 	],
 });
 const isEdit = ref<boolean>(false);
+const fileList = ref<UploadUserFile[]>([]);
 
 // 移除当前图片
-const handleRemove = () => {
+const handleRemove = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
 	if (isEdit.value) {
-		// 编辑模式下确认删除
-		useConfirm('确定要移除当前图片吗？', 'warning', () => {
-			formData.image_url = '';
-			imageFile.value = null;
-			upload.value?.clearFiles();
-			ElMessage.success('图片已移除，保存时将不包含图片');
-		});
+		fileList.value = fileList.value.filter((file) => file.uid !== uploadFile.uid);
+		if (uploadFile.url) {
+			formData.images = formData.images.filter((url) => url !== uploadFile.url);
+		}
+
+		ElMessage.success('图片已移除');
 	} else {
 		// 新增模式直接删除
-		formData.image_url = '';
-		imageFile.value = null;
-		upload.value?.clearFiles();
+		fileList.value = fileList.value.filter((file) => file.uid !== uploadFile.uid);
+		formData.images = formData.images.filter((url) => url !== uploadFile.url);
+
+		// 重新构建 FormData
+		if (imageFile.value) {
+			imageFile.value.delete('files');
+			fileList.value.forEach((item) => {
+				if (item.raw) {
+					imageFile.value?.append('files', item.raw);
+				}
+			});
+		}
 	}
 };
 
 // 上传成功
-const handleImageSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
+const handleImageSuccess = (uploadFile: UploadFile) => {
 	// 验证文件类型
 	const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 	const maxSize = 5 * 1024 * 1024; // 5MB
@@ -106,25 +115,18 @@ const handleImageSuccess = (uploadFile: UploadFile, _uploadFiles: UploadFiles) =
 	// 验证文件类型
 	if (!allowedTypes.includes(uploadFile.raw.type)) {
 		ElMessage.error('只能上传 JPG、PNG、GIF、WebP 格式的图片');
-		upload.value?.clearFiles();
 		return;
 	}
 
 	// 验证文件大小
 	if (uploadFile.raw.size > maxSize) {
 		ElMessage.error('图片大小不能超过 5MB');
-		upload.value?.clearFiles();
 		return;
 	}
 
-	// 显示预览图片
-	formData.image_url = URL.createObjectURL(uploadFile.raw);
-
-	// 准备上传的 FormData
-	imageFile.value = new FormData();
-	imageFile.value.append('file', uploadFile.raw);
-
-	ElMessage.success('图片选择成功');
+	fileList.value.push(uploadFile);
+	formData.images.push('');
+	imageFile.value!.append('files', uploadFile.raw);
 };
 
 // 保存
@@ -132,24 +134,31 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
 		if (valid) {
 			try {
-				// 如果有新的图片文件需要上传
-				if (imageFile.value && imageFile.value.has('file')) {
-					const { data } = await uploadRecordDetailImage(imageFile.value);
+				const hasNewFiles = imageFile.value && imageFile.value.has('files');
+
+				if (hasNewFiles) {
+					const { data } = await uploadRecordDetailImage(imageFile.value!);
 
 					if (!data) {
 						return;
 					}
 
-					formData.image_url = data.url;
+					formData.images = isEdit.value ? [...formData.images, ...data.urls] : data.urls;
 				}
 
 				let res;
 				if (isEdit.value) {
 					// 修改
-					res = await updateRecordDetail(formData);
+					res = await updateRecordDetail({
+						...formData,
+						images: formData.images.filter((url) => url !== ''),
+					});
 				} else {
 					// 新增
-					res = await createRecordDetail(formData);
+					res = await createRecordDetail({
+						...formData,
+						images: formData.images.filter((url) => url !== ''),
+					});
 				}
 
 				if (res.data) {
@@ -173,10 +182,11 @@ const resetForm = () => {
 	formData.title = '';
 	formData.summary = '';
 	formData.time_range = '';
-	formData.image_url = '';
+	formData.images = [];
 	formData.image_alt = '';
 	groupId.value = undefined;
-	imageFile.value = null;
+	imageFile.value?.delete('files');
+	fileList.value = [];
 	upload.value?.clearFiles();
 	ruleFormRef.value?.resetFields();
 };
@@ -225,6 +235,10 @@ const handleDelete = async (id: number) => {
 				pageNumber.value -= 1;
 			}
 			await queryArticles(pageNumber.value, pageSize.value);
+
+			if (formData.id === id) {
+				resetForm();
+			}
 		}
 	});
 };
@@ -244,41 +258,42 @@ const handleCancel = () => {
 };
 
 // 编辑记录详情
-const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
+const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>) => {
 	const { group, ...rest } = row;
 	isEdit.value = true;
 	// 复制数据到表单
-	Object.assign(formData, { ...rest });
+	Object.assign(formData, {
+		...rest,
+		images: row.images.map((item) => item.url),
+	});
 	groupId.value = row.group_id;
 
-	if (row.image_url) {
-		imageFile.value = null;
+	if (row.images && row.images.length > 0) {
+		imageFile.value?.delete('files');
+		fileList.value = row.images.map((imageUrl: RecordDetailImages, index: number) => {
+			return {
+				name: `图片-${index + 1}`,
+				url: imageUrl.url,
+				uid: Date.now() + index,
+				status: 'success' as const,
+				percentage: 100,
+			} as UploadUserFile;
+		});
+	} else {
+		fileList.value = [];
 	}
 };
 </script>
 
 <template>
 	<AdminFormMain title="文章管理">
-		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" :inline="true" class="!w-full"
+		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" class="flex !w-full flex-wrap"
 			label-width="100px">
-			<ElFormItem prop="image_url" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="照片：">
-				<ElUpload ref="upload" class="relative" action="#" list-type="picture-card"
-					:on-change="handleImageSuccess" :auto-upload="false" :show-file-list="false" :limit="1"
-					accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
-					<!-- 上传后显示图片 -->
-					<template v-if="formData.image_url">
-						<div class="group absolute h-full w-full" @click.stop>
-							<ElImage :src="formData.image_url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-								:preview-src-list="[formData.image_url]" show-progress fit="cover" />
-							<Icon
-								class="absolute right-1 top-1 cursor-pointer text-[20px] text-admin-tag-active-text transition sm:opacity-0 sm:group-hover:text-admin-tag-active-text sm:group-hover:opacity-100"
-								icon="mdi:close" @click="handleRemove" />
-						</div>
-					</template>
-					<!-- 上传前显示加号 -->
-					<template v-else>
-						<Icon class="text-[40px] text-gray-400" icon="mdi:add" />
-					</template>
+			<ElFormItem prop="images" class="!mx-0 flex !w-full items-start sm:!w-[50%] sm:odd:pr-4" label="照片：">
+				<ElUpload ref="upload" v-model:file-list="fileList" :auto-upload="false" :multiple="true"
+					class="relative w-full" action="#" :on-change="handleImageSuccess" :on-remove="handleRemove"
+					list-type="picture">
+					<el-button type="primary">上传照片</el-button>
 				</ElUpload>
 			</ElFormItem>
 			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="详情：">
@@ -323,10 +338,7 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 					<ElTableColumn prop="summary" label="详情" show-overflow-tooltip />
 					<ElTableColumn label="图片" width="100">
 						<template #default="{ row }">
-							<template v-if="row.image_url">
-								<ElImage :src="row.image_url" fit="cover" class="!h-10 !w-10 rounded" />
-							</template>
-							<template v-else>—</template>
+							{{ row.images ? row.images.length : 0 }}
 						</template>
 					</ElTableColumn>
 					<ElTableColumn prop="image_alt" label="图片描述" width="120" show-overflow-tooltip />
@@ -353,5 +365,13 @@ const handleEdit = (row: GroupWithDetail<CreateRecordDetailDto>) => {
 <style lang="postcss" scoped>
 :deep(.el-date-editor) {
 	@apply !w-full;
+}
+
+:deep(.el-upload-list) {
+	@apply max-h-[180px] w-full overflow-y-auto;
+}
+
+:deep(.el-upload-list__item-thumbnail) {
+	@apply h-12 w-12;
 }
 </style>
