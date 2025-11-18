@@ -23,6 +23,7 @@ const formData = reactive<CreateRecordDetailDto>({
 	summary: '',
 	time_range: '',
 	images: [],
+	date_path: '',
 	image_alt: '',
 });
 const ruleFormRef = templateRef('ruleFormRef');
@@ -91,7 +92,7 @@ const handleRemove = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
 
 		// 重新构建 FormData
 		if (imageFile.value) {
-			imageFile.value.delete('files');
+			imageFile.value = new FormData();
 			fileList.value.forEach((item) => {
 				if (item.raw) {
 					imageFile.value?.append('files', item.raw);
@@ -131,10 +132,12 @@ const handleImageSuccess = (uploadFile: UploadFile) => {
 
 // 保存
 const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
+	const date_path = isEdit.value ? formData.date_path : getDatePath();
 	formEl?.validate(async (valid) => {
 		if (valid) {
 			try {
 				const hasNewFiles = imageFile.value && imageFile.value.has('files');
+				!imageFile.value?.has('datePath') && imageFile.value?.append('datePath', date_path);
 
 				if (hasNewFiles) {
 					const { data } = await uploadRecordDetailImage(imageFile.value!);
@@ -144,6 +147,7 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 					}
 
 					formData.images = isEdit.value ? [...formData.images, ...data.urls] : data.urls;
+					formData.date_path = date_path;
 				}
 
 				let res;
@@ -183,9 +187,10 @@ const resetForm = () => {
 	formData.summary = '';
 	formData.time_range = '';
 	formData.images = [];
+	formData.date_path = '';
 	formData.image_alt = '';
 	groupId.value = undefined;
-	imageFile.value?.delete('files');
+	imageFile.value = new FormData();
 	fileList.value = [];
 	upload.value?.clearFiles();
 	ruleFormRef.value?.resetFields();
@@ -269,7 +274,7 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 	groupId.value = row.group_id;
 
 	if (row.images && row.images.length > 0) {
-		imageFile.value?.delete('files');
+		imageFile.value = new FormData();
 		fileList.value = row.images.map((imageUrl: RecordDetailImages, index: number) => {
 			return {
 				name: `图片-${index + 1}`,
