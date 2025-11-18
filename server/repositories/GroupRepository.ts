@@ -101,18 +101,15 @@ export class GroupRepository {
 			// 首先删除关联的记录详情所有图片
 			const relatedDetails = await this.prismaClient.record_details.findMany({
 				where: { group_id: Number(id) },
-				select: { images: true },
+				select: { date_path: true },
 			});
 
-			const imageUrls = relatedDetails
-				.flatMap((detail) => detail.images.map((img) => img.url).filter(Boolean))
-				.filter(Boolean);
-			imageUrls.forEach((item) => {
-				if (item) {
-					const relativePath = item.startsWith('/') ? item.substring(1) : item;
-					const imagePath = join(process.cwd(), 'public', relativePath);
-					if (fs.existsSync(imagePath)) {
-						fs.unlinkSync(imagePath);
+			relatedDetails.forEach((currentDelete) => {
+				if (currentDelete.date_path) {
+					const uploadDir = join(process.cwd(), 'public', 'recorddetail', currentDelete.date_path);
+
+					if (fs.existsSync(uploadDir)) {
+						fs.rmSync(uploadDir, { recursive: true, force: true });
 					}
 				}
 			});
