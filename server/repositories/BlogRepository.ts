@@ -25,10 +25,12 @@ export class BlogRepository {
 				// 如果有标签，创建博客标签关联
 				if (tags && tags.length > 0) {
 					await tx.blog_tag.createMany({
-						data: tags.map((tagId) => ({
-							blog_id: blog.id,
-							tag_id: tagId,
-						})),
+						data: tags
+							.map((tagId) => ({
+								blog_id: blog.id,
+								tag_id: tagId,
+							}))
+							.filter(Boolean),
 					});
 				}
 
@@ -65,7 +67,7 @@ export class BlogRepository {
 				}
 				: {};
 
-			const [records, total] = await Promise.all([
+			const [list, total] = await this.prismaClient.$transaction([
 				this.prismaClient.blog.findMany({
 					where,
 					skip: Number(skip),
@@ -82,12 +84,12 @@ export class BlogRepository {
 				this.prismaClient.blog.count({ where }),
 			]);
 
-			if (!records || !total) {
+			if (!list || !total) {
 				return returnData(StatusCode.SUCCESS, '博客列表到底了', null);
 			}
 
 			return returnData(StatusCode.SUCCESS, '博客列表获取成功', {
-				records,
+				records: list,
 				total,
 			});
 		} catch (error) {
@@ -99,12 +101,6 @@ export class BlogRepository {
 	async deleteBlog(id: number) {
 		try {
 			const res = await this.prismaClient.$transaction(async (tx) => {
-				// 先删除博客标签关联
-				await tx.blog_tag.deleteMany({
-					where: { blog_id: Number(id) },
-				});
-
-				// 再删除博客
 				const currentDelete = await tx.blog.delete({
 					where: { id: Number(id) },
 				});
@@ -204,10 +200,12 @@ export class BlogRepository {
 					// 如果有新标签，创建新的关联
 					if (tags.length > 0) {
 						await tx.blog_tag.createMany({
-							data: tags.map((tagId) => ({
-								blog_id: Number(id),
-								tag_id: tagId,
-							})),
+							data: tags
+								.map((tagId) => ({
+									blog_id: Number(id),
+									tag_id: tagId,
+								}))
+								.filter(Boolean),
 						});
 					}
 				}
