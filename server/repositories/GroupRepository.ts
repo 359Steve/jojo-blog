@@ -3,6 +3,8 @@ import type { CreateGroupDto } from '../dto/CreateGroupDto';
 import { prisma } from '../core/prisma';
 import { returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
+import { join } from 'path';
+import fs from 'fs';
 
 export class GroupRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
@@ -96,6 +98,24 @@ export class GroupRepository {
 	// 删除分组
 	async deleteGroup(id: number) {
 		try {
+			// 首先删除关联的记录详情所有图片
+			const relatedDetails = await this.prismaClient.record_details.findMany({
+				where: { group_id: Number(id) },
+				select: { images: true },
+			});
+
+			const imageUrls = relatedDetails
+				.flatMap((detail) => detail.images.map((img) => img.url).filter(Boolean))
+				.filter(Boolean);
+			imageUrls.forEach((item) => {
+				if (item) {
+					const relativePath = item.startsWith('/') ? item.substring(1) : item;
+					const imagePath = join(process.cwd(), 'public', relativePath);
+					if (fs.existsSync(imagePath)) {
+						fs.unlinkSync(imagePath);
+					}
+				}
+			});
 			const res = await this.prismaClient.record_groups.delete({
 				where: { id: Number(id) },
 			});
