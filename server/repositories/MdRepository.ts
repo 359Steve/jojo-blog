@@ -6,22 +6,13 @@ import fs from 'node:fs';
 import { prisma } from '../core/prisma';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
+import { getDatePath } from '~/composables/public';
 
 export class MdRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
 	// 上传图片
 	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
-		const dateTime = new Date();
-		const newDatePath =
-			datePath ||
-			`${dateTime.getFullYear()}-${(dateTime.getMonth() + 1)
-				.toString()
-				.padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}` +
-			`-${dateTime.getHours().toString().padStart(2, '0')}` +
-			`${dateTime.getMinutes().toString().padStart(2, '0')}` +
-			`${dateTime.getSeconds().toString().padStart(2, '0')}`;
-
 		if (!files || files.length === 0) {
 			throw new Error('没有上传文件！');
 		}
@@ -63,7 +54,7 @@ export class MdRepository {
 				const safeFileName = `md_${timestamp}_${randomStr}.${fileExtension}`;
 
 				// 确保文件夹存在
-				const uploadDir = join(process.cwd(), 'public/mdfile', newDatePath);
+				const uploadDir = join(process.cwd(), 'public/mdfile', datePath);
 				if (!fs.existsSync(uploadDir)) {
 					fs.mkdirSync(uploadDir, { recursive: true });
 				}
@@ -77,7 +68,7 @@ export class MdRepository {
 				uploadResults.push({
 					originalName: file.filename,
 					fileName: safeFileName,
-					url: `/mdfile/${newDatePath}/${safeFileName}`,
+					url: `/mdfile/${datePath}/${safeFileName}`,
 					size: file.data.length,
 					type: file.type || `image/${fileExtension}`,
 				});
@@ -88,9 +79,7 @@ export class MdRepository {
 			}
 
 			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
-				files: uploadResults,
 				urls: uploadResults.map((item) => item.url).filter(Boolean),
-				datePath: newDatePath,
 			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, (error as Error).message, null);
