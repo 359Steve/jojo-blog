@@ -88,7 +88,7 @@ export const updateRecordDetail = async (data: Partial<CreateRecordDetailDto>) =
 		fetchPostApi<Partial<CreateRecordDetailDto>, Partial<Omit<CreateRecordDetailDto, 'images'>>>(
 			'/record/detail/detailUpdate',
 			{
-			body: data,
+				body: data,
 			},
 		),
 	);
@@ -121,7 +121,7 @@ export const queryRecordDetailById = async (id: number) => {
 // 上传记录详情图片
 export const uploadRecordDetailImage = async (formData: FormData) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<FormData, { url: string }>('/record/detail/detailUpload', {
+		fetchPostApi<FormData, { urls: string[] }>('/record/detail/detailUpload', {
 			body: formData,
 		}),
 	);
