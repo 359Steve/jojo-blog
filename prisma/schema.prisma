@@ -39,15 +39,15 @@ model blog {
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
   content     String     @db.Text
-  front_cover String     @db.VarChar(255)
   date_path   String     @default("1997-01-01-103523") @db.VarChar(255)
+  front_cover String     @db.VarChar(255)
   tags        blog_tag[]
 }
 
 model blog_tag {
   blog_id Int
   tag_id  Int
-  blog    blog @relation(fields: [blog_id], references: [id])
+  blog    blog @relation(fields: [blog_id], references: [id], onDelete: Cascade)
   tag     tag  @relation(fields: [tag_id], references: [id])
 
   @@id([blog_id, tag_id])
@@ -78,19 +78,28 @@ model record_groups {
 }
 
 model record_details {
-  id         Int           @id @default(autoincrement())
+  id         Int             @id @default(autoincrement())
   group_id   Int
-  title      String        @db.VarChar(100)
-  summary    String        @db.Text
-  time_range String        @db.VarChar(20)
-  image_url  String        @db.VarChar(500)
-  image_alt  String        @db.VarChar(200)
-  created_at DateTime      @default(now())
-  updated_at DateTime      @updatedAt
-  group      record_groups @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  title      String          @db.VarChar(100)
+  summary    String          @db.Text
+  time_range String          @db.VarChar(20)
+  image_alt  String          @db.VarChar(200)
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+  group      record_groups   @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  images     record_images[]
 
   @@index([group_id], map: "record_details_group_id_fkey")
   @@map("record_details")
+}
+
+model record_images {
+  id               Int            @id @default(autoincrement())
+  record_detail_id Int
+  url              String         @db.VarChar(500)
+  detail           record_details @relation(fields: [record_detail_id], references: [id], onDelete: Cascade)
+
+  @@index([record_detail_id], map: "record_images_record_detail_id_fkey")
 }
 
 enum TagType {
