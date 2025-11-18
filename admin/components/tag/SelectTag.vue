@@ -24,7 +24,7 @@ const { data: allTags } = await useAsyncData(
 	},
 );
 const tagsOptions = ref<TagsOptions[]>(
-	allTags.value?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [],
+	allTags.value?.data?.map((item) => ({ value: item.id || 0, label: item.name })).filter(Boolean) || [],
 );
 
 watchEffect(() => {
@@ -32,7 +32,7 @@ watchEffect(() => {
 });
 
 watch(allTags, (newTags) => {
-	tagsOptions.value = newTags?.data?.map((item: any) => ({ value: item.id, label: item.name })) || [];
+	tagsOptions.value = newTags?.data?.map((item) => ({ value: item.id || 0, label: item.name })).filter(Boolean) || [];
 });
 
 watch(values, (newVal) => {
