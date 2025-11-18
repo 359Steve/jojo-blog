@@ -24,7 +24,7 @@ export const recordDetailsQuery = async (query: RecordQueryParams) => {
 		fetchUseGet<
 			RecordQueryParams,
 			{
-				records: Pick<CreateRecordDetailDto, 'id' | 'title' | 'image_url' | 'image_alt' | 'time_range'>[];
+				records: Pick<CreateRecordDetailDto, 'id' | 'title' | 'images' | 'image_alt' | 'time_range'>[];
 				total: number;
 			}
 		>('/record/recordPublicDetails', {
