@@ -154,10 +154,12 @@ export class UserRepository {
 
 				// 创建新的标签关联
 				if (tags && tags.length > 0) {
-					const tagNumbers = tags.map((tag_id) => ({
-						user_id: Number(userInfo.id),
-						tag_id,
-					}));
+					const tagNumbers = tags
+						.map((tag_id) => ({
+							user_id: Number(userInfo.id),
+							tag_id,
+						}))
+						.filter(Boolean);
 
 					await tx.user_tag.createMany({
 						data: tagNumbers,
