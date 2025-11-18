@@ -62,7 +62,7 @@ export const queryRecordDetailAll = async (page: number = 1, size: number = 10) 
 	const res = await jojoLoadingIndicator(() =>
 		fetchUseGet<
 			{ pageNumber: number; pageSize: number },
-			{ records: GroupWithDetail<CreateRecordDetailDto>[]; total: number }
+			{ records: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[]; total: number }
 		>('/record/detail/detailQueryAll', {
 			query: { pageNumber: page, pageSize: size },
 		}),
@@ -83,11 +83,14 @@ export const createRecordDetail = async (data: CreateRecordDetailDto) => {
 };
 
 // 修改记录详情
-export const updateRecordDetail = async (data: CreateRecordDetailDto) => {
+export const updateRecordDetail = async (data: Partial<CreateRecordDetailDto>) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<CreateRecordDetailDto, CreateRecordDetailDto>('/record/detail/detailUpdate', {
+		fetchPostApi<Partial<CreateRecordDetailDto>, Partial<Omit<CreateRecordDetailDto, 'images'>>>(
+			'/record/detail/detailUpdate',
+			{
 			body: data,
-		}),
+			},
+		),
 	);
 
 	return handleApiResponse(res);
