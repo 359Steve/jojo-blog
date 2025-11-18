@@ -26,7 +26,7 @@ definePageMeta({
 
 const { resetCurrentBlog } = useAdminBlog();
 const { currentBlog } = storeToRefs(useAdminBlog());
-const frontImage = ref<FormData | null>(null);
+const frontImage = ref<FormData | null>(new FormData());
 const upload = templateRef('upload');
 // 初始化表单数据
 const initFormData = () => {
@@ -111,17 +111,9 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				res = await updateBlog(formData);
 			} else {
 				const { id, ...blogDataWithoutId } = formData;
-				const dateTime = new Date();
-				const dataPath =
-					`${dateTime.getFullYear()}-${(dateTime.getMonth() + 1)
-						.toString()
-						.padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}` +
-					`-${dateTime.getHours().toString().padStart(2, '0')}` +
-					`${dateTime.getMinutes().toString().padStart(2, '0')}` +
-					`${dateTime.getSeconds().toString().padStart(2, '0')}`;
 				res = await createBlog({
 					...blogDataWithoutId,
-					date_path: formData.date_path || dataPath,
+					date_path: formData.date_path || getDatePath(),
 				});
 			}
 
@@ -182,7 +174,8 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 		}
 
 		const fileData = new FormData();
-		fileData.append('datePath', formData.date_path);
+		const date_path = isEdit.value ? formData.date_path : getDatePath();
+		!fileData.has('datePath') && fileData.append('datePath', date_path);
 		validFiles.forEach((file) => {
 			fileData.append('files', file);
 		});
@@ -190,7 +183,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 		const res = await mdUploadImage(fileData);
 
 		if (res.data) {
-			formData.date_path = res.data.datePath;
+			formData.date_path = date_path;
 			currentMdPics.value = res.data.urls;
 			callback(res.data.urls);
 		}
@@ -267,7 +260,7 @@ const backAdd = async () => {
 	resetFormData();
 
 	// 清理上传状态
-	frontImage.value = null;
+	frontImage.value = new FormData();
 	upload.value?.clearFiles();
 
 	// 跳转到新增页面
@@ -289,7 +282,7 @@ const resetForm = async () => {
 	}
 
 	// 清理上传相关状态
-	frontImage.value = null;
+	frontImage.value = new FormData();
 	upload.value?.clearFiles();
 };
 
