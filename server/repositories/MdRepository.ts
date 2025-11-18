@@ -89,7 +89,7 @@ export class MdRepository {
 
 			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
 				files: uploadResults,
-				urls: uploadResults.map((item) => item.url),
+				urls: uploadResults.map((item) => item.url).filter(Boolean),
 				datePath: newDatePath,
 			});
 		} catch (error) {
