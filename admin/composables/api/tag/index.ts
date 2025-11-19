@@ -71,3 +71,15 @@ export const deleteTags = async (id: number) => {
 
 	return handleApiResponse(res);
 };
+
+// 验证iconify图标是否存在
+export const validateIconify = async (icon: string) => {
+	const [collection, name] = icon.split(':');
+	try {
+		const { data } = await useFetch<Response>(`https://api.iconify.design/${collection}/${name}.svg`);
+
+		return !!data.value;
+	} catch {
+		return false;
+	}
+};
