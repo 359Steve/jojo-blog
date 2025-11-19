@@ -115,8 +115,11 @@ onBeforeUnmount(() => {
 					<span v-for="tag in blogItem.tags" :key="tag.tag.id" :style="{
 						color: tag.tag.color,
 					}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-3 py-1 text-sm shadow-sm dark:bg-gray-100/10">
-						<Icon :icon="tag.tag.icon" width="24" />
-						{{ tag.tag.name }}
+						<a :href="tag.tag.url" target="_blank" rel="noopener noreferrer"
+							class="flex items-center gap-1">
+							<Icon :icon="tag.tag.icon" width="24" />
+							{{ tag.tag.name }}
+						</a>
 					</span>
 				</div>
 			</div>
