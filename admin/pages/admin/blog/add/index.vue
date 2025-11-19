@@ -325,7 +325,7 @@ onBeforeUnmount(() => {
 					<SelectTag :tags="formData.tags" type="BLOG" @tag-change="formData.tags = $event" />
 				</ElFormItem>
 				<ElFormItem class="!mx-0 !w-full" prop="subtitle" label="简介：">
-					<ElInput v-model="formData.subtitle" placeholder="请输入简介" type="textarea" clearable />
+					<ElInput v-model="formData.subtitle" :rows="2" placeholder="请输入简介" type="textarea" clearable />
 				</ElFormItem>
 				<ElFormItem class="save col-span-1 !mx-0 !w-full sm:col-span-2">
 					<ElButton v-if="isEdit" type="primary" plain @click="backAdd">新增</ElButton>

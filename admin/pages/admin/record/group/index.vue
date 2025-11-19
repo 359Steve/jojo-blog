@@ -117,21 +117,22 @@ const handleDateChange = (value: string) => {
 
 <template>
 	<AdminFormMain title="分组管理">
-		<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="createRules" class="!w-full">
-			<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
+		<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="createRules"
+			class="!grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
+			<ElFormItem prop="time_range" class="!mx-0 !w-full" label="年份：">
 				<ElDatePicker v-model="formData.time_range" type="year" placeholder="请选择年份"
 					@change="handleDateChange" />
 			</ElFormItem>
-			<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
+			<ElFormItem prop="title" class="!mx-0 !w-full" label="标题：">
 				<ElInput v-model="formData.title" placeholder="请输入标题" />
 			</ElFormItem>
-			<ElFormItem prop="role" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="简介：">
+			<ElFormItem prop="role" class="!mx-0 !w-full" label="简介：">
 				<ElInput v-model="formData.role" placeholder="请输入简介" />
 			</ElFormItem>
-			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="描述：">
+			<ElFormItem prop="summary" class="!mx-0 !w-full" label="描述：">
 				<ElInput v-model="formData.summary" placeholder="请输入描述" />
 			</ElFormItem>
-			<ElFormItem class="save !mx-0 !w-full">
+			<ElFormItem class="save col-span-1 !mx-0 !w-full sm:col-span-2">
 				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="saveGroup(ruleFormRef!)">
 					新增
 				</ElButton>

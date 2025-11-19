@@ -198,11 +198,12 @@ watch(searchTag, (newValue) => {
 
 <template>
 	<AdminFormMain title="新增标签">
-		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules" class="!w-full">
-			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="name" label="名称：">
+		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="createTagRules"
+			class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4">
+			<ElFormItem class="!mx-0 !w-full" prop="name" label="名称：">
 				<ElInput v-model="formData.name" placeholder="请输入标签" clearable />
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="icon" label="图标：">
+			<ElFormItem class="!mx-0 !w-full" prop="icon" label="图标：">
 				<ElInput v-model="formData.icon" placeholder="请输入图标" clearable>
 					<template #prefix>
 						<Icon class="cursor-pointer text-[20px]" :icon="formData.icon || 'mdi:emoticon-kiss-outline'" />
@@ -216,23 +217,23 @@ watch(searchTag, (newValue) => {
 					</template>
 				</ElInput>
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="url" label="链接：">
+			<ElFormItem class="!mx-0 !w-full" prop="url" label="链接：">
 				<ElInput v-model="formData.url" placeholder="请输入链接" clearable />
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="type" label="类型：">
+			<ElFormItem class="!mx-0 !w-full" prop="type" label="类型：">
 				<ElSelect v-model="formData.type" placeholder="请选择" class="!w-full" clearable>
 					<ElOption label="博客" value="BLOG" />
 					<ElOption label="个人" value="PERSON" />
 				</ElSelect>
 			</ElFormItem>
-			<ElFormItem class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="color" label="颜色：">
+			<ElFormItem class="!mx-0 !w-full" prop="color" label="颜色：">
 				<ElInput v-model="formData.color" class="color" placeholder="请输入颜色值，如 #409eff" clearable>
 					<template #prefix>
 						<el-color-picker v-model="formData.color" class="!border-none" />
 					</template>
 				</ElInput>
 			</ElFormItem>
-			<ElFormItem class="save !mx-0 !w-full sm:!w-[50%]">
+			<ElFormItem class="save !mx-0">
 				<ElButton v-if="!isEdit" :loading="loading" type="primary" @click="createTag(ruleFormRef!)">
 					新增
 				</ElButton>

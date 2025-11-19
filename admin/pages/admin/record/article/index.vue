@@ -292,33 +292,33 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 
 <template>
 	<AdminFormMain title="文章管理">
-		<ElForm ref="ruleFormRef" :model="formData" :rules="updateUserRules" class="flex !w-full flex-wrap"
-			label-width="100px">
-			<ElFormItem prop="images" class="!mx-0 flex !w-full items-start sm:!w-[50%] sm:odd:pr-4" label="照片：">
+		<ElForm ref="ruleFormRef" :inline="true" :model="formData" :rules="updateUserRules"
+			class="grid w-full grid-cols-1 gap-x-0 sm:grid-cols-2 sm:gap-x-4" label-width="100px">
+			<ElFormItem prop="images" class="choose-pic !mx-0 !w-full" label="照片：">
 				<ElUpload ref="upload" v-model:file-list="fileList" :auto-upload="false" :multiple="true"
 					class="relative w-full" action="#" :on-change="handleImageSuccess" :on-remove="handleRemove"
 					list-type="picture">
 					<el-button type="primary">上传照片</el-button>
 				</ElUpload>
 			</ElFormItem>
-			<ElFormItem prop="summary" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="详情：">
+			<ElFormItem prop="summary" class="!mx-0 !w-full" label="详情：">
 				<ElInput v-model="formData.summary" type="textarea" :rows="6" placeholder="请输入详情" />
 			</ElFormItem>
-			<ElFormItem prop="image_alt" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="图片描述：">
+			<ElFormItem prop="image_alt" class="!mx-0 !w-full" label="图片描述：">
 				<ElInput v-model="formData.image_alt" placeholder="请输入图片描述" />
 			</ElFormItem>
-			<ElFormItem prop="time_range" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="年份：">
+			<ElFormItem prop="time_range" class="!mx-0 !w-full" label="年份：">
 				<ElDatePicker v-model="formData.time_range" placeholder="请选择年份" @change="handleDateChange" />
 			</ElFormItem>
-			<ElFormItem prop="title" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="标题：">
+			<ElFormItem prop="title" class="!mx-0 !w-full" label="标题：">
 				<ElInput v-model="formData.title" placeholder="请输入标题" />
 			</ElFormItem>
-			<ElFormItem prop="group_id" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" label="汇总：">
+			<ElFormItem prop="group_id" class="!mx-0 !w-full" label="汇总：">
 				<ElSelect v-model="groupId" placeholder="请选择汇总" @change="(event) => (formData.group_id = event)">
 					<ElOption v-for="item in selectData" :key="item.id" :label="item.time_range" :value="item.id" />
 				</ElSelect>
 			</ElFormItem>
-			<ElFormItem class="save !mx-0 !w-full">
+			<ElFormItem class="save col-span-1 !mx-0 !w-full sm:col-span-2">
 				<ElButton type="primary" @click="saveArticle(ruleFormRef!)">
 					{{ isEdit ? '修改' : '新增' }}
 				</ElButton>
@@ -378,5 +378,9 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 
 :deep(.el-upload-list__item-thumbnail) {
 	@apply h-12 w-12;
+}
+
+:deep(.choose-pic .el-form-item__content) {
+	@apply flex items-start;
 }
 </style>
