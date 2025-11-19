@@ -135,9 +135,13 @@ onMounted(() => {
 					<div class="mt-2 flex flex-wrap gap-2 md:mb-1">
 						<span v-for="tag in item.tags" :key="tag.tag.id" :style="{
 							color: tag.tag.color,
-						}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-2 py-1 text-xs shadow-sm dark:bg-gray-100/10 md:text-xs lg:text-xs">
-							<Icon :icon="tag.tag.icon" width="24" />
-							{{ tag.tag.name }}
+						}" class="text-secondary flex items-center justify-between gap-1 rounded-base bg-gray-100 px-2 py-1 text-xs shadow-sm dark:bg-gray-100/10 md:text-xs lg:text-xs"
+							@click.stop="">
+							<a :href="tag.tag.url" target="_blank" rel="noopener noreferrer"
+								class="flex items-center gap-1">
+								<Icon :icon="tag.tag.icon" width="24" />
+								{{ tag.tag.name }}
+							</a>
 						</span>
 					</div>
 				</div>
