@@ -26,7 +26,10 @@ const isEdit = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
 const rulesText = (value: string): boolean => {
-	return /^[a-z0-9]+:[a-z0-9-_]+$/i.test(value);
+	return /^[a-z0-9]+(?:[._-][a-z0-9]+)*:[a-z0-9]+(?:[._\-/][a-z0-9]+)*$/i.test(value);
+};
+const rulesColor = (value: string): boolean => {
+	return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value);
 };
 
 // 创建规则
@@ -38,13 +41,15 @@ const createTagRules = reactive<FormRules>({
 			validator: (_rule: any, value: string, callback: any) => {
 				if (!value) {
 					callback(new Error('请输入图标名称'));
-				} else if (rulesText(value)) {
-					callback();
-				} else {
+				} else if (!rulesText(value)) {
 					callback(new Error('图标名称格式不正确'));
+				} else {
+					iconChange(value).then((res) => {
+						res ? callback() : callback(new Error('图标不存在'));
+					});
 				}
 			},
-			trigger: 'blur',
+			trigger: 'change',
 		},
 	],
 	color: [
@@ -53,7 +58,7 @@ const createTagRules = reactive<FormRules>({
 			validator: (_rule: any, value: string, callback: any) => {
 				if (!value) {
 					callback();
-				} else if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value)) {
+				} else if (rulesColor(value)) {
 					callback();
 				} else {
 					callback(new Error('颜色值格式不正确'));
@@ -175,6 +180,11 @@ const handleSizeChange = (val: number): void => {
 	queryTag(searchTag.value, 1);
 };
 
+// 验证icon是否存在
+const iconChange = async (icon: string) => {
+	return await validateIconify(icon);
+};
+
 // 使用防抖优化搜索
 let searchTimeout: NodeJS.Timeout;
 watch(searchTag, (newValue) => {
@@ -240,7 +250,8 @@ watch(searchTag, (newValue) => {
 					<ElTableColumn prop="name" label="名称" />
 					<ElTableColumn prop="icon" label="Icon">
 						<template #default="scope">
-							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon" />
+							<Icon class="cursor-pointer text-[24px]" :icon="scope.row.icon"
+								:style="{ color: scope.row.color }" />
 						</template>
 					</ElTableColumn>
 					<ElTableColumn prop="url" label="链接" width="1000">
