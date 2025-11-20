@@ -7,7 +7,7 @@ const { data } = await useAsyncData('indexRecordPictures', () =>
 	}),
 );
 
-const pictureList = ref<Awaited<ReturnType<typeof findRecordPictures>>['data']>(data.value?.data || []);
+const pictureList = ref<ReturnFunction<typeof findRecordPictures>['data']>(data.value?.data || []);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);

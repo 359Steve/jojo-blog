@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery());
-const summaryList = ref<Awaited<ReturnType<typeof recordPublicQuery>>['data'] | null>(data.value?.data || null);
+const summaryList = ref<ReturnFunction<typeof recordPublicQuery>['data'] | null>(data.value?.data || null);
 const total = ref<number>(data.value?.data?._count.details || 0);
 const cardRef = templateRef('cardRef');
 const cardCount = computed(() => {

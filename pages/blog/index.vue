@@ -11,7 +11,9 @@ const { data } = await useAsyncData('publicQueryBlogList', () =>
 	}),
 );
 
-const blogList = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
+const blogList = ref<NonNullable<ReturnFunction<typeof getPublicBlogList>['data']>['records']>(
+	data.value?.data?.records || [],
+);
 const search = ref<string>('');
 const isLoading = ref<boolean>(false);
 const hasMore = ref<boolean>(true);

@@ -29,7 +29,7 @@ export class RecordDetailService {
 	}
 
 	// 上传记录详情图片
-	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+	async uploadRecordDetailImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
 		return await this.recordDetailRepo.uploadRecordDetailImage(files, datePath);
 	}
 

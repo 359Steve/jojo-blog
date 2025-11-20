@@ -1,6 +1,8 @@
 import type { ShallowRef } from 'vue';
 
 declare global {
+	declare type ReturnFunction<T extends (...args: any) => any> = Awaited<ReturnType<T>>;
+
 	declare interface RecordsResponse<T> {
 		records: T[];
 		total: number;

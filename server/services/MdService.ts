@@ -9,7 +9,7 @@ export class MdService {
 	}
 
 	// 上传图片
-	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+	async uploadImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
 		return await this.mdRepo.uploadImage(files, datePath);
 	}
 

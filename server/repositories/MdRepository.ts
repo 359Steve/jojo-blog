@@ -12,7 +12,7 @@ export class MdRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
 
 	// 上传图片
-	async uploadImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+	async uploadImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
 		if (!files || files.length === 0) {
 			throw new Error('没有上传文件！');
 		}

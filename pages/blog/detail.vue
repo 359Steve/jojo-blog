@@ -26,7 +26,7 @@ const { data, pending, error } = await useAsyncData('publicQueryBlogDetail', asy
 	return getPublicBlogDetail(Number(id.value));
 });
 
-const blogItem = ref(data.value?.data || null);
+const blogItem = ref<ReturnFunction<typeof getPublicBlogDetail>['data']>(data.value?.data || null);
 
 // 格式化发布时间
 const formatDate = (dateString: string) => {

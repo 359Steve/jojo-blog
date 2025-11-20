@@ -162,7 +162,7 @@ export class RecordDetailRepository {
 	}
 
 	// 上传记录详情图片
-	async uploadRecordDetailImage(files: Awaited<ReturnType<typeof readMultipartFormData>>, datePath: string) {
+	async uploadRecordDetailImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
 		if (!files || files.length === 0) {
 			throw new Error('没有上传文件！');
 		}

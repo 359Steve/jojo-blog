@@ -232,7 +232,7 @@ export class BlogRepository {
 	}
 
 	// 上传封面
-	async uploadfrontCover(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadfrontCover(files: ReturnFunction<typeof readMultipartFormData>) {
 		try {
 			if (!files || files.length === 0) {
 				throw new Error('没有上传文件！');

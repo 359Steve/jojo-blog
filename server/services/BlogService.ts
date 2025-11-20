@@ -35,7 +35,7 @@ export class BlogService {
 	}
 
 	// 上传封面
-	async uploadfrontCover(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadfrontCover(files: ReturnFunction<typeof readMultipartFormData>) {
 		return await this.blogRepo.uploadfrontCover(files);
 	}
 }

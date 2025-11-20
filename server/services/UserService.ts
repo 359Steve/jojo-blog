@@ -26,7 +26,7 @@ export class UserService {
 	}
 
 	// 上传头像
-	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadAvatar(files: ReturnFunction<typeof readMultipartFormData>) {
 		return await this.userRepo.uploadAvatar(files);
 	}
 

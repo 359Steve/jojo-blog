@@ -80,7 +80,7 @@ export class UserRepository {
 	}
 
 	// 上传头像
-	async uploadAvatar(files: Awaited<ReturnType<typeof readMultipartFormData>>) {
+	async uploadAvatar(files: ReturnFunction<typeof readMultipartFormData>) {
 		try {
 			if (!files || files.length === 0) {
 				throw new Error('没有上传文件！');
