@@ -1,14 +1,9 @@
-type Method = 'get' | 'post' | 'put' | 'delete';
-// 自定义 Options 类型
-interface Options<T> {
-	baseURL?: string;
-	method?: Method;
-	body?: T;
-	query?: T;
-	params?: T;
-	headers?: Record<string, string>;
-	[key: string]: any;
-}
+type Options<T, Rq> = T & {
+	params?: Rq;
+	body?: Rq;
+	query?: Rq;
+};
+
 // 响应基本信息类型
 interface H3Error<T> {
 	data: T;
