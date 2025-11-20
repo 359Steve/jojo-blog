@@ -1,49 +1,6 @@
 import type { ShallowRef } from 'vue';
 
 declare global {
-	declare interface Timeline {
-		id: string;
-		timestamp: string;
-		title: string;
-		description: string;
-		url: string;
-	}
-
-	declare interface StaticImage {
-		default: string;
-		[key: string]: any;
-	}
-
-	declare interface RecordList {
-		id: number;
-		title: string;
-	}
-
-	declare interface RecordButtonList {
-		id: number;
-		icon: string;
-		title: string;
-		href: string;
-	}
-
-	declare interface Summary {
-		id: number;
-		groupId: number;
-		icon: string;
-		title: string;
-		summary: string;
-		timeRange: string;
-	}
-
-	declare interface RecordSummary {
-		id: number;
-		timeRange: string;
-		title: string;
-		role: string;
-		summary: string;
-		data: Summary[];
-	}
-
 	declare interface Error {
 		url: string;
 		statusCode: number;
@@ -51,18 +8,6 @@ declare global {
 		message: string;
 		description: string;
 		data: any;
-	}
-
-	declare interface UseBoundingClientRect {
-		top: ShallowRef<number, number>;
-		right: ShallowRef<number, number>;
-		bottom: ShallowRef<number, number>;
-		left: ShallowRef<number, number>;
-		width: ShallowRef<number, number>;
-		height: ShallowRef<number, number>;
-		x: ShallowRef<number, number>;
-		y: ShallowRef<number, number>;
-		update: () => void;
 	}
 
 	/** 整体路由配置表（包括完整子路由） */
