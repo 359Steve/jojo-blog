@@ -15,7 +15,7 @@ export const createBlog = async (data: CreateBlogDto) => {
 // 查询博客列表
 export const getBlogList = async (data: FindBlogParams) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<FindBlogParams, { records: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]; total: number }>(
+		fetchUseGet<FindBlogParams, RecordsResponse<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>>(
 			'/blog/blogList',
 			{
 				query: data,

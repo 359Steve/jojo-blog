@@ -23,10 +23,7 @@ export const recordDetailsQuery = async (query: RecordQueryParams) => {
 	const res = await jojoLoadingIndicator(() =>
 		fetchUseGet<
 			RecordQueryParams,
-			{
-				records: Pick<CreateRecordDetailDto, 'id' | 'title' | 'images' | 'image_alt' | 'time_range'>[];
-				total: number;
-			}
+			RecordsResponse<Pick<CreateRecordDetailDto, 'id' | 'title' | 'images' | 'image_alt' | 'time_range'>>
 		>('/record/recordPublicDetails', {
 			query,
 		}),

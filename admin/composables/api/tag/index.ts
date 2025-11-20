@@ -14,7 +14,7 @@ export const queryTagAll = async (name: string = '', n: number = 1, s: number = 
 	};
 
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<FindAllReq, { records: CreateTagDto[]; total: number }>('/tag/tagQueryAll', {
+		fetchUseGet<FindAllReq, RecordsResponse<CreateTagDto>>('/tag/tagQueryAll', {
 			query: queryParams,
 		}),
 	);

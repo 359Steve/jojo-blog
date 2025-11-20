@@ -1,6 +1,11 @@
 import type { ShallowRef } from 'vue';
 
 declare global {
+	declare interface RecordsResponse<T> {
+		records: T[];
+		total: number;
+	}
+
 	declare interface Error {
 		url: string;
 		statusCode: number;

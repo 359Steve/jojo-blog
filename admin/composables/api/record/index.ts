@@ -4,7 +4,7 @@ import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
 // 查询全部分组
 export const queryGroupAll = async (page: number = 1, size: number = 10) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<{ pageNumber: number; pageSize: number }, { records: CreateGroupDto[]; total: number }>(
+		fetchUseGet<{ pageNumber: number; pageSize: number }, RecordsResponse<CreateGroupDto>>(
 			'/record/group/groupQueryAll',
 			{
 				query: { pageNumber: page, pageSize: size },
@@ -62,7 +62,7 @@ export const queryRecordDetailAll = async (page: number = 1, size: number = 10) 
 	const res = await jojoLoadingIndicator(() =>
 		fetchUseGet<
 			{ pageNumber: number; pageSize: number },
-			{ records: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[]; total: number }
+			RecordsResponse<GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>>
 		>('/record/detail/detailQueryAll', {
 			query: { pageNumber: page, pageSize: size },
 		}),
