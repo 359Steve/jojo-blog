@@ -7,7 +7,7 @@ const loginOut = (): void => {
 		confirmButtonText: '确定',
 		type: 'warning',
 	}).then(async () => {
-		const res = await fetchPostApi('/user/logout');
+		const res = await fetchPostApi<any, any>('/user/logout');
 
 		if (res.code === StatusCode.SUCCESS) {
 			useUserState().setToken('');
