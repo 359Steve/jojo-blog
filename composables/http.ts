@@ -1,6 +1,7 @@
+import type { UseFetchOptions } from 'nuxt/app';
 import { StatusCode } from '~/types/com-types';
 
-export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
+export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>) => {
 	// 获取全局变量
 	const appConfig = useAppConfig();
 	// 获取nuxtApp实例
@@ -8,7 +9,6 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 
 	return useFetch<NewResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
-		method: option?.method as any,
 		...option,
 
 		// 设置请求拦截
@@ -23,7 +23,7 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 				options.headers = {
 					Authorization: `Bearer ${useUserState().getToken() ?? ''}`,
 					...options.headers,
-				} as Headers & { Authorization: string };
+				} as Headers;
 			}
 		},
 
@@ -76,14 +76,17 @@ export const apiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | an
 };
 
 // GET请求封装
-export const useGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}): Promise<NewResponse<Rp>> => {
+export const useGet = <Rq, Rp>(
+	url: string,
+	option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'get',
 			...option,
 		})
 			.then((res) => {
-				resolve(res.data.value as NewResponse<Rp>);
+				res.data.value && resolve(res.data.value);
 			})
 			.catch((err) => {
 				reject(err);
@@ -92,14 +95,17 @@ export const useGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}
 };
 
 // POST 封装
-export const postApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+export const postApi = <Rq, Rp>(
+	url: string,
+	option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'post',
 			...option,
 		})
 			.then((res) => {
-				resolve(res.data.value as NewResponse<Rp>);
+				res.data.value && resolve(res.data.value);
 			})
 			.catch((err) => {
 				reject(err);
@@ -108,14 +114,17 @@ export const postApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): 
 };
 
 // DELETE 封装
-export const deleteApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+export const deleteApi = <Rq, Rp>(
+	url: string,
+	option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		apiCore<Rq, Rp>(url, {
 			method: 'delete',
 			...option,
 		})
 			.then((res) => {
-				resolve(res.data.value as NewResponse<Rp>);
+				res.data.value && resolve(res.data.value);
 			})
 			.catch((err) => {
 				reject(err);

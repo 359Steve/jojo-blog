@@ -1,15 +1,17 @@
 import { StatusCode } from '~/types/com-types';
+import type { NitroFetchOptions } from 'nitropack';
 
-export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq | any>) => {
+export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
+	url: string,
+	option: Options<NitroFetchOptions<string>, Rq>,
+) => {
 	// 获取全局变量
 	const appConfig = useAppConfig();
 	// 获取token
 	const token: string = useUserState().getToken() || '';
-	// Authorization = token ? { Authorization: `Bearer ${token}` } : null;
 
 	return $fetch<NewResponse<Rp>>(url, {
 		baseURL: appConfig.baseUrl,
-		method: option?.method as any,
 		...option,
 
 		// 设置请求拦截
@@ -17,7 +19,7 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 			options.headers = {
 				Authorization: `Bearer ${token}`,
 				...options.headers,
-			} as Headers & { Authorization?: string };
+			} as Headers;
 		},
 
 		// 响应拦截
@@ -45,14 +47,17 @@ export const fetchApiCore = <Rq = any, Rp = any>(url: string, option: Options<Rq
 };
 
 // GET请求封装
-export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq> = {}): Promise<NewResponse<Rp>> => {
+export const fetchUseGet = <Rq extends Record<string, any>, Rp>(
+	url: string,
+	option?: Options<NitroFetchOptions<string>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'get',
 			...option,
 		})
 			.then((res) => {
-				resolve(res as NewResponse<Rp>);
+				resolve(res);
 			})
 			.catch((err) => {
 				reject(err);
@@ -61,14 +66,17 @@ export const fetchUseGet = <Rq = any, Rp = any>(url: string, option: Options<Rq>
 };
 
 // POST 封装
-export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+export const fetchPostApi = <Rq extends Record<string, any>, Rp>(
+	url: string,
+	option?: Options<NitroFetchOptions<string>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'post',
 			...option,
 		})
 			.then((res) => {
-				resolve(res as NewResponse<Rp>);
+				resolve(res);
 			})
 			.catch((err) => {
 				reject(err);
@@ -77,14 +85,17 @@ export const fetchPostApi = <Rq = any, Rp = any>(url: string, option?: Options<R
 };
 
 // DELETE 封装
-export const fetchDeleteApi = <Rq = any, Rp = any>(url: string, option?: Options<Rq>): Promise<NewResponse<Rp>> => {
+export const fetchDeleteApi = <Rq extends Record<string, any>, Rp>(
+	url: string,
+	option?: Options<NitroFetchOptions<string>, Rq>,
+): Promise<NewResponse<Rp>> => {
 	return new Promise((resolve, reject) => {
 		fetchApiCore<Rq, Rp>(url, {
 			method: 'delete',
 			...option,
 		})
 			.then((res) => {
-				resolve(res as NewResponse<Rp>);
+				resolve(res);
 			})
 			.catch((err) => {
 				reject(err);
