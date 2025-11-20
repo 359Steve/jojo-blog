@@ -9,4 +9,4 @@ export const getPublicBlogList = chooseCondition<
 
 // 查询博客详情
 export const getPublicBlogDetail = (id: number) =>
-	chooseCondition<null, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`)();
+	chooseCondition<any, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`)();
