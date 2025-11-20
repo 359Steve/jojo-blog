@@ -1,4 +1,5 @@
 import { StatusCode } from '~/types/com-types';
+import type { NitroFetchOptions } from 'nitropack';
 
 // 加载静态图片资源
 export const useLoadStaticImage = async (url: string | number): Promise<string> => {
@@ -103,7 +104,10 @@ export const handleApiResponse = <T>(
 };
 
 // 封装不同环境请求
-export const chooseCondition = <Req, Rep>(endpoint: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET') => {
+export const chooseCondition = <Req extends Record<string, any>, Rep>(
+	endpoint: string,
+	method: Options<NitroFetchOptions<string>, Req>['method'] = 'GET',
+) => {
 	return async (data?: Req) => {
 		const res = await jojoLoadingIndicator(() => {
 			if (import.meta.server) {
