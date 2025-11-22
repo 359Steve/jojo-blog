@@ -87,6 +87,7 @@ export default defineNuxtConfig({
 		'~/plugins/iconify.ts',
 		'~/plugins/mdEditor.ts',
 		'~/plugins/getUser.ts',
+		'~/plugins/weather.client.ts',
 		'~/plugins/preventDefault.client.ts',
 	],
 	pages: true,
