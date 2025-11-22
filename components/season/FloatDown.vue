@@ -22,16 +22,33 @@ interface ImageOptions {
 	size: number;
 }
 
+const { getWeather } = useWeather();
+const weather = computed(() => getWeather());
+const { power } = weather.value;
+
+const windDirMap: Record<string, [number, number]> = {
+	北: [0, -1],
+	东北: [1, -1],
+	东: [1, 0],
+	东南: [1, 1],
+	南: [0, 1],
+	西南: [-1, 1],
+	西: [-1, 0],
+	西北: [-1, -1],
+};
+
 const images = ref<ImageOptions[]>([
-	{ url: Spring, count: 10, size: 40 },
-	{ url: Summer, count: 5, size: 40 },
-	{ url: Autumn, count: 10, size: 40 },
-	{ url: Snowflake, count: 100, size: 15 },
+	{ url: Spring, count: power ? power * 10 : 10, size: 30 },
+	{ url: Summer, count: power ? power * 5 : 5, size: 40 },
+	{ url: Autumn, count: power ? power * 10 : 10, size: 40 },
+	{ url: Snowflake, count: power ? power * 100 : 100, size: 15 },
 ]);
+
 const canvas = templateRef<HTMLCanvasElement>('canvas');
 const ctx = ref<CanvasRenderingContext2D | null>(null);
 const animationFrameId = ref<number>();
 const sakuraList = ref<SakuraParticle[]>([]);
+
 const currentImageUrl = computed(() => {
 	const month = new Date().getMonth() + 1;
 	switch (month) {
@@ -50,11 +67,57 @@ const currentImageUrl = computed(() => {
 		case 9:
 		case 10:
 		case 11:
-			return images.value[2];
+			return images.value[0];
 		default:
 			return images.value[0];
 	}
 });
+
+// 根据风向获取粒子重生位置
+const getRespawnPosition = () => {
+	const { wind, power } = weather.value;
+	const [wx] = windDirMap[wind] ?? [0, 0];
+	const windForce = wx * (0.6 + power * 0.4);
+
+	let x, y;
+
+	if (windForce > 0.3) {
+		// 强向右风：从左侧和顶部生成
+		if (Math.random() < 0.7) {
+			x = -50 - Math.random() * 100; // 从左侧外部生成
+			y = Math.random() * window.innerHeight * 0.8;
+		} else {
+			x = Math.random() * window.innerWidth;
+			y = -20;
+		}
+	} else if (windForce < -0.3) {
+		// 强向左风：从右侧和顶部生成
+		if (Math.random() < 0.7) {
+			x = window.innerWidth + 50 + Math.random() * 100; // 从右侧外部生成
+			y = Math.random() * window.innerHeight * 0.8;
+		} else {
+			x = Math.random() * window.innerWidth;
+			y = -20;
+		}
+	} else {
+		// 微风或无风：主要从顶部生成，少量从侧面
+		if (Math.random() < 0.9) {
+			x = Math.random() * window.innerWidth;
+			y = -20;
+		} else {
+			// 偶尔从侧面生成
+			if (Math.random() < 0.5) {
+				x = -30;
+				y = Math.random() * window.innerHeight * 0.5;
+			} else {
+				x = window.innerWidth + 30;
+				y = Math.random() * window.innerHeight * 0.5;
+			}
+		}
+	}
+
+	return { x, y };
+};
 
 // 创建粒子
 const createSakura = (
@@ -64,13 +127,7 @@ const createSakura = (
 	rotation: number,
 	fn: SakuraParticle['fn'],
 ): SakuraParticle => {
-	return {
-		x,
-		y,
-		size,
-		rotation,
-		fn,
-	};
+	return { x, y, size, rotation, fn };
 };
 
 // 更新单个粒子
@@ -79,21 +136,22 @@ const updateSakura = (sakura: SakuraParticle) => {
 	sakura.y = sakura.fn.y(sakura.y, sakura.y);
 	sakura.rotation = sakura.fn.r(sakura.rotation);
 
-	// 检查是否超出边界，重新设置位置
-	if (sakura.x > window.innerWidth || sakura.x < 0 || sakura.y > window.innerHeight || sakura.y < 0) {
-		const resetFromTop = Math.random() > 0.4;
-		if (resetFromTop) {
-			sakura.x = getRandom('x');
-			sakura.y = 0;
-		} else {
-			sakura.x = window.innerWidth;
-			sakura.y = getRandom('y');
-		}
+	// 检查粒子是否需要重生
+	const margin = 100;
+	if (sakura.y > window.innerHeight + margin || sakura.x > window.innerWidth + margin || sakura.x < -margin) {
+		const { wind, power } = weather.value;
+		const [wx] = windDirMap[wind] ?? [0, 0];
+		const windForce = wx * (0.6 + power * 0.4);
+
+		// 使用改进的重生位置逻辑
+		const respawnPos = getRespawnPosition();
+		sakura.x = respawnPos.x;
+		sakura.y = respawnPos.y;
 		sakura.size = getRandom('s');
 		sakura.rotation = getRandom('r');
 		sakura.fn = {
-			x: getRandom('fnx'),
-			y: getRandom('fny'),
+			x: (x) => x + windForce + (Math.random() - 0.5) * 0.3,
+			y: (y) => y + 1.2 + Math.random() * 0.8,
 			r: getRandom('fnr'),
 		};
 	}
@@ -158,10 +216,17 @@ function getRandom(option: string) {
 // 初始化粒子列表
 const initSakuraList = (count: number = 50) => {
 	sakuraList.value = [];
+	const { wind, power } = weather.value;
+	const [wx] = windDirMap[wind] ?? [0, 0];
+	const windForce = wx * (0.6 + power * 0.4);
+
 	for (let i = 0; i < count; i++) {
-		const sakura = createSakura(getRandom('x'), getRandom('y'), getRandom('s'), getRandom('r'), {
-			x: getRandom('fnx'),
-			y: getRandom('fny'),
+		// 初始化时也使用改进的位置生成逻辑
+		const pos = Math.random() < 0.8 ? { x: getRandom('x'), y: getRandom('y') } : getRespawnPosition();
+
+		const sakura = createSakura(pos.x, pos.y, getRandom('s'), getRandom('r'), {
+			x: (x) => x + windForce + (Math.random() - 0.5) * 0.3,
+			y: (y) => y + 1.2 + Math.random() * 0.8,
 			r: getRandom('fnr'),
 		});
 		sakuraList.value.push(sakura);
