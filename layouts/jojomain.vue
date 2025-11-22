@@ -61,8 +61,8 @@ onMounted(() => {
 	<div ref="jojoMain" class="relative h-full w-full">
 		<ClientOnly>
 			<SeasonFloatDown v-if="windWidth > 640" />
-			<!-- <RecordBackground v-if="windWidth > 640" class-name="w-full h-[100dvh] fixed inset-0 z-[-1]" /> -->
-			<BgcanvasBranchCanvas v-else />
+			<RecordBackground v-else class-name="w-full h-[100dvh] fixed inset-0 z-[-1]" />
+			<!-- <BgcanvasBranchCanvas v-else /> -->
 		</ClientOnly>
 		<ElBacktop :right="50" :bottom="100">
 			<i class="ri-arrow-up-line" />
