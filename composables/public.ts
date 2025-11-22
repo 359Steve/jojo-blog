@@ -101,30 +101,31 @@ export const handleApiResponse = <T>(
 export const chooseCondition = <Req extends Record<string, any>, Rep>(
 	endpoint: string,
 	method: Options<NitroFetchOptions<string>, Req>['method'] = 'GET',
+	headers?: Options<NitroFetchOptions<string>, Req>['headers'],
 ) => {
 	return async (data?: Req) => {
 		const res = await jojoLoadingIndicator(() => {
 			if (import.meta.server) {
 				switch (method) {
 					case 'GET':
-						return useGet<Req, Rep>(endpoint, { query: data });
+						return useGet<Req, Rep>(endpoint, { query: data, headers });
 					case 'POST':
-						return postApi<Req, Rep>(endpoint, { body: data });
+						return postApi<Req, Rep>(endpoint, { body: data, headers });
 					case 'DELETE':
-						return deleteApi<Req, Rep>(endpoint, { body: data });
+						return deleteApi<Req, Rep>(endpoint, { body: data, headers });
 					default:
-						return useGet<Req, Rep>(endpoint, { query: data });
+						return useGet<Req, Rep>(endpoint, { query: data, headers });
 				}
 			} else {
 				switch (method) {
 					case 'GET':
-						return fetchUseGet<Req, Rep>(endpoint, { query: data });
+						return fetchUseGet<Req, Rep>(endpoint, { query: data, headers });
 					case 'POST':
-						return fetchPostApi<Req, Rep>(endpoint, { body: data });
+						return fetchPostApi<Req, Rep>(endpoint, { body: data, headers });
 					case 'DELETE':
-						return fetchDeleteApi<Req, Rep>(endpoint, { body: data });
+						return fetchDeleteApi<Req, Rep>(endpoint, { body: data, headers });
 					default:
-						return fetchUseGet<Req, Rep>(endpoint, { query: data });
+						return fetchUseGet<Req, Rep>(endpoint, { query: data, headers });
 				}
 			}
 		});
