@@ -15,13 +15,16 @@ const whitelistPatterns = [/^\/api\/blog\/blogPublicDetail(\/\d+)?(\?.*)?$/];
 export default defineEventHandler(async (event) => {
 	const path = (event.node.req.url || '').split('?')[0];
 
-	// 只处理 /api 开头接口
 	if (!path.startsWith('/api')) return;
 
-	// 检查是否白名单
 	const isWhitelist = whitelist.includes(path) || whitelistPatterns.some((p) => p.test(path));
 
-	if (isWhitelist) return;
+	if (isWhitelist) {
+		if (event.node.req.headers['authorization']) {
+			delete event.node.req.headers['authorization'];
+		}
+		return;
+	}
 
 	let realToken = '';
 	if (import.meta.server) {
