@@ -1,6 +1,12 @@
 import type { ShallowRef } from 'vue';
 
 declare global {
+	declare interface ImageOptions {
+		url: string;
+		count: number;
+		maxSize: number;
+	}
+
 	declare type ReturnFunction<T extends (...args: any) => any> = Awaited<ReturnType<T>>;
 
 	declare interface RecordsResponse<T> {
