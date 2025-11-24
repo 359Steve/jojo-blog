@@ -2,6 +2,7 @@ import { StatusCode } from '~/types/com-types';
 
 export default defineNuxtRouteMiddleware(async (to) => {
 	// 路由白名单
+	const nuxtApp = useNuxtApp();
 	const whiteRoutes = ['/admin/login'];
 	const path = to.path;
 	const cookies = useUserState().getToken();
@@ -17,9 +18,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
 						token: cookies,
 					},
 				});
-				return res.code === StatusCode.SUCCESS ? true : navigateTo('/admin/login');
+
+				if (res.code === StatusCode.UNAUTHORIZED) {
+					nuxtApp.runWithContext(() => {
+						useUserState().setToken('');
+						return navigateTo('/admin/login', { replace: true });
+					});
+				}
 			} catch (error) {
-				return navigateTo('/admin/login');
+				nuxtApp.runWithContext(() => {
+					useUserState().setToken('');
+					return navigateTo('/admin/login', { replace: true });
+				});
 			}
 		}
 	}
