@@ -1,4 +1,4 @@
-import { StatusCode } from "~/types/com-types";
+import { StatusCode } from '~/types/com-types';
 
 export default defineEventHandler(async (event): Promise<NitroResponse<any>> => {
 	const { token } = await readBody<{ token: string }>(event);
@@ -8,13 +8,13 @@ export default defineEventHandler(async (event): Promise<NitroResponse<any>> => 
 		return {
 			code: StatusCode.SUCCESS,
 			msg: '验证成功！',
-			data: null
+			data: null,
 		};
 	} catch (error) {
 		return {
-			code: StatusCode.FAIL,
-			msg: '验证失败！',
-			data: null
+			code: StatusCode.UNAUTHORIZED,
+			msg: '登录已失效！',
+			data: null,
 		};
 	}
-})
+});
