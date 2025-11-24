@@ -40,7 +40,7 @@ const currentImageUrl = computed(() => {
 		case 9:
 		case 10:
 		case 11:
-			return images.value[0];
+			return images.value[2];
 		default:
 			return images.value[0];
 	}
