@@ -12,7 +12,7 @@ export enum StatusCode {
 	PARAM_ERROR = 1000,
 
 	/** 未登录 / Token 缺失 */
-	UNAUTHORIZED = 1001,
+	UNAUTHORIZED = 401,
 
 	/** 登录已过期 / Token 无效 */
 	TOKEN_EXPIRED = 1002,
