@@ -2,6 +2,7 @@
 import type { FormInstance, FormRules } from 'element-plus';
 import { StatusCode } from '~/types/com-types';
 
+const { setToken } = useUserState();
 const Illustration = getIcons().Illustration;
 const Avatar = getIcons().Avatar;
 
@@ -52,7 +53,7 @@ const onLogin = (): void => {
 			);
 
 			if (res.code === StatusCode.SUCCESS) {
-				useUserState().setToken(res.data.accessToken);
+				setToken(res.data.accessToken);
 				useCookie('user_name').value = ruleForm.username;
 				const { data } = await findUser(ruleForm.username);
 
