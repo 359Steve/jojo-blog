@@ -124,7 +124,10 @@ export default defineNuxtConfig({
 		head: {
 			title: 'jojo-blog',
 			meta,
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }],
+			link: [
+				{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+				{ rel: 'shortcut icon', href: '/favicon.ico' },
+			],
 			viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 		},
 	},
@@ -136,16 +139,6 @@ export default defineNuxtConfig({
 		'animate.css/animate.min.css',
 		'remixicon/fonts/remixicon.css',
 	],
-
-	// googleFonts: {
-	// 	families: {
-	// 		'Zhi Mang Xing': true
-	// 	},
-	// 	download: true,
-	// 	base64: false,
-	// 	overwriting: true,
-	// 	outputDir: 'assets/fonts'
-	// },
 
 	// 定义公共样式
 	vite: {
