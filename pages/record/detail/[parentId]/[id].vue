@@ -126,7 +126,7 @@ const preview = (src: string) => {
 				class="duration-1200 transition-all" />
 		</Starport>
 		<div class="w-full py-4 sm:py-8">
-			<div class="mb-4 text-center text-lg font-semibold text-black sm:mb-6">
+			<div class="mb-4 text-center text-lg font-semibold text-black dark:text-white sm:mb-6">
 				{{ currentData?.title }}
 			</div>
 			<div class="text-gray-500">
