@@ -17,7 +17,7 @@ const { currentBlog } = storeToRefs(useBlog());
 const route = useRoute();
 const id = computed(() => route.query.id);
 
-const { data, pending, error } = await useAsyncData('publicQueryBlogDetail', async () => {
+const { data, error } = await useAsyncData('publicQueryBlogDetail', async () => {
 	if (currentBlog.value) {
 		return {
 			data: currentBlog.value,
@@ -59,21 +59,16 @@ onBeforeUnmount(() => {
 
 <template>
 	<main>
-		<!-- 加载状态 -->
-		<div v-if="pending" class="flex items-center justify-center py-20">
-			<div class="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
-		</div>
-
 		<!-- 博客内容 -->
-		<div v-else-if="blogItem">
+		<div v-if="blogItem">
 			<!-- 返回按钮 -->
 			<div class="mb-6">
-				<ElButton link
-					class="hover:text-primary flex items-center gap-2 !text-sm text-gray-600 transition-colors duration-200"
+				<button
+					class="hover:text-primary flex items-center gap-1 text-sm text-gray-600 transition-colors duration-200 focus:outline-none"
 					@click="goBack">
-					<Icon icon="ri:arrow-left-line" />
-					返回博客列表
-				</ElButton>
+					<Icon icon="ri:arrow-left-s-line" width="24" />
+					<span>CD ..</span>
+				</button>
 			</div>
 
 			<!-- 博客头部 -->
