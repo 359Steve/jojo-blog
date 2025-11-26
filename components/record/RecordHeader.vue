@@ -30,7 +30,8 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 				<div class="mt-4 flex w-full items-center gap-2">
 					<div v-for="item in userInfo?.tags" :key="item.tag_id" class="w-fit">
 						<a :href="item.tag.url" target="_blank" rel="noopener noreferrer" class="button">
-							<ElButton size="default" class="!text-black dark:!text-white">
+							<ElButton size="default"
+								class="!text-black hover:!border-gray-300 dark:!text-white dark:hover:!border-white">
 								<template #icon>
 									<div class="text-[20px]">
 										<Icon :icon="item.tag.icon" />
