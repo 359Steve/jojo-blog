@@ -16,6 +16,8 @@ definePageMeta({
 const route = useRoute();
 const parentId = computed(() => route.params.parentId);
 const id = computed(() => route.params.id);
+const previewSrc = ref<string>('');
+const isPreviewVisible = ref<boolean>(false);
 
 const { data, error, refresh } = await useAsyncData(
 	() => `recordDetailQuery-${parentId.value}-${id.value}`,
@@ -94,18 +96,28 @@ const currentDisplayImages = computed(() => {
 const getById = async (recordId: number) => {
 	navigateTo({ path: `/record/detail/${parentId.value}/${recordId}` }, { replace: true });
 };
+
+// 预览图片
+const preview = (src: string) => {
+	previewSrc.value = src;
+	isPreviewVisible.value = true;
+};
 </script>
 
 <template>
+	<ClientOnly>
+		<PreviewImageMask v-if="isPreviewVisible" :src="previewSrc" :alt="currentData?.image_alt || ''"
+			@click="isPreviewVisible = false" />
+	</ClientOnly>
 	<div class="w-full">
 		<RecordHeader class="sm:mb-20" />
 		<div class="mb-6 flex w-full items-center justify-between">
-			<ElButton link
-				class="hover:text-primary flex items-center gap-2 !text-sm text-gray-600 transition-colors duration-200"
+			<button
+				class="hover:text-primary flex items-center gap-1 text-sm text-gray-600 transition-colors duration-200 focus:outline-none"
 				@click="navigateTo('/record/home')">
-				<Icon icon="ri:arrow-left-line" />
-				返回日记列表
-			</ElButton>
+				<Icon icon="ri:arrow-left-s-line" width="24" />
+				<span>CD ..</span>
+			</button>
 			<span class="text-sm text-gray-600">{{ date }}</span>
 		</div>
 		<Starport :id="`record-image-my-id${id}`" :port="`my-id${id}`"
@@ -148,9 +160,10 @@ const getById = async (recordId: number) => {
 				</div>
 				<div class="h-px flex-1 flex-grow bg-gray-300" />
 			</div>
+
 			<ElScrollbar v-if="currentDisplayImages.length > 0">
 				<div
-					class="scroll-wrap mt-4 flex flex-row gap-4 sm:mt-8 sm:grid sm:aspect-video sm:grid-cols-4 sm:grid-rows-2">
+					class="scroll-wrap mt-4 flex flex-row gap-2 sm:mt-8 sm:grid sm:aspect-video sm:grid-cols-4 sm:grid-rows-2">
 					<div v-for="(item, index) in currentDisplayImages.slice(0, 4)"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
 						class="relative h-48 w-36 flex-shrink-0 overflow-hidden rounded-base sm:row-span-1 sm:h-auto sm:w-full"
@@ -160,12 +173,12 @@ const getById = async (recordId: number) => {
 							index === 2 ? 'sm:col-start-1' : '',
 							index === 3 ? 'sm:col-start-2' : '',
 						]">
-						<ElImage :src="item" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-							:preview-src-list="currentDisplayImages" show-progress fit="cover"
-							:preview-teleported="true" />
+						<img :src="item" :min-scale="0.2" :alt="currentData?.image_alt"
+							class="h-full w-full cursor-pointer object-cover" @click="preview(item)">
 
 						<div v-if="index === 3 && currentDisplayImages.length > 4"
-							class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+							class="absolute inset-0 flex cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"
+							@click="preview(currentDisplayImages.slice(index, currentDisplayImages.length).toString())">
 							<div class="text-center">
 								<div class="text-lg font-bold">+{{ currentDisplayImages.length - 4 }}</div>
 								<div class="text-xs">更多</div>
