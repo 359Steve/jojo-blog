@@ -122,7 +122,7 @@ export default defineNuxtConfig({
 	// 项目配置
 	app: {
 		head: {
-			title: 'jojo-blog',
+			title: 'JoJo-Blog',
 			meta,
 			link: [
 				{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
