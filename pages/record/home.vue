@@ -90,16 +90,19 @@ onMounted(() => {
 									: 'justify-start'
 								: 'justify-end',
 						]">
-							<ElButton v-if="summaryList?.prev" class="!font-semibold !text-black"
+							<button v-if="summaryList?.prev"
+								class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
 								@click="changeRecord(summaryList.prev.id)">
-								<Icon icon="ri:arrow-left-s-line" width="24" height="24" class="k mr-2" />
-								<span class="font-semibold text-black">上一篇</span>
-							</ElButton>
-							<ElButton v-if="summaryList?.next" class="!font-semibold !text-black"
+								<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
+								<span>上一篇</span>
+							</button>
+
+							<button v-if="summaryList?.next"
+								class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
 								@click="changeRecord(summaryList.next.id)">
-								<span class="font-semibold text-black">下一篇</span>
-								<Icon icon="ri:arrow-right-s-line" width="24" height="24" class="ml-2" />
-							</ElButton>
+								<span>下一篇</span>
+								<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
+							</button>
 						</div>
 					</div>
 				</div>
@@ -107,7 +110,8 @@ onMounted(() => {
 				<CardsstackContainerScroll :class-name="`space-y-8 mt-6`"
 					:style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
 					<CardsstackCardSticky v-for="(phase, index) in summaryList?.details" ref="cardRef" :key="phase.id"
-						:index="index" class-name="rounded-2xl border p-4 shadow-md backdrop-blur-md"
+						:index="index"
+						class-name="rounded-2xl border p-4 bg-white/40 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
 						@click="toDetail(summaryList?.id!, phase.id!)">
 						<div class="mb-4 flex items-center justify-between gap-4">
 							<h2 class="flex-1 text-xl font-bold tracking-tighter">{{ phase.time_range }}</h2>
