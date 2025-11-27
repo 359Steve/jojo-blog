@@ -7,7 +7,15 @@ const { data } = await useAsyncData('indexRecordPictures', () =>
 	}),
 );
 
-const pictureList = ref<ReturnFunction<typeof findRecordPictures>['data']>(data.value?.data || []);
+const rawData = data.value?.data ?? [];
+const pictureList = ref<HomePicResponse<RecordDetailImages>[]>(
+	isArrayOf<HomePicResponse<RecordDetailImages>>(
+		rawData,
+		(item): item is HomePicResponse<RecordDetailImages> => typeof item === 'object',
+	)
+		? rawData
+		: [],
+);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
