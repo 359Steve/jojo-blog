@@ -3,6 +3,7 @@ const { src = '', alt = '' } = defineProps<{
 	src: string;
 	alt: string;
 }>();
+const isPreviewVisible = defineModel<boolean>('preview');
 
 const srcArr = computed(() => {
 	return src.includes(',') ? src.split(',') : [src];
@@ -24,7 +25,8 @@ const nextImage = () => {
 </script>
 
 <template>
-	<div class="fixed bottom-0 left-0 right-0 top-0 z-[500] backdrop-blur-md">
+	<div v-if="isPreviewVisible" class="fixed bottom-0 left-0 right-0 top-0 z-[500] backdrop-blur-md"
+		@click="isPreviewVisible = false">
 		<button v-if="currentIndex > 0"
 			class="absolute left-1 top-1/2 flex translate-y-[-50%] items-center rounded-md font-semibold"
 			@click.stop="prevImage">
