@@ -105,10 +105,7 @@ const preview = (src: string) => {
 </script>
 
 <template>
-	<ClientOnly>
-		<PreviewImageMask v-if="isPreviewVisible" :src="previewSrc" :alt="currentData?.image_alt || ''"
-			@click="isPreviewVisible = false" />
-	</ClientOnly>
+	<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" :alt="currentData?.image_alt || ''" />
 	<div class="w-full">
 		<RecordHeader class="sm:mb-20" />
 		<div class="mb-6 flex w-full items-center justify-between">
