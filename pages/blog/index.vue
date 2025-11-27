@@ -127,7 +127,7 @@ onMounted(() => {
 		</div>
 	</div>
 	<div class="w-full">
-		<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+		<div v-if="blogList.length > 0" class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 			<div v-for="item in blogList" :key="item.id"
 				class="group flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
 				@click="toDetail(item)">
@@ -159,6 +159,9 @@ onMounted(() => {
 				</div>
 			</div>
 		</div>
+		<ClientOnly v-else>
+			<TRexRunner />
+		</ClientOnly>
 	</div>
 </template>
 
