@@ -9,4 +9,6 @@ export const findPublicUser = chooseCondition<
 
 // 查询照片
 export const findRecordPictures = (query: FindPictureRequest) =>
-	chooseCondition<FindPictureRequest, HomePicResponse<RecordDetailImages>[]>('/record/recordPublicPic')(query);
+	chooseCondition<FindPictureRequest, HomePicResponse<RecordDetailImages>[] | string[]>('/record/recordPublicPic')(
+		query,
+	);
