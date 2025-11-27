@@ -145,3 +145,7 @@ export const getDatePath = (): string => {
 		`${date.getSeconds().toString().padStart(2, '0')}`
 	);
 };
+
+export const isArrayOf = <T>(arr: any[], predicate: (item: unknown) => item is T): arr is T[] => {
+	return arr.every(predicate);
+};
