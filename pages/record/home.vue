@@ -70,45 +70,51 @@ onMounted(() => {
 
 <template>
 	<div class="mx-auto w-full">
-		<div class="min-h-svh w-full">
-			<div class="grid md:grid-cols-2 md:gap-8 xl:gap-12">
+		<div class="w-full" :class="[summaryList?.id ? 'min-h-svh' : 'h-auto']">
+			<div class="grid md:gap-8 xl:gap-12" :class="[summaryList?.id ? 'md:grid-cols-2' : 'grid-cols-1']">
 				<div class="flex items-start">
-					<div class="sticky top-[5rem] sm:top-[6rem]">
+					<div class="sticky top-[5rem] w-full sm:top-[6rem]">
 						<RecordHeader :sm="false" :space="false" />
-						<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
-						<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
-							{{ summaryList?.title }}
-						</h2>
-						<p class="max-w-prose indent-7 text-sm sm:indent-0">
-							{{ summaryList?.summary }}
-						</p>
+						<div v-if="summaryList?.id" class="w-full">
+							<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
+							<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
+								{{ summaryList?.title }}
+							</h2>
+							<p class="max-w-prose indent-7 text-sm sm:indent-0">
+								{{ summaryList?.summary }}
+							</p>
 
-						<div v-if="summaryList?.prev || summaryList?.next" class="mt-4 flex w-full items-center" :class="[
-							summaryList?.prev
-								? summaryList?.next
-									? 'justify-between'
-									: 'justify-start'
-								: 'justify-end',
-						]">
-							<button v-if="summaryList?.prev"
-								class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
-								@click="changeRecord(summaryList.prev.id)">
-								<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
-								<span>上一篇</span>
-							</button>
+							<div v-if="summaryList?.prev || summaryList?.next" class="mt-4 flex w-full items-center"
+								:class="[
+									summaryList?.prev
+										? summaryList?.next
+											? 'justify-between'
+											: 'justify-start'
+										: 'justify-end',
+								]">
+								<button v-if="summaryList?.prev"
+									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
+									@click="changeRecord(summaryList.prev.id)">
+									<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
+									<span>上一篇</span>
+								</button>
 
-							<button v-if="summaryList?.next"
-								class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
-								@click="changeRecord(summaryList.next.id)">
-								<span>下一篇</span>
-								<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
-							</button>
+								<button v-if="summaryList?.next"
+									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
+									@click="changeRecord(summaryList.next.id)">
+									<span>下一篇</span>
+									<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
+								</button>
+							</div>
 						</div>
+						<ClientOnly v-else>
+							<TRexRunner />
+						</ClientOnly>
 					</div>
 				</div>
 
-				<CardsstackContainerScroll :class-name="`space-y-8 mt-6`"
-					:style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
+				<CardsstackContainerScroll v-if="summaryList?.details && summaryList?.details.length > 0"
+					:class-name="`space-y-8 mt-6`" :style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
 					<CardsstackCardSticky v-for="(phase, index) in summaryList?.details" ref="cardRef" :key="phase.id"
 						:index="index"
 						class-name="rounded-2xl border p-4 bg-white/40 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
