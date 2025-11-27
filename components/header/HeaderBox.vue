@@ -19,17 +19,23 @@ onMounted(() => {
 </script>
 
 <template>
-	<HeaderDrawerHeader></HeaderDrawerHeader>
+	<HeaderDrawerHeader />
 	<header ref="headerEl"
 		class="bg-background/50 border-border/50 sticky top-0 z-10 flex h-12 w-full items-center justify-between border-x-0 px-4 backdrop-blur-md transition-all duration-300 ease-in-out"
 		:class="[useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']">
 		<div class="h-full w-24 cursor-pointer py-2">
-			<LogoBasicLogo></LogoBasicLogo>
+			<LogoBasicLogo />
 		</div>
-		<div class="hidden h-full absolute left-[50%] translate-x-[-50%]  items-center justify-center sm:flex">
-			<HeaderMenuList></HeaderMenuList>
+		<div class="absolute left-[50%] hidden h-full translate-x-[-50%] items-center justify-center sm:flex">
+			<HeaderMenuList />
 		</div>
 		<div class="flex h-full w-fit items-center justify-between gap-x-2">
+			<div
+				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
+				<a rel="noopener noreferrer" @click="navigateTo('/photos')">
+					<Icon icon="ri:camera-3-fill" />
+				</a>
+			</div>
 			<div
 				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
 				<a href="https://www.facebook.com/profile.php?id=61565513711985" target="_blank"
@@ -40,18 +46,18 @@ onMounted(() => {
 			<div
 				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
 				<a href="https://github.com/359Steve" target="_blank" rel="noopener noreferrer">
-					<Icon icon="ri:github-fill"></Icon>
+					<Icon icon="ri:github-fill" />
 				</a>
 			</div>
 			<div class="flex items-center justify-between gap-x-2">
 				<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
 					@click="$emit('changeTheme', $event)">
-					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black"></Icon>
+					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black" />
 				</div>
 				<NuxtLink
 					class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
 					target="_blank" rel="noopener noreferrer" to="/admin">
-					<Icon icon="ri:settings-5-fill" class="dark:text-black"></Icon>
+					<Icon icon="ri:settings-5-fill" class="dark:text-black" />
 				</NuxtLink>
 				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:hidden"
 					@click="drawer = !drawer">
