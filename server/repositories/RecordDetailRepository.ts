@@ -353,26 +353,36 @@ export class RecordDetailRepository {
 				return returnData(StatusCode.SUCCESS, '照片列表查询成功', randomImagesWithGroup);
 			} else {
 				// 正常查询分页照片
-				const records = await this.prismaClient.record_images.findMany({
-					where: {
-						url: {
-							not: '',
+				const [records, total] = await this.prismaClient.$transaction([
+					this.prismaClient.record_images.findMany({
+						where: {
+							url: {
+								not: '',
+							},
 						},
-					},
-					skip: offset,
-					take: Number(pageSize),
-					orderBy: {
-						id: 'desc',
-					},
-				});
+						skip: offset,
+						take: Number(pageSize),
+						orderBy: {
+							id: 'desc',
+						},
+					}),
+					this.prismaClient.record_images.count({
+						where: {
+							url: {
+								not: '',
+							},
+						},
+					}),
+				]);
 
-				return records
-					? returnData(
-						StatusCode.SUCCESS,
-						'照片列表查询成功',
-						records.map((item) => item.url).filter(Boolean),
-					)
-					: returnData(StatusCode.SUCCESS, '照片列表到底了', null);
+				if (!records || !total) {
+					return returnData(StatusCode.SUCCESS, '照片列表到底了', null);
+				}
+
+				return returnData(StatusCode.SUCCESS, '照片列表查询成功', {
+					records: records.map((item) => item.url).filter(Boolean),
+					total,
+				});
 			}
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
