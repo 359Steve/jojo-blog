@@ -14,9 +14,8 @@ const { data } = await useAsyncData('publicQueryBlogList', () =>
 const blogList = ref<NonNullable<ReturnFunction<typeof getPublicBlogList>['data']>['records']>(
 	data.value?.data?.records || [],
 );
+const total = ref<number>(data.value?.data?.total || 0);
 const search = ref<string>('');
-const isLoading = ref<boolean>(false);
-const hasMore = ref<boolean>(true);
 
 const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): void => {
 	useBlog().setCurrentBlog(blog);
@@ -25,41 +24,27 @@ const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): v
 
 // 搜索防抖函数
 const debouncedSearch = useDebounceFn(async (keyword: string) => {
-	if (search.value !== keyword || isLoading.value) return;
+	const res = await getPublicBlogList({
+		pageNumber: 1,
+		pageSize: pageSize.value,
+		keyword: keyword || undefined,
+	});
 
-	isLoading.value = true;
-	try {
-		const res = await getPublicBlogList({
-			pageNumber: 1,
-			pageSize: pageSize.value,
-			keyword: keyword || undefined,
-		});
-
-		if (search.value === keyword) {
-			blogList.value = res.data?.records || [];
-			pageNumber.value = 1;
-			hasMore.value = (res.data?.records || []).length >= pageSize.value;
-		}
-	} finally {
-		isLoading.value = false;
+	if (search.value === keyword) {
+		blogList.value = res.data?.records || [];
+		total.value = res.data?.total || 0;
+		pageNumber.value = 1;
 	}
 }, 500);
 
 const clearSearch = async () => {
-	if (isLoading.value) return;
-
-	isLoading.value = true;
-	try {
-		const res = await getPublicBlogList({
-			pageNumber: 1,
-			pageSize: pageSize.value,
-		});
-		blogList.value = res.data?.records || [];
-		pageNumber.value = 1;
-		hasMore.value = true;
-	} finally {
-		isLoading.value = false;
-	}
+	const res = await getPublicBlogList({
+		pageNumber: 1,
+		pageSize: pageSize.value,
+	});
+	blogList.value = res.data?.records || [];
+	total.value = res.data?.total || 0;
+	pageNumber.value = 1;
 };
 
 // 搜索功能
@@ -73,25 +58,16 @@ watch(search, async (newSearch, oldSearch) => {
 
 // 滚动加载更多防抖函数
 const debouncedLoadMore = useDebounceFn(async () => {
-	if (isLoading.value || !hasMore.value) return;
+	const res = await getPublicBlogList({
+		pageNumber: pageNumber.value + 1,
+		pageSize: pageSize.value,
+		keyword: search.value || undefined,
+	});
 
-	isLoading.value = true;
-	try {
-		const res = await getPublicBlogList({
-			pageNumber: pageNumber.value + 1,
-			pageSize: pageSize.value,
-			keyword: search.value || undefined,
-		});
-
-		if (res.data?.records && res.data.records.length > 0) {
-			blogList.value = blogList.value.concat(res.data.records);
-			pageNumber.value += 1;
-			hasMore.value = res.data.records.length >= pageSize.value;
-		} else {
-			hasMore.value = false;
-		}
-	} finally {
-		isLoading.value = false;
+	if (res.data?.records && res.data.records.length > 0) {
+		blogList.value = blogList.value.concat(res.data.records);
+		total.value = res.data?.total || 0;
+		pageNumber.value += 1;
 	}
 }, 300);
 
@@ -104,7 +80,7 @@ onMounted(() => {
 			const windowHeight = window.innerHeight;
 			const documentHeight = document.documentElement.scrollHeight;
 
-			if (scrollTop + windowHeight >= documentHeight - 200) {
+			if (scrollTop + windowHeight >= documentHeight - 200 && total.value > blogList.value.length) {
 				debouncedLoadMore();
 			}
 		});
