@@ -1,21 +1,13 @@
 <script lang="ts" setup>
 const { data } = await useAsyncData('indexRecordPictures', () =>
-	findRecordPictures({
+	findRecordPictures<HomePicResponse<RecordDetailImages>[]>({
 		pageNumber: 1,
 		pageSize: 4,
 		random: true,
 	}),
 );
 
-const rawData = data.value?.data ?? [];
-const pictureList = ref<HomePicResponse<RecordDetailImages>[]>(
-	isArrayOf<HomePicResponse<RecordDetailImages>>(
-		rawData,
-		(item): item is HomePicResponse<RecordDetailImages> => typeof item === 'object',
-	)
-		? rawData
-		: [],
-);
+const pictureList = ref<HomePicResponse<RecordDetailImages>[]>(data.value?.data ?? []);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);
