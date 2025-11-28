@@ -32,6 +32,7 @@ if (error.value) {
 }
 
 const currentData = ref<ReturnFunction<typeof recordDetailQuery>['data']>(data.value?.data || null);
+const mark = ref<number>(4);
 
 // 监听路由变化，更新数据
 watch([parentId, id], async () => {
@@ -87,9 +88,13 @@ const date = computed(() => {
 // 照片墙切换状态
 const photoWallMode = ref<'current' | 'all'>('current');
 
+const count = computed(() => {
+	return photoWallMode.value === 'current' ? stableSrcList.value : stableSrcListAll.value;
+});
+
 // 当前显示的图片列表
 const currentDisplayImages = computed(() => {
-	return photoWallMode.value === 'current' ? stableSrcList.value : stableSrcListAll.value;
+	return count.value.slice(0, mark.value);
 });
 
 // 查询上下条数据
@@ -102,6 +107,10 @@ const preview = (src: string) => {
 	previewSrc.value = src;
 	isPreviewVisible.value = true;
 };
+
+watch(photoWallMode, () => {
+	mark.value = 4;
+});
 </script>
 
 <template>
@@ -160,24 +169,18 @@ const preview = (src: string) => {
 
 			<ElScrollbar v-if="currentDisplayImages.length > 0">
 				<div
-					class="scroll-wrap mt-4 flex flex-row gap-2 sm:mt-8 sm:grid sm:aspect-video sm:grid-cols-4 sm:grid-rows-2">
-					<div v-for="(item, index) in currentDisplayImages.slice(0, 4)"
+					class="scroll-wrap mt-4 flex flex-row gap-2 sm:mt-8 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+					<div v-for="(item, index) in currentDisplayImages"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
-						class="relative h-48 w-36 flex-shrink-0 overflow-hidden rounded-base sm:row-span-1 sm:h-auto sm:w-full"
-						:class="[
-							'sm:' + (index < 2 ? 'col-span-2' : 'row-start-2'),
-							index === 1 ? 'sm:col-start-3 sm:row-span-2' : '',
-							index === 2 ? 'sm:col-start-1' : '',
-							index === 3 ? 'sm:col-start-2' : '',
-						]">
-						<img :src="item" :min-scale="0.2" :alt="currentData?.image_alt"
-							class="h-full w-full cursor-pointer object-cover" @click="preview(item)">
+						class="relative aspect-square w-36 flex-shrink-0 overflow-hidden rounded-base sm:w-48 md:w-full">
+						<img :src="item" :min-scale="0.2" :alt="currentData?.image_alt" loading="lazy" decoding="async"
+							class="aspect-square w-full cursor-pointer object-cover" @click="preview(item)">
 
-						<div v-if="index === 3 && currentDisplayImages.length > 4"
-							class="absolute inset-0 flex cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"
-							@click="preview(currentDisplayImages.slice(index, currentDisplayImages.length).toString())">
+						<div v-if="index === 3 && count.length > currentDisplayImages.length"
+							class="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"
+							@click="mark = count.length">
 							<div class="text-center">
-								<div class="text-lg font-bold">+{{ currentDisplayImages.length - 4 }}</div>
+								<div class="text-lg font-bold">+{{ count.length - 4 }}</div>
 								<div class="text-xs">更多</div>
 							</div>
 						</div>
@@ -226,19 +229,7 @@ const preview = (src: string) => {
 	@apply overflow-x-auto sm:overflow-visible;
 }
 
-.scroll-wrap>div>div {
-	@apply min-h-[12rem] min-w-[9rem];
-}
-
-.scroll-wrap>div>div {
-	@apply sm:min-h-[auto] sm:min-w-[auto];
-}
-
 .relative:hover :deep(.el-image) {
 	@apply scale-105 transition-transform duration-300;
-}
-
-.relative:hover .absolute {
-	@apply bg-opacity-70 transition-all duration-200;
 }
 </style>
