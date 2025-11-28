@@ -38,30 +38,40 @@ const toDetail = (parentId: number, id: number): void => {
 	navigateTo({ path: `/record/detail/${parentId}/${id}` });
 };
 
+// 加载更多记录防抖函数
+const debouncedLoadMore = useDebounceFn(async () => {
+	const res = await recordDetailsQuery({
+		parentId: summaryList.value?.id || 0,
+		pageNumber: pageNumber.value,
+		pageSize: pageSize.value,
+	});
+
+	if (res.data?.records && res.data.records.length > 0) {
+		summaryList.value?.details.push(...res.data.records);
+		total.value = res.data?.total || 0;
+		pageNumber.value += 1;
+
+		await nextTick();
+		cardMinHeight.value = getCardMaxHeight();
+	}
+}, 300);
+
 onMounted(() => {
 	nextTick(() => {
 		cardMinHeight.value = getCardMaxHeight();
 
-		const { arrivedState } = useWindowScroll();
+		const { y } = useWindowScroll();
 
-		watch(arrivedState, async (newValue) => {
-			if (newValue.bottom) {
-				if (total.value <= (summaryList.value?.details.length || 0)) {
-					return;
-				}
-				const res = await recordDetailsQuery({
-					parentId: summaryList.value?.id || 0,
-					pageNumber: pageNumber.value,
-					pageSize: pageSize.value,
-				});
+		watch(y, () => {
+			const scrollTop = y.value;
+			const windowHeight = window.innerHeight;
+			const documentHeight = document.documentElement.scrollHeight;
 
-				if (res.data?.records && res.data.records.length > 0) {
-					summaryList.value?.details.push(...res.data.records);
-					pageNumber.value += 1;
-
-					await nextTick();
-					cardMinHeight.value = getCardMaxHeight();
-				}
+			if (
+				scrollTop + windowHeight >= documentHeight - 200 &&
+				total.value > (summaryList.value?.details.length || 0)
+			) {
+				debouncedLoadMore();
 			}
 		});
 	});
