@@ -30,9 +30,9 @@ onMounted(() => {
 			<HeaderMenuList />
 		</div>
 		<div class="flex h-full w-fit items-center justify-between gap-x-2">
-			<div
-				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
-				<a rel="noopener noreferrer" @click="navigateTo('/photos')">
+			<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black"
+				@click="navigateTo('/photos')">
+				<a rel="noopener noreferrer">
 					<Icon icon="ri:camera-3-fill" />
 				</a>
 			</div>
