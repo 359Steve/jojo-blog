@@ -49,14 +49,17 @@ onMounted(() => {
 </script>
 
 <template>
-	<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" alt="照片墙"
-		@click="isPreviewVisible = false" />
-	<div class="grid w-full grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-		<div v-for="item in photoList" :key="item">
-			<img :src="item" loading="lazy" decoding="async" fetchpriority="low"
-				class="aspect-square w-full object-cover" @click="preview(item)">
+	<div v-if="photoList && photoList.length > 0" class="w-full">
+		<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" alt="照片墙"
+			@click="isPreviewVisible = false" />
+		<div class="grid w-full grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div v-for="item in photoList" :key="item">
+				<img :src="item" loading="lazy" decoding="async" fetchpriority="low"
+					class="aspect-square w-full object-cover" @click="preview(item)">
+			</div>
 		</div>
 	</div>
+	<TRexRunner v-else />
 </template>
 
 <style lang="scss" scoped></style>
