@@ -16,6 +16,9 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 
 		// 设置请求拦截
 		onRequest({ options }) {
+			if (useUserState().getIsUnauthorized()) {
+				return Promise.reject('401 detected: request aborted');
+			}
 			options.headers = {
 				Authorization: `Bearer ${token}`,
 				...options.headers,
@@ -26,6 +29,11 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 		onResponse({ response }) {
 			if (!response.ok) return;
 			const data = response._data as NewResponse<Rp>;
+			if (response.status === StatusCode.UNAUTHORIZED) {
+				useUserState().setToken('');
+				useUserState().setIsUnauthorized(true);
+				navigateTo('/admin/login');
+			}
 			if (data.code !== StatusCode.SUCCESS) {
 				const error = data as NewResponse<{ message: string }>;
 				ElMessage({
@@ -38,6 +46,11 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 		// 响应失败
 		onResponseError({ response }) {
 			const error = response._data as NewResponse<{ message: string }>;
+			if (response.status === StatusCode.UNAUTHORIZED) {
+				useUserState().setToken('');
+				useUserState().setIsUnauthorized(true);
+				navigateTo('/admin/login');
+			}
 			ElMessage({
 				type: 'error',
 				message: error.msg || error.data.message || '请求出错！',
