@@ -9,7 +9,6 @@ const whitelist = [
 	'/api/record/recordPublicDetail',
 	'/api/record/recordPublicDetails',
 	'/api/record/recordPublicPic',
-	'/api/user/verify-token',
 ];
 
 // 白名单路径模式
