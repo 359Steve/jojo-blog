@@ -13,18 +13,21 @@ export class UserRepository {
 
 	// 用户登录
 	async loginUser(body: Pick<CreateUserDto, 'user_name' | 'password'>) {
-		const { user_name, password } = body;
+		const { user_name, password: pwd } = body;
 		try {
 			const res = await this.prismaClient.user_info.findFirst({
 				where: {
 					user_name,
-					password,
+					password: pwd,
 				},
 			});
 
-			return res
-				? returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(res) })
-				: returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
+			if (res?.id) {
+				const { password, ...rest } = res;
+				return returnData(StatusCode.SUCCESS, '登录成功！', { accessToken: signToken(rest) });
+			}
+
+			return returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
 		} catch (error) {
 			return returnData(StatusCode.LOGIN_FAILED, '登录失败！', null);
 		}
