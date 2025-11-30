@@ -5,6 +5,7 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 	url: string,
 	option: Options<NitroFetchOptions<string>, Rq>,
 ) => {
+	const { setToken, setIsUnauthorized, getIsUnauthorized } = useUserState();
 	// 获取全局变量
 	const appConfig = useAppConfig();
 	// 获取token
@@ -16,8 +17,8 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 
 		// 设置请求拦截
 		onRequest({ options }) {
-			if (useUserState().getIsUnauthorized()) {
-				return Promise.reject('401 detected: request aborted');
+			if (getIsUnauthorized()) {
+				return Promise.reject('401 登录失效：请求中止！');
 			}
 			options.headers = {
 				Authorization: `Bearer ${token}`,
@@ -30,11 +31,10 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 			if (!response.ok) return;
 			const data = response._data as NewResponse<Rp>;
 			if (response.status === StatusCode.UNAUTHORIZED) {
-				useUserState().setToken('');
-				useUserState().setIsUnauthorized(true);
+				setToken('');
+				setIsUnauthorized(true);
 				navigateTo('/admin/login');
-			}
-			if (data.code !== StatusCode.SUCCESS) {
+			} else if (data.code !== StatusCode.SUCCESS) {
 				const error = data as NewResponse<{ message: string }>;
 				ElMessage({
 					type: 'error',
@@ -47,14 +47,15 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 		onResponseError({ response }) {
 			const error = response._data as NewResponse<{ message: string }>;
 			if (response.status === StatusCode.UNAUTHORIZED) {
-				useUserState().setToken('');
-				useUserState().setIsUnauthorized(true);
+				setToken('');
+				setIsUnauthorized(true);
 				navigateTo('/admin/login');
+			} else {
+				ElMessage({
+					type: 'error',
+					message: error.msg || error.data.message || '请求出错！',
+				});
 			}
-			ElMessage({
-				type: 'error',
-				message: error.msg || error.data.message || '请求出错！',
-			});
 		},
 	});
 };
