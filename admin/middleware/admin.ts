@@ -1,35 +1,26 @@
-import { StatusCode } from '~/types/com-types';
+import type { CookieRef } from 'nuxt/app';
+
+const { getToken } = useUserState();
 
 export default defineNuxtRouteMiddleware(async (to) => {
 	// 路由白名单
-	const nuxtApp = useNuxtApp();
 	const whiteRoutes = ['/admin/login'];
 	const path = to.path;
-	const cookies = useUserState().getToken();
+	const userState = useCookie('userState') as CookieRef<{ token: string; isUnauthorized: boolean }>;
 
-	if (!whiteRoutes.includes(path)) {
-		if (!cookies) {
+	if (!whiteRoutes.includes(path) && !path.startsWith('/api')) {
+		if (!getToken()) {
 			return navigateTo('/admin/login');
 		} else {
 			// 验证token
-			try {
-				const res = await postApi<{ token: string }, any>('/user/verify-token', {
-					body: {
-						token: cookies,
-					},
+			if (getToken() !== userState.value?.token) {
+				ElMessage({
+					type: 'error',
+					message: '登录已失效！',
 				});
-
-				if (res.code === StatusCode.UNAUTHORIZED) {
-					nuxtApp.runWithContext(() => {
-						useUserState().setToken('');
-						return navigateTo('/admin/login', { replace: true });
-					});
-				}
-			} catch (error) {
-				nuxtApp.runWithContext(() => {
-					useUserState().setToken('');
-					return navigateTo('/admin/login', { replace: true });
-				});
+				useUserState().setToken('');
+				useUserState().setIsUnauthorized(false);
+				return navigateTo('/admin/login', { replace: true });
 			}
 		}
 	}
