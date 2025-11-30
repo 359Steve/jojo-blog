@@ -13,9 +13,6 @@ export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<Ne
 
 		// 设置请求拦截
 		onRequest({ options }) {
-			if (useUserState().getIsUnauthorized()) {
-				return Promise.reject('401 detected: request aborted');
-			}
 			if (import.meta.server) {
 				const ssrHeaders = useRequestHeaders(['cookie']);
 				options.headers = {
@@ -34,11 +31,6 @@ export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<Ne
 		onResponse({ response }) {
 			if (!response.ok) return;
 			const data = response._data as NewResponse<Rp>;
-			if (response.status === StatusCode.UNAUTHORIZED) {
-				useUserState().setToken('');
-				useUserState().setIsUnauthorized(true);
-				navigateTo('/admin/login');
-			}
 			if (data.code !== StatusCode.SUCCESS) {
 				const error = data as NewResponse<{ message: string }>;
 				if (import.meta.client) {
@@ -63,11 +55,6 @@ export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<Ne
 		// 响应失败
 		onResponseError({ response }) {
 			const error = response._data as NewResponse<{ message: string }>;
-			if (response.status === StatusCode.UNAUTHORIZED) {
-				useUserState().setToken('');
-				useUserState().setIsUnauthorized(true);
-				navigateTo('/admin/login');
-			}
 			// 如果是客户端直接提示错误信息
 			if (import.meta.client) {
 				ElMessage({
