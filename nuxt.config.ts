@@ -6,6 +6,7 @@ const meta: Meta[] = [
 	{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 	{ name: 'format-detection', content: 'telephone=no' },
 	{ name: 'google-site-verification', content: 'pixBrjqAVBmn9ObEtLR4qdsb7zhOhrW9NcEqKpZrIDw' },
+	{ name: 'baidu-site-verification', content: 'codeva-fvEddP22we' },
 
 	// SEO
 	{ hid: 'description', name: 'description', content: 'Jojo的个人博客，分享技术文章、生活记录和项目经验' },
