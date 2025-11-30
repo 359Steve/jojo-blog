@@ -3,7 +3,7 @@ export default defineAppConfig({
 	jwtSecret: 'jojo-blog',
 	accessTokenExpiresIn: '7d',
 	expiresin: 604800,
-	wearther: {
+	weather: {
 		key: 'c757fe98c35be3f4726d54c191e934f8',
 		baseCityCode: '110101',
 		areaCodes: {
