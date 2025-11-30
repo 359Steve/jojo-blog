@@ -11,6 +11,7 @@ const loginOut = (): void => {
 
 		if (res.code === StatusCode.SUCCESS) {
 			useUserState().setToken('');
+			useUserState().setIsUnauthorized(false);
 			navigateTo({ path: '/admin/login' });
 		} else {
 			ElMessage({
