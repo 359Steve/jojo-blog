@@ -2,7 +2,7 @@
 import type { FormInstance, FormRules } from 'element-plus';
 import { StatusCode } from '~/types/com-types';
 
-const { setToken } = useUserState();
+const { setToken, setIsUnauthorized } = useUserState();
 const Illustration = getIcons().Illustration;
 const Avatar = getIcons().Avatar;
 
@@ -42,6 +42,7 @@ const loading = ref<boolean>(false);
 const onLogin = (): void => {
 	ruleFormRef.value?.validate(async (valid) => {
 		if (valid) {
+			setIsUnauthorized(false);
 			const res = await fetchPostApi<{ user_name: string; password: string }, { accessToken: string }>(
 				'/user/user-login',
 				{
