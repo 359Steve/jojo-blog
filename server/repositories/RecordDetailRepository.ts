@@ -360,8 +360,6 @@ export class RecordDetailRepository {
 								not: '',
 							},
 						},
-						skip: offset,
-						take: Number(pageSize),
 						orderBy: {
 							id: 'desc',
 						},
