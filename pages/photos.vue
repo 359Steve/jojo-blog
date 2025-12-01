@@ -12,6 +12,7 @@ const photoList = ref<string[]>(data.value?.data?.records ?? []);
 const total = ref<number>(data.value?.data?.total ?? 0);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
+const translate = ref<boolean>(false);
 
 const preview = (src: string) => {
 	previewSrc.value = src;
@@ -52,10 +53,16 @@ onMounted(() => {
 	<div v-if="photoList && photoList.length > 0" class="w-full">
 		<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" alt="照片墙"
 			@click="isPreviewVisible = false" />
-		<div class="grid w-full grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-			<div v-for="item in photoList" :key="item">
-				<img :src="item" loading="lazy" decoding="async" fetchpriority="low"
-					class="aspect-square w-full object-cover" @click="preview(item)">
+
+		<div class="fixed top-14 flex items-center justify-center py-2">
+			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
+				class="cursor-pointer text-gray-300" @click="translate = !translate" />
+		</div>
+		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div v-for="(item, index) in photoList" :key="item" class="aspect-square">
+				<img :src="item" :data-photo-index="index" class="h-full w-full"
+					:class="[translate ? 'aspect-square object-cover' : 'object-contain sm:aspect-square']"
+					@click="preview(item)">
 			</div>
 		</div>
 	</div>
