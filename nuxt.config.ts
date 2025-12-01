@@ -85,7 +85,7 @@ export default defineNuxtConfig({
 		compressPublicAssets: { gzip: true, brotli: true },
 		minify: true,
 		prerender: {
-			routes: ['/', '/photos'],
+			routes: ['/'],
 			crawlLinks: false,
 			ignore: ['/admin', '/api'],
 		},
@@ -98,8 +98,8 @@ export default defineNuxtConfig({
 	// 路由规则
 	routeRules: {
 		'/admin/**': { ssr: false },
-		'/': { prerender: true },
-		'/photos': { prerender: true },
+		'/': { prerender: true, isr: 300 },
+		'/photos': { isr: 600, headers: { 'cache-control': 's-maxage=600' } },
 		'/blog': { isr: 1800 },
 		'/blog/**': { isr: 3600 },
 		'/record': { isr: 1800 },
