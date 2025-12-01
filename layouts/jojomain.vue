@@ -62,7 +62,7 @@ onMounted(() => {
 		<ClientOnly>
 			<SeasonFloatDown v-if="windWidth > 640" />
 			<RecordBackground v-else class-name="w-full h-[100dvh] fixed inset-0 z-[-1]" />
-			<!-- <BgcanvasBranchCanvas v-else /> -->
+			<!-- <BgcanvasBranchCanvas  /> -->
 		</ClientOnly>
 		<ElBacktop :right="50" :bottom="100">
 			<i class="ri-arrow-up-line" />
