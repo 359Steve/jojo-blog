@@ -1,4 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// nuxt.config.ts
 import type { MetaObject } from 'nuxt/schema';
 
 const meta: MetaObject = {
@@ -37,149 +37,11 @@ const meta: MetaObject = {
 export default defineNuxtConfig({
 	extends: ['./admin'],
 	devtools: { enabled: false },
-
-	// 构建配置
-	nitro: {
-		preset: 'node-server',
-		compressPublicAssets: {
-			gzip: true,
-			brotli: true,
-		},
-		minify: true,
-		prerender: {
-			routes: ['/sitemap.xml', '/robots.txt', '/'],
-			crawlLinks: false,
-			ignore: ['/admin', '/api'],
-		},
-		routeRules: {
-			'/public/**': { headers: { 'cache-control': 's-maxage=31536000' } },
-		},
-	},
-
-	routeRules: {
-		'/admin/**': { ssr: false },
-
-		// 首页预渲染
-		'/': { prerender: true },
-
-		'/photos': {
-			isr: 600,
-			headers: { 'cache-control': 's-maxage=600' },
-		},
-
-		'/blog': { isr: 1800 },
-		'/blog/**': { isr: 3600 },
-
-		'/record': { isr: 1800 },
-		'/record/**': { isr: 3600 },
-
-		'/api/blog/**': {
-			headers: { 'cache-control': 's-maxage=300' },
-			cors: true,
-		},
-		'/api/record/**': {
-			headers: { 'cache-control': 's-maxage=600' },
-			cors: true,
-		},
-		'/api/user/**': {
-			headers: { 'cache-control': 's-maxage=60' },
-			cors: true,
-		},
-		'/api/**': {
-			headers: { 'cache-control': 's-maxage=60' },
-			cors: true,
-		},
-
-		'/favicon.ico': { headers: { 'cache-control': 's-maxage=31536000' } },
-		'/robots.txt': { prerender: true },
-		'/sitemap.xml': { prerender: true },
-	},
-	components: [
-		{
-			path: '~/components',
-			extensions: ['.vue', '.tsx'],
-		},
-		{
-			path: '~/admin/components',
-			pathPrefix: false,
-			extensions: ['.vue', '.tsx'],
-		},
-	],
-	runtimeConfig: {
-		public: {
-			siteUrl: 'https://www.polnareff.me',
-			siteName: 'Jojo Blog',
-			jwtSecret: 'jojo-blog',
-			accessTokenExpiresIn: '7d',
-			expiresin: 604800,
-			// 配置邮件服务
-			email: {
-				host: '2075313210@qq.com',
-				port: 465,
-				secure: true,
-				auth: {
-					user: '2075313210@qq.com',
-					pass: 'uudttqgftlgvfdeb',
-				},
-			},
-		},
-	},
-	experimental: {
-		payloadExtraction: false,
-		viewTransition: true,
-		componentIslands: false,
-		typedPages: true,
-		asyncContext: true,
-	},
-	imports: {
-		dirs: [
-			'composables',
-			'composables/api/user',
-			'composables/api/blog',
-			'composables/blog',
-			'composables/user',
-			'composables/api/record',
-			'composables/api/error',
-		],
-	},
-	plugins: [
-		'~/plugins/vueStarport.ts',
-		'~/plugins/iconify.ts',
-		'~/plugins/mdEditor.ts',
-		'~/plugins/getUser.ts',
-		'~/plugins/weather.client.ts',
-		'~/plugins/preventDefault.client.ts',
-	],
+	ssr: true,
 	pages: true,
-	typescript: {
-		strict: true,
-		tsConfig: {
-			compilerOptions: {
-				experimentalDecorators: true,
-				emitDecoratorMetadata: true,
-			},
-		},
-	},
-	compatibilityDate: '2024-11-01',
-	modules: [
-		'@nuxtjs/tailwindcss',
-		'@element-plus/nuxt',
-		'@pinia/nuxt',
-		'pinia-plugin-persistedstate',
-		'@vueuse/nuxt',
-		'@nuxtjs/color-mode',
-		'@vueuse/motion/nuxt',
-		'@nuxtjs/google-fonts',
-		'@nuxt/eslint',
-	],
+	typescript: { strict: true },
 
-	colorMode: {
-		classSuffix: '',
-		storageKey: 'nuxt-color-mode',
-		preference: 'system',
-		fallback: 'light',
-	},
-	// 项目配置
+	// App 配置
 	app: {
 		head: {
 			title: 'JoJo-Blog',
@@ -192,17 +54,62 @@ export default defineNuxtConfig({
 			],
 			viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 		},
-		pageTransition: { name: 'page', mode: 'out-in' },
-		layoutTransition: { name: 'layout', mode: 'out-in' },
 	},
 
-	ssr: true,
+	// 组件自动导入
+	components: [
+		{ path: '~/components', extensions: ['.vue', '.tsx'] },
+		{ path: '~/admin/components', pathPrefix: false, extensions: ['.vue', '.tsx'] },
+	],
 
-	features: {
-		inlineStyles: false,
+	// 运行时配置
+	runtimeConfig: {
+		public: {
+			siteUrl: 'https://www.polnareff.me',
+			siteName: 'Jojo Blog',
+			jwtSecret: 'jojo-blog',
+			accessTokenExpiresIn: '7d',
+			expiresin: 604800,
+			email: {
+				host: '2075313210@qq.com',
+				port: 465,
+				secure: true,
+				auth: { user: '2075313210@qq.com', pass: 'uudttqgftlgvfdeb' },
+			},
+		},
 	},
 
-	// 初始化样式
+	// Nitro 配置
+	nitro: {
+		preset: 'node-server',
+		compressPublicAssets: { gzip: true, brotli: true },
+		minify: true,
+		prerender: {
+			routes: ['/', '/photos'],
+			crawlLinks: false,
+			ignore: ['/admin', '/api'],
+		},
+		experimental: { wasm: false },
+		routeRules: {
+			'/public/**': { headers: { 'cache-control': 's-maxage=31536000' } },
+		},
+	},
+
+	// 路由规则
+	routeRules: {
+		'/admin/**': { ssr: false },
+		'/': { prerender: true },
+		'/photos': { prerender: true },
+		'/blog': { isr: 1800 },
+		'/blog/**': { isr: 3600 },
+		'/record': { isr: 1800 },
+		'/record/**': { isr: 3600 },
+		'/api/blog/**': { headers: { 'cache-control': 's-maxage=300' }, cors: true },
+		'/api/record/**': { headers: { 'cache-control': 's-maxage=600' }, cors: true },
+		'/api/user/**': { headers: { 'cache-control': 's-maxage=60' }, cors: true },
+		'/favicon.ico': { headers: { 'cache-control': 's-maxage=31536000' } },
+	},
+	// CSS
 	css: [
 		'~/assets/css/index.scss',
 		'~/assets/css/tailwind.css',
@@ -210,75 +117,38 @@ export default defineNuxtConfig({
 		'remixicon/fonts/remixicon.css',
 	],
 
-	// 定义公共样式
+	// Vite 构建
 	vite: {
 		css: {
 			preprocessorOptions: {
-				scss: {
-					additionalData: '@use "~/assets/css/element-variables.scss" as element;',
-				},
+				scss: { additionalData: '@use "~/assets/css/element-variables.scss" as element;' },
 			},
 			preprocessorMaxWorkers: true,
 		},
 		build: {
-			// 启用代码分割
 			cssCodeSplit: true,
-			// 块大小警告限制
 			chunkSizeWarningLimit: 1000,
-			// 启用压缩
 			minify: 'esbuild',
-			// 目标浏览器
 			target: 'es2015',
-			// 构建输出配置
 			rollupOptions: {
 				output: {
-					// JS 文件命名
 					chunkFileNames: '_nuxt/js/[name]-[hash].js',
 					entryFileNames: '_nuxt/js/entry-[hash].js',
-					// 资源文件命名
 					assetFileNames: (assetInfo) => {
-						const fileName = assetInfo.names?.[0] || '';
-
-						// CSS 文件
-						if (fileName.endsWith('.css')) {
-							return '_nuxt/css/[name]-[hash].css';
-						}
-
-						// 图片文件
-						if (/\.(png|jpe?g|gif|svg|webp|avif)$/.test(fileName)) {
-							return '_nuxt/images/[name]-[hash][extname]';
-						}
-
-						// 字体文件
-						if (/\.(woff2?|eot|ttf|otf)$/.test(fileName)) {
-							return '_nuxt/fonts/[name]-[hash][extname]';
-						}
-
-						// 媒体文件
-						if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)$/.test(fileName)) {
+						const names = assetInfo.names || [''];
+						const name = names[0];
+						if (name.endsWith('.css')) return '_nuxt/css/[name]-[hash].css';
+						if (/\.(png|jpe?g|gif|svg|webp|avif)$/.test(name)) return '_nuxt/images/[name]-[hash][extname]';
+						if (/\.(woff2?|eot|ttf|otf)$/.test(name)) return '_nuxt/fonts/[name]-[hash][extname]';
+						if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)$/.test(name))
 							return '_nuxt/media/[name]-[hash][extname]';
-						}
-
-						// 其他文件
 						return '_nuxt/assets/[name]-[hash][extname]';
 					},
 				},
 			},
-			// 压缩选项
-			terserOptions: {
-				compress: {
-					drop_console: true,
-					drop_debugger: true,
-				},
-			},
+			terserOptions: { compress: { drop_console: true, drop_debugger: true } },
 		},
-		// 开发服务器优化
-		server: {
-			hmr: {
-				port: 24678,
-			},
-		},
-		// 优化依赖预构建
+		server: { hmr: { port: 24678 } },
 		optimizeDeps: {
 			include: [
 				'vue',
@@ -290,19 +160,68 @@ export default defineNuxtConfig({
 				'@iconify/vue',
 				'pinia',
 				'vue-starport',
-				'animate.css',
 			],
 			exclude: ['@prisma/client', 'mysql2', 'nodemailer', 'three'],
 		},
 	},
 
-	elementPlus: {
-		importStyle: 'css',
+	elementPlus: { importStyle: 'css' },
+
+	colorMode: {
+		classSuffix: '',
+		storageKey: 'nuxt-color-mode',
+		preference: 'system',
+		fallback: 'light',
 	},
 
-	// 字体优化
+	modules: [
+		'@nuxtjs/tailwindcss',
+		'@element-plus/nuxt',
+		'@pinia/nuxt',
+		'pinia-plugin-persistedstate',
+		'@vueuse/nuxt',
+		'@nuxtjs/color-mode',
+		'@vueuse/motion/nuxt',
+		'@nuxtjs/google-fonts',
+		'@nuxt/eslint',
+	],
+
+	experimental: {
+		payloadExtraction: false,
+		viewTransition: true,
+		componentIslands: false,
+		typedPages: true,
+		asyncContext: true,
+	},
+
+	imports: {
+		dirs: [
+			'composables',
+			'composables/api/user',
+			'composables/api/blog',
+			'composables/blog',
+			'composables/user',
+			'composables/api/record',
+			'composables/api/error',
+		],
+	},
+
+	plugins: [
+		'~/plugins/getUser.ts',
+		'~/plugins/azyload.ts',
+		'~/plugins/iconify.ts',
+		'~/plugins/mdEditor.ts',
+		'~/plugins/vueStarport.ts',
+		'~/plugins/weather.client.ts',
+		'~/plugins/preventDefault.client.ts',
+	],
+
 	googleFonts: {
-		families: {},
+		families: {
+			'Roboto+Slab': [400, 700],
+			Lato: [400, 700, 900],
+			'Fira+Code': [400, 700],
+		},
 		display: 'swap',
 		prefetch: false,
 		preconnect: false,
@@ -318,16 +237,7 @@ export default defineNuxtConfig({
 			...(process.env.NODE_ENV === 'production'
 				? {
 					cssnano: {
-						preset: [
-							'default',
-							{
-								discardComments: { removeAll: true },
-								normalizeWhitespace: true,
-								mergeRules: true,
-								mergeLonghand: false,
-								discardUnused: false,
-							},
-						],
+						preset: ['default', { discardComments: { removeAll: true }, normalizeWhitespace: true }],
 					},
 				}
 				: {}),
