@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 useHead({
-	title: 'jojo-admin',
+	title: 'JoJo-Admin',
 });
 
 const route = useRoute();
