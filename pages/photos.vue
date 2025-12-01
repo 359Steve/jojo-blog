@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const pageNumber = ref<number>(1);
-const pageSize = ref<number>(15);
+const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
 	findRecordPictures<RecordsResponse<string>>({
 		pageNumber: pageNumber.value,
@@ -60,7 +60,7 @@ onMounted(() => {
 		</div>
 		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			<div v-for="(item, index) in photoList" :key="item" class="aspect-square">
-				<img :src="item" :data-photo-index="index" class="h-full w-full"
+				<img v-lazy="item" :data-photo-index="index" class="h-full w-full"
 					:class="[translate ? 'aspect-square object-cover' : 'object-contain sm:aspect-square']"
 					@click="preview(item)">
 			</div>
