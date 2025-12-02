@@ -85,7 +85,7 @@ export default defineNuxtConfig({
 		compressPublicAssets: { gzip: true, brotli: true },
 		minify: true,
 		prerender: {
-			routes: ['/'],
+			routes: [],
 			crawlLinks: false,
 			ignore: ['/admin', '/api'],
 		},
