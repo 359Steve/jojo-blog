@@ -4,6 +4,7 @@ export default defineAppConfig({
 	accessTokenExpiresIn: '7d',
 	expiresin: 604800,
 	weather: {
+		enabled: false,
 		key: 'c757fe98c35be3f4726d54c191e934f8',
 		baseCityCode: '110101',
 		areaCodes: {
