@@ -1,0 +1,13 @@
+-- AlterTable
+ALTER TABLE `record_details` ADD COLUMN `date_path` VARCHAR(255) NOT NULL DEFAULT '1997-01-01-103523';
+
+-- CreateTable
+CREATE TABLE `error_report` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `content` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
