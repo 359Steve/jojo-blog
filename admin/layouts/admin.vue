@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 useHead({
-	title: 'JoJo-Admin',
+	title: '管理后台',
 });
 
 const route = useRoute();
