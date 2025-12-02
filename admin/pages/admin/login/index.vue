@@ -73,7 +73,7 @@ const onLogin = (): void => {
 
 <template>
 	<div class="select-none">
-		<img :src="getIcons().bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
+		<img v-lazy="getIcons().bg" class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
 		<div class="absolute right-5 top-3 flex">
 			<!-- 主题 -->
 			<LaySwitch />
