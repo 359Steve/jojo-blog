@@ -4,10 +4,9 @@ definePageMeta({
 });
 
 const findUsers = async () => {
-	const user_name = useCookie('user_name').value;
 	const token = useUserState().getToken();
-	if (user_name && token) {
-		const { data } = await findUser(user_name ?? '');
+	if (token) {
+		const { data } = await findUser();
 		data &&
 			useUserinfo().setUserInfo({
 				...data,
