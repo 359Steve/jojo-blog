@@ -11,7 +11,7 @@ const isPreviewVisible = defineModel<boolean>('preview');
 		<div v-if="isPreviewVisible" class="fixed bottom-0 left-0 right-0 top-0 z-[500] backdrop-blur-md transition-all"
 			@click="isPreviewVisible = false">
 			<div class="absolute inset-0 z-[-1] bg-black/50" />
-			<img :src="src" :alt="alt"
+			<img v-lazy="src" :alt="alt"
 				class="z-[2] h-full max-h-[100vh] w-full max-w-[100vw] object-contain sm:aspect-square">
 		</div>
 	</Transition>

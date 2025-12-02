@@ -107,9 +107,8 @@ onMounted(() => {
 			<div v-for="item in blogList" :key="item.id"
 				class="group flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
 				@click="toDetail(item)">
-				<img alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]"
-					:src="item.front_cover">
+				<img v-lazy="item.front_cover" alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
+					class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]" />
 				<div class="flex min-h-0 flex-1 flex-col justify-between overflow-hidden">
 					<div class="min-h-0 flex-1">
 						<h4

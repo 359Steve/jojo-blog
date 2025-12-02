@@ -93,8 +93,9 @@ onMounted(() => {
 						gridRowEnd: pos.rowEnd,
 						opacity: 1,
 					}" @click="toRecordDetail(pictureList[index])">
-					<img class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.url || ''" :src="pictureList[index]?.url || defaultImages[index]">
+					<img v-lazy="pictureList[index]?.url || defaultImages[index]"
+						class="size-full object-cover object-center" width="100%" height="100%"
+						:alt="pictureList[index]?.url || ''">
 				</div>
 			</div>
 		</div>

@@ -6,7 +6,7 @@ const { img_url, img_alt } = defineProps<{
 </script>
 
 <template>
-	<img class="h-full w-full rounded-base object-cover" :src="img_url" :alt="img_alt" />
+	<img v-lazy="img_url" class="h-full w-full rounded-base object-cover" :alt="img_alt">
 </template>
 
 <style lang="scss" scoped></style>
