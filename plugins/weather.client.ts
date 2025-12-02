@@ -3,9 +3,9 @@ export default defineNuxtPlugin({
 	parallel: true,
 	async setup() {
 		const route = useRoute();
-		if (!route.path.startsWith('/admin')) {
-			const config = useAppConfig();
-			const { key, baseCityCode, areaCodes } = config.weather;
+		const config = useAppConfig();
+		const { key, baseCityCode, areaCodes, enabled } = config.weather;
+		if (!route.path.startsWith('/admin') && enabled) {
 			let cityCode = baseCityCode;
 
 			// 封装获取城市码逻辑
