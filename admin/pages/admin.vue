@@ -1,8 +1,4 @@
 <script lang="ts" setup>
-definePageMeta({
-	middleware: 'admin',
-});
-
 const findUsers = async () => {
 	const user_name = useCookie('user_name').value;
 	const token = useUserState().getToken();
