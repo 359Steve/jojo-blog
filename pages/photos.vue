@@ -17,6 +17,7 @@ const total = ref<number>(data.value?.data?.total ?? 0);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 const translate = ref<boolean>(false);
+const animating = ref(false);
 
 const preview = (src: string) => {
 	previewSrc.value = src;
@@ -35,6 +36,19 @@ const debouncedLoadMore = useDebounceFn(async () => {
 		pageNumber.value += 1;
 	}
 }, 300);
+
+const toggleLayout = () => {
+	if (animating.value) return;
+
+	animating.value = true;
+	requestAnimationFrame(() => {
+		translate.value = !translate.value;
+
+		requestAnimationFrame(() => {
+			animating.value = false;
+		});
+	});
+};
 
 onMounted(() => {
 	nextTick(() => {
@@ -60,17 +74,28 @@ onMounted(() => {
 
 		<div class="fixed top-14 flex items-center justify-center py-2">
 			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
-				class="cursor-pointer text-gray-300" @click="translate = !translate" />
+				class="cursor-pointer text-gray-300" @click="toggleLayout" />
 		</div>
-		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+			:class="[translate ? 'is-grid' : 'is-masonry']">
 			<div v-for="(item, index) in photoList" :key="item" class="aspect-square">
-				<img v-lazy="item" :data-photo-index="index" class="h-full w-full"
-					:class="[translate ? 'aspect-square object-cover' : 'object-contain sm:aspect-square']"
-					@click="preview(item)">
+				<img v-lazy="item" :data-photo-index="index" class="img-style" @click="preview(item)">
 			</div>
 		</div>
 	</div>
 	<TRexRunner v-else />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="postcss" scoped>
+.img-style {
+	@apply h-full w-full cursor-pointer transition-all duration-[0.25s] ease-in-out;
+}
+
+.is-grid .img-style {
+	@apply object-cover;
+}
+
+.is-masonry .img-style {
+	@apply object-contain;
+}
+</style>
