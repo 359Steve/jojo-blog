@@ -29,7 +29,7 @@ export const queryTagByType = async (type: keyof typeof TagType) => {
 	};
 
 	const res = await jojoLoadingIndicator(() =>
-		useGet<FindReq, CreateTagDto[]>('/tag/tagQuery', {
+		fetchUseGet<FindReq, CreateTagDto[]>('/tag/tagQuery', {
 			query: queryParams,
 		}),
 	);
