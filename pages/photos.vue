@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+useHead({
+	title: '照片墙',
+});
+
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
