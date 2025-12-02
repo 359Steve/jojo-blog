@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+useHead({
+	title: '记录',
+});
+
 definePageMeta({
 	middleware: ['record'],
 });
