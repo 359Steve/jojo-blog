@@ -6,6 +6,7 @@ const { error } = defineProps({
 	error: Object as () => NuxtError,
 });
 
+const errorData = ref<string>(error?.message || '未知错误');
 const formData = reactive<CreateErrorMessageDto>({
 	name: '',
 	email: '',
@@ -18,15 +19,15 @@ const disabled = computed(() => {
 
 const sendEmail = async () => {
 	try {
-		const res = await sendErrorEmail(formData);
-
-		if (res.data?.messageId) {
-			formData.name = '';
-			formData.email = '';
-			formData.content = '';
-		}
+		const newFormData = { ...formData };
+		formData.name = '';
+		formData.email = '';
+		formData.content = '';
+		const res = await sendErrorEmail(newFormData);
+		if (!res.data?.messageId) throw new Error(res.msg);
+		errorData.value = res.msg;
 	} catch (err) {
-		console.error('发送邮件失败:', err);
+		errorData.value = (err as Error).message || '提交失败，请稍后重试';
 	}
 };
 </script>
@@ -40,7 +41,7 @@ const sendEmail = async () => {
 						<span class="text-4xl">✉️</span>
 						<h1
 							class="from-primary to-secondary mb-2 bg-gradient-to-r bg-clip-text text-base font-black md:text-xl lg:text-4xl">
-							{{ error?.statusCode }} - {{ error?.message }}
+							{{ errorData }}
 						</h1>
 						<p class="text-secondary mb-10 text-sm font-normal text-gray-500/50 lg:text-base">
 							如果是系统问题,请通过电子邮件或填写此问题表格。我会在最短的时间内解决问题。
