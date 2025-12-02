@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+useHead({
+	title: '记录详情',
+});
+
 definePageMeta({
 	validate(route) {
 		if (!route.params.parentId && !route.params.id) {
