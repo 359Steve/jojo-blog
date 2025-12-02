@@ -98,7 +98,7 @@ export default defineNuxtConfig({
 	// 路由规则
 	routeRules: {
 		'/admin/**': { ssr: false },
-		'/': { prerender: true, isr: 300 },
+		'/': { isr: 300 },
 		'/photos': { isr: 600, headers: { 'cache-control': 's-maxage=600' } },
 		'/blog': { isr: 1800 },
 		'/blog/**': { isr: 3600 },
