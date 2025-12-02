@@ -5,7 +5,8 @@ useHead({
 
 definePageMeta({
 	validate(route) {
-		if (!route.params.parentId && !route.params.id) {
+		const { parentId, id } = route.params as { parentId?: string; id?: string };
+		if (!parentId && !id) {
 			throw createError({
 				statusCode: 500,
 				data: {
@@ -18,8 +19,9 @@ definePageMeta({
 });
 
 const route = useRoute();
-const parentId = computed(() => route.params.parentId);
-const id = computed(() => route.params.id);
+const { parentId: pid, id: rid } = route.params as { parentId: string; id: string };
+const parentId = computed(() => pid);
+const id = computed(() => rid);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 
