@@ -1,9 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-interface JwtPayload {
-	id: number;
-	username: string;
-}
+import type { CreateUserDto } from '../dto/CreateUserDto';
 
 // 获取环境变量
 const { jwtSecret, expiresin } = useRuntimeConfig().public;
@@ -15,7 +11,7 @@ export const signToken = (payload: Record<string, any>, expiresIn: number = expi
 };
 
 // 验证token
-export const verifyToken = (token: string): JwtPayload => {
+export const verifyToken = (token: string): CreateUserDto => {
 	// 验证token
-	return jwt.verify(token, jwtSecret) as JwtPayload;
+	return jwt.verify(token, jwtSecret) as CreateUserDto;
 };
