@@ -34,12 +34,6 @@ export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<Ne
 			if (data.code !== StatusCode.SUCCESS) {
 				const error = data as NewResponse<{ message: string }>;
 				if (import.meta.client) {
-					const { setToken, setIsUnauthorized } = useUserState();
-					if (response.status === StatusCode.UNAUTHORIZED) {
-						setToken('');
-						setIsUnauthorized(true);
-						navigateTo('/admin/login');
-					}
 					// 直接提示错误信息
 					ElMessage({
 						type: 'error',
@@ -63,12 +57,6 @@ export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<Ne
 			const error = response._data as NewResponse<{ message: string }>;
 			// 如果是客户端直接提示错误信息
 			if (import.meta.client) {
-				const { setToken, setIsUnauthorized } = useUserState();
-				if (response.status === StatusCode.UNAUTHORIZED) {
-					setToken('');
-					setIsUnauthorized(true);
-					navigateTo('/admin/login');
-				}
 				ElMessage({
 					type: 'error',
 					message: error.msg || error.data.message || '请求出错！',
