@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+useHead({
+	title: '博客详情',
+});
+
 definePageMeta({
 	validate(route) {
 		if (!route.query.id) {
@@ -74,7 +78,7 @@ onBeforeUnmount(() => {
 			<!-- 博客头部 -->
 			<div class="reactive mb-10">
 				<div class="mb-6">
-					<img v-if="blogItem.front_cover" :src="blogItem.front_cover" :alt="blogItem.title"
+					<img v-if="blogItem.front_cover" v-lazy="blogItem.front_cover" :alt="blogItem.title"
 						class="mb-6 h-64 w-full rounded-base object-cover md:h-80">
 				</div>
 
