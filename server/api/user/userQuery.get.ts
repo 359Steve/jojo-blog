@@ -1,17 +1,22 @@
+import { StatusCode } from '~/types/com-types';
 import { container } from '../../core/container';
 import { UserService } from '../../services/UserService';
 import { sendErrorWithMessage } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-	// 读取qeruy参数
-	const { user_name } = getQuery<{ user_name: string }>(event);
+	const user_name = event.context.user?.user_name;
+
+	if (!user_name) {
+		sendErrorWithMessage(event, StatusCode.UNAUTHORIZED, '用户未登录');
+		return null;
+	}
 
 	try {
 		const userService = container.get(UserService);
 		// 查询用户信息
 		return await userService.findUser(user_name);
 	} catch {
-		sendErrorWithMessage(event, 500, '用户信息查询失败');
+		sendErrorWithMessage(event, StatusCode.UNAUTHORIZED, '用户信息查询失败');
 		return null;
 	}
 });
