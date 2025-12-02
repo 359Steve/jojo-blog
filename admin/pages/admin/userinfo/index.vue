@@ -145,7 +145,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 
 <template>
 	<AdminFormMain title="个人信息">
-		<ElForm ref="ruleFormRef" :model="formData" :inline="true" :rules="updateUserRules" label-width="auto">
+		<ElForm ref="ruleFormRef" label-width="80px" :model="formData" :inline="true" :rules="updateUserRules">
 			<div class="w-full">
 				<ElFormItem label="头像：" class="!mx-0 !w-full sm:!w-[50%] sm:odd:pr-4" prop="avatar_url">
 					<ElUpload ref="upload" class="relative" action="#" list-type="picture-card" :auto-upload="false"
