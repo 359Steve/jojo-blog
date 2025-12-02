@@ -7,13 +7,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	const whiteRoutes = ['/admin/login'];
 	const path = to.path;
 	const userState = useCookie('userState') as CookieRef<{ token: string; isUnauthorized: boolean }>;
+	const user_name = useCookie('user_name');
 
 	if (!whiteRoutes.includes(path) && !path.startsWith('/api')) {
 		if (!getToken()) {
 			return navigateTo('/admin/login');
 		} else {
 			// 验证token
-			if (getToken() !== userState.value?.token) {
+			if (getToken() !== userState.value?.token || !user_name.value) {
 				ElMessage({
 					type: 'error',
 					message: '登录已失效！',
