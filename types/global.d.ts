@@ -13,8 +13,8 @@ declare global {
 	interface TokenCookie {
 		userState: {
 			token: string;
+			isUnauthorized: boolean;
 		};
-		token: string;
 	}
 }
 
