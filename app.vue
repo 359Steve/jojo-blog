@@ -1,4 +1,13 @@
 <script lang="ts" setup>
+useHead({
+	titleTemplate(title) {
+		return title ? `${title} %separator %siteName` : `%siteName`;
+	},
+	templateParams: {
+		siteName: 'Josef',
+		separator: '-',
+	},
+});
 onBeforeUnmount(() => {
 	// 还原数据
 	useAdminMenu().reset();
