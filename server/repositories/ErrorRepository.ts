@@ -64,9 +64,18 @@ export class ErrorRepository {
 
 			const result = await transporter.sendMail(mailOptions);
 
-			return result.messageId
-				? returnData(StatusCode.SUCCESS, '问题已提交，我会尽快处理', result)
-				: returnData(StatusCode.FAIL, '邮件发送失败', null);
+			if (result.messageId) {
+				await this.prismaClient.error_report.create({
+					data: {
+						name: errorInfo.name,
+						email: errorInfo.email,
+						content: errorInfo.content,
+					},
+				});
+
+				return returnData(StatusCode.SUCCESS, '感谢你提供的问题，我会尽快处理', result);
+			}
+			return returnData(StatusCode.FAIL, '邮件发送失败', null);
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '邮件发送失败', null);
 		}
