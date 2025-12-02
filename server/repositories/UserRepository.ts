@@ -37,7 +37,9 @@ export class UserRepository {
 	async findUser(user_name: string) {
 		try {
 			const res = await this.prismaClient.user_info.findFirst({
-				where: user_name ? { user_name } : undefined,
+				where: {
+					user_name,
+				},
 				include: {
 					tags: {
 						include: {
