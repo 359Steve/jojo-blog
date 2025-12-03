@@ -1,15 +1,8 @@
-import { container } from '../core/container';
 import type { CreateErrorMessageDto } from '../dto/CreateErrorMessageDto';
-import { ErrorRepository } from '../repositories/ErrorRepository';
+import type { ErrorRepository } from '../repositories/ErrorRepository';
 
-export class ErrorService {
-	private errorRepo: ErrorRepository;
-	constructor() {
-		this.errorRepo = container.get(ErrorRepository);
-	}
-
+export const ERROR_SERVICE = Symbol.for('ErrorService');
+export interface ErrorService {
 	// 发送邮件
-	async sendErrorEmail(errorInfo: CreateErrorMessageDto) {
-		return await this.errorRepo.sendErrorEmail(errorInfo);
-	}
+	sendErrorEmail(errorInfo: CreateErrorMessageDto): ReturnType<ErrorRepository['sendErrorEmail']>;
 }

@@ -1,41 +1,20 @@
-import { container } from '../core/container';
 import type { CreateBlogDto } from '../dto/CreateBlogDto';
-import { BlogRepository } from '../repositories/BlogRepository';
+import type { BlogRepository } from '../repositories/BlogRepository';
 
-export class BlogService {
-	private blogRepo: BlogRepository;
-	constructor() {
-		// 这里手动获取容器中的依赖
-		this.blogRepo = container.get(BlogRepository);
-	}
-
+export const BLOG_SERVICE = Symbol('BlogService');
+export interface BlogService {
 	// 创建博客
-	async createBlog(data: CreateBlogDto) {
-		return this.blogRepo.createBlog(data);
-	}
-
+	createBlog(data: CreateBlogDto): ReturnType<BlogRepository['createBlog']>;
 	// 获取博客列表
-	async getBlogList(data: FindBlogParams) {
-		return this.blogRepo.getBlogList(data);
-	}
-
+	getBlogList(data: FindBlogParams): ReturnType<BlogRepository['getBlogList']>;
 	// 删除博客
-	async deleteBlog(id: number) {
-		return this.blogRepo.deleteBlog(id);
-	}
-
+	deleteBlog(id: number): ReturnType<BlogRepository['deleteBlog']>;
 	// 查询单个博客
-	async getBlogById(id: number) {
-		return this.blogRepo.getBlogById(id);
-	}
-
+	getBlogById(id: number): ReturnType<BlogRepository['getBlogById']>;
 	// 更新博客
-	async updateBlog(data: Partial<CreateBlogDto>) {
-		return this.blogRepo.updateBlog(data);
-	}
-
+	updateBlog(data: Partial<CreateBlogDto>): ReturnType<BlogRepository['updateBlog']>;
 	// 上传封面
-	async uploadfrontCover(files: ReturnFunction<typeof readMultipartFormData>) {
-		return await this.blogRepo.uploadfrontCover(files);
-	}
+	uploadfrontCover(
+		files: ReturnFunction<typeof readMultipartFormData>,
+	): ReturnType<BlogRepository['uploadfrontCover']>;
 }

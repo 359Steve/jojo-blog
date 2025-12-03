@@ -1,50 +1,28 @@
-import { container } from '../core/container';
 import type { CreateRecordDetailDto } from '../dto/CreateArticleDto';
-import { RecordDetailRepository } from '../repositories/RecordDetailRepository';
+import type { RecordDetailRepository } from '../repositories/RecordDetailRepository';
 
-export class RecordDetailService {
-	private recordDetailRepo: RecordDetailRepository;
-	constructor() {
-		this.recordDetailRepo = container.get(RecordDetailRepository);
-	}
-
+export const RECORD_DETAIL_SERVICE = Symbol('RecordDetailService');
+export interface RecordDetailService {
 	// 新增记录详情
-	async createRecordDetail(data: CreateRecordDetailDto) {
-		return await this.recordDetailRepo.createRecordDetail(data);
-	}
-
+	createRecordDetail(data: CreateRecordDetailDto): ReturnType<RecordDetailRepository['createRecordDetail']>;
 	// 查询全部记录详情
-	async getAllRecordDetails(query: { pageNumber: number; pageSize: number }) {
-		return await this.recordDetailRepo.getAllRecordDetails(query);
-	}
-
+	getAllRecordDetails(query: {
+		pageNumber: number;
+		pageSize: number;
+	}): ReturnType<RecordDetailRepository['getAllRecordDetails']>;
 	// 更新记录详情
-	async updateRecordDetail(data: Partial<CreateRecordDetailDto>) {
-		return await this.recordDetailRepo.updateRecordDetail(data);
-	}
-
+	updateRecordDetail(data: Partial<CreateRecordDetailDto>): ReturnType<RecordDetailRepository['updateRecordDetail']>;
 	// 删除记录详情
-	async deleteRecordDetail(id: number) {
-		return await this.recordDetailRepo.deleteRecordDetail(id);
-	}
-
+	deleteRecordDetail(id: number): ReturnType<RecordDetailRepository['deleteRecordDetail']>;
 	// 上传记录详情图片
-	async uploadRecordDetailImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
-		return await this.recordDetailRepo.uploadRecordDetailImage(files, datePath);
-	}
-
+	uploadRecordDetailImage(
+		files: ReturnFunction<typeof readMultipartFormData>,
+		datePath: string,
+	): ReturnType<RecordDetailRepository['uploadRecordDetailImage']>;
 	// 查询单个记录详情
-	async getPublicRecordDetail(parentId: number, id: number) {
-		return await this.recordDetailRepo.getPublicRecordDetail(parentId, id);
-	}
-
+	getPublicRecordDetail(parentId: number, id: number): ReturnType<RecordDetailRepository['getPublicRecordDetail']>;
 	// 查询照片
-	async getPublicRecordPictures(query: FindPictureRequest) {
-		return await this.recordDetailRepo.getPublicRecordPictures(query);
-	}
-
+	getPublicRecordPictures(query: FindPictureRequest): ReturnType<RecordDetailRepository['getPublicRecordPictures']>;
 	// 分页查询记录详情
-	async getPublicRecordDetails(query: RecordQueryParams) {
-		return await this.recordDetailRepo.getPublicRecordDetails(query);
-	}
+	getPublicRecordDetails(query: RecordQueryParams): ReturnType<RecordDetailRepository['getPublicRecordDetails']>;
 }

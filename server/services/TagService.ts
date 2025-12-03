@@ -1,36 +1,16 @@
-import { container } from '../core/container';
 import type { CreateTagDto } from '../dto/CreateTagDto';
-import { TagRepository } from '../repositories/TagRepository';
+import type { TagRepository } from '../repositories/TagRepository';
 
-export class TagService {
-	private tagRepo: TagRepository;
-	constructor() {
-		// 这里手动获取容器中的依赖
-		this.tagRepo = container.get(TagRepository);
-	}
-
+export const TAG_SERVICE = Symbol('TagService');
+export interface TagService {
 	// 查询全部标签
-	async findAllTag(query: FindAllReq) {
-		return await this.tagRepo.findAllTag(query);
-	}
-
+	findAllTag(query: FindAllReq): ReturnType<TagRepository['findAllTag']>;
 	// 分类型查询标签
-	async findTag(query: FindReq) {
-		return await this.tagRepo.findTag(query);
-	}
-
+	findTag(query: FindReq): ReturnType<TagRepository['findTag']>;
 	// 创建标签
-	async createTag(body: CreateTagDto) {
-		return await this.tagRepo.createTag(body);
-	}
-
+	createTag(body: CreateTagDto): ReturnType<TagRepository['createTag']>;
 	// 修改标签
-	async updateTag(body: Partial<CreateTagDto>) {
-		return await this.tagRepo.updateTag(body);
-	}
-
+	updateTag(body: Partial<CreateTagDto>): ReturnType<TagRepository['updateTag']>;
 	// 删除标签
-	async deleteTag(id: number) {
-		return await this.tagRepo.deleteTag(id);
-	}
+	deleteTag(id: number): ReturnType<TagRepository['deleteTag']>;
 }

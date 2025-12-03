@@ -1,20 +1,12 @@
-import { container } from '../core/container';
-import { MdRepository } from '../repositories/MdRepository';
+import type { MdRepository } from '../repositories/MdRepository';
 
-export class MdService {
-	private mdRepo: MdRepository;
-
-	constructor() {
-		this.mdRepo = container.get(MdRepository);
-	}
-
+export const MD_SERVICE = Symbol('MD_SERVICE');
+export interface MdService {
 	// 上传图片
-	async uploadImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
-		return await this.mdRepo.uploadImage(files, datePath);
-	}
-
+	uploadImage(
+		files: ReturnFunction<typeof readMultipartFormData>,
+		datePath: string,
+	): ReturnType<MdRepository['uploadImage']>;
 	// 删除指定目录下的图片
-	async deleteMdPicture(picPath: string, fileNames: string[]) {
-		return await this.mdRepo.deleteMdPicture(picPath, fileNames);
-	}
+	deleteMdPicture(picPath: string, fileNames: string[]): ReturnType<MdRepository['deleteMdPicture']>;
 }

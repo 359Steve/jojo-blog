@@ -1,40 +1,18 @@
-import { container } from '../core/container';
 import type { CreateGroupDto } from '../dto/CreateGroupDto';
-import { GroupRepository } from '../repositories/GroupRepository';
+import type { GroupRepository } from '../repositories/GroupRepository';
 
-export class GroupService {
-	private groupRepo: GroupRepository;
-	constructor() {
-		this.groupRepo = container.get(GroupRepository);
-	}
-
+export const GROUP_SERVICE = Symbol('GroupService');
+export interface GroupService {
 	// 新增分组
-	async createGroup(data: CreateGroupDto) {
-		return await this.groupRepo.createGroup(data);
-	}
-
+	createGroup(data: CreateGroupDto): ReturnType<GroupRepository['createGroup']>;
 	// 查询全部分组
-	async getAllGroups(query: Omit<FindAllReq, 'name'>) {
-		return await this.groupRepo.getAllGroups(query);
-	}
-
+	getAllGroups(query: Omit<FindAllReq, 'name'>): ReturnType<GroupRepository['getAllGroups']>;
 	// 更新分组
-	async updateGroup(data: Partial<CreateGroupDto>) {
-		return await this.groupRepo.updateGroup(data);
-	}
-
+	updateGroup(data: Partial<CreateGroupDto>): ReturnType<GroupRepository['updateGroup']>;
 	// 删除分组
-	async deleteGroup(id: number) {
-		return await this.groupRepo.deleteGroup(id);
-	}
-
+	deleteGroup(id: number): ReturnType<GroupRepository['deleteGroup']>;
 	// 查询分组时间范围
-	async getGroupTimeRanges() {
-		return await this.groupRepo.getGroupTimeRanges();
-	}
-
+	getGroupTimeRanges(): ReturnType<GroupRepository['getGroupTimeRanges']>;
 	// 查询公共分组数据
-	async getPublicGroups(query: { id?: number }) {
-		return await this.groupRepo.getPublicGroups(query);
-	}
+	getPublicGroups(query: { id?: number }): ReturnType<GroupRepository['getPublicGroups']>;
 }
