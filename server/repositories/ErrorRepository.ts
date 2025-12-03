@@ -80,4 +80,34 @@ export class ErrorRepository {
 			return returnData(StatusCode.FAIL, '邮件发送失败', null);
 		}
 	}
+
+	// 分页查询错误信息
+	async queryErrorList(query: ErrorQueryListParams) {
+		try {
+			const { pageNumber, pageSize } = query;
+			const skip = Number((pageNumber - 1) * pageSize);
+			const take = Number(pageSize);
+
+			const [total, records] = await this.prismaClient.$transaction([
+				this.prismaClient.error_report.count(),
+				this.prismaClient.error_report.findMany({
+					skip,
+					take,
+					orderBy: { created_at: 'desc' },
+				}),
+			]);
+
+			if (!records || !total) {
+				return returnData(StatusCode.SUCCESS, '错误信息到底了', null);
+			}
+
+			return returnData(StatusCode.SUCCESS, '错误信息获取成功', {
+				records,
+				total,
+			});
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '错误信息获取失败', null);
+		}
+	}
+
 }
