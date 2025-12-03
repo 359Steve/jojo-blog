@@ -110,4 +110,19 @@ export class ErrorRepository {
 		}
 	}
 
+	// 删除错误信息
+	async deleteError(id: number) {
+		try {
+			const res = await this.prismaClient.error_report.delete({
+				where: {
+					id: Number(id),
+				},
+			});
+			return res.id
+				? returnData(StatusCode.SUCCESS, '错误信息删除成功', res)
+				: returnData(StatusCode.FAIL, '错误信息删除失败', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '错误信息删除失败', null);
+		}
+	}
 }
