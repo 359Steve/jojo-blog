@@ -4,47 +4,38 @@ import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
-const { data } = await useAsyncData('queryBlogList', () =>
-	getBlogList({
-		pageNumber: pageNumber.value,
-		pageSize: pageSize.value,
-	}),
-);
-const tableData = ref<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(data.value?.data?.records || []);
-const total = ref<number>(data.value?.data?.total || 0);
-const loading = ref<boolean>(false);
 const keyword = ref<string>('');
-
-// 查询全部博客
-const queryBlog = async (keyword: string = '', page: number = 1, size: number = 10) => {
-	loading.value = true;
-	try {
-		const { data } = await getBlogList({
-			keyword,
-			pageSize: size,
-			pageNumber: page,
-		});
-
-		tableData.value = data?.records || [];
-		total.value = data?.total || 0;
-	} finally {
-		loading.value = false;
-	}
-};
+const { data, refresh } = await useAsyncData(
+	'queryBlogList',
+	() =>
+		getBlogList({
+			pageNumber: pageNumber.value,
+			pageSize: pageSize.value,
+			keyword: keyword.value,
+		}),
+	{
+		watch: [pageNumber, pageSize],
+	},
+);
+const tableData = computed(
+	(): BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[] => data.value?.data?.records || [],
+);
+const total = computed((): number => data.value?.data?.total || 0);
+const loading = ref<boolean>(false);
 
 // 搜索博客
 const handleSearch = () => {
 	pageNumber.value = 1;
-	queryBlog(keyword.value, 1, pageSize.value);
+	refresh();
 };
 
 // 添加搜索防抖
 let searchTimeout: NodeJS.Timeout;
-watch(keyword, (newValue) => {
+watch(keyword, () => {
 	clearTimeout(searchTimeout);
 	searchTimeout = setTimeout(() => {
 		pageNumber.value = 1;
-		queryBlog(newValue, 1, pageSize.value);
+		refresh();
 	}, 300);
 });
 
@@ -52,13 +43,11 @@ watch(keyword, (newValue) => {
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
 	pageNumber.value = 1;
-	queryBlog(keyword.value, 1, val);
 };
 
 // 当前页改变
 const handleCurrentChange = (val: number) => {
 	pageNumber.value = val;
-	queryBlog(keyword.value, val, pageSize.value);
 };
 
 const goCreate = () => {
@@ -72,17 +61,10 @@ const goEdit = (id: number) => {
 // 删除博客
 const handleDelete = async (id: number) => {
 	useConfirm('删除博客', 'warning', async () => {
-		try {
-			const { data } = await deleteBlog(id);
-
-			if (data) {
-				if (tableData.value.length === 1 && pageNumber.value > 1) {
-					pageNumber.value -= 1;
-				}
-				queryBlog(keyword.value, pageNumber.value, pageSize.value);
-			}
-		} catch (error) {
-			console.log(error);
+		const { data } = await deleteBlog(id);
+		if (data) {
+			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
+			refresh();
 		}
 	});
 };
@@ -140,7 +122,7 @@ const handleDelete = async (id: number) => {
 			</template>
 		</TableHeight>
 
-		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+		<AdminFormPagination :total="total" :page-number="pageNumber" :page-size="pageSize"
 			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
