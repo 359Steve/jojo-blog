@@ -7,9 +7,11 @@ const pageNumber = ref<number>(1);
 const loading = ref<boolean>(false);
 const isEdit = ref<boolean>(false);
 const ruleFormRef = templateRef('ruleFormRef');
-const { data } = await useAsyncData('recordGroups', () => queryGroupAll(pageNumber.value, pageSize.value));
-const tableData = ref<CreateGroupDto[]>(data.value?.data?.records || []);
-const total = ref<number>(data.value?.data?.total || 0);
+const { data, refresh } = await useAsyncData('recordGroups', () => queryGroupAll(pageNumber.value, pageSize.value), {
+	watch: [pageNumber, pageSize],
+});
+const tableData = computed<CreateGroupDto[]>(() => data.value?.data?.records || []);
+const total = computed<number>(() => data.value?.data?.total || 0);
 
 const formData = reactive<CreateGroupDto>({
 	time_range: '',
@@ -36,28 +38,14 @@ const resetForm = () => {
 	ruleFormRef.value?.resetFields?.();
 };
 
-// 查询函数
-const queryGroups = async (page = 1, size = 10) => {
-	loading.value = true;
-	try {
-		const res = await queryGroupAll(page, size);
-		tableData.value = res.data?.records || [];
-		total.value = res.data?.total || 0;
-	} finally {
-		loading.value = false;
-	}
-};
-
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
 	pageNumber.value = 1;
-	queryGroups(1, val);
 };
 
 // 分页
 const handleCurrentChange = (val: number) => {
 	pageNumber.value = val;
-	queryGroups(val, pageSize.value);
 };
 
 // 编辑分组
@@ -81,13 +69,13 @@ const saveGroup = async (formEl: any) => {
 
 					if (res.data) {
 						resetForm();
-						queryGroups(pageNumber.value, pageSize.value);
+						refresh();
 					}
 				} else {
 					const res = await createGroup(formData);
 					if (res.data) {
 						resetForm();
-						queryGroups(pageNumber.value, pageSize.value);
+						refresh();
 					}
 				}
 			} finally {
@@ -103,7 +91,7 @@ const handleDelete = async (id: number) => {
 		const res = await deleteGroup(id);
 		if (res.data) {
 			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
-			queryGroups(pageNumber.value, pageSize.value);
+			refresh();
 		}
 	});
 };
@@ -172,7 +160,7 @@ const handleDateChange = (value: string) => {
 			</template>
 		</TableHeight>
 
-		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+		<AdminFormPagination :total="total" :page-number="pageNumber" :page-size="pageSize"
 			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>

@@ -3,19 +3,23 @@ import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
 import type { FormInstance, FormRules, UploadFile, UploadFiles, UploadUserFile } from 'element-plus';
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
-const selectData = ref<{ id: number; time_range: string }[]>(data.value?.data || []);
+const selectData = computed((): { id: number; time_range: string }[] => data.value?.data || []);
 
-// 分页和表格数据
+// 获取记录详情数据
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
 const loading = ref<boolean>(false);
-
-// 获取记录详情数据
-const { data: detailData } = await useAsyncData('recordArticleDetails', () =>
-	queryRecordDetailAll(pageNumber.value, pageSize.value),
+const { data: detailData, refresh } = await useAsyncData(
+	'recordArticleDetails',
+	() => queryRecordDetailAll(pageNumber.value, pageSize.value),
+	{
+		watch: [pageNumber, pageSize],
+	},
 );
-const total = ref<number>(detailData.value?.data?.total || 0);
-const tableData = ref<GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[]>(detailData.value?.data?.records || []);
+const total = computed((): number => detailData.value?.data?.total || 0);
+const tableData = computed(
+	(): GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[] => detailData.value?.data?.records || [],
+);
 const groupId = ref<number>();
 const formData = reactive<CreateRecordDetailDto>({
 	group_id: groupId.value!,
@@ -168,8 +172,7 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 				if (res.data) {
 					// 重置表单
 					resetForm();
-					// 刷新列表
-					await refreshData();
+					refresh();
 				}
 			} catch (error) {
 				ElMessage.error('操作失败，请重试');
@@ -196,33 +199,14 @@ const resetForm = () => {
 	ruleFormRef.value?.resetFields();
 };
 
-// 刷新数据
-const refreshData = async () => {
-	await queryArticles(pageNumber.value, pageSize.value);
-};
-
-// 查询记录详情
-const queryArticles = async (page = 1, size = 10) => {
-	loading.value = true;
-	try {
-		const res = await queryRecordDetailAll(page, size);
-		tableData.value = res.data?.records || [];
-		total.value = res.data?.total || 0;
-	} finally {
-		loading.value = false;
-	}
-};
-
 // 分页处理
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
 	pageNumber.value = 1;
-	queryArticles(1, val);
 };
 
 const handleCurrentChange = (val: number) => {
 	pageNumber.value = val;
-	queryArticles(val, pageSize.value);
 };
 
 // 编辑操作
@@ -234,16 +218,10 @@ const goEdit = (row: any) => {
 const handleDelete = async (id: number) => {
 	useConfirm('删除记录详情', 'warning', async () => {
 		const res = await deleteRecordDetail(id);
-
 		if (res.data) {
-			if (tableData.value.length === 1 && pageNumber.value > 1) {
-				pageNumber.value -= 1;
-			}
-			await queryArticles(pageNumber.value, pageSize.value);
-
-			if (formData.id === id) {
-				resetForm();
-			}
+			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
+			res.data && refresh();
+			formData.id === id && resetForm();
 		}
 	});
 };
@@ -362,7 +340,7 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 			</template>
 		</TableHeight>
 
-		<AdminFormPagination :total="detailData?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+		<AdminFormPagination :total="total" :page-number="pageNumber" :page-size="pageSize"
 			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>

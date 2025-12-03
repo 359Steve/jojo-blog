@@ -16,12 +16,23 @@ const formData = reactive<CreateTagDto>({
 	type: 'BLOG',
 });
 
-const { data } = await useAsyncData('tags', () => queryTagAll());
-const tableData = ref<CreateTagDto[]>(data.value?.data?.records || []);
-const total = ref<number>(data.value?.data?.total || 0);
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(10);
 const searchTag = ref<string>('');
+const { data, refresh } = await useAsyncData(
+	'tags',
+	() =>
+		queryTagAll({
+			name: searchTag.value,
+			pageNumber: pageNumber.value,
+			pageSize: pageSize.value,
+		}),
+	{
+		watch: [pageNumber, pageSize],
+	},
+);
+const tableData = computed((): CreateTagDto[] => data.value?.data?.records || []);
+const total = computed((): number => data.value?.data?.total || 0);
 const isEdit = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
@@ -83,19 +94,6 @@ const resetForm = () => {
 	ruleFormRef.value?.resetFields();
 };
 
-// 查询全部标签
-const queryTag = async (name: string = '', page: number = 1) => {
-	loading.value = true;
-	try {
-		const { data } = await queryTagAll(name, page, pageSize.value);
-
-		tableData.value = data?.records || [];
-		total.value = data?.total || 0;
-	} finally {
-		loading.value = false;
-	}
-};
-
 // 新增标签
 const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 	formEl?.validate(async (valid) => {
@@ -106,7 +104,7 @@ const createTag = async (formEl: FormInstance | undefined): Promise<void> => {
 
 				if (data) {
 					resetForm();
-					queryTag(searchTag.value, pageNumber.value);
+					refresh();
 				}
 			} finally {
 				loading.value = false;
@@ -156,10 +154,8 @@ const deleteClick = (value: CreateTagDto): void => {
 		try {
 			const { data } = await deleteTags(value.id!);
 			if (data) {
-				if (tableData.value.length === 1 && pageNumber.value > 1) {
-					pageNumber.value -= 1;
-				}
-				queryTag(searchTag.value, pageNumber.value);
+				if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
+				refresh();
 			}
 		} finally {
 			loading.value = false;
@@ -170,14 +166,12 @@ const deleteClick = (value: CreateTagDto): void => {
 // 分页查询
 const handleCurrentChange = (val: number): void => {
 	pageNumber.value = val;
-	queryTag(searchTag.value, val);
 };
 
 // 每页条数改变
 const handleSizeChange = (val: number): void => {
 	pageSize.value = val;
 	pageNumber.value = 1;
-	queryTag(searchTag.value, 1);
 };
 
 // 验证icon是否存在
@@ -187,11 +181,11 @@ const iconChange = async (icon: string) => {
 
 // 使用防抖优化搜索
 let searchTimeout: NodeJS.Timeout;
-watch(searchTag, (newValue) => {
+watch(searchTag, () => {
 	clearTimeout(searchTimeout);
 	searchTimeout = setTimeout(() => {
 		pageNumber.value = 1;
-		queryTag(newValue, 1);
+		refresh();
 	}, 300);
 });
 </script>
@@ -281,7 +275,7 @@ watch(searchTag, (newValue) => {
 			</template>
 		</TableHeight>
 
-		<AdminFormPagination :total="data?.data?.total || 0" :page-number="pageNumber" :page-size="pageSize"
+		<AdminFormPagination :total="total" :page-number="pageNumber" :page-size="pageSize"
 			@handle-current-change="handleCurrentChange" @handle-size-change="handleSizeChange" />
 	</AdminFormMain>
 </template>
