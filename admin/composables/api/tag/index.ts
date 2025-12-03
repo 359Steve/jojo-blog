@@ -6,16 +6,10 @@ enum TagType {
 }
 
 // 查询全部标签
-export const queryTagAll = async (name: string = '', n: number = 1, s: number = 10) => {
-	const queryParams = {
-		name,
-		pageNumber: n,
-		pageSize: s,
-	};
-
+export const queryTagAll = async (query: FindAllReq) => {
 	const res = await jojoLoadingIndicator(() =>
 		fetchUseGet<FindAllReq, RecordsResponse<CreateTagDto>>('/tag/tagQueryAll', {
-			query: queryParams,
+			query,
 		}),
 	);
 
