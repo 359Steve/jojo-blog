@@ -116,3 +116,22 @@ export const fetchDeleteApi = <Rq extends Record<string, any>, Rp>(
 			});
 	});
 };
+
+// PUT 封装
+export const fetchPutApi = <Rq extends Record<string, any>, Rp>(
+	url: string,
+	option?: Options<NitroFetchOptions<string>, Rq>,
+): Promise<NewResponse<Rp>> => {
+	return new Promise((resolve, reject) => {
+		fetchApiCore<Rq, Rp>(url, {
+			method: 'put',
+			...option,
+		})
+			.then((res) => {
+				resolve(res);
+			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+};

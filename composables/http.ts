@@ -131,3 +131,22 @@ export const deleteApi = <Rq, Rp>(
 			});
 	});
 };
+
+// PUT 封装
+export const putApi = <Rq, Rp>(
+	url: string,
+	option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>,
+): Promise<NewResponse<Rp>> => {
+	return new Promise((resolve, reject) => {
+		apiCore<Rq, Rp>(url, {
+			method: 'put',
+			...option,
+		})
+			.then((res) => {
+				res.data.value && resolve(res.data.value);
+			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+};
