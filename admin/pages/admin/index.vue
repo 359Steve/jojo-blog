@@ -20,7 +20,7 @@ const activeComponentName = ref<CardList['component']>('SuggestionList');
 
 <template>
 	<AdminFormMain title="后台首页">
-		<div class="mb-2 grid w-full grid-cols-1 gap-2 *:gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div class="mb-4 grid w-full grid-cols-1 gap-2 *:gap-4 md:grid-cols-2 xl:grid-cols-3">
 			<ElCard v-for="item in cardList" :key="item.value" shadow="hover"
 				class="!min-h-[128px] !cursor-pointer !rounded-md" @click="activeComponentName = item.component">
 				<div class="flex h-full w-full items-center justify-between gap-1">
