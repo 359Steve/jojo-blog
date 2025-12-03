@@ -1,10 +1,11 @@
 import { container } from '~/server/core/container';
-import { MdService } from '~/server/services/MdService';
+import type { MdService } from '~/server/services/MdService';
+import { MD_SERVICE } from '~/server/services/MdService';
 import type { MultiPartData } from 'h3';
 
 export default defineEventHandler(async (event) => {
 	try {
-		const mdService = container.get(MdService);
+		const mdService = container.get<MdService>(MD_SERVICE);
 		const multipart = await readMultipartFormData(event);
 
 		let datePath = '';

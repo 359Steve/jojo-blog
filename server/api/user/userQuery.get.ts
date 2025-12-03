@@ -1,6 +1,7 @@
 import { StatusCode } from '~/types/com-types';
 import { container } from '../../core/container';
-import { UserService } from '../../services/UserService';
+import type { UserService } from '../../services/UserService';
+import { USER_SERVICE } from '../../services/UserService';
 import { sendErrorWithMessage } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
-		const userService = container.get(UserService);
+		const userService = container.get<UserService>(USER_SERVICE);
 		// 查询用户信息
 		return await userService.findUser(user_name);
 	} catch {

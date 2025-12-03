@@ -1,6 +1,7 @@
 import { type CreateTagDto, CreateTagSchema } from '../../dto/CreateTagDto';
 import { container } from '~/server/core/container';
-import { TagService } from '~/server/services/TagService';
+import type { TagService } from '~/server/services/TagService';
+import { TAG_SERVICE } from '~/server/services/TagService';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody<CreateTagDto>(event);
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const tagService = container.get(TagService);
+		const tagService = container.get<TagService>(TAG_SERVICE);
 		return await tagService.createTag(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '标签创建失败');

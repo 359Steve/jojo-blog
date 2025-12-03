@@ -1,6 +1,7 @@
 import { container } from '~/server/core/container';
 import { CreateGroupSchema, type CreateGroupDto } from '~/server/dto/CreateGroupDto';
-import { GroupService } from '~/server/services/GroupService';
+import type { GroupService } from '~/server/services/GroupService';
+import { GROUP_SERVICE } from '~/server/services/GroupService';
 
 export default defineEventHandler(async (event) => {
 	const query = await readBody<Partial<CreateGroupDto>>(event);
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const groupService = container.get(GroupService);
+		const groupService = container.get<GroupService>(GROUP_SERVICE);
 		return await groupService.updateGroup(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '分组更新失败');

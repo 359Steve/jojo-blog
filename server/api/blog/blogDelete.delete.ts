@@ -1,5 +1,6 @@
 import { container } from '~/server/core/container';
-import { BlogService } from '~/server/services/BlogService';
+import type { BlogService } from '~/server/services/BlogService';
+import { BLOG_SERVICE } from '~/server/services/BlogService';
 
 export default defineEventHandler(async (event) => {
 	const { id } = getQuery<{ id: number }>(event);
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
-		const blogService = container.get(BlogService);
+		const blogService = container.get<BlogService>(BLOG_SERVICE);
 		return await blogService.deleteBlog(id);
 	} catch (error) {
 		sendErrorWithMessage(event, 500, '博客删除失败');

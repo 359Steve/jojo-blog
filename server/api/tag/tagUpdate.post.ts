@@ -1,7 +1,8 @@
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 import { CreateTagSchema } from '~/server/dto/CreateTagDto';
 import { container } from '~/server/core/container';
-import { TagService } from '~/server/services/TagService';
+import type { TagService } from '~/server/services/TagService';
+import { TAG_SERVICE } from '~/server/services/TagService';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody<Partial<CreateTagDto>>(event);
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const tagService = container.get(TagService);
+		const tagService = container.get<TagService>(TAG_SERVICE);
 		return await tagService.updateTag(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '更新标签失败');

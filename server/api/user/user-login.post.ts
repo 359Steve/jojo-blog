@@ -1,6 +1,7 @@
 import { container } from '../../core/container';
 import { type CreateUserDto, CreateUserSchema } from '../../dto/CreateUserDto';
-import { UserService } from '../../services/UserService';
+import type { UserService } from '../../services/UserService';
+import { USER_SERVICE } from '../../services/UserService';
 import { sendErrorWithMessage } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const userService = container.get(UserService);
+		const userService = container.get<UserService>(USER_SERVICE);
 		return await userService.loginUser(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '登录失败！');

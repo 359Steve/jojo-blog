@@ -1,10 +1,11 @@
 import { container } from '~/server/core/container';
-import { RecordDetailService } from '~/server/services/RecordDetailService';
+import type { RecordDetailService } from '~/server/services/RecordDetailService';
+import { RECORD_DETAIL_SERVICE } from '~/server/services/RecordDetailService';
 import type { MultiPartData } from 'h3';
 
 export default defineEventHandler(async (event) => {
 	try {
-		const recordDetailService = container.get(RecordDetailService);
+		const recordDetailService = container.get<RecordDetailService>(RECORD_DETAIL_SERVICE);
 		const files = await readMultipartFormData(event);
 
 		let datePath = '';

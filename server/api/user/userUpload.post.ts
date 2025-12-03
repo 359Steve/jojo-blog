@@ -1,9 +1,10 @@
 import { container } from '~/server/core/container';
-import { UserService } from '~/server/services/UserService';
+import type { UserService } from '~/server/services/UserService';
+import { USER_SERVICE } from '~/server/services/UserService';
 
 export default defineEventHandler(async (event) => {
 	try {
-		const userService = container.get(UserService);
+		const userService = container.get<UserService>(USER_SERVICE);
 		const files = await readMultipartFormData(event);
 
 		if (!files || files.length === 0) {

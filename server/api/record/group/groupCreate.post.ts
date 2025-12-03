@@ -1,7 +1,8 @@
 import { container } from '~/server/core/container';
 import type { CreateGroupDto } from '~/server/dto/CreateGroupDto';
 import { CreateGroupSchema } from '~/server/dto/CreateGroupDto';
-import { GroupService } from '~/server/services/GroupService';
+import type { GroupService } from '~/server/services/GroupService';
+import { GROUP_SERVICE } from '~/server/services/GroupService';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody<CreateGroupDto>(event);
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const groupService = container.get(GroupService);
+		const groupService = container.get<GroupService>(GROUP_SERVICE);
 		return await groupService.createGroup(result);
 	} catch {
 		sendErrorWithMessage(event, 500, '分组创建失败');

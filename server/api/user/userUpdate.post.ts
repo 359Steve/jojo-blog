@@ -1,6 +1,7 @@
 import { container } from '~/server/core/container';
 import { type CreateUserDto, CreateUserSchema } from '~/server/dto/CreateUserDto';
-import { UserService } from '~/server/services/UserService';
+import type { UserService } from '~/server/services/UserService';
+import { USER_SERVICE } from '~/server/services/UserService';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody<Partial<CreateUserDto & { tags: number[] }>>(event);
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const userService = container.get(UserService);
+		const userService = container.get<UserService>(USER_SERVICE);
 		return await userService.updateUser({ ...result, tags: body.tags });
 	} catch {
 		sendErrorWithMessage(event, 500, '用户更新失败');
