@@ -11,9 +11,9 @@ const components = {
 	SuggestionList: resolveComponent('SuggestionList'),
 };
 const cardList = ref<CardList[]>([
-	{ title: '记录数', value: 128, component: 'SuggestionList' },
+	{ title: '建议数', value: 32, component: 'SuggestionList' },
+	{ title: '记录数', value: 128, component: 'RecordList' },
 	{ title: '博客数', value: 64, component: 'BlogList' },
-	{ title: '建议数', value: 32, component: 'RecordList' },
 ]);
 const activeComponentName = ref<CardList['component']>('SuggestionList');
 </script>
