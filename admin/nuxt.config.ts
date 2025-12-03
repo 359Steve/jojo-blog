@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 			'composables/api/blog',
 			'composables/api/md',
 			'composables/api/record',
+			'composables/api/error',
 		],
 	},
 });
