@@ -113,6 +113,8 @@ export const chooseCondition = <Req extends Record<string, any>, Rep>(
 						return postApi<Req, Rep>(endpoint, { body: data, headers });
 					case 'DELETE':
 						return deleteApi<Req, Rep>(endpoint, { body: data, headers });
+					case 'PUT':
+						return putApi<Req, Rep>(endpoint, { body: data, headers });
 					default:
 						return useGet<Req, Rep>(endpoint, { query: data, headers });
 				}
@@ -124,6 +126,8 @@ export const chooseCondition = <Req extends Record<string, any>, Rep>(
 						return fetchPostApi<Req, Rep>(endpoint, { body: data, headers });
 					case 'DELETE':
 						return fetchDeleteApi<Req, Rep>(endpoint, { body: data, headers });
+					case 'PUT':
+						return fetchPutApi<Req, Rep>(endpoint, { body: data, headers });
 					default:
 						return fetchUseGet<Req, Rep>(endpoint, { query: data, headers });
 				}
