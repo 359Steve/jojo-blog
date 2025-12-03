@@ -33,7 +33,11 @@ const handleSizeChange = (val: number): void => {
 const deleteErrorClick = async (id: number) => {
 	useConfirm('删除错误信息', 'warning', async () => {
 		const res = await deleteError(id);
-		res.data && refresh();
+
+		if (res.data) {
+			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
+			refresh();
+		}
 	});
 };
 </script>
