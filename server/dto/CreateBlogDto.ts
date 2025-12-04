@@ -27,6 +27,7 @@ export const CreateBlogSchema = z.object({
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '日期路径必须为字符串' })
 		.min(1, '日期路径不能为空'),
+	view: z.number().optional(),
 	tags: z.array(z.number()).optional().default([]),
 	created_at: z.string().trim().optional(),
 	updated_at: z.string().trim().optional(),
