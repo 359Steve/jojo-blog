@@ -113,6 +113,26 @@ model error_report {
     created_at DateTime @default(now())
 }
 
+model blog_views_daily {
+    id        Int      @id @default(autoincrement())
+    blog_id   Int
+    view_date DateTime
+    views     Int      @default(0)
+
+    @@unique([blog_id, view_date], name: "blog_id_view_date")
+    @@index([blog_id], map: "blog_views_daily_blog_id_fkey")
+}
+
+model record_details_views_daily {
+    id               Int      @id @default(autoincrement())
+    record_detail_id Int
+    view_date        DateTime
+    views            Int      @default(0)
+
+    @@unique([record_detail_id, view_date], name: "record_detail_id_view_date")
+    @@index([record_detail_id], map: "record_details_views_daily_record_detail_id_fkey")
+}
+
 enum TagType {
     BLOG
     PERSON
