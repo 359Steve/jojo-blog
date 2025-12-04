@@ -219,7 +219,6 @@ const handleDelete = async (id: number) => {
 	useConfirm('删除记录详情', 'warning', async () => {
 		const res = await deleteRecordDetail(id);
 		if (res.data) {
-			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
 			res.data && refresh();
 			formData.id === id && resetForm();
 		}

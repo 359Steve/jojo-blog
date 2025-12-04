@@ -89,10 +89,7 @@ const saveGroup = async (formEl: any) => {
 const handleDelete = async (id: number) => {
 	useConfirm('删除分组', 'warning', async () => {
 		const res = await deleteGroup(id);
-		if (res.data) {
-			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
-			refresh();
-		}
+		res.data && refresh();
 	});
 };
 

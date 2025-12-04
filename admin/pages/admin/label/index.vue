@@ -153,10 +153,7 @@ const deleteClick = (value: CreateTagDto): void => {
 	useConfirm('删除标签', 'warning', async () => {
 		try {
 			const { data } = await deleteTags(value.id!);
-			if (data) {
-				if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
-				refresh();
-			}
+			data && refresh();
 		} finally {
 			loading.value = false;
 		}
