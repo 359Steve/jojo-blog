@@ -17,4 +17,6 @@ export interface BlogService {
 	uploadfrontCover(
 		files: ReturnFunction<typeof readMultipartFormData>,
 	): ReturnType<BlogRepository['uploadfrontCover']>;
+	// 增加博客浏览量
+	addBlogView(id: number, ip: string, userAgent: string): ReturnType<BlogRepository['addBlogView']>;
 }
