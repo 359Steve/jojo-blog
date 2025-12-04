@@ -56,6 +56,12 @@ if (error.value) {
 	});
 }
 
+onMounted(() => {
+	nextTick(async () => {
+		await addBlogView(Number(id.value));
+	});
+});
+
 onBeforeUnmount(() => {
 	useBlog().setCurrentBlog(null);
 });
