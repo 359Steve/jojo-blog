@@ -55,6 +55,10 @@ export default defineNuxtConfig({
 		},
 	},
 
+	build: {
+		transpile: [/echarts/],
+	},
+
 	// 组件自动导入
 	components: [
 		{ path: '~/components', extensions: ['.vue', '.tsx'] },
