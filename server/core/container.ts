@@ -20,6 +20,9 @@ import { GroupServiceImpl } from '../serviceImpl/GroupServiceImpl';
 import { RecordDetailServiceImpl } from '../serviceImpl/RecordDetailServiceImpl';
 import { MdServiceImpl } from '../serviceImpl/MdServiceImpl';
 import { ErrorServiceImpl } from '../serviceImpl/ErrorServiceImpl';
+import { StatisticalRepository } from '../repositories/StatisticalRepository';
+import { STATISTICAL_SERVICE } from '../services/Statistical';
+import { StatisticalServiceImpl } from '../serviceImpl/StatisticalServiceImpl';
 
 const container = new Container();
 
@@ -31,6 +34,7 @@ container.bind(MdRepository).toSelf().inSingletonScope();
 container.bind(GroupRepository).toSelf().inSingletonScope();
 container.bind(RecordDetailRepository).toSelf().inSingletonScope();
 container.bind(ErrorRepository).toSelf().inSingletonScope();
+container.bind(StatisticalRepository).toSelf().inSingletonScope();
 
 // 绑定 Services 并手动注入依赖
 container
@@ -79,6 +83,13 @@ container
 	.bind(ERROR_SERVICE)
 	.toDynamicValue(() => {
 		return new ErrorServiceImpl(container.get(ErrorRepository));
+	})
+	.inSingletonScope();
+
+container
+	.bind(STATISTICAL_SERVICE)
+	.toDynamicValue(() => {
+		return new StatisticalServiceImpl(container.get(StatisticalRepository));
 	})
 	.inSingletonScope();
 
