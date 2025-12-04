@@ -10,3 +10,6 @@ export const getPublicBlogList = chooseCondition<
 // 查询博客详情
 export const getPublicBlogDetail = (id: number) =>
 	chooseCondition<any, BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>>(`/blog/blogPublicDetail/${id}`)();
+
+// 增加博客浏览量
+export const addBlogView = (id: number) => chooseCondition<any, CreateBlogDto>(`/blog/blogAddView/${id}`, 'PUT')();
