@@ -8,10 +8,12 @@ module.exports = {
 			env: {
 				NODE_ENV: 'production',
 				DATABASE_URL: 'mysql://root:huhai20020103@localhost:3306/jojo-blog',
+				REDIS_HOST: '127.0.0.1',
 			},
 			env_production: {
 				NODE_ENV: 'production',
 				DATABASE_URL: 'mysql://root:huhai20020103@localhost:3306/jojo-blog',
+				REDIS_HOST: '127.0.0.1',
 			},
 		},
 	],
