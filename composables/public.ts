@@ -149,3 +149,21 @@ export const getDatePath = (): string => {
 		`${date.getSeconds().toString().padStart(2, '0')}`
 	);
 };
+
+export const monthArrData = (year: number = new Date().getFullYear()) => {
+	const monthArr = [];
+
+	for (let i = 1; i <= 12; i++) {
+		const numDays = new Date(year, i, 0).getDate();
+		const monthObj = {
+			month: i,
+			name: `${i}月`,
+			monthDayList: Array.from({ length: numDays }, (_, n) => ({
+				day: n + 1,
+			})),
+		};
+		monthArr.push(monthObj);
+	}
+
+	return monthArr;
+};
