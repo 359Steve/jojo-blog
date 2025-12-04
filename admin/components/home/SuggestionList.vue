@@ -34,10 +34,7 @@ const deleteErrorClick = async (id: number) => {
 	useConfirm('删除错误信息', 'warning', async () => {
 		const res = await deleteError(id);
 
-		if (res.data) {
-			if (tableData.value.length === 1 && pageNumber.value > 1) pageNumber.value -= 1;
-			refresh();
-		}
+		res.data && refresh();
 	});
 };
 </script>
