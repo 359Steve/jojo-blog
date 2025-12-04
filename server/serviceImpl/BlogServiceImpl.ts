@@ -8,6 +8,9 @@ export class BlogServiceImpl implements BlogService {
 	constructor(blogRepository: BlogRepository) {
 		this.blogRepository = blogRepository;
 	}
+	addBlogView(id: number, ip: string, userAgent: string): ReturnType<BlogRepository['addBlogView']> {
+		return this.blogRepository.addBlogView(id, ip, userAgent);
+	}
 
 	createBlog(data: CreateBlogDto): ReturnType<BlogRepository['createBlog']> {
 		return this.blogRepository.createBlog(data);
