@@ -6,9 +6,15 @@ import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
 import { writeFile } from 'fs/promises';
 import fs from 'fs';
+import crypto from 'crypto';
+import type Redis from 'ioredis';
+import { redis } from '../core/redis';
 
 export class RecordDetailRepository {
-	constructor(private prismaClient: PrismaClient = prisma) { }
+	constructor(
+		private prismaClient: PrismaClient = prisma,
+		private redisClient: Redis = redis,
+	) { }
 
 	// 查询全部记录详情
 	async getAllRecordDetails(query: { pageNumber: number; pageSize: number }) {
@@ -435,6 +441,63 @@ export class RecordDetailRepository {
 			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '记录列表查询失败', null);
+		}
+	}
+
+	// 增加记录详情浏览量
+	async addRecordDetailView(id: number, ip: string, userAgent: string) {
+		try {
+			const fingerprint = crypto.createHash('md5').update(userAgent).digest('hex');
+			const redisKey = `record:view:${id}:${ip}:${fingerprint}`;
+
+			// 检查今天是否已经访问
+			const hasViewed = await this.redisClient.get(redisKey);
+			if (hasViewed) {
+				// 已经访问过，不增加浏览量
+				return returnData(StatusCode.SUCCESS, '今日已浏览，浏览量未增加', null);
+			}
+
+			const updatedBlog = await this.prismaClient.$transaction(async (tx) => {
+				// 增加浏览量
+				const updatedBlog = await tx.record_details.update({
+					where: { id: Number(id) },
+					data: {
+						views: {
+							increment: 1,
+						},
+					},
+				});
+
+				// 设置Redis键，过期时间为24小时
+				await this.redisClient.set(redisKey, '1', 'EX', 60 * 60 * 24);
+				// 存储一条浏览记录
+				await this.prismaClient.record_details_views_daily.upsert({
+					where: {
+						record_detail_id_view_date: {
+							record_detail_id: Number(id),
+							view_date: getDay('today'),
+						},
+					},
+					update: {
+						views: {
+							increment: 1,
+						},
+					},
+					create: {
+						record_detail_id: Number(id),
+						view_date: getDay('today'),
+						views: 1,
+					},
+				});
+
+				return updatedBlog;
+			});
+
+			return updatedBlog
+				? returnData(StatusCode.SUCCESS, '浏览量增加成功', updatedBlog)
+				: returnData(StatusCode.FAIL, '增加浏览量失败', null);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '增加浏览量失败', null);
 		}
 	}
 }
