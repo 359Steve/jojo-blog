@@ -12,7 +12,11 @@ const whitelist = [
 ];
 
 // 白名单路径模式
-const whitelistPatterns = [/^\/api\/blog\/blogPublicDetail(\/\d+)?(\?.*)?$/];
+const whitelistPatterns = [
+	/^\/api\/blog\/blogPublicDetail(\/\d+)?(\?.*)?$/,
+	/^\/api\/blog\/blogAddView(\/\d+)?(\?.*)?$/,
+	/^\/api\/record\/detail\/detailAddView(\/\d+)?(\?.*)?$/,
+];
 
 export default defineEventHandler(async (event) => {
 	const path = (event.node.req.url || '').split('?')[0];
