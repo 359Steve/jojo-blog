@@ -117,6 +117,13 @@ const preview = (src: string) => {
 watch(photoWallMode, () => {
 	mark.value = 4;
 });
+
+onMounted(() => {
+	nextTick(async () => {
+		// 增加浏览量
+		await addRecordDetailView(Number(id.value));
+	});
+});
 </script>
 
 <template>
