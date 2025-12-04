@@ -30,6 +30,7 @@ export default defineNuxtConfig({
 			'composables/api/md',
 			'composables/api/record',
 			'composables/api/error',
+			'composables/api/statistical',
 		],
 	},
 });
