@@ -8,6 +8,9 @@ export class RecordDetailServiceImpl implements RecordDetailService {
 	constructor(recordDetailRepository: RecordDetailRepository) {
 		this.recordDetailRepository = recordDetailRepository;
 	}
+	addRecordDetailView(id: number, ip: string, userAgent: string) {
+		return this.recordDetailRepository.addRecordDetailView(id, ip, userAgent);
+	}
 
 	createRecordDetail(data: CreateRecordDetailDto): ReturnType<RecordDetailRepository['createRecordDetail']> {
 		return this.recordDetailRepository.createRecordDetail(data);
