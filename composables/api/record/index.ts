@@ -31,3 +31,7 @@ export const recordDetailsQuery = async (query: RecordQueryParams) => {
 
 	return handleApiResponse(res, false);
 };
+
+// 增加记录详情浏览量
+export const addRecordDetailView = (id: number) =>
+	chooseCondition<any, CreateRecordDetailDto>(`/record/detail/detailAddView/${id}`, 'PUT')();
