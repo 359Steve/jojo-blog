@@ -13,6 +13,7 @@ export default defineNuxtConfig({
 			extensions: ['.vue', '.tsx'],
 		},
 	],
+	plugins: ['~/admin/plugins/chart.ts'],
 	vite: {
 		plugins: [sbgLoader()],
 	},
