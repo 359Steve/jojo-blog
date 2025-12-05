@@ -19,20 +19,24 @@ const formData = reactive<CreateTagDto>({
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(10);
 const searchTag = ref<string>('');
+const debouncedSearch = useDebounce(searchTag, 300);
+watch(debouncedSearch, () => {
+	pageNumber.value = 1;
+});
 const { data, refresh } = await useAsyncData(
 	'tags',
 	() =>
 		queryTagAll({
-			name: searchTag.value,
+			name: debouncedSearch.value,
 			pageNumber: pageNumber.value,
 			pageSize: pageSize.value,
 		}),
 	{
-		watch: [pageNumber, pageSize],
+		watch: [pageNumber],
 	},
 );
-const tableData = computed((): CreateTagDto[] => data.value?.data?.records || []);
-const total = computed((): number => data.value?.data?.total || 0);
+const tableData = computed<CreateTagDto[]>(() => data.value?.data?.records || []);
+const total = computed<number>(() => data.value?.data?.total || 0);
 const isEdit = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
@@ -175,16 +179,6 @@ const handleSizeChange = (val: number): void => {
 const iconChange = async (icon: string) => {
 	return await validateIconify(icon);
 };
-
-// 使用防抖优化搜索
-let searchTimeout: NodeJS.Timeout;
-watch(searchTag, () => {
-	clearTimeout(searchTimeout);
-	searchTimeout = setTimeout(() => {
-		pageNumber.value = 1;
-		refresh();
-	}, 300);
-});
 </script>
 
 <template>

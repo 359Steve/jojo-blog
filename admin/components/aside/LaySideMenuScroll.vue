@@ -7,7 +7,7 @@ const route = useRoute();
 const theme = useJojoColorMode().getDarkMode().preference;
 const menuData = ref<RouteConfigsTable[]>(getRouterConfig());
 
-const activeMenu = computed(() => route.path);
+const activeMenu = computed<string>(() => route.path);
 </script>
 
 <template>

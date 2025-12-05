@@ -23,16 +23,12 @@ const { data: allTags } = await useAsyncData(
 		watch: [() => props.type],
 	},
 );
-const tagsOptions = ref<TagsOptions[]>(
-	allTags.value?.data?.map((item) => ({ value: item.id || 0, label: item.name })).filter(Boolean) || [],
+const tagsOptions = computed<TagsOptions[]>(
+	() => allTags.value?.data?.map((item) => ({ value: item.id || 0, label: item.name })).filter(Boolean) || [],
 );
 
 watchEffect(() => {
 	values.value = props.tags;
-});
-
-watch(allTags, (newTags) => {
-	tagsOptions.value = newTags?.data?.map((item) => ({ value: item.id || 0, label: item.name })).filter(Boolean) || [];
 });
 
 watch(values, (newVal) => {

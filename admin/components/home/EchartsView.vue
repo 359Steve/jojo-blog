@@ -36,7 +36,7 @@ const { data } = await useAsyncData(
 		watch: [year, month],
 	},
 );
-const views = computed(() => data.value?.data || []);
+const views = computed<number[]>(() => data.value?.data || []);
 
 const option = computed<EChartsOption>(() => ({
 	tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },

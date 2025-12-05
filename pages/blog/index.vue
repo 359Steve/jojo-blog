@@ -2,73 +2,51 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
-const pageSize = ref<number>(20);
-const pageNumber = ref<number>(1);
-const { data } = await useAsyncData('publicQueryBlogList', () =>
-	getPublicBlogList({
-		pageNumber: pageNumber.value,
-		pageSize: pageSize.value,
-	}),
-);
+const search = ref('');
+const pageNumber = ref(1);
+const pageSize = ref(20);
 
+const debouncedSearch = useDebounce(search, 300);
+
+watch(debouncedSearch, () => {
+	pageNumber.value = 1;
+});
+const { data } = await useAsyncData(
+	'publicQueryBlogList',
+	() =>
+		getPublicBlogList({
+			pageNumber: pageNumber.value,
+			pageSize: pageSize.value,
+			keyword: debouncedSearch.value,
+		}),
+	{
+		watch: [pageNumber],
+	},
+);
 const blogList = ref<NonNullable<ReturnFunction<typeof getPublicBlogList>['data']>['records']>(
 	data.value?.data?.records || [],
 );
 const total = ref<number>(data.value?.data?.total || 0);
-const search = ref<string>('');
+
+watch(data, (newData) => {
+	if (newData?.data?.records) {
+		if (pageNumber.value === 1) {
+			blogList.value = newData.data.records;
+			total.value = newData.data?.total || 0;
+		} else {
+			blogList.value = blogList.value.concat(newData.data.records);
+		}
+	}
+});
 
 const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): void => {
 	useBlog().setCurrentBlog(blog);
 	navigateTo({ path: '/blog/detail', query: { id: blog.id } });
 };
 
-// 搜索防抖函数
-const debouncedSearch = useDebounceFn(async (keyword: string) => {
-	const res = await getPublicBlogList({
-		pageNumber: 1,
-		pageSize: pageSize.value,
-		keyword: keyword || undefined,
-	});
-
-	if (search.value === keyword) {
-		blogList.value = res.data?.records || [];
-		total.value = res.data?.total || 0;
-		pageNumber.value = 1;
-	}
-}, 500);
-
-const clearSearch = async () => {
-	const res = await getPublicBlogList({
-		pageNumber: 1,
-		pageSize: pageSize.value,
-	});
-	blogList.value = res.data?.records || [];
-	total.value = res.data?.total || 0;
-	pageNumber.value = 1;
-};
-
-// 搜索功能
-watch(search, async (newSearch, oldSearch) => {
-	if (!newSearch && oldSearch) {
-		clearSearch();
-	} else if (newSearch) {
-		debouncedSearch(newSearch);
-	}
-});
-
 // 滚动加载更多防抖函数
 const debouncedLoadMore = useDebounceFn(async () => {
-	const res = await getPublicBlogList({
-		pageNumber: pageNumber.value + 1,
-		pageSize: pageSize.value,
-		keyword: search.value || undefined,
-	});
-
-	if (res.data?.records && res.data.records.length > 0) {
-		blogList.value = blogList.value.concat(res.data.records);
-		total.value = res.data?.total || 0;
-		pageNumber.value += 1;
-	}
+	pageNumber.value += 1;
 }, 300);
 
 onMounted(() => {
@@ -108,7 +86,7 @@ onMounted(() => {
 				class="group flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
 				@click="toDetail(item)">
 				<img v-lazy="item.front_cover" alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
-					class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]" />
+					class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]">
 				<div class="flex min-h-0 flex-1 flex-col justify-between overflow-hidden">
 					<div class="min-h-0 flex-1">
 						<h4

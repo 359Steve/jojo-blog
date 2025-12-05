@@ -43,56 +43,20 @@ if (error.value) {
 const currentData = computed<ReturnFunction<typeof recordDetailQuery>['data']>(() => data.value?.data || null);
 const mark = ref<number>(4);
 
-const srcList = computed(() => {
-	if (!currentData.value?.images) return [];
-	return currentData.value.images;
-});
-const srcListAll = computed(() => {
-	if (!currentData.value?.imageAll) return [];
-	return currentData.value.imageAll.flatMap((item) => item.images).filter(Boolean);
-});
-const stableSrcList = ref<string[]>([]);
-const stableSrcListAll = ref<string[]>([]);
+const srcList = computed(() => currentData.value?.images.map((i) => i).filter(Boolean) ?? []);
+const srcListAll = computed(() => currentData.value?.imageAll?.flatMap((i) => i.images).filter(Boolean) ?? []);
 
-watch(
-	srcList,
-	(newList) => {
-		if (newList.length > 0 && JSON.stringify(newList) !== JSON.stringify(stableSrcList.value)) {
-			stableSrcList.value = [...newList];
-		}
-	},
-	{ immediate: true },
+const date = computed(() =>
+	currentData.value?.created_at ? new Date(currentData.value.created_at).toLocaleDateString() : '',
 );
-
-watch(
-	srcListAll,
-	(newList) => {
-		if (newList.length > 0 && JSON.stringify(newList) !== JSON.stringify(stableSrcListAll.value)) {
-			stableSrcListAll.value = [...newList];
-		}
-	},
-	{ immediate: true },
-);
-
-const date = computed(() => {
-	if (!currentData.value?.created_at) {
-		return '';
-	}
-	const d = new Date(currentData.value.created_at);
-	return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
-});
 
 // 照片墙切换状态
 const photoWallMode = ref<'current' | 'all'>('current');
 
-const count = computed(() => {
-	return photoWallMode.value === 'current' ? stableSrcList.value : stableSrcListAll.value;
-});
+const count = computed(() => (photoWallMode.value === 'current' ? srcList.value : srcListAll.value));
 
 // 当前显示的图片列表
-const currentDisplayImages = computed(() => {
-	return count.value.slice(0, mark.value);
-});
+const currentDisplayImages = computed(() => count.value.slice(0, mark.value));
 
 // 查询上下条数据
 const getById = async (recordId: number) => {
@@ -156,7 +120,7 @@ onMounted(() => {
 					]" @click="photoWallMode = 'current'">
 					<Icon :icon="photoWallMode === 'current' ? 'ri:image-fill' : 'ri:image-line'"
 						class="mr-1 text-sm sm:mr-2 sm:text-base" />
-					<span>当日 ({{ stableSrcList.length }})</span>
+					<span>当日 ({{ srcList.length }})</span>
 				</div>
 				<div class="flex cursor-pointer items-center justify-center rounded-full px-2 py-1 text-xs font-medium transition-all duration-200 sm:px-4 sm:py-2 sm:text-sm"
 					:class="[
@@ -166,7 +130,7 @@ onMounted(() => {
 					]" @click="photoWallMode = 'all'">
 					<Icon :icon="photoWallMode === 'all' ? 'ri:gallery-fill' : 'ri:gallery-line'"
 						class="mr-1 text-sm sm:mr-2 sm:text-base" />
-					<span>全年 ({{ stableSrcListAll.length }})</span>
+					<span>全年 ({{ srcListAll.length }})</span>
 				</div>
 				<div class="h-px flex-1 flex-grow bg-gray-300" />
 			</div>

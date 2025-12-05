@@ -6,14 +6,13 @@ useHead({
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
-	findRecordPictures<RecordsResponse<string>>({
+	findRecordPictures<string[]>({
 		pageNumber: pageNumber.value,
 		pageSize: pageSize.value,
 	}),
 );
 
-const photoList = ref<string[]>(data.value?.data?.records ?? []);
-const total = ref<number>(data.value?.data?.total ?? 0);
+const photoList = computed<string[]>(() => data.value?.data ?? []);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 const translate = ref<boolean>(false);
@@ -23,19 +22,6 @@ const preview = (src: string) => {
 	previewSrc.value = src;
 	isPreviewVisible.value = true;
 };
-
-const debouncedLoadMore = useDebounceFn(async () => {
-	const res = await findRecordPictures<RecordsResponse<string>>({
-		pageNumber: pageNumber.value + 1,
-		pageSize: pageSize.value,
-	});
-
-	if (res.data?.records && res.data.records.length > 0) {
-		photoList.value = photoList.value.concat(res.data.records);
-		total.value = res.data?.total || 0;
-		pageNumber.value += 1;
-	}
-}, 300);
 
 const toggleLayout = () => {
 	if (animating.value) return;
@@ -49,22 +35,6 @@ const toggleLayout = () => {
 		});
 	});
 };
-
-onMounted(() => {
-	nextTick(() => {
-		const { y } = useWindowScroll();
-
-		watch(y, () => {
-			const scrollTop = y.value;
-			const windowHeight = window.innerHeight;
-			const documentHeight = document.documentElement.scrollHeight;
-
-			if (scrollTop + windowHeight >= documentHeight - 200 && total.value > photoList.value.length) {
-				debouncedLoadMore();
-			}
-		});
-	});
-});
 </script>
 
 <template>

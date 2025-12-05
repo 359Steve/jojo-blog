@@ -8,7 +8,7 @@ const loading = ref<boolean>(false);
 const isEdit = ref<boolean>(false);
 const ruleFormRef = templateRef('ruleFormRef');
 const { data, refresh } = await useAsyncData('recordGroups', () => queryGroupAll(pageNumber.value, pageSize.value), {
-	watch: [pageNumber, pageSize],
+	watch: [pageNumber],
 });
 const tableData = computed<CreateGroupDto[]>(() => data.value?.data?.records || []);
 const total = computed<number>(() => data.value?.data?.total || 0);

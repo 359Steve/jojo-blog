@@ -13,9 +13,7 @@ const formData = reactive<CreateErrorMessageDto>({
 	content: '',
 });
 
-const disabled = computed(() => {
-	return !formData.name || !formData.email || !formData.content;
-});
+const disabled = computed<boolean>(() => !formData.name || !formData.email || !formData.content);
 
 const sendEmail = async () => {
 	try {

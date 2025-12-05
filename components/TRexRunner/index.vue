@@ -30,10 +30,7 @@ const createImage = (src: string) => {
 const Dino = useTemplateRef<HTMLCanvasElement>('Dino');
 const ctx = ref<CanvasRenderingContext2D | null>(null);
 // 恐龙运动时图片
-const dinoRunImg = computed(() => {
-	const imgs = [createImage(DinoRun1), createImage(DinoRun2)];
-	return imgs;
-});
+const dinoRunImg = computed(() => [createImage(DinoRun1), createImage(DinoRun2)]);
 // 恐龙初始化图片
 const dinoStaticImg = computed(() => createImage(DinoStatic));
 // 恐龙失败图片

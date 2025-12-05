@@ -30,7 +30,7 @@ const { data, error } = await useAsyncData('publicQueryBlogDetail', async () => 
 	return getPublicBlogDetail(Number(id.value));
 });
 
-const blogItem = ref<ReturnFunction<typeof getPublicBlogDetail>['data']>(data.value?.data || null);
+const blogItem = computed<ReturnFunction<typeof getPublicBlogDetail>['data']>(() => data.value?.data || null);
 
 // 格式化发布时间
 const formatDate = (dateString: string) => {
