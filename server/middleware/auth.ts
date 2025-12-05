@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 
 	let realToken = '';
 	if (import.meta.server) {
-		const token: TokenCookie = parseCookies(event) as any;
+		const token = parseCookies(event) as unknown as TokenCookie;
 		const cookieToken: { token: string } = JSON.parse((token.userState || JSON.stringify({})) as unknown as string);
 		realToken = cookieToken?.token || '';
 	} else {
