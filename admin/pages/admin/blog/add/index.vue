@@ -123,7 +123,7 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				await navigateTo('/admin/blog/group');
 			}
 		} catch (error) {
-			console.log(error);
+			// 错误已通过 handleApiResponse 处理
 		} finally {
 			loading.value = false;
 		}
