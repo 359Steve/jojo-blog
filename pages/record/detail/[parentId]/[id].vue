@@ -25,9 +25,12 @@ const id = computed(() => rid);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 
-const { data, error, refresh } = await useAsyncData(
-	() => `recordDetailQuery-${parentId.value}-${id.value}`,
+const { data, error } = await useAsyncData(
+	'recordDetailQuery',
 	() => recordDetailQuery(Number(parentId.value), Number(id.value)),
+	{
+		watch: [parentId, id],
+	},
 );
 
 if (error.value) {
@@ -37,20 +40,8 @@ if (error.value) {
 	});
 }
 
-const currentData = ref<ReturnFunction<typeof recordDetailQuery>['data']>(data.value?.data || null);
+const currentData = computed<ReturnFunction<typeof recordDetailQuery>['data']>(() => data.value?.data || null);
 const mark = ref<number>(4);
-
-// 监听路由变化，更新数据
-watch([parentId, id], async () => {
-	try {
-		await refresh();
-		if (data.value?.data) {
-			currentData.value = data.value.data;
-		}
-	} catch (err) {
-		console.error('获取数据失败:', err);
-	}
-});
 
 const srcList = computed(() => {
 	if (!currentData.value?.images) return [];
