@@ -32,7 +32,7 @@ export const CreateRecordDetailSchema = z.object({
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '图片描述必须为字符串' })
 		.min(1, '图片描述不能为空'),
-	view: z.number().optional(),
+	views: z.number().optional(),
 	created_at: z.string().trim().optional(),
 	updated_at: z.string().trim().optional(),
 });
