@@ -8,3 +8,14 @@ export const getStatisticalAll = async () => {
 
 	return handleApiResponse(res, false);
 };
+
+// 获取浏览量统计数据
+export const getViewsStatistical = async (query: BlogViewsQuery) => {
+	const res = await jojoLoadingIndicator(() =>
+		fetchUseGet<BlogViewsQuery, number[]>('/statistical/blogOrRecordViews', {
+			query,
+		}),
+	);
+
+	return handleApiResponse(res, false);
+};
