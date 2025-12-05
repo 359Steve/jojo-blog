@@ -61,4 +61,57 @@ export class StatisticalRepository {
 			return returnData(StatusCode.FAIL, '获取统计数据失败', null);
 		}
 	}
+
+	// 获取博客访问量
+	async getBlogOrRecordViews(query: BlogViewsQuery) {
+		const { type, year, month } = query;
+		try {
+			const numDays = new Date(year, month, 0).getDate();
+			const startDate = new Date(year, month - 1, 1);
+			const endDate = new Date(year, month, 0);
+
+			const whereClause = {
+				select: {
+					view_date: true,
+					views: true,
+				},
+				where: {
+					view_date: {
+						gte: startDate,
+						lte: endDate,
+					},
+				},
+			};
+
+			const blogViewsRaw =
+				type === 'blog'
+					? await this.prismaClient.blog_views_daily.findMany(whereClause)
+					: await this.prismaClient.record_details_views_daily.findMany(whereClause);
+
+			const viewsMap = new Map<string, number>();
+			for (const item of blogViewsRaw) {
+				const day = new Date(item.view_date).getDate();
+				if (viewsMap.has(day.toString())) {
+					viewsMap.set(day.toString(), viewsMap.get(day.toString())! + (item.views ?? 0));
+				} else {
+					viewsMap.set(day.toString(), item.views ?? 0);
+				}
+			}
+
+			const blogViews = Array.from(viewsMap, ([day, views]) => ({
+				view_date: new Date(year, month - 1, Number(day)),
+				views,
+			}));
+			const dayViews = Array(numDays).fill(0);
+
+			for (const item of blogViews) {
+				const day = new Date(item.view_date).getDate();
+				dayViews[day - 1] = item.views ?? 0;
+			}
+
+			return returnData(StatusCode.SUCCESS, '获取博客访问量成功', dayViews);
+		} catch (error) {
+			return returnData(StatusCode.FAIL, '获取博客访问量失败', null);
+		}
+	}
 }

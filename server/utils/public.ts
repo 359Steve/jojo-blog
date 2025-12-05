@@ -1,3 +1,4 @@
+import type Redis from 'ioredis';
 import type { StatusCode } from '~/types/com-types';
 
 export const returnData = <T>(code: StatusCode, msg: string, data: T | null): NitroResponse<T> => {
@@ -20,4 +21,13 @@ export const getDay = (type: 'today' | 'yesterday' | 'tomorrow') => {
 		default:
 			return today;
 	}
+};
+
+// 封装redis自动存储到期时间函数
+export const setRedisWithExpire = async (redisClient: Redis, key: string, value: string) => {
+	const now = new Date();
+	const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+	const secondsUntilEndOfToday = Math.floor((endOfToday.getTime() - now.getTime()) / 1000);
+
+	await redisClient.set(key, value, 'EX', secondsUntilEndOfToday);
 };

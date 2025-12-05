@@ -469,7 +469,7 @@ export class RecordDetailRepository {
 				});
 
 				// 设置Redis键，过期时间为24小时
-				await this.redisClient.set(redisKey, '1', 'EX', 60 * 60 * 24);
+				await setRedisWithExpire(this.redisClient, redisKey, '1');
 				// 存储一条浏览记录
 				await this.prismaClient.record_details_views_daily.upsert({
 					where: {

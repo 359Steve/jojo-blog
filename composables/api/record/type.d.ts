@@ -1,7 +1,7 @@
 type RecordWithDetailsRep<T, K> = T & {
 	prev: { id: number } | null;
 	next: { id: number } | null;
-	details: Pick<K, 'id' | 'title' | 'images' | 'image_alt' | 'time_range'>[];
+	details: Pick<K, 'id' | 'title' | 'images' | 'image_alt' | 'time_range' | 'views'>[];
 	_count: {
 		details: number;
 	};

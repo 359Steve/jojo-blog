@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div class="w-full">记录列表</div>
+	<EchartsView color="#22c55e" title="记录" type="record" />
 </template>
 
 <style lang="scss" scoped></style>

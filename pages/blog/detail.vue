@@ -72,13 +72,14 @@ onBeforeUnmount(() => {
 		<!-- 博客内容 -->
 		<div v-if="blogItem">
 			<!-- 返回按钮 -->
-			<div class="mb-6">
+			<div class="mb-6 flex items-center justify-between">
 				<button
 					class="hover:text-primary flex items-center gap-1 text-sm text-gray-600 transition-colors duration-200 focus:outline-none"
 					@click="goBack">
 					<Icon icon="ri:arrow-left-s-line" width="24" />
 					<span>CD ..</span>
 				</button>
+				<span class="text-[16px] text-gray-600">浏览量：{{ blogItem.views }}</span>
 			</div>
 
 			<!-- 博客头部 -->

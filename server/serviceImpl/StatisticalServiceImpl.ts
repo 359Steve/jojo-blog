@@ -7,6 +7,9 @@ export class StatisticalServiceImpl implements StatisticalService {
 	constructor(statisticalRepository: StatisticalRepository) {
 		this.statisticalRepository = statisticalRepository;
 	}
+	getBlogOrRecordViews(query: BlogViewsQuery) {
+		return this.statisticalRepository.getBlogOrRecordViews(query);
+	}
 
 	// 获取全部统计数据
 	getStatisticalAll() {
