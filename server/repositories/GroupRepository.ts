@@ -171,8 +171,17 @@ export class GroupRepository {
 								id: true,
 								title: true,
 								time_range: true,
-								images: true,
+								images: {
+									select: {
+										url: true,
+									},
+									orderBy: {
+										id: 'asc',
+									},
+									take: 1,
+								},
 								image_alt: true,
+								views: true,
 							},
 							orderBy: {
 								time_range: 'desc',
