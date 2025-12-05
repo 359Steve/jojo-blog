@@ -7,7 +7,7 @@ const { data } = await useAsyncData('indexRecordPictures', () =>
 	}),
 );
 
-const pictureList = ref<HomePicResponse<RecordDetailImages>[]>(data.value?.data ?? []);
+const pictureList = computed<HomePicResponse<RecordDetailImages>[]>(() => data.value?.data ?? []);
 const indexBg = ref<HTMLElement | null>(null);
 const rect = ref<DOMRect>();
 const theta = ref<number>(0);

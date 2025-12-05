@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 const mdItem = useTemplateRef<HTMLDivElement>('MdItem');
-const mdHeight = computed(() => {
-	return mdItem.value ? mdItem.value.offsetHeight : 0;
-});
+const mdHeight = computed<number>(() => (mdItem.value ? mdItem.value.offsetHeight : 0));
 </script>
 
 <template>

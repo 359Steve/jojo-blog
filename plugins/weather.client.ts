@@ -68,10 +68,10 @@ export default defineNuxtPlugin({
 				if (weather.value?.status === '1') {
 					useWeather().setWeather(weather.value.forecasts);
 				} else {
-					console.error('天气接口返回错误:', weather.value);
+					// 天气接口返回错误，使用默认值
 				}
 			} catch (err) {
-				console.error('天气插件初始化失败:', err);
+				// 天气插件初始化失败，使用默认值
 			}
 		}
 	},

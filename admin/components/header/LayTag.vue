@@ -186,9 +186,10 @@ const contextmenuClose = (id: number) => {
 	if (contextmenuItem.value) executeCommand(id, contextmenuItem.value);
 };
 
-const getContextMenuStyle = computed((): CSSProperties => {
-	return { left: `${buttonLeft.value}px`, top: `${buttonTop.value}px` };
-});
+const getContextMenuStyle = computed<CSSProperties>(() => ({
+	left: `${buttonLeft.value}px`,
+	top: `${buttonTop.value}px`,
+}));
 
 watch(
 	() => route.path,

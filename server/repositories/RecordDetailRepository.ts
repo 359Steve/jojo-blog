@@ -330,8 +330,7 @@ export class RecordDetailRepository {
 	// 查询照片
 	async getPublicRecordPictures(query: FindPictureRequest) {
 		try {
-			const { pageNumber, pageSize, random } = query;
-			const offset = (Number(pageNumber) - 1) * Number(pageSize);
+			const { random } = query;
 
 			if (random) {
 				// 随机查询照片
@@ -359,34 +358,24 @@ export class RecordDetailRepository {
 				return returnData(StatusCode.SUCCESS, '照片列表查询成功', randomImagesWithGroup);
 			} else {
 				// 正常查询分页照片
-				const [records, total] = await this.prismaClient.$transaction([
-					this.prismaClient.record_images.findMany({
-						where: {
-							url: {
-								not: '',
-							},
+				const records = await this.prismaClient.record_images.findMany({
+					where: {
+						url: {
+							not: '',
 						},
-						orderBy: {
-							id: 'desc',
-						},
-					}),
-					this.prismaClient.record_images.count({
-						where: {
-							url: {
-								not: '',
-							},
-						},
-					}),
-				]);
-
-				if (!records || !total) {
-					return returnData(StatusCode.SUCCESS, '照片列表到底了', null);
-				}
-
-				return returnData(StatusCode.SUCCESS, '照片列表查询成功', {
-					records: records.map((item) => item.url).filter(Boolean),
-					total,
+					},
+					orderBy: {
+						id: 'desc',
+					},
 				});
+
+				return records
+					? returnData(
+						StatusCode.SUCCESS,
+						'照片列表查询成功',
+						records.map((item) => item.url).filter(Boolean),
+					)
+					: returnData(StatusCode.FAIL, '照片列表查询失败', null);
 			}
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);

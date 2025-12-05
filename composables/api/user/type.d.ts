@@ -1,6 +1,6 @@
 interface FindPictureRequest {
-	pageNumber: number;
-	pageSize: number;
+	pageNumber?: number;
+	pageSize?: number;
 	random?: boolean;
 }
 

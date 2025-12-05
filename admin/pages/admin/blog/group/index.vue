@@ -5,39 +5,27 @@ import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
 const keyword = ref<string>('');
+const debouncedSearch = useDebounce(keyword, 300);
+watch(debouncedSearch, () => {
+	pageNumber.value = 1;
+});
 const { data, refresh } = await useAsyncData(
 	'queryBlogList',
 	() =>
 		getBlogList({
 			pageNumber: pageNumber.value,
 			pageSize: pageSize.value,
-			keyword: keyword.value,
+			keyword: debouncedSearch.value,
 		}),
 	{
-		watch: [pageNumber, pageSize],
+		watch: [pageNumber],
 	},
 );
-const tableData = computed(
-	(): BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[] => data.value?.data?.records || [],
+const tableData = computed<BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>[]>(
+	() => data.value?.data?.records || [],
 );
-const total = computed((): number => data.value?.data?.total || 0);
+const total = computed<number>(() => data.value?.data?.total || 0);
 const loading = ref<boolean>(false);
-
-// 搜索博客
-const handleSearch = () => {
-	pageNumber.value = 1;
-	refresh();
-};
-
-// 添加搜索防抖
-let searchTimeout: NodeJS.Timeout;
-watch(keyword, () => {
-	clearTimeout(searchTimeout);
-	searchTimeout = setTimeout(() => {
-		pageNumber.value = 1;
-		refresh();
-	}, 300);
-});
 
 // 每页条数改变
 const handleSizeChange = (val: number) => {
@@ -71,8 +59,7 @@ const handleDelete = async (id: number) => {
 	<AdminFormMain title="博客管理">
 		<div class="mb-2 flex items-center justify-between gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3">
 			<div class="flex items-center gap-2 sm:gap-4">
-				<ElInput v-model="keyword" placeholder="搜索标题或简介" clearable @keyup.enter="handleSearch" />
-				<ElButton type="primary" @click="handleSearch">搜索</ElButton>
+				<ElInput v-model="keyword" placeholder="搜索标题或简介" clearable />
 			</div>
 			<div class="flex items-center justify-end md:col-span-2">
 				<ElButton type="primary" @click="goCreate">新增博客</ElButton>

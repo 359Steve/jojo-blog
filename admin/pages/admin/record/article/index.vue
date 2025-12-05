@@ -3,7 +3,7 @@ import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
 import type { FormInstance, FormRules, UploadFile, UploadFiles, UploadUserFile } from 'element-plus';
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
-const selectData = computed((): { id: number; time_range: string }[] => data.value?.data || []);
+const selectData = computed<{ id: number; time_range: string }[]>(() => data.value?.data || []);
 
 // 获取记录详情数据
 const pageSize = ref<number>(10);
@@ -13,12 +13,12 @@ const { data: detailData, refresh } = await useAsyncData(
 	'recordArticleDetails',
 	() => queryRecordDetailAll(pageNumber.value, pageSize.value),
 	{
-		watch: [pageNumber, pageSize],
+		watch: [pageNumber],
 	},
 );
-const total = computed((): number => detailData.value?.data?.total || 0);
-const tableData = computed(
-	(): GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[] => detailData.value?.data?.records || [],
+const total = computed<number>(() => detailData.value?.data?.total || 0);
+const tableData = computed<GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>[]>(
+	() => detailData.value?.data?.records || [],
 );
 const groupId = ref<number>();
 const formData = reactive<CreateRecordDetailDto>({

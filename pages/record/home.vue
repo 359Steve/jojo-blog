@@ -1,17 +1,26 @@
 <script lang="ts" setup>
-const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery());
-const summaryList = ref<ReturnFunction<typeof recordPublicQuery>['data'] | null>(data.value?.data || null);
-const total = ref<number>(data.value?.data?._count.details || 0);
-const cardRef = templateRef('cardRef');
-const cardCount = computed(() => {
-	return summaryList.value ? summaryList.value.details.length : 0;
-});
-const cardMinHeight = ref<number>(0);
-const containerMinHeight = computed(() => {
-	return (cardCount.value - 1) * cardMinHeight.value;
-});
 const pageNumber = ref<number>(2);
 const pageSize = ref<number>(5);
+const groupId = ref<number>();
+const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery(groupId.value), {
+	watch: [groupId],
+});
+const summaryList = computed<ReturnFunction<typeof recordPublicQuery>['data'] | null>(() => data.value?.data || null);
+const recordDetails = ref<NonNullable<ReturnFunction<typeof recordDetailsQuery>['data']>['records']>(
+	summaryList.value?.details || [],
+);
+const total = computed<number>(() => data.value?.data?._count.details || 0);
+const cardRef = templateRef('cardRef');
+const cardCount = computed(() => (recordDetails.value ? recordDetails.value.length : 0));
+const cardMinHeight = ref<number>(0);
+const containerMinHeight = computed(() => (cardCount.value - 1) * cardMinHeight.value);
+
+watch(data, async (newData) => {
+	if (newData?.data) {
+		await nextTick();
+		cardMinHeight.value = getCardMaxHeight();
+	}
+});
 
 // 获取卡片最大高度
 const getCardMaxHeight = () => {
@@ -21,17 +30,6 @@ const getCardMaxHeight = () => {
 	}
 
 	return 0;
-};
-
-// 查询其他记录
-const changeRecord = async (id: number) => {
-	const res = await recordPublicQuery(id);
-	if (res.data?.id) {
-		pageNumber.value = 2;
-		summaryList.value = res.data;
-		total.value = res.data._count.details || 0;
-		cardMinHeight.value = getCardMaxHeight();
-	}
 };
 
 const toDetail = (parentId: number, id: number): void => {
@@ -47,8 +45,7 @@ const debouncedLoadMore = useDebounceFn(async () => {
 	});
 
 	if (res.data?.records && res.data.records.length > 0) {
-		summaryList.value?.details.push(...res.data.records);
-		total.value = res.data?.total || 0;
+		recordDetails.value.push(...res.data.records);
 		pageNumber.value += 1;
 
 		await nextTick();
@@ -67,10 +64,7 @@ onMounted(() => {
 			const windowHeight = window.innerHeight;
 			const documentHeight = document.documentElement.scrollHeight;
 
-			if (
-				scrollTop + windowHeight >= documentHeight - 200 &&
-				total.value > (summaryList.value?.details.length || 0)
-			) {
+			if (scrollTop + windowHeight >= documentHeight - 200 && total.value > (recordDetails.value?.length || 0)) {
 				debouncedLoadMore();
 			}
 		});
@@ -104,14 +98,14 @@ onMounted(() => {
 								]">
 								<button v-if="summaryList?.prev"
 									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
-									@click="changeRecord(summaryList.prev.id)">
+									@click="groupId = summaryList.prev.id">
 									<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
 									<span>上一篇</span>
 								</button>
 
 								<button v-if="summaryList?.next"
 									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
-									@click="changeRecord(summaryList.next.id)">
+									@click="groupId = summaryList.next.id">
 									<span>下一篇</span>
 									<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
 								</button>
@@ -123,9 +117,9 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<CardsstackContainerScroll v-if="summaryList?.details && summaryList?.details.length > 0"
+				<CardsstackContainerScroll v-if="recordDetails && recordDetails.length > 0"
 					:class-name="`space-y-8 mt-6`" :style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
-					<CardsstackCardSticky v-for="(phase, index) in summaryList?.details" ref="cardRef" :key="phase.id"
+					<CardsstackCardSticky v-for="(phase, index) in recordDetails" ref="cardRef" :key="phase.id"
 						:index="index"
 						class-name="rounded-2xl border p-4 bg-white/40 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
 						@click="toDetail(summaryList?.id!, phase.id!)">

@@ -49,7 +49,7 @@ const initFormData = () => {
 const formData = reactive<CreateBlogDto>(initFormData());
 
 const ruleFormRef = templateRef('ruleFormRef');
-const isEdit = computed(() => !!currentBlog.value?.id);
+const isEdit = computed<boolean>(() => !!currentBlog.value?.id);
 const loading = ref(false);
 const currentMdPics = ref<string[]>([]);
 
@@ -123,7 +123,7 @@ const saveBlog = async (formEl: FormInstance | undefined) => {
 				await navigateTo('/admin/blog/group');
 			}
 		} catch (error) {
-			console.log(error);
+			// 错误已通过 handleApiResponse 处理
 		} finally {
 			loading.value = false;
 		}

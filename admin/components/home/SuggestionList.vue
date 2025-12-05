@@ -11,12 +11,12 @@ const { data, refresh } = await useAsyncData(
 			pageSize: pageSize.value,
 		}),
 	{
-		watch: [pageNumber, pageSize],
+		watch: [pageNumber],
 	},
 );
 
-const tableData = computed((): CreateErrorMessageDto[] => data.value?.data?.records || []);
-const total = computed((): number => data.value?.data?.total || 0);
+const tableData = computed<CreateErrorMessageDto[]>(() => data.value?.data?.records || []);
+const total = computed<number>(() => data.value?.data?.total || 0);
 
 // 分页查询
 const handleCurrentChange = (val: number): void => {

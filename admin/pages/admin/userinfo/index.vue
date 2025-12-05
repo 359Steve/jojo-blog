@@ -18,9 +18,7 @@ const toolbars = ref<ToolbarNames[]>([
 ]);
 const ruleFormRef = templateRef('ruleFormRef');
 const upload = templateRef('upload');
-const { data } = await useAsyncData('userinfo', () => {
-	return findUser();
-});
+const { data } = await useAsyncData('userinfo', () => findUser());
 const formData = reactive(
 	data.value?.data
 		? {
