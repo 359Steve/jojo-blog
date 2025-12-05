@@ -3,7 +3,6 @@ import Spring from '~/assets/image/spring.png';
 import Snowflake from '~/assets/image/snowflake.png';
 import Summer from '~/assets/image/summer.png';
 import Autumn from '~/assets/image/autumn.png';
-import { createSakuraFall } from '~/admin/composables/sakura-fall-three';
 
 const canvas = useTemplateRef<HTMLElement>('canvas');
 interface ImageOptions {
