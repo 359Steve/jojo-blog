@@ -147,6 +147,13 @@ export default defineNuxtConfig({
 							return '_nuxt/media/[name]-[hash][extname]';
 						return '_nuxt/assets/[name]-[hash][extname]';
 					},
+					manualChunks: {
+						'vue-vendor': ['vue', 'vue-router', 'pinia', 'vue-starport'],
+						'element-plus': ['element-plus'],
+						echarts: ['echarts'],
+						iconify: ['@iconify/vue'],
+						vueuse: ['@vueuse/core', '@vueuse/motion'],
+					},
 				},
 			},
 			terserOptions: { compress: { drop_console: true, drop_debugger: true } },
