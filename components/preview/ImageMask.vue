@@ -8,7 +8,7 @@ const isPreviewVisible = defineModel<boolean>('preview');
 
 <template>
 	<Transition name="fade" appear>
-		<div v-if="isPreviewVisible" class="fixed bottom-0 left-0 right-0 top-0 z-[500] backdrop-blur-md transition-all"
+		<div v-if="isPreviewVisible" class="glass fixed bottom-0 left-0 right-0 top-0 z-[500] transition-all"
 			@click="isPreviewVisible = false">
 			<div class="absolute inset-0 z-[-1] bg-black/50" />
 			<img v-lazy="src" :alt="alt"

@@ -86,7 +86,7 @@ onMounted(() => {
 		<div class="relative">
 			<div v-if="pictureList" class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
 				<div v-for="(pos, index) in gridPositions" :key="index"
-					class="relative cursor-pointer overflow-hidden rounded-xl shadow-xl" :style="{
+					class="glass relative cursor-pointer overflow-hidden rounded-xl shadow-xl" :style="{
 						gridColumnStart: pos.colStart,
 						gridColumnEnd: pos.colEnd,
 						gridRowStart: pos.rowStart,

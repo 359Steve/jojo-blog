@@ -121,7 +121,7 @@ onMounted(() => {
 					:class-name="`space-y-8 mt-6`" :style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
 					<CardsstackCardSticky v-for="(phase, index) in recordDetails" ref="cardRef" :key="phase.id"
 						:index="index"
-						class-name="rounded-2xl border p-4 bg-white/40 shadow-md backdrop-blur-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
+						class-name="rounded-2xl border p-4 bg-white/40 shadow-md glass transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
 						@click="toDetail(summaryList?.id!, phase.id!)">
 						<div class="mb-4 flex items-center justify-between gap-4">
 							<h2 class="flex-1 text-xl font-bold tracking-tighter">{{ phase.time_range }}</h2>

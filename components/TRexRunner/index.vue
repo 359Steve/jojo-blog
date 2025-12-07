@@ -288,7 +288,7 @@ onBeforeUnmount(() => {
 	<div ref="DinoBox" class="relative mt-12 h-[400px] w-full">
 		<div class="relative flex h-1/2 w-full items-center justify-center p-4">
 			<div
-				class="absolute right-4 top-4 z-10 rounded bg-white/70 px-3 py-1 text-sm font-medium text-gray-800 shadow-md backdrop-blur-md dark:bg-gray-800/70 dark:text-gray-200">
+				class="glass absolute right-4 top-4 z-10 rounded bg-white/70 px-3 py-1 text-sm font-medium text-gray-800 shadow-md dark:bg-gray-800/70 dark:text-gray-200">
 				分数: {{ Math.floor(gameState.score) }}
 			</div>
 			<div>
