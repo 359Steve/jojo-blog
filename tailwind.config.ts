@@ -28,7 +28,11 @@ const addVariablesForColors = ({ addBase, theme }: any) => {
 	const allColors = flattenColorPalette(theme('colors'));
 	const newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]));
 	addBase({
-		':root': newVars
+		':root': newVars,
+		'.glass': {
+			'backdrop-filter': 'blur(12px)',
+			'-webkit-backdrop-filter': 'blur(12px)',
+		},
 	});
 };
 
