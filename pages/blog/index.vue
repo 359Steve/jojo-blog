@@ -20,7 +20,7 @@ const { data } = await useAsyncData(
 			keyword: debouncedSearch.value,
 		}),
 	{
-		watch: [pageNumber],
+		watch: [pageNumber, debouncedSearch],
 	},
 );
 const blogList = ref<NonNullable<ReturnFunction<typeof getPublicBlogList>['data']>['records']>(

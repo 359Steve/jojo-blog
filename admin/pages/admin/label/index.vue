@@ -32,7 +32,7 @@ const { data, refresh } = await useAsyncData(
 			pageSize: pageSize.value,
 		}),
 	{
-		watch: [pageNumber],
+		watch: [pageNumber, debouncedSearch],
 	},
 );
 const tableData = computed<CreateTagDto[]>(() => data.value?.data?.records || []);
