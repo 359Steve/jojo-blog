@@ -1,17 +1,11 @@
 <script lang="ts" setup>
-const pageNumber = ref<number>(2);
-const pageSize = ref<number>(5);
 const groupId = ref<number>();
 const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery(groupId.value), {
 	watch: [groupId],
 });
 const summaryList = computed<ReturnFunction<typeof recordPublicQuery>['data'] | null>(() => data.value?.data || null);
-const recordDetails = ref<NonNullable<ReturnFunction<typeof recordDetailsQuery>['data']>['records']>(
-	summaryList.value?.details || [],
-);
-const total = computed<number>(() => data.value?.data?._count.details || 0);
 const cardRef = templateRef('cardRef');
-const cardCount = computed(() => (recordDetails.value ? recordDetails.value.length : 0));
+const cardCount = computed(() => (summaryList.value?.details ? summaryList.value.details.length : 0));
 const cardMinHeight = ref<number>(0);
 const containerMinHeight = computed(() => (cardCount.value - 1) * cardMinHeight.value);
 
@@ -25,7 +19,7 @@ watch(data, async (newData) => {
 // 获取卡片最大高度
 const getCardMaxHeight = () => {
 	if (cardRef.value) {
-		const cardHeights: number[] = cardRef.value.map((item) => item?.$el.offsetHeight).filter(Boolean);
+		const cardHeights: number[] = cardRef.value.map((item) => item?.$el.offsetHeight + 8).filter(Boolean);
 		return Math.max(...cardHeights);
 	}
 
@@ -36,38 +30,9 @@ const toDetail = (parentId: number, id: number): void => {
 	navigateTo({ path: `/record/detail/${parentId}/${id}` });
 };
 
-// 加载更多记录防抖函数
-const debouncedLoadMore = useDebounceFn(async () => {
-	const res = await recordDetailsQuery({
-		parentId: summaryList.value?.id || 0,
-		pageNumber: pageNumber.value,
-		pageSize: pageSize.value,
-	});
-
-	if (res.data?.records && res.data.records.length > 0) {
-		recordDetails.value.push(...res.data.records);
-		pageNumber.value += 1;
-
-		await nextTick();
-		cardMinHeight.value = getCardMaxHeight();
-	}
-}, 300);
-
 onMounted(() => {
 	nextTick(() => {
 		cardMinHeight.value = getCardMaxHeight();
-
-		const { y } = useWindowScroll();
-
-		watch(y, () => {
-			const scrollTop = y.value;
-			const windowHeight = window.innerHeight;
-			const documentHeight = document.documentElement.scrollHeight;
-
-			if (scrollTop + windowHeight >= documentHeight - 200 && total.value > (recordDetails.value?.length || 0)) {
-				debouncedLoadMore();
-			}
-		});
 	});
 });
 </script>
@@ -117,9 +82,9 @@ onMounted(() => {
 					</div>
 				</div>
 
-				<CardsstackContainerScroll v-if="recordDetails && recordDetails.length > 0"
+				<CardsstackContainerScroll v-if="summaryList?.details && summaryList.details.length > 0"
 					:class-name="`space-y-8 mt-6`" :style="{ minHeight: `calc(100vh + ${containerMinHeight}px)` }">
-					<CardsstackCardSticky v-for="(phase, index) in recordDetails" ref="cardRef" :key="phase.id"
+					<CardsstackCardSticky v-for="(phase, index) in summaryList.details" ref="cardRef" :key="phase.id"
 						:index="index"
 						class-name="rounded-2xl border p-4 bg-white/40 shadow-md glass transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)]"
 						@click="toDetail(summaryList?.id!, phase.id!)">
