@@ -6,7 +6,7 @@ const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
 const keyword = ref<string>('');
 const debouncedSearch = useDebounce(keyword, 300);
-watch(debouncedSearch, () => {
+watch([debouncedSearch, pageSize], () => {
 	pageNumber.value = 1;
 });
 const { data, refresh } = await useAsyncData(
@@ -30,7 +30,6 @@ const loading = ref<boolean>(false);
 // 每页条数改变
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
-	pageNumber.value = 1;
 };
 
 // 当前页改变
