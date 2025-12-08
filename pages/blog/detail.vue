@@ -130,16 +130,6 @@ onBeforeUnmount(() => {
 				</div>
 			</div>
 		</div>
-
-		<!-- 错误状态 -->
-		<div v-else class="py-20 text-center">
-			<Icon icon="ri:error-warning-line" class="mb-4 text-4xl text-gray-400" />
-			<p class="text-gray-500">博客不存在或已被删除</p>
-			<button class="bg-primary hover:bg-primary/90 mt-4 rounded-base px-4 py-2 text-white transition-colors"
-				@click="goBack">
-				返回博客列表
-			</button>
-		</div>
 	</main>
 </template>
 
