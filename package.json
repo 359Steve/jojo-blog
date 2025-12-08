@@ -12,7 +12,6 @@
 	},
 	"dependencies": {
 		"@codemirror/view": "^6.36.6",
-		"@iconify-json/ri": "^1.2.5",
 		"@iconify/vue": "^5.0.0",
 		"@nuxt/eslint": "^1.9.0",
 		"@nuxtjs/color-mode": "^3.5.2",
