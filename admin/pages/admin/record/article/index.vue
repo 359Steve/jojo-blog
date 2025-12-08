@@ -9,6 +9,9 @@ const selectData = computed<{ id: number; time_range: string }[]>(() => data.val
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
 const loading = ref<boolean>(false);
+watch(pageSize, () => {
+	pageNumber.value = 1;
+});
 const { data: detailData, refresh } = await useAsyncData(
 	'recordArticleDetails',
 	() => queryRecordDetailAll(pageNumber.value, pageSize.value),
@@ -202,7 +205,6 @@ const resetForm = () => {
 // 分页处理
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
-	pageNumber.value = 1;
 };
 
 const handleCurrentChange = (val: number) => {
