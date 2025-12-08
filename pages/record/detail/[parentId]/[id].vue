@@ -19,14 +19,13 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { parentId: pid, id: rid } = route.params as { parentId: string; id: string };
-const parentId = computed(() => pid);
-const id = computed(() => rid);
+const parentId = computed<string>(() => (route.params as { parentId?: string }).parentId || '');
+const id = computed<string>(() => (route.params as { id?: string }).id || '');
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 
 const { data, error } = await useAsyncData(
-	'recordDetailQuery',
+	() => `recordDetailQuery-${parentId.value}-${id.value}`,
 	() => recordDetailQuery(Number(parentId.value), Number(id.value)),
 	{
 		watch: [parentId, id],
@@ -60,7 +59,7 @@ const currentDisplayImages = computed(() => count.value.slice(0, mark.value));
 
 // 查询上下条数据
 const getById = async (recordId: number) => {
-	navigateTo({ path: `/record/detail/${parentId.value}/${recordId}` }, { replace: true });
+	await navigateTo({ path: `/record/detail/${parentId.value}/${recordId}` }, { replace: true });
 };
 
 // 预览图片
