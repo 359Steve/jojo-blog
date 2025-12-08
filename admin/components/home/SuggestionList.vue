@@ -3,6 +3,9 @@ import type { CreateErrorMessageDto } from '~/server/dto/CreateErrorMessageDto';
 
 const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
+watch(pageSize, () => {
+	pageNumber.value = 1;
+});
 const { data, refresh } = await useAsyncData(
 	'errorList',
 	() =>
@@ -26,7 +29,6 @@ const handleCurrentChange = (val: number): void => {
 // 每页条数改变
 const handleSizeChange = (val: number): void => {
 	pageSize.value = val;
-	pageNumber.value = 1;
 };
 
 // 删除错误信息

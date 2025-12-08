@@ -21,7 +21,7 @@ onMounted(() => {
 <template>
 	<HeaderDrawerHeader />
 	<header ref="headerEl"
-		class="bg-background/50 border-border/50 sticky top-0 z-10 flex h-12 w-full items-center justify-between border-x-0 px-4 backdrop-blur-md transition-all duration-300 ease-in-out"
+		class="glass sticky top-0 z-10 flex h-12 w-full items-center justify-between border-x-0 px-4 transition-all duration-300 ease-in-out"
 		:class="[useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']">
 		<div class="h-full w-24 cursor-pointer py-2">
 			<LogoBasicLogo />

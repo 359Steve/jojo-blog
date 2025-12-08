@@ -7,6 +7,9 @@ const pageNumber = ref<number>(1);
 const loading = ref<boolean>(false);
 const isEdit = ref<boolean>(false);
 const ruleFormRef = templateRef('ruleFormRef');
+watch(pageSize, () => {
+	pageNumber.value = 1;
+});
 const { data, refresh } = await useAsyncData('recordGroups', () => queryGroupAll(pageNumber.value, pageSize.value), {
 	watch: [pageNumber],
 });
@@ -40,7 +43,6 @@ const resetForm = () => {
 
 const handleSizeChange = (val: number) => {
 	pageSize.value = val;
-	pageNumber.value = 1;
 };
 
 // 分页

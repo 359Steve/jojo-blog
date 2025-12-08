@@ -6,18 +6,18 @@ const generateSlideAnimations = (): Record<string, Record<string, Record<string,
 	const directions = ['top', 'right', 'bottom', 'left'];
 	const result: Record<string, Record<string, Record<string, string>>> = {};
 
-	directions.forEach(dir => {
+	directions.forEach((dir) => {
 		const axis = dir === 'top' || dir === 'bottom' ? 'Y' : 'X';
 		const sign = dir === 'top' || dir === 'left' ? '-' : '';
 
 		result[`${dir}Enter`] = {
 			'0%': { transform: `translate${axis}(${sign}100%)` },
-			'100%': { transform: `translate${axis}(0)` }
+			'100%': { transform: `translate${axis}(0)` },
 		};
 
 		result[`${dir}Leave`] = {
 			'0%': { transform: `translate${axis}(0)` },
-			'100%': { transform: `translate${axis}(${sign}100%)` }
+			'100%': { transform: `translate${axis}(${sign}100%)` },
 		};
 	});
 
@@ -28,7 +28,11 @@ const addVariablesForColors = ({ addBase, theme }: any) => {
 	const allColors = flattenColorPalette(theme('colors'));
 	const newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]));
 	addBase({
-		':root': newVars
+		':root': newVars,
+		'.glass': {
+			'backdrop-filter': 'blur(12px)',
+			'-webkit-backdrop-filter': 'blur(12px)',
+		},
 	});
 };
 
@@ -39,27 +43,27 @@ export default {
 		'./components/**/*.{vue,js,ts}',
 		'./layouts/**/*.{vue,js,ts}',
 		'./app.vue',
-		'./nuxt.config.ts'
+		'./nuxt.config.ts',
 	],
 	theme: {
 		extend: {
 			screens: {
 				'mobile-pad': '480px',
 				'admin-lg': '1180px',
-				'admin-md': '968px'
+				'admin-md': '968px',
 			},
 			borderRadius: {
-				base: '6px'
+				base: '6px',
 			},
 			columns: {
-				'4xs': '14rem'
+				'4xs': '14rem',
 			},
 			flexBasis: {
-				hh: '8rem'
+				hh: '8rem',
 			},
 			fontFamily: {
 				ww: '华文新魏',
-				cmm: 'Consolas,Monaco,monospace'
+				cmm: 'Consolas,Monaco,monospace',
 			},
 			backgroundColor: {
 				'half-gray': 'rgb(107 114 128 / 0.5)',
@@ -77,7 +81,7 @@ export default {
 				'admin-header-bg-hover': 'var(--jojo-admin-menu-hover)',
 				'admin-dropdown-menu-bg': 'var(--jojo-admin-dropdown-menu-bg)',
 
-				'blog-base-color': 'var(--jojo-blog-base-color)'
+				'blog-base-color': 'var(--jojo-blog-base-color)',
 			},
 			textColor: {
 				'admin-tag-text': 'var(--jojo-admin-menu-text)',
@@ -85,7 +89,7 @@ export default {
 				'admin-sub-menu-active-text': 'var(--jojo-admin-sub-menu-active-text)',
 				'admin-menu-text': 'var(--jojo-admin-menu-text)',
 				'admin-menu-title-hover': 'var(--jojo-admin-menu-title-hover)',
-				'admin-menu-disabled-text': 'var(--jojo-admin-text-color-disabled)'
+				'admin-menu-disabled-text': 'var(--jojo-admin-text-color-disabled)',
 			},
 			borderColor: {
 				'admin-menu-border': 'var(--jojo-admin-border-color)',
@@ -94,42 +98,42 @@ export default {
 				...generateSlideAnimations(),
 				aurora: {
 					from: {
-						backgroundPosition: '50% 50%, 50% 50%'
+						backgroundPosition: '50% 50%, 50% 50%',
 					},
 					to: {
-						backgroundPosition: '350% 50%, 350% 50%'
-					}
+						backgroundPosition: '350% 50%, 350% 50%',
+					},
 				},
 				grow: {
 					'0%': {
 						strokeDasharray: '0 350px',
-						opacity: '0'
+						opacity: '0',
 					},
 					'10%': {
-						opacity: '1'
+						opacity: '1',
 					},
 					'40%': {
-						strokeDasharray: '350px 0'
+						strokeDasharray: '350px 0',
 					},
 					'100%': {
 						strokeDasharray: '350px 0',
-						opacity: '1'
-					}
+						opacity: '1',
+					},
 				},
 				shrink: {
 					'0%': {
 						strokeDasharray: '350px 0',
-						opacity: '1'
+						opacity: '1',
 					},
 					'99%': {
 						strokeDasharray: '0 350px',
-						opacity: '1'
+						opacity: '1',
 					},
 					'100%': {
 						strokeDasharray: '0 350px',
-						opacity: '0'
-					}
-				}
+						opacity: '0',
+					},
+				},
 			},
 			animation: {
 				topEnter: 'topEnter 0.3s ease both',
@@ -142,13 +146,13 @@ export default {
 				leftLeave: 'leftLeave 0.3s ease both',
 				aurora: 'aurora 60s linear infinite',
 				grow: 'grow 5s ease forwards',
-				shrink: 'shrink 1s ease forwards'
+				shrink: 'shrink 1s ease forwards',
 			},
 			boxShadow: {
 				base: '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
 				'admin-menu-shadow': '0 1px 5px 0 var(--jojo-admin-border-color)',
-			}
-		}
+			},
+		},
 	},
-	plugins: ['prettier-plugin-tailwindcss', addVariablesForColors]
+	plugins: ['prettier-plugin-tailwindcss', addVariablesForColors],
 };

@@ -20,7 +20,7 @@ const pageNumber = ref<number>(1);
 const pageSize = ref<number>(10);
 const searchTag = ref<string>('');
 const debouncedSearch = useDebounce(searchTag, 300);
-watch(debouncedSearch, () => {
+watch([debouncedSearch, pageSize], () => {
 	pageNumber.value = 1;
 });
 const { data, refresh } = await useAsyncData(
@@ -32,7 +32,7 @@ const { data, refresh } = await useAsyncData(
 			pageSize: pageSize.value,
 		}),
 	{
-		watch: [pageNumber],
+		watch: [pageNumber, debouncedSearch],
 	},
 );
 const tableData = computed<CreateTagDto[]>(() => data.value?.data?.records || []);
@@ -172,7 +172,6 @@ const handleCurrentChange = (val: number): void => {
 // 每页条数改变
 const handleSizeChange = (val: number): void => {
 	pageSize.value = val;
-	pageNumber.value = 1;
 };
 
 // 验证icon是否存在
