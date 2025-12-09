@@ -18,15 +18,12 @@ export const recordDetailQuery = (parentId: number, id: number) =>
 		id,
 	});
 
-// 分页查询记录详情
-export const recordDetailsQuery = async (query: RecordQueryParams) => {
+// 查询记录详情列表
+export const recordDetailsQuery = async () => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchUseGet<
-			RecordQueryParams,
-			RecordsResponse<Pick<CreateRecordDetailDto, 'id' | 'title' | 'images' | 'image_alt' | 'time_range'>>
-		>('/record/recordPublicDetails', {
-			query,
-		}),
+		fetchUseGet<any, RecordsResponse<Omit<CreateRecordDetailDto, 'summary' | 'views' | 'date_path'>>>(
+			'/record/recordPublicDetails',
+		),
 	);
 
 	return handleApiResponse(res, false);
