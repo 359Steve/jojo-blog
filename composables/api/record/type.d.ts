@@ -12,10 +12,3 @@ type RecordDetailRep<T> = T & {
 	prev: { id: number } | null;
 	next: { id: number } | null;
 };
-
-// 分页查询记录参数类型
-type RecordQueryParams = {
-	parentId: number;
-	pageNumber: number;
-	pageSize: number;
-};
