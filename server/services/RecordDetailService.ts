@@ -24,7 +24,7 @@ export interface RecordDetailService {
 	// 查询照片
 	getPublicRecordPictures(query: FindPictureRequest): ReturnType<RecordDetailRepository['getPublicRecordPictures']>;
 	// 分页查询记录详情
-	getPublicRecordDetails(query: RecordQueryParams): ReturnType<RecordDetailRepository['getPublicRecordDetails']>;
+	getPublicRecordDetails(): ReturnType<RecordDetailRepository['getPublicRecordDetails']>;
 	// 增加记录详情浏览量
 	addRecordDetailView(
 		id: number,
