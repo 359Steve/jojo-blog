@@ -41,7 +41,7 @@ watch(data, (newData) => {
 
 const toDetail = (blog: BlogWithTagsRep<CreateBlogDto, CreateTagDto, 'tags'>): void => {
 	useBlog().setCurrentBlog(blog);
-	navigateTo({ path: '/blog/detail', query: { id: blog.id } });
+	navigateTo({ path: `/blog/detail/${blog.id}` });
 };
 
 // 滚动加载更多防抖函数
@@ -83,7 +83,7 @@ onMounted(() => {
 	<div class="w-full">
 		<div v-if="blogList.length > 0" class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 			<div v-for="item in blogList" :key="item.id"
-				class="glass group flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
+				class="group glass flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
 				@click="toDetail(item)">
 				<img v-lazy="item.front_cover" alt="thumbnail" loading="lazy" decoding="async" data-nimg="1"
 					class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]">
