@@ -23,7 +23,7 @@ export interface RecordDetailService {
 	getPublicRecordDetail(parentId: number, id: number): ReturnType<RecordDetailRepository['getPublicRecordDetail']>;
 	// 查询照片
 	getPublicRecordPictures(query: FindPictureRequest): ReturnType<RecordDetailRepository['getPublicRecordPictures']>;
-	// 分页查询记录详情
+	// 查询记录详情列表
 	getPublicRecordDetails(): ReturnType<RecordDetailRepository['getPublicRecordDetails']>;
 	// 增加记录详情浏览量
 	addRecordDetailView(
