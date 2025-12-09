@@ -100,13 +100,13 @@ export default defineNuxtConfig({
 
 	// 路由规则
 	routeRules: {
-		'/admin/**': { ssr: false },
-		'/': { isr: 300 },
-		'/photos': { isr: 600, headers: { 'cache-control': 's-maxage=600' } },
-		'/blog': { isr: 1800 },
-		'/blog/**': { isr: 3600 },
-		'/record': { isr: 1800 },
-		'/record/**': { isr: 3600 },
+		'/admin/**': { ssr: false } as any,
+		'/': { swr: 300 },
+		'/photos': { swr: 600, headers: { 'cache-control': 's-maxage=600' } },
+		'/blog': { swr: 1800 },
+		'/blog/**': { swr: 3600 },
+		'/record': { swr: 1800 },
+		'/record/**': { swr: 3600 },
 		'/api/blog/**': { headers: { 'cache-control': 's-maxage=300' }, cors: true },
 		'/api/record/**': { headers: { 'cache-control': 's-maxage=600' }, cors: true },
 		'/api/user/**': { headers: { 'cache-control': 's-maxage=60' }, cors: true },
@@ -194,7 +194,26 @@ export default defineNuxtConfig({
 		'@vueuse/motion/nuxt',
 		'@nuxtjs/google-fonts',
 		'@nuxt/eslint',
+		'@nuxtjs/sitemap',
 	],
+
+	site: {
+		url: 'https://www.polnareff.me',
+		name: 'Jojo Blog',
+		description: 'Jojo的个人博客，分享技术文章、生活记录和项目经验',
+		defaultLocale: 'zh',
+	},
+
+	sitemap: {
+		strictNuxtContentPaths: true,
+		exclude: ['/admin/**', '/api/**'],
+		sources: ['/api/sitemap/urls'],
+		defaults: {
+			changefreq: 'weekly',
+			priority: 0.5,
+			lastmod: new Date(),
+		},
+	},
 
 	experimental: {
 		payloadExtraction: false,
