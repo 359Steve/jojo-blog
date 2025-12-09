@@ -382,7 +382,7 @@ export class RecordDetailRepository {
 		}
 	}
 
-	// 分页查询记录详情
+	// 查询记录详情列表
 	async getPublicRecordDetails() {
 		try {
 			const [records, total] = await this.prismaClient.$transaction([
