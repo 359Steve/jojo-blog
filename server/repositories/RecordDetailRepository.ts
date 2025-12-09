@@ -383,34 +383,25 @@ export class RecordDetailRepository {
 	}
 
 	// 分页查询记录详情
-	async getPublicRecordDetails(query: RecordQueryParams) {
+	async getPublicRecordDetails() {
 		try {
-			const { pageNumber, pageSize, parentId } = query;
-			const offset = (pageNumber - 1) * pageSize;
-
 			const [records, total] = await this.prismaClient.$transaction([
 				this.prismaClient.record_details.findMany({
-					where: {
-						group_id: Number(parentId),
-					},
 					select: {
 						id: true,
+						group_id: true,
 						title: true,
 						time_range: true,
 						images: true,
 						image_alt: true,
+						created_at: true,
+						updated_at: true,
 					},
 					orderBy: {
 						time_range: 'desc',
 					},
-					skip: offset,
-					take: Number(pageSize),
 				}),
-				this.prismaClient.record_details.count({
-					where: {
-						group_id: Number(parentId),
-					},
-				}),
+				this.prismaClient.record_details.count(),
 			]);
 
 			if (!records || !total) {
