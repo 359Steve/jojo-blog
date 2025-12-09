@@ -55,29 +55,29 @@ export class BlogRepository {
 	async getBlogList(data: FindBlogParams) {
 		try {
 			const { pageSize = 10, pageNumber = 1, keyword = '' } = data;
-			const skip = (pageNumber - 1) * pageSize;
+
+			// 搜索条件
 			const where = keyword
 				? {
-					OR: [
-						{
-							title: {
-								contains: keyword,
-							},
-						},
-						{
-							subtitle: {
-								contains: keyword,
-							},
-						},
-					],
+					OR: [{ title: { contains: keyword } }, { subtitle: { contains: keyword } }],
 				}
 				: {};
+
+			let skip = 0;
+			let take: number | undefined = Number(pageSize);
+
+			if (pageSize === -1) {
+				skip = 0;
+				take = undefined;
+			} else {
+				skip = (pageNumber - 1) * pageSize;
+			}
 
 			const [list, total] = await this.prismaClient.$transaction([
 				this.prismaClient.blog.findMany({
 					where,
-					skip: Number(skip),
-					take: Number(pageSize),
+					skip,
+					take,
 					orderBy: { created_at: 'desc' },
 					include: {
 						tags: {
@@ -89,10 +89,6 @@ export class BlogRepository {
 				}),
 				this.prismaClient.blog.count({ where }),
 			]);
-
-			if (!list || !total) {
-				return returnData(StatusCode.SUCCESS, '博客列表到底了', null);
-			}
 
 			return returnData(StatusCode.SUCCESS, '博客列表获取成功', {
 				records: list,
