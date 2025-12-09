@@ -39,7 +39,7 @@ export class RecordDetailServiceImpl implements RecordDetailService {
 	getPublicRecordPictures(query: FindPictureRequest): ReturnType<RecordDetailRepository['getPublicRecordPictures']> {
 		return this.recordDetailRepository.getPublicRecordPictures(query);
 	}
-	getPublicRecordDetails(query: RecordQueryParams): ReturnType<RecordDetailRepository['getPublicRecordDetails']> {
-		return this.recordDetailRepository.getPublicRecordDetails(query);
+	getPublicRecordDetails(): ReturnType<RecordDetailRepository['getPublicRecordDetails']> {
+		return this.recordDetailRepository.getPublicRecordDetails();
 	}
 }
