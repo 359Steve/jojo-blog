@@ -1,5 +1,5 @@
 ---
-title: 'Hello Nuxt Content1'
+title: 'Hello Nuxt Content666'
 date: 2023-10-01
 description: '一篇关于 Nuxt Content1 的简单介绍文章'
 ---
