@@ -16,7 +16,7 @@ jobs:
             - name: 设置Node.js环境
               uses: actions/setup-node@v4
               with:
-                  node-version: '20.x'
+                  node-version: '24.x'
                   cache: 'npm'
 
             - name: 安装依赖
@@ -28,7 +28,7 @@ jobs:
               run: npm run build
 
             - name: 压缩构建产物（包含所有依赖）
-              run: tar -czf deploy.tar.gz .output package.json package-lock.json ecosystem.config.js
+              run: tar -czf deploy.tar.gz .output ecosystem.config.js
 
             - name: 上传构建产物到服务器
               uses: appleboy/scp-action@v0.1.7
@@ -52,8 +52,8 @@ jobs:
                       echo "📦 解压构建产物..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-                      echo "📥 安装生产依赖..."
-                      npm ci --omit=dev --prefer-offline
+                      echo "📥 安装依赖..."
+                      npm ci
                       echo "🔄 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
                       echo "✅ 部署完成！"
