@@ -8,19 +8,6 @@ interface Props {
 const { lang = 'text', filename, copyable = true } = defineProps<Props>();
 
 const copied = ref(false);
-
-const copyCode = async () => {
-	const codeElement = document.querySelector('.code-content');
-	if (codeElement) {
-		try {
-			await navigator.clipboard.writeText(codeElement.textContent || '');
-			copied.value = true;
-			setTimeout(() => (copied.value = false), 2000);
-		} catch (err) {
-			console.error('Failed to copy:', err);
-		}
-	}
-};
 </script>
 
 <template>
@@ -30,7 +17,7 @@ const copyCode = async () => {
 				<span class="code-lang">{{ lang }}</span>
 				<span v-if="filename" class="code-filename">{{ filename }}</span>
 			</div>
-			<button v-if="copyable" class="copy-button" @click="copyCode">
+			<button v-if="copyable" class="copy-button">
 				{{ copied ? 'Copied!' : 'Copy' }}
 			</button>
 		</div>

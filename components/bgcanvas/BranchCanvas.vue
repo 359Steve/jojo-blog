@@ -17,12 +17,17 @@ const width = ref<number>(0);
 const height = ref<number>(0);
 const pendingTasks = ref<TaskFn[]>([]);
 const frameCount = ref<number>(0);
-const ctx = ref<CanvasRenderingContext2D | null>(null)
+const ctx = ref<CanvasRenderingContext2D | null>(null);
+let randomSeed = 12345;
+const seededRandom = () => {
+	randomSeed = (randomSeed * 9301 + 49297) % 233280;
+	return randomSeed / 233280;
+};
 
 const getEndPoint = (b: BranchLine): Point => {
 	return {
 		x: b.start.x + b.lenght * Math.cos(b.theta),
-		y: b.start.y + b.lenght * Math.sin(b.theta)
+		y: b.start.y + b.lenght * Math.sin(b.theta),
 	};
 };
 
@@ -46,32 +51,32 @@ const step = (b: BranchLine, deep = 0) => {
 	drawBranch(b);
 
 	// 左边的枝
-	if (deep < 3 || Math.random() < 0.5) {
+	if (deep < 3 || seededRandom() < 0.5) {
 		// 调用计算结束点方法
 		pendingTasks.value.push(() =>
 			step(
 				{
 					start: end,
-					lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-					theta: b.theta - 0.3 * Math.random()
+					lenght: b.lenght > 5 ? b.lenght : b.lenght + (seededRandom() * 5 - 1),
+					theta: b.theta - 0.3 * seededRandom(),
 				},
-				deep + 1
-			)
+				deep + 1,
+			),
 		);
 	}
 
 	// 右边的枝
-	if (deep < 3 || Math.random() < 0.5) {
+	if (deep < 3 || seededRandom() < 0.5) {
 		// 调用计算结束点方法
 		pendingTasks.value.push(() =>
 			step(
 				{
 					start: end,
-					lenght: b.lenght > 5 ? b.lenght : b.lenght + (Math.random() * 5 - 1),
-					theta: b.theta + 0.3 * Math.random()
+					lenght: b.lenght > 5 ? b.lenght : b.lenght + (seededRandom() * 5 - 1),
+					theta: b.theta + 0.3 * seededRandom(),
 				},
-				deep + 1
-			)
+				deep + 1,
+			),
 		);
 	}
 };
@@ -87,16 +92,16 @@ const init = () => {
 
 	const branches: BranchLine[] = [
 		{ start: leftTop, lenght: 3, theta: leftTheta },
-		{ start: rightBottom, lenght: 3, theta: rightTheta }
+		{ start: rightBottom, lenght: 3, theta: rightTheta },
 	];
 
-	branches.forEach(branch => step(branch));
+	branches.forEach((branch) => step(branch));
 };
 
 const frame = () => {
 	const tasks = [...pendingTasks.value];
 	pendingTasks.value = [];
-	tasks.forEach(task => task());
+	tasks.forEach((task) => task());
 };
 
 const animate = () => {
@@ -122,7 +127,7 @@ onMounted(() => {
 		canvasEl.value.width = rect.width * ratio;
 		canvasEl.value.height = rect.height * ratio;
 
-		ctx.value = canvasEl.value.getContext('2d')
+		ctx.value = canvasEl.value.getContext('2d');
 
 		// 缩放上下文，让坐标系统仍然用 CSS 像素
 		ctx.value!.scale(ratio, ratio);
@@ -136,7 +141,7 @@ onMounted(() => {
 
 <template>
 	<div class="fixed inset-0 z-[-1]">
-		<canvas ref="canvasEl" class="h-full w-full"></canvas>
+		<canvas ref="canvasEl" class="h-full w-full" />
 	</div>
 </template>
 

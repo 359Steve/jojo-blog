@@ -6,8 +6,8 @@ const windWidth = ref<number>(0);
 
 const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 	selectTheme.value = !selectTheme.value;
-	// 判断是否支持该api
-	const isViewTransitionSupported = 'startViewTransition' in document;
+	// 判断是否支持该api (检查是否在浏览器环境)
+	const isViewTransitionSupported = typeof document !== 'undefined' && 'startViewTransition' in document;
 
 	if (!isViewTransitionSupported) {
 		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');

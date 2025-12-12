@@ -21,31 +21,38 @@ const images = ref<ImageOptions[]>([
 	{ url: Snowflake, count: power ? power * 100 : 100, maxSize: 15 },
 ]);
 
-const currentImageUrl = computed(() => {
+const currentImageUrl = ref<ImageOptions>(images.value[0]);
+
+const updateCurrentImageUrl = () => {
 	const month = new Date().getMonth() + 1;
 	switch (month) {
 		case 12:
 		case 1:
 		case 2:
-			return images.value[3];
+			currentImageUrl.value = images.value[3];
+			break;
 		case 3:
 		case 4:
 		case 5:
-			return images.value[0];
+			currentImageUrl.value = images.value[0];
+			break;
 		case 6:
 		case 7:
 		case 8:
-			return images.value[1];
+			currentImageUrl.value = images.value[1];
+			break;
 		case 9:
 		case 10:
 		case 11:
-			return images.value[2];
+			currentImageUrl.value = images.value[2];
+			break;
 		default:
-			return images.value[0];
+			currentImageUrl.value = images.value[0];
 	}
-});
+};
 
 onMounted(() => {
+	updateCurrentImageUrl();
 	nextTick(() => {
 		if (canvas.value) {
 			createSakuraFall({
