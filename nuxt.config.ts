@@ -279,7 +279,7 @@ export default defineNuxtConfig({
 		prefetch: false,
 		preconnect: false,
 		preload: false,
-		download: true,
+		download: false,
 		base64: false,
 	},
 

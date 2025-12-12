@@ -1,0 +1,60 @@
+name: Deploy to Aliyun Server
+
+on:
+    push:
+        branches: [main, master]
+    workflow_dispatch: # 允许手动触发
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: 检出代码
+              uses: actions/checkout@v4
+
+            - name: 设置Node.js环境
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20.x'
+                  cache: 'npm'
+
+            - name: 安装依赖
+              run: |
+                  npm config set registry https://registry.npmmirror.com
+                  npm ci
+
+            - name: 构建项目
+              run: npm run build
+
+            - name: 压缩构建产物
+              run: tar -czf deploy.tar.gz .output package.json package-lock.json ecosystem.config.js
+
+            - name: 上传构建产物到服务器
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.ALIYUN_HOST }}
+                  username: ${{ secrets.ALIYUN_USER }}
+                  key: ${{ secrets.ALIYUN_SSH_KEY }}
+                  port: ${{ secrets.ALIYUN_PORT || 22 }}
+                  source: 'deploy.tar.gz'
+                  target: '/tmp/'
+
+            - name: 部署到阿里云服务器
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.ALIYUN_HOST }}
+                  username: ${{ secrets.ALIYUN_USER }}
+                  key: ${{ secrets.ALIYUN_SSH_KEY }}
+                  port: ${{ secrets.ALIYUN_PORT || 22 }}
+                  script: |
+                      cd ${{ secrets.DEPLOY_PATH }}
+                      echo "📦 解压构建产物..."
+                      tar -xzf /tmp/deploy.tar.gz
+                      rm /tmp/deploy.tar.gz
+                      echo "📥 安装生产依赖..."
+                      npm ci --production
+                      echo "🔄 重启应用..."
+                      pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
+                      echo "✅ 部署完成！"
+                      pm2 status nuxt-app
