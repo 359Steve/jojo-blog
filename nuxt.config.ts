@@ -195,7 +195,32 @@ export default defineNuxtConfig({
 		'@nuxtjs/google-fonts',
 		'@nuxt/eslint',
 		'@nuxtjs/sitemap',
+		'@nuxt/content',
 	],
+
+	content: {
+		build: {
+			markdown: {
+				toc: {
+					depth: 2,
+					searchDepth: 2,
+				},
+				contentHeading: true,
+				highlight: {
+					theme: {
+						default: 'github-light',
+						dark: 'github-dark',
+						sepia: 'monokai',
+					},
+				},
+			},
+		},
+		renderer: {
+			alias: {
+				p: 'text-style',
+			},
+		},
+	},
 
 	site: {
 		url: 'https://www.polnareff.me',
@@ -205,7 +230,6 @@ export default defineNuxtConfig({
 	},
 
 	sitemap: {
-		strictNuxtContentPaths: true,
 		exclude: ['/admin/**', '/api/**'],
 		sources: ['/api/sitemap/urls'],
 		defaults: {
