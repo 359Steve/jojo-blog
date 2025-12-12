@@ -96,8 +96,9 @@ export default defineNuxtConfig({
 		routeRules: {
 			'/public/**': { headers: { 'cache-control': 's-maxage=31536000' } },
 		},
-		moduleSideEffects: ['tslib'],
-		noExternals: true,
+		externals: {
+			inline: ['tslib'],
+		},
 	},
 
 	// 路由规则
