@@ -16,7 +16,7 @@ jobs:
             - name: 设置Node.js环境
               uses: actions/setup-node@v4
               with:
-                  node-version: '24.x'
+                  node-version: '20.x'
                   cache: 'npm'
 
             - name: 安装依赖
@@ -52,9 +52,7 @@ jobs:
                       echo "📦 解压构建产物..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-                      echo "📥 安装依赖..."
-                      npm ci
-                      echo "🔄 重启应用..."
+                      echo " 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
                       echo "✅ 部署完成！"
                       pm2 status nuxt-app
