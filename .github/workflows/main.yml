@@ -52,8 +52,8 @@ jobs:
                       echo "📦 解压构建产物..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-                      echo "📥 安装生产依赖..."
-                      npm ci --production
+                      echo "📥 安装依赖..."
+                      npm ci
                       echo "🔄 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
                       echo "✅ 部署完成！"
