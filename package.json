@@ -29,6 +29,7 @@
 		"@vueuse/core": "^13.1.0",
 		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^13.1.0",
+		"@element-plus/nuxt": "^1.1.4",
 		"animate.css": "^4.1.1",
 		"autoprefixer": "^10.4.21",
 		"better-sqlite3": "^12.5.0",
@@ -71,7 +72,6 @@
 		"@koa/router": "^15.0.0"
 	},
 	"devDependencies": {
-		"@element-plus/nuxt": "^1.1.4",
 		"@types/jsonwebtoken": "^9.0.9",
 		"@types/number-to-words": "^1.2.3",
 		"@types/passport-jwt": "^4.0.1",
