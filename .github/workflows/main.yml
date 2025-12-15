@@ -19,12 +19,13 @@ jobs:
                   node-version: '20.x'
                   cache: 'npm'
 
-            - name: 安装依赖并构建
+            - name: 安装依赖
               run: |
                   npm config set registry https://registry.npmmirror.com
                   npm ci
-                  npx prisma generate
-                  npm run build
+
+            - name: 构建项目
+              run: npm run build
 
             - name: 安装生产依赖（预编译原生模块）
               run: |
@@ -32,7 +33,7 @@ jobs:
                   npm ci --omit=dev
 
             - name: 打包部署文件
-              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json prisma/migrations
+              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json
 
             - name: 上传部署文件到服务器
               uses: appleboy/scp-action@v0.1.7
@@ -52,34 +53,13 @@ jobs:
                   key: ${{ secrets.ALIYUN_SSH_KEY }}
                   port: ${{ secrets.ALIYUN_PORT || 22 }}
                   script: |
-                      cd ${{ secrets.DEPLOY_PATH }} || exit 1
-
-                      echo "🧹 清理旧临时文件..."
-                      rm -rf /tmp/deploy.tar.gz
-
-                      echo "📦 备份旧版本..."
-                      if [ -d ".output" ]; then
-                        mv .output output_backup_$(date +%Y%m%d_%H%M%S)
-                      fi
-                      if [ -d "node_modules" ]; then
-                        mv node_modules node_modules_backup_$(date +%Y%m%d_%H%M%S)
-                      fi
-
-                      echo "📦 解压新版本..."
+                      cd ${{ secrets.DEPLOY_PATH }}
+                      echo "🧹 清理旧文件..."
+                      rm -rf .output node_modules
+                      echo "📦 解压构建文件..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-
-                      echo "📂 部署 Prisma 迁移..."
-                      if [ -d "prisma/migrations" ]; then
-                        npx prisma migrate deploy || true
-                      fi
-
-                      echo "🔄 重启 PM2 服务..."
+                      echo "🔄 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
-
-                      echo "🧹 清理旧备份（保留最近3个）..."
-                      ls -dt output_backup_* | tail -n +4 | xargs -r rm -rf
-                      ls -dt node_modules_backup_* | tail -n +4 | xargs -r rm -rf
-
                       echo "✅ 部署完成！"
                       pm2 status nuxt-app
