@@ -49,11 +49,13 @@ jobs:
                   port: ${{ secrets.ALIYUN_PORT || 22 }}
                   script: |
                       cd ${{ secrets.DEPLOY_PATH }}
+                      echo "🧹 清理旧文件..."
+                      rm -rf .output
                       echo "📦 解压构建文件..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
                       echo "📦 安装生产依赖..."
-                      npm ci --production
+                      npm ci --omit=dev
                       echo "🔄 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
                       echo "✅ 部署完成！"
