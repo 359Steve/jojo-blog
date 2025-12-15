@@ -27,8 +27,13 @@ jobs:
             - name: 构建项目
               run: npm run build
 
+            - name: 安装生产依赖（预编译原生模块）
+              run: |
+                  rm -rf node_modules
+                  npm ci --omit=dev
+
             - name: 打包部署文件
-              run: tar -czf deploy.tar.gz .output ecosystem.config.js package*.json
+              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json
 
             - name: 上传部署文件到服务器
               uses: appleboy/scp-action@v0.1.7
@@ -50,12 +55,10 @@ jobs:
                   script: |
                       cd ${{ secrets.DEPLOY_PATH }}
                       echo "🧹 清理旧文件..."
-                      rm -rf .output
+                      rm -rf .output node_modules
                       echo "📦 解压构建文件..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-                      echo "📦 安装生产依赖..."
-                      npm ci --omit=dev
                       echo "🔄 重启应用..."
                       pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
                       echo "✅ 部署完成！"
