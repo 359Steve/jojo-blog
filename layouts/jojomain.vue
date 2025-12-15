@@ -1,49 +1,7 @@
 <script lang="ts" setup>
 const route = useRoute();
-const selectTheme = ref<boolean>(useJojoColorMode().getDarkMode().preference !== 'dark');
 const jojoMain = useTemplateRef('jojoMain');
 const windWidth = ref<number>(0);
-
-const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
-	selectTheme.value = !selectTheme.value;
-	// 判断是否支持该api (检查是否在浏览器环境)
-	const isViewTransitionSupported = typeof document !== 'undefined' && 'startViewTransition' in document;
-
-	if (!isViewTransitionSupported) {
-		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
-		return true;
-	}
-	const transition: ViewTransition = document.startViewTransition(() => {
-		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
-	});
-
-	transition.ready.then(() => {
-		const isDark = useJojoColorMode().getDarkMode().preference === 'dark';
-		const clientX = innerWidth / 2;
-		const clientY = innerHeight / 2;
-
-		// 计算最大半径
-		const radius = Math.hypot(Math.max(clientX, innerWidth - clientX), Math.max(clientY, innerHeight - clientY));
-
-		// 开始动画
-		const clipPath = [
-			`circle(0% at ${clientX}px ${clientY}px)`,
-			`circle(${radius}px at ${clientX}px ${clientY}px)`,
-		];
-		document.documentElement.animate(
-			{
-				clipPath: isDark ? clipPath.reverse() : clipPath,
-			},
-			// 设置时间，已经目标伪元素
-			{
-				duration: 500,
-				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
-			},
-		);
-	});
-
-	return true;
-};
 
 onMounted(() => {
 	nextTick(() => {
@@ -69,7 +27,7 @@ onMounted(() => {
 		</ElBacktop>
 		<div class="flex h-full min-h-screen w-full flex-col">
 			<!-- 导航栏 -->
-			<HeaderBox :select-theme="selectTheme" @change-theme="changeTheme" />
+			<HeaderBox />
 			<ClientOnly>
 				<NuxtLoadingIndicator color="#A3AAB6" />
 			</ClientOnly>

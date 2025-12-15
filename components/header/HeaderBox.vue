@@ -1,16 +1,51 @@
 <script lang="ts" setup>
-const { drawer } = storeToRefs(useJojoHeader());
+const { drawer, isScroll } = storeToRefs(useJojoHeader());
 const headerEl = ref<HTMLElement | null>(null);
+const selectTheme = ref<boolean>(true);
 
-const { selectTheme } = defineProps<{
-	selectTheme?: boolean;
-}>();
+const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
+	selectTheme.value = !selectTheme.value;
+	// 判断是否支持该api (检查是否在浏览器环境)
+	const isViewTransitionSupported = typeof document !== 'undefined' && 'startViewTransition' in document;
 
-defineEmits<{
-	(e: 'changeTheme', value: MouseEvent): void;
-}>();
+	if (!isViewTransitionSupported) {
+		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
+		return true;
+	}
+	const transition: ViewTransition = document.startViewTransition(() => {
+		useJojoColorMode().setDarkMode(selectTheme.value ? 'light' : 'dark');
+	});
+
+	transition.ready.then(() => {
+		const isDark = useJojoColorMode().getDarkMode().preference === 'dark';
+		const clientX = innerWidth / 2;
+		const clientY = innerHeight / 2;
+
+		// 计算最大半径
+		const radius = Math.hypot(Math.max(clientX, innerWidth - clientX), Math.max(clientY, innerHeight - clientY));
+
+		// 开始动画
+		const clipPath = [
+			`circle(0% at ${clientX}px ${clientY}px)`,
+			`circle(${radius}px at ${clientX}px ${clientY}px)`,
+		];
+		document.documentElement.animate(
+			{
+				clipPath: isDark ? clipPath.reverse() : clipPath,
+			},
+			// 设置时间，已经目标伪元素
+			{
+				duration: 500,
+				pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+			},
+		);
+	});
+
+	return true;
+};
 
 onMounted(() => {
+	selectTheme.value = useJojoColorMode().getDarkMode().preference !== 'dark';
 	nextTick(() => {
 		const height: number = headerEl.value!.getBoundingClientRect().height;
 		useJojoHeader().setHeaderHeight(height);
@@ -19,10 +54,12 @@ onMounted(() => {
 </script>
 
 <template>
-	<HeaderDrawerHeader />
+	<ClientOnly>
+		<HeaderDrawerHeader />
+	</ClientOnly>
 	<header ref="headerEl"
 		class="glass sticky top-0 z-10 flex h-12 w-full items-center justify-between border-x-0 px-4 transition-all duration-300 ease-in-out"
-		:class="[useJojoHeader().getScroll() ? '-translate-y-full' : 'translate-y-0']">
+		:class="[isScroll ? '-translate-y-full' : 'translate-y-0']">
 		<div class="h-full w-24 cursor-pointer py-2">
 			<LogoBasicLogo />
 		</div>
@@ -51,14 +88,9 @@ onMounted(() => {
 			</div>
 			<div class="flex items-center justify-between gap-x-2">
 				<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
-					@click="$emit('changeTheme', $event)">
+					@click="changeTheme($event)">
 					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black" />
 				</div>
-				<NuxtLink
-					class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
-					target="_blank" rel="noopener noreferrer" to="/admin">
-					<Icon icon="ri:settings-5-fill" class="dark:text-black" />
-				</NuxtLink>
 				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:hidden"
 					@click="drawer = !drawer">
 					<Icon icon="ri:menu-fold-4-fill" />

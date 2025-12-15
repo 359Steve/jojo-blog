@@ -22,23 +22,20 @@ const gridPositions = ref([
 ]);
 
 // 默认图片列表
-const defaultImages = ref([
-	'https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2338&auto=format&fit=crop&ixlib=rb-4.0.3',
-	'https://images.unsplash.com/photo-1733680958774-39a0e8a64a54?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3',
-	'https://images.unsplash.com/photo-1548783307-f63adc3f200b?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3',
-	'https://images.unsplash.com/photo-1703622377707-29bc9409aaf2?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.0.3',
-]);
+const defaultImages = ref(['/images/home1.png', '/images/home2.png', '/images/home3.png', '/images/home4.png']);
 
-const userInfo = reactive(
-	getBlogUserInfo() ?? {
-		user_name: '',
-		avatar_url: '',
-		pet_name: '',
-		sign: '',
-		describe: '',
-		tags: [],
-	},
-);
+const userInfo = computed(() => {
+	return (
+		getBlogUserInfo() || {
+			user_name: '',
+			avatar_url: '',
+			pet_name: '',
+			sign: '',
+			describe: '',
+			tags: [],
+		}
+	);
+});
 
 const toRecord = () => {
 	navigateTo('/record/home');
