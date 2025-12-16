@@ -4,16 +4,6 @@
 	list-style: none;
 	font-family: 'Zhi Mang Xing', sans-serif;
 	font-weight: 300;
-
-	// 设置滚动条样式
-	&::-webkit-scrollbar {
-		width: 6px;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		border-radius: 2px;
-		background-color: #575656;
-	}
 }
 
 body {
@@ -21,6 +11,11 @@ body {
 	padding: 0;
 	width: 100%;
 	height: 100vh;
+	scrollbar-color: #EEEEEE transparent;
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 2px;
+	}
 }
 
 ::view-transition-new(root),
