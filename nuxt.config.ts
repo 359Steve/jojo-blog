@@ -205,8 +205,8 @@ export default defineNuxtConfig({
 		build: {
 			markdown: {
 				toc: {
-					depth: 2,
-					searchDepth: 2,
+					depth: 3,
+					searchDepth: 3,
 				},
 				contentHeading: true,
 				highlight: {
@@ -219,8 +219,9 @@ export default defineNuxtConfig({
 			},
 		},
 		renderer: {
-			alias: {
-				p: 'text-style',
+			anchorLinks: {
+				h2: true,
+				h3: true,
 			},
 		},
 	},
