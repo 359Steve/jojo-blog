@@ -1,37 +1,35 @@
 <script lang="ts" setup>
-const { data: posts } = await useAsyncData('blog-posts', () => {
+const { data } = await useAsyncData('blog-posts', () => {
 	return queryCollection('content')
 		.where('id', 'LIKE', 'content/blog/%')
-		.select('id', 'title', 'description', 'meta')
+		.select('title', 'id', 'description', 'meta')
+		.order('meta', 'DESC')
 		.all();
 });
 
+const posts = computed(() => data.value || []);
+
 const toBlogMd = (id: string) => {
 	const fileName = id.replace(/^content\/blog\/(.*)\.md$/, '$1');
-	navigateTo(`/content/blog/detail/${fileName}`);
+	navigateTo(`/content/blog/${fileName}`);
 };
 </script>
 
 <template>
-	<div>
-		<div v-if="posts && posts.length > 0" class="posts-list">
-			<article v-for="post in posts" :key="post.id" class="post-item" @click="toBlogMd(post.id)">
-				<h2 class="text-[24px] font-bold">
-					{{ post.title }}
-				</h2>
-				<div class="post-meta">
-					<time v-if="post.meta?.date">
-						{{ new Date(post.meta.date as string | number).toLocaleDateString('zh-CN') }}
-					</time>
+	<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+		<div v-for="post in posts" :key="post.id" class="card overflow-hidden rounded-md border shadow-sm"
+			@click="toBlogMd(post.id)">
+			<img :src="post.meta.cover as string" :alt="post.title" class="h-40 w-full object-cover" />
+			<div class="p-4">
+				<h2 class="mb-2 text-lg font-bold">{{ post.title }}</h2>
+				<p class="mb-2 text-gray-600">{{ post.description }}</p>
+				<div class="flex flex-wrap gap-2">
+					<span v-for="tag in post.meta.tags as string[]" :key="tag"
+						class="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
+						{{ tag }}
+					</span>
 				</div>
-				<p v-if="post.description" class="post-description">
-					{{ post.description }}
-				</p>
-			</article>
-		</div>
-
-		<div v-else>
-			<p>没有找到博客文章</p>
+			</div>
 		</div>
 	</div>
 </template>
