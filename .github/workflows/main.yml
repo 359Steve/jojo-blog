@@ -30,7 +30,7 @@ jobs:
             - name: 安装生产依赖（预编译原生模块）
               run: |
                   rm -rf node_modules
-                  npm install --omit=dev
+                  npm ci --omit=dev
 
             - name: 打包部署文件
               run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json
