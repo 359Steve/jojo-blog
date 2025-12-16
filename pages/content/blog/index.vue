@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { data } = await useAsyncData('blog-posts', () => {
+const { data, error, pending } = await useAsyncData('blog-posts', () => {
 	return queryCollection('content')
 		.where('id', 'LIKE', 'content/blog/%')
 		.select('title', 'id', 'description', 'meta')
@@ -16,7 +16,16 @@ const toBlogMd = (id: string) => {
 </script>
 
 <template>
-	<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+	<div v-if="pending" class="flex justify-center py-20">
+		<div class="text-gray-500">加载中...</div>
+	</div>
+	<div v-else-if="error" class="flex justify-center py-20">
+		<div class="text-red-500">加载失败: {{ error.message }}</div>
+	</div>
+	<div v-else-if="posts.length === 0" class="flex justify-center py-20">
+		<div class="text-gray-500">暂无文章</div>
+	</div>
+	<div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 		<div v-for="post in posts" :key="post.id" class="card overflow-hidden rounded-md border shadow-sm"
 			@click="toBlogMd(post.id)">
 			<img :src="post.meta.cover as string" :alt="post.title" class="h-40 w-full object-cover" />
