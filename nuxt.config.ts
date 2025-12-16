@@ -88,8 +88,8 @@ export default defineNuxtConfig({
 		compressPublicAssets: { gzip: true, brotli: true },
 		minify: true,
 		prerender: {
-			routes: [],
-			crawlLinks: false,
+			routes: ['/content/blog'],
+			crawlLinks: true,
 			ignore: ['/admin', '/api'],
 		},
 		experimental: { wasm: false },
@@ -110,6 +110,7 @@ export default defineNuxtConfig({
 		'/blog/**': { swr: 3600 },
 		'/record': { swr: 1800 },
 		'/record/**': { swr: 3600 },
+		'/content/**': { prerender: true },
 		'/api/blog/**': { headers: { 'cache-control': 's-maxage=300' }, cors: true },
 		'/api/record/**': { headers: { 'cache-control': 's-maxage=600' }, cors: true },
 		'/api/user/**': { headers: { 'cache-control': 's-maxage=60' }, cors: true },
