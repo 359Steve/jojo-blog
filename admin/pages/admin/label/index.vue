@@ -241,7 +241,7 @@ const iconChange = async (icon: string) => {
 					</ElTableColumn>
 					<ElTableColumn prop="url" label="链接" width="1000">
 						<template #default="scope">
-							<el-link underline="always" :href="scope.row.url" target="_blank">
+							<el-link underline="never" :href="scope.row.url" target="_blank">
 								{{ scope.row.url }}
 							</el-link>
 						</template>
