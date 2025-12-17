@@ -63,7 +63,7 @@ const option = computed<EChartsOption>(() => ({
 <template>
 	<TableHeight>
 		<template #default="{ height }">
-			<ClientOnly>
+			<ClientOnly v-if="height > 0">
 				<div class="flex w-full flex-col" :style="{ height: `${height}px` }">
 					<div class="flex w-full items-center justify-between">
 						<div class="text-[16px] font-semibold">
