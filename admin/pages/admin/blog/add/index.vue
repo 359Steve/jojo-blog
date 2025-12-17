@@ -48,7 +48,7 @@ const initFormData = () => {
 
 const formData = reactive<CreateBlogDto>(initFormData());
 
-const ruleFormRef = templateRef('ruleFormRef');
+const ruleFormRef = useTemplateRef('ruleFormRef');
 const isEdit = computed<boolean>(() => !!currentBlog.value?.id);
 const loading = ref(false);
 const currentMdPics = ref<string[]>([]);
