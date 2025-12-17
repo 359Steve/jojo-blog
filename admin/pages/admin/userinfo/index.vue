@@ -150,7 +150,7 @@ const updateUser = async (formEl: FormInstance | undefined): Promise<void> => {
 						<!-- 上传后显示图片 -->
 						<template v-if="formData.avatar_url">
 							<div class="group absolute h-full w-full" @click.stop>
-								<ElImage v-lazy="formData.avatar_url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+								<ElImage :src="formData.avatar_url" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
 									:preview-src-list="[formData.avatar_url]" show-progress fit="cover" />
 								<Icon
 									class="absolute right-1 top-1 cursor-pointer text-[20px] text-admin-tag-active-text transition sm:opacity-0 sm:group-hover:text-admin-tag-active-text sm:group-hover:opacity-100"
