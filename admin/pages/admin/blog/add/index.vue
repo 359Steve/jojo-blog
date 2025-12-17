@@ -174,7 +174,7 @@ const mdEditorUpload = async (files: File[], callback: (urls: string[]) => void)
 		}
 
 		const fileData = new FormData();
-		const date_path = isEdit.value ? formData.date_path : getDatePath();
+		const date_path = isEdit.value ? formData.date_path : formData.date_path || getDatePath();
 		!fileData.has('datePath') && fileData.append('datePath', date_path);
 		validFiles.forEach((file) => {
 			fileData.append('files', file);
