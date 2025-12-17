@@ -21,8 +21,8 @@ jobs:
                       --exclude='.nuxt' \
                       --exclude='.env' \
                       --exclude='data' \
-                      --exclude='deploy.tar.gz' \
-                      -czf deploy.tar.gz .
+                      --exclude='*.tar.gz' \
+                      -czf /tmp/deploy.tar.gz . && mv /tmp/deploy.tar.gz .
 
             - name: 上传项目文件到服务器
               uses: appleboy/scp-action@v0.1.7
