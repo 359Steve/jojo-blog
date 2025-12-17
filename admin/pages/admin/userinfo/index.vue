@@ -16,8 +16,8 @@ const toolbars = ref<ToolbarNames[]>([
 	'orderedList',
 	'task',
 ]);
-const ruleFormRef = templateRef('ruleFormRef');
-const upload = templateRef('upload');
+const ruleFormRef = useTemplateRef('ruleFormRef');
+const upload = useTemplateRef('upload');
 const { data } = await useAsyncData('userinfo', () => findUser());
 const formData = reactive(
 	data.value?.data
