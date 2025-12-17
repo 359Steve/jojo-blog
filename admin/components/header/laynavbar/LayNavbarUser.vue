@@ -26,7 +26,7 @@ const loginOut = (): void => {
 <template>
 	<ElDropdown trigger="click">
 		<span class="flex h-[48px] w-fit cursor-pointer items-center gap-[6px] px-[6px] hover:bg-admin-header-bg-hover">
-			<ElAvatar v-lazy="useUserinfo().userinfo?.avatar_url" :size="24" type="circle" />
+			<ElAvatar :src="useUserinfo().userinfo?.avatar_url" :size="24" type="circle" />
 			<p>{{ useUserinfo().userinfo?.user_name }}</p>
 		</span>
 		<template #dropdown>
