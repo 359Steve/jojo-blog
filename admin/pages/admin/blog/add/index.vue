@@ -27,7 +27,7 @@ definePageMeta({
 const { resetCurrentBlog } = useAdminBlog();
 const { currentBlog } = storeToRefs(useAdminBlog());
 const frontImage = ref<FormData | null>(new FormData());
-const upload = templateRef('upload');
+const upload = useTemplateRef('upload');
 // 初始化表单数据
 const initFormData = () => {
 	if (currentBlog.value?.id) {
