@@ -19,6 +19,9 @@ jobs:
                       --exclude='node_modules' \
                       --exclude='.output' \
                       --exclude='.nuxt' \
+                      --exclude='.env' \
+                      --exclude='data' \
+                      --exclude='deploy.tar.gz' \
                       -czf deploy.tar.gz .
 
             - name: 上传项目文件到服务器
