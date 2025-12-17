@@ -1,6 +1,17 @@
 <script lang="ts" setup>
 const tableRefs = useTemplateRef<HTMLDivElement>('tableRefs');
-const tableRefsHeight = computed<number>(() => (tableRefs.value ? tableRefs.value.offsetHeight : 0));
+const tableRefsHeight = ref<number>(0);
+
+const updateHeight = () => {
+	if (tableRefs.value) {
+		tableRefsHeight.value = tableRefs.value.offsetHeight;
+	}
+};
+
+onMounted(async () => {
+	await nextTick();
+	updateHeight();
+});
 </script>
 
 <template>
