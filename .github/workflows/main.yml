@@ -1,4 +1,4 @@
-name: Deploy to Aliyun Server
+name: Deploy to Aliyun Server with Docker
 
 on:
     push:
@@ -13,29 +13,15 @@ jobs:
             - name: 检出代码
               uses: actions/checkout@v4
 
-            - name: 设置 Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '22.x'
-                  cache: 'npm'
-
-            - name: 安装依赖
+            - name: 打包项目文件
               run: |
-                  npm config set registry https://registry.npmmirror.com
-                  npm ci
+                  tar --exclude='.git' \
+                      --exclude='node_modules' \
+                      --exclude='.output' \
+                      --exclude='.nuxt' \
+                      -czf deploy.tar.gz .
 
-            - name: 构建项目
-              run: npm run build
-
-            - name: 安装生产依赖（预编译原生模块）
-              run: |
-                  rm -rf node_modules
-                  npm ci --omit=dev
-
-            - name: 打包部署文件
-              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json
-
-            - name: 上传部署文件到服务器
+            - name: 上传项目文件到服务器
               uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{ secrets.ALIYUN_HOST }}
@@ -45,7 +31,7 @@ jobs:
                   source: 'deploy.tar.gz'
                   target: '/tmp/'
 
-            - name: 部署到阿里云服务器
+            - name: 使用 Docker 部署到阿里云服务器
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.ALIYUN_HOST }}
@@ -55,11 +41,26 @@ jobs:
                   script: |
                       cd ${{ secrets.DEPLOY_PATH }}
                       echo "🧹 清理旧文件..."
-                      rm -rf .output node_modules
-                      echo "📦 解压构建文件..."
+                      rm -rf * .[^.]* 2>/dev/null || true
+                      echo "📦 解压项目文件..."
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
-                      echo "🔄 重启应用..."
-                      pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
+                      echo "📝 创建环境变量文件..."
+                      cat > .env << 'EOF'
+                      NODE_ENV=production
+                      HOST=0.0.0.0
+                      PORT=3000
+                      DATABASE_URL=${{ secrets.DATABASE_URL }}
+                      REDIS_HOST=host.docker.internal
+                      EOF
+                      echo "🐳 停止并删除旧容器..."
+                      docker compose down 2>/dev/null || true
+                      docker rm -f nuxt-app 2>/dev/null || true
+                      echo "🏗️  构建 Docker 镜像..."
+                      docker compose build --no-cache
+                      echo "🚀 启动 Docker 容器..."
+                      docker compose up -d
                       echo "✅ 部署完成！"
-                      pm2 status nuxt-app
+                      docker compose ps
+                      echo "📋 容器日志（最后 20 行）："
+                      docker compose logs --tail=20
