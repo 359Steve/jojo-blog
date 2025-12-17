@@ -132,7 +132,6 @@ const handleImageSuccess = (uploadFile: UploadFile) => {
 		return;
 	}
 
-	fileList.value.push(uploadFile);
 	formData.images.push('');
 	imageFile.value!.append('files', uploadFile.raw);
 };
