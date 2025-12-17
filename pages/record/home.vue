@@ -4,7 +4,7 @@ const { data } = await useAsyncData('recordPublicQuery', () => recordPublicQuery
 	watch: [groupId],
 });
 const summaryList = computed<ReturnFunction<typeof recordPublicQuery>['data'] | null>(() => data.value?.data || null);
-const cardRef = templateRef('cardRef');
+const cardRef = useTemplateRef('cardRef');
 const cardCount = computed(() => (summaryList.value?.details ? summaryList.value.details.length : 0));
 const cardMinHeight = ref<number>(0);
 const containerMinHeight = computed(() => (cardCount.value - 1) * cardMinHeight.value);
