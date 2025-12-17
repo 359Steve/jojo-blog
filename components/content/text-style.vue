@@ -32,7 +32,7 @@ const textStyle = {
 </script>
 
 <template>
-	<span :style="textStyle">
+	<span class="mb-2 text-lg font-bold">
 		<slot />
 	</span>
 </template>
