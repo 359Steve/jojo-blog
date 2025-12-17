@@ -25,6 +25,6 @@ const {
 	style?: CSSProperties;
 }>();
 
-const cardRef = templateRef<HTMLDivElement>('cardRef');
+const cardRef = useTemplateRef<HTMLDivElement>('cardRef');
 defineExpose({ cardRef });
 </script>

@@ -7,7 +7,7 @@ enum TagType {
 	PERSON = '个人',
 }
 
-const ruleFormRef = templateRef('ruleFormRef');
+const ruleFormRef = useTemplateRef('ruleFormRef');
 const formData = reactive<CreateTagDto>({
 	name: '',
 	icon: '',

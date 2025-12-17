@@ -6,7 +6,7 @@ const pageSize = ref<number>(10);
 const pageNumber = ref<number>(1);
 const loading = ref<boolean>(false);
 const isEdit = ref<boolean>(false);
-const ruleFormRef = templateRef('ruleFormRef');
+const ruleFormRef = useTemplateRef('ruleFormRef');
 watch(pageSize, () => {
 	pageNumber.value = 1;
 });

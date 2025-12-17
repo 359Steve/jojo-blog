@@ -12,6 +12,6 @@ defineProps<{
 	style?: CSSProperties;
 }>();
 
-const containerRef = templateRef<HTMLDivElement>('containerRef');
+const containerRef = useTemplateRef<HTMLDivElement>('containerRef');
 defineExpose({ containerRef });
 </script>
