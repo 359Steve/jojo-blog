@@ -33,7 +33,7 @@ jobs:
                   npm ci --omit=dev
 
             - name: 打包部署文件
-              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.js package*.json
+              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.cjs package*.json
 
             - name: 上传部署文件到服务器
               uses: appleboy/scp-action@v0.1.7
@@ -60,6 +60,6 @@ jobs:
                       tar -xzf /tmp/deploy.tar.gz
                       rm /tmp/deploy.tar.gz
                       echo "🔄 重启应用..."
-                      pm2 restart nuxt-app || pm2 start ecosystem.config.js --name nuxt-app
+                      pm2 restart nuxt-app || pm2 start ecosystem.config.cjs --name nuxt-app
                       echo "✅ 部署完成！"
                       pm2 status nuxt-app
