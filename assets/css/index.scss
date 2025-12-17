@@ -69,6 +69,10 @@ body {
 	transform: translateX(20px);
 }
 
+.md-editor-resize-operate {
+	background-color: #EEEEEE !important;
+}
+
 @keyframes grow {
 	0% {
 		stroke-dasharray: 0 350px;
