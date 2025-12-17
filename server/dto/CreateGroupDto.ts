@@ -14,7 +14,7 @@ export const CreateGroupSchema = z.object({
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '标题必须为字符串' })
 		.min(1, '标题不能为空！')
-		.max(100),
+		.max(16),
 	role: z
 		.string()
 		.trim()
@@ -26,7 +26,7 @@ export const CreateGroupSchema = z.object({
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '描述必须为字符串' })
 		.min(1, '描述不能为空！')
-		.max(100),
+		.max(255),
 	created_at: z.string().trim().optional(),
 	updated_at: z.string().trim().optional(),
 });
