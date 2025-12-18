@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 			<div class="reactive mb-10">
 				<div class="mb-6">
 					<NuxtImg v-if="blogItem.front_cover" :src="blogItem.front_cover" :alt="blogItem.title"
-						class="mb-6 h-64 w-full rounded-base object-cover md:h-80" />
+						class="mb-6 h-64 w-full rounded-base object-cover md:h-80" loading="lazy" decoding="async" />
 				</div>
 
 				<h1 class="mb-4 bg-gradient-to-r bg-clip-text text-xl font-black sm:mb-8 md:text-2xl lg:text-4xl">

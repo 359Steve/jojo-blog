@@ -92,7 +92,7 @@ onMounted(() => {
 					}" @click="toRecordDetail(pictureList[index])">
 					<NuxtImg :src="pictureList[index]?.url || defaultImages[index]"
 						class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.url || ''" loading="lazy" />
+						:alt="pictureList[index]?.url || ''" loading="lazy" decoding="async" />
 				</div>
 			</div>
 		</div>

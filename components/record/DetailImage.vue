@@ -6,7 +6,8 @@ const { img_url, img_alt } = defineProps<{
 </script>
 
 <template>
-	<NuxtImg :src="img_url" class="h-full w-full rounded-base object-cover" :alt="img_alt" loading="lazy" />
+	<NuxtImg :src="img_url" class="h-full w-full rounded-base object-cover" :alt="img_alt" loading="lazy"
+		decoding="async" />
 </template>
 
 <style lang="scss" scoped></style>
