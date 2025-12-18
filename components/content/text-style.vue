@@ -33,6 +33,6 @@ const textStyle = {
 
 <template>
 	<span class="mb-2 text-lg font-bold">
-		<slot />
+		<slot mdc-unwrap="p" />
 	</span>
 </template>
