@@ -201,6 +201,7 @@ export default defineNuxtConfig({
 		'@nuxt/eslint',
 		'@nuxtjs/sitemap',
 		'@nuxt/content',
+		'@nuxt/image',
 	],
 
 	content: {
@@ -225,6 +226,19 @@ export default defineNuxtConfig({
 				h2: true,
 				h3: true,
 			},
+		},
+	},
+
+	image: {
+		quality: 80,
+		screens: {
+			xs: 320,
+			sm: 640,
+			md: 768,
+			lg: 1024,
+			xl: 1280,
+			xxl: 1536,
+			'2xl': 1536,
 		},
 	},
 
@@ -267,7 +281,6 @@ export default defineNuxtConfig({
 
 	plugins: [
 		'~/plugins/getUser.ts',
-		'~/plugins/azyload.ts',
 		'~/plugins/iconify.ts',
 		'~/plugins/mdEditor.ts',
 		'~/plugins/vueStarport.ts',
