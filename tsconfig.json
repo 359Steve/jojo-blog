@@ -14,10 +14,6 @@
 				"./*"
 			]
 		},
-		"types": [
-			"@types/node",
-			"@vue/runtime-core"
-		],
 		"strict": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": false,
