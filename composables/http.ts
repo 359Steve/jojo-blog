@@ -3,12 +3,12 @@ import { StatusCode } from '~/types/com-types';
 
 export const apiCore = <Rq, Rp>(url: string, option?: Options<UseFetchOptions<NewResponse<Rp>>, Rq>) => {
 	// 获取全局变量
-	const appConfig = useAppConfig();
+	const { baseUrl } = useRuntimeConfig().public;
 	// 获取nuxtApp实例
 	const nuxtApp = useNuxtApp();
 
 	return useFetch<NewResponse<Rp>>(url, {
-		baseURL: appConfig.baseUrl,
+		baseURL: baseUrl,
 		...option,
 
 		// 设置请求拦截

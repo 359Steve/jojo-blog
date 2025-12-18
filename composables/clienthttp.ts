@@ -7,12 +7,12 @@ export const fetchApiCore = <Rq extends Record<string, any>, Rp>(
 ) => {
 	const { setToken, setIsUnauthorized, getIsUnauthorized } = useUserState();
 	// 获取全局变量
-	const appConfig = useAppConfig();
+	const { baseUrl } = useRuntimeConfig().public;
 	// 获取token
 	const token: string = useUserState().getToken() || '';
 
 	return $fetch<NewResponse<Rp>>(url, {
-		baseURL: appConfig.baseUrl,
+		baseURL: baseUrl,
 		...option,
 
 		// 设置请求拦截
