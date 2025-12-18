@@ -46,26 +46,14 @@ const toggleLayout = () => {
 			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
 				class="cursor-pointer text-gray-300" @click="toggleLayout" />
 		</div>
-		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-			:class="[translate ? 'is-grid' : 'is-masonry']">
+		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			<div v-for="(item, index) in photoList" :key="item" class="aspect-square">
-				<img v-lazy="item" :data-photo-index="index" class="img-style" @click="preview(item)">
+				<NuxtImg :src="item" :data-photo-index="index" class="h-full w-full cursor-pointer"
+					:fit="translate ? 'cover' : 'contain'" loading="lazy" @click="preview(item)" />
 			</div>
 		</div>
 	</div>
 	<TRexRunner v-else />
 </template>
 
-<style lang="postcss" scoped>
-.img-style {
-	@apply h-full w-full cursor-pointer transition-all duration-[0.25s] ease-in-out;
-}
-
-.is-grid .img-style {
-	@apply object-cover;
-}
-
-.is-masonry .img-style {
-	@apply object-contain;
-}
-</style>
+<style lang="postcss" scoped></style>

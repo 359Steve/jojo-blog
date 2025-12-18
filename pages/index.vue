@@ -90,9 +90,9 @@ onMounted(() => {
 						gridRowEnd: pos.rowEnd,
 						opacity: 1,
 					}" @click="toRecordDetail(pictureList[index])">
-					<img v-lazy="pictureList[index]?.url || defaultImages[index]"
+					<NuxtImg :src="pictureList[index]?.url || defaultImages[index]"
 						class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.url || ''">
+						:alt="pictureList[index]?.url || ''" loading="lazy" />
 				</div>
 			</div>
 		</div>

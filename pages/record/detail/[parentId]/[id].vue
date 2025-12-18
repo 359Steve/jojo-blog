@@ -140,9 +140,8 @@ onMounted(() => {
 					<div v-for="(item, index) in currentDisplayImages"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
 						class="relative aspect-square w-36 flex-shrink-0 overflow-hidden rounded-base sm:w-48 md:w-full">
-						<img v-lazy="item" :min-scale="0.2" :alt="currentData?.image_alt" loading="lazy"
-							decoding="async" class="aspect-square w-full cursor-pointer object-cover"
-							@click="preview(item)">
+						<NuxtImg :src="item" :alt="currentData?.image_alt" loading="lazy" decoding="async"
+							class="aspect-square w-full cursor-pointer object-cover" @click="preview(item)" />
 
 						<div v-if="index === 3 && count.length > currentDisplayImages.length"
 							class="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"
