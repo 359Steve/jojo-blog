@@ -47,6 +47,7 @@ const toRecord = () => {
 };
 
 const toRecordDetail = (item: HomePicResponse<RecordDetailImages>) => {
+	if (!item.record_detail_id || !item.group_id) return;
 	navigateTo({ path: `/record/detail/${item.group_id}/${item.record_detail_id}` });
 };
 
