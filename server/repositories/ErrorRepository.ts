@@ -10,8 +10,7 @@ export class ErrorRepository {
 	// 发送错误邮件
 	async sendErrorEmail(errorInfo: CreateErrorMessageDto) {
 		try {
-			const nuxtConfig = useRuntimeConfig();
-			const { email } = nuxtConfig.public;
+			const { email } = useRuntimeConfig();
 
 			const transporter = nodemailer.createTransport({
 				host: 'smtp.qq.com',
@@ -21,7 +20,7 @@ export class ErrorRepository {
 					user: email.auth.user,
 					pass: email.auth.pass,
 				},
-			});
+			} as nodemailer.TransportOptions | nodemailer.SentMessageInfo);
 
 			const mailOptions = {
 				from: `"Jojo Blog 用户反馈" <${email.auth.user}>`,
