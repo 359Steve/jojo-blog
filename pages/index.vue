@@ -22,7 +22,12 @@ const gridPositions = ref([
 ]);
 
 // 默认图片列表
-const defaultImages = ref(['/images/home1.png', '/images/home2.png', '/images/home3.png', '/images/home4.png']);
+const defaultImages = ref<string[]>([
+	'/images/home1.png',
+	'/images/home2.png',
+	'/images/home3.png',
+	'/images/home4.png',
+]);
 
 const userInfo = computed(() => {
 	return (
