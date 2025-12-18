@@ -87,7 +87,7 @@ onMounted(() => {
 		</div>
 
 		<div class="relative">
-			<div v-if="pictureList" class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
+			<div class="grid grid-cols-2 grid-rows-[50px_150px_50px_150px_50px] gap-4">
 				<div v-for="(pos, index) in gridPositions" :key="index"
 					class="glass relative cursor-pointer overflow-hidden rounded-xl shadow-xl" :style="{
 						gridColumnStart: pos.colStart,
@@ -98,7 +98,7 @@ onMounted(() => {
 					}" @click="toRecordDetail(pictureList[index])">
 					<NuxtImg :src="pictureList[index]?.url || defaultImages[index]"
 						class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.url || ''" loading="lazy" decoding="async" />
+						:alt="pictureList[index]?.url || '首页默认'" loading="lazy" decoding="async" />
 				</div>
 			</div>
 		</div>
