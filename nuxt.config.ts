@@ -67,17 +67,39 @@ export default defineNuxtConfig({
 
 	// 运行时配置
 	runtimeConfig: {
+		jwtSecret: 'jojo-blog',
+		accessTokenExpiresIn: '7d',
+		expiresin: 604800,
+		email: {
+			host: '2075313210@qq.com',
+			port: 465,
+			secure: true,
+			auth: { user: '2075313210@qq.com', pass: 'uudttqgftlgvfdeb' },
+		},
 		public: {
+			baseUrl: '/api',
 			siteUrl: 'https://www.polnareff.me',
 			siteName: 'Jojo Blog',
-			jwtSecret: 'jojo-blog',
-			accessTokenExpiresIn: '7d',
-			expiresin: 604800,
-			email: {
-				host: '2075313210@qq.com',
-				port: 465,
-				secure: true,
-				auth: { user: '2075313210@qq.com', pass: 'uudttqgftlgvfdeb' },
+			weather: {
+				enabled: false,
+				key: 'c757fe98c35be3f4726d54c191e934f8',
+				baseCityCode: '110101',
+				areaCodes: {
+					'023': '500000', // 重庆
+					'010': '110000', // 北京
+					'021': '310000', // 上海
+					'022': '120000', // 天津
+					'0571': '330100', // 杭州
+					'0755': '440300', // 深圳
+					'020': '440100', // 广州
+					'0592': '350200', // 厦门
+					'0512': '320500', // 苏州
+					'0411': '210200', // 大连
+					'027': '420100', // 武汉
+					'028': '510100', // 成都
+					'0731': '430100', // 长沙
+					'029': '610100', // 西安
+				} as const,
 			},
 		},
 	},
