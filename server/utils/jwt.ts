@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 
 // 获取环境变量
-const { jwtSecret, expiresin } = useRuntimeConfig().public;
+const { jwtSecret, expiresin } = useRuntimeConfig();
 
 // 生成token
 export const signToken = (payload: Record<string, any>, expiresIn: number = expiresin) => {
