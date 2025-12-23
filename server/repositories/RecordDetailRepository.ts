@@ -9,6 +9,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
 import { redis } from '../core/redis';
+import { getPublicDir } from '../utils/index';
 
 export class RecordDetailRepository {
 	constructor(
@@ -121,7 +122,8 @@ export class RecordDetailRepository {
 						toDelete.forEach((img) => {
 							if (img) {
 								const relativePath = img.startsWith('/') ? img.substring(1) : img;
-								const imagePath = join(process.cwd(), 'public', relativePath);
+								const publicDir = getPublicDir();
+								const imagePath = join(publicDir, relativePath);
 								if (fs.existsSync(imagePath)) {
 									fs.unlinkSync(imagePath);
 								}
@@ -150,7 +152,8 @@ export class RecordDetailRepository {
 				});
 
 				const datePath = currentDelete.date_path;
-				const uploadDir = join(process.cwd(), 'public', 'recorddetail', datePath);
+				const publicDir = getPublicDir();
+				const uploadDir = join(publicDir, 'recorddetail', datePath);
 
 				if (fs.existsSync(uploadDir)) {
 					fs.rmSync(uploadDir, { recursive: true, force: true });
@@ -210,7 +213,8 @@ export class RecordDetailRepository {
 				const safeFileName = `recorddetail_${timestamp}_${randomStr}.${fileExtension}`;
 
 				// 确保文件夹存在
-				const uploadDir = join(process.cwd(), 'public/recorddetail', datePath);
+				const publicDir = getPublicDir();
+				const uploadDir = join(publicDir, 'recorddetail', datePath);
 				if (!fs.existsSync(uploadDir)) {
 					fs.mkdirSync(uploadDir, { recursive: true });
 				}

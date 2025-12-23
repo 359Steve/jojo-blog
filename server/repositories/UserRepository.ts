@@ -1,11 +1,11 @@
 import type { PrismaClient } from '@prisma/client';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import process from 'node:process';
 import fs from 'node:fs';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
+import { getPublicDir } from '../utils/index';
 import { prisma } from '../core/prisma';
 
 export class UserRepository {
@@ -106,26 +106,25 @@ export class UserRepository {
 			}
 
 			const fileName = file.filename || 'avatar.png';
+			const publicDir = getPublicDir();
+			const dirPath = join(publicDir, 'avatar');
+			const filePath = join(dirPath, fileName);
 
 			// 判断当前文件是否已经存在
-			const filePath = join(process.cwd(), 'public/avatar', fileName);
 			if (fs.existsSync(filePath)) {
 				fs.unlinkSync(filePath); // 删除旧文件，准备覆盖
 			}
 
 			// 确保目录存在
-			const dirPath = join(process.cwd(), 'public/avatar');
 			if (!fs.existsSync(dirPath)) {
 				fs.mkdirSync(dirPath, { recursive: true });
 			}
-
-			const savePath = join(dirPath, fileName);
 
 			if (!file.data) {
 				throw new Error('文件数据无效');
 			}
 
-			await writeFile(savePath, file.data);
+			await writeFile(filePath, file.data);
 
 			// 返回文件访问路径
 			return returnData(StatusCode.SUCCESS, '上传成功', { url: `/avatar/${fileName}` });

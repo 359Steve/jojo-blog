@@ -1,12 +1,11 @@
 import type { PrismaClient } from '@prisma/client';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import process from 'node:process';
 import fs from 'node:fs';
 import { prisma } from '../core/prisma';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
-import { getDatePath } from '~/composables/public';
+import { getPublicDir } from '../utils/index';
 
 export class MdRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
@@ -54,7 +53,8 @@ export class MdRepository {
 				const safeFileName = `md_${timestamp}_${randomStr}.${fileExtension}`;
 
 				// 确保文件夹存在
-				const uploadDir = join(process.cwd(), 'public/mdfile', datePath);
+				const publicDir = getPublicDir();
+				const uploadDir = join(publicDir, 'mdfile', datePath);
 				if (!fs.existsSync(uploadDir)) {
 					fs.mkdirSync(uploadDir, { recursive: true });
 				}
@@ -89,7 +89,8 @@ export class MdRepository {
 	// 删除指定目录下的图片
 	async deleteMdPicture(picPath: string, fileNames: string[] | string) {
 		try {
-			const fullDirPath = join(process.cwd(), 'public', 'mdfile', picPath);
+			const publicDir = getPublicDir();
+			const fullDirPath = join(publicDir, 'mdfile', picPath);
 
 			if (!fs.existsSync(fullDirPath)) {
 				return returnData(StatusCode.FAIL, '指定目录不存在', null);
