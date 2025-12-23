@@ -98,7 +98,7 @@ onMounted(() => {
 					}" @click="toRecordDetail(pictureList[index])">
 					<NuxtImg :src="pictureList[index]?.url || defaultImages[index]"
 						class="size-full object-cover object-center" width="100%" height="100%"
-						:alt="pictureList[index]?.url || '首页默认'" loading="lazy" decoding="async" />
+						:alt="pictureList[index]?.url || '首页默认'" />
 				</div>
 			</div>
 		</div>
