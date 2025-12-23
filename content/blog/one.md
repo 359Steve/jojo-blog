@@ -8,9 +8,12 @@ tags:
 date: 2025-12-15
 ---
 
-::text-style
-
+::TextTitle
 欢迎来到 Nuxt Content 的世界！在这里，你可以用 Markdown 编写内容，再通过 Vue 组件灵活展示1。
+::
+
+::LinkBox{title="了解更多关于 Nuxt Content"}
+点击这里，深入了解 Nuxt Content 的强大功能和使用方法。
 ::
 
 ::ContentImage
