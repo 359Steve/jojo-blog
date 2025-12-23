@@ -126,6 +126,7 @@ export default defineNuxtConfig({
 	// 路由规则
 	routeRules: {
 		'/admin/**': { ssr: false } as any,
+		'/_ipx/**': { headers: { 'cache-control': 's-maxage=31536000' } },
 		'/': { swr: 300 },
 		'/photos': { swr: 600, headers: { 'cache-control': 's-maxage=600' } },
 		'/blog': { swr: 1800 },
@@ -252,7 +253,11 @@ export default defineNuxtConfig({
 	},
 
 	image: {
+		provider: 'ipx',
 		quality: 80,
+		ipx: {
+			maxAge: 31536000,
+		},
 		screens: {
 			xs: 320,
 			sm: 640,
