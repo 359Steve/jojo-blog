@@ -254,6 +254,7 @@ export default defineNuxtConfig({
 
 	image: {
 		provider: 'ipx',
+		dir: 'public',
 		quality: 80,
 		ipx: {
 			maxAge: 31536000,
