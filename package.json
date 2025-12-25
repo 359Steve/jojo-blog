@@ -65,7 +65,8 @@
 		"vue-echarts": "^8.0.1",
 		"vue-router": "^4.5.0",
 		"vue-starport": "^0.4.0",
-		"zod": "^4.1.9"
+		"zod": "^4.1.9",
+		"sharp": "^0.34.5"
 	},
 	"overrides": {
 		"glob": "^10.0.0",
