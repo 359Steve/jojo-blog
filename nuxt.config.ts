@@ -131,13 +131,13 @@ export default defineNuxtConfig({
 		'/photos': { swr: 600, headers: { 'cache-control': 's-maxage=600' } },
 		'/blog': { swr: 1800 },
 		'/blog/**': { swr: 3600 },
-		'/content/blog': { 
-			swr: 1800, 
-			headers: { 'cache-control': 's-maxage=1800, stale-while-revalidate=3600' } 
+		'/content/blog': {
+			swr: 1800,
+			headers: { 'cache-control': 's-maxage=1800, stale-while-revalidate=3600' },
 		},
-		'/content/blog/**': { 
-			swr: 3600, 
-			headers: { 'cache-control': 's-maxage=3600, stale-while-revalidate=7200' } 
+		'/content/blog/**': {
+			swr: 3600,
+			headers: { 'cache-control': 's-maxage=3600, stale-while-revalidate=7200' },
 		},
 		'/record': { swr: 1800 },
 		'/record/**': { swr: 3600 },
@@ -260,7 +260,6 @@ export default defineNuxtConfig({
 
 	image: {
 		provider: 'ipx',
-		dir: 'public',
 		quality: 80,
 		ipx: {
 			maxAge: 31536000,
