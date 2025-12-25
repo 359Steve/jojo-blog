@@ -131,8 +131,14 @@ export default defineNuxtConfig({
 		'/photos': { swr: 600, headers: { 'cache-control': 's-maxage=600' } },
 		'/blog': { swr: 1800 },
 		'/blog/**': { swr: 3600 },
-		'/content/blog': { swr: 1800 },
-		'/content/blog/**': { swr: 3600 },
+		'/content/blog': { 
+			swr: 1800, 
+			headers: { 'cache-control': 's-maxage=1800, stale-while-revalidate=3600' } 
+		},
+		'/content/blog/**': { 
+			swr: 3600, 
+			headers: { 'cache-control': 's-maxage=3600, stale-while-revalidate=7200' } 
+		},
 		'/record': { swr: 1800 },
 		'/record/**': { swr: 3600 },
 		'/api/blog/**': { headers: { 'cache-control': 's-maxage=300' }, cors: true },
@@ -267,6 +273,17 @@ export default defineNuxtConfig({
 			xl: 1280,
 			xxl: 1536,
 			'2xl': 1536,
+		},
+		// 预设常用尺寸，减少实时计算和重复处理
+		presets: {
+			thumbnail: {
+				modifiers: {
+					format: 'webp',
+					width: 400,
+					height: 160,
+					quality: 75,
+				},
+			},
 		},
 	},
 
