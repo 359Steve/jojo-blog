@@ -95,7 +95,7 @@ onMounted(() => {
 		</div>
 		<Starport :id="`record-image-my-id${id}`" :port="`my-id${id}`"
 			class="relative flex h-[10rem] cursor-pointer items-center justify-center overflow-hidden rounded-base sm:h-[12rem] md:h-[14rem] lg:h-[16rem] xl:h-[16rem] 2xl:h-[16rem]">
-			<RecordDetailImage :img_url="currentData?.images[0] || ''" :img_alt="currentData?.image_alt"
+			<RecordDetailImage :img_url="currentData?.images[0].url || ''" :img_alt="currentData?.image_alt"
 				class="duration-1200 transition-all" />
 		</Starport>
 		<div class="w-full py-4 sm:py-8">
@@ -140,8 +140,8 @@ onMounted(() => {
 					<div v-for="(item, index) in currentDisplayImages"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
 						class="relative aspect-square w-36 flex-shrink-0 overflow-hidden rounded-base sm:w-48 md:w-full">
-						<NuxtImg :src="item" :alt="currentData?.image_alt" loading="lazy" decoding="async"
-							class="aspect-square w-full cursor-pointer object-cover" @click="preview(item)" />
+						<img :src="item.url" :alt="currentData?.image_alt" loading="lazy" decoding="async"
+							class="aspect-square w-full cursor-pointer object-cover" @click="preview(item.url)">
 
 						<div v-if="index === 3 && count.length > currentDisplayImages.length"
 							class="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"

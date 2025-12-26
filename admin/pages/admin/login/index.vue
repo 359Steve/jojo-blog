@@ -72,8 +72,8 @@ const onLogin = (): void => {
 
 <template>
 	<div class="select-none">
-		<NuxtImg :src="getIcons().bg" alt="logo" loading="lazy" decoding="async"
-			class="fixed z-[-1] hidden h-full w-[80%] admin-md:block" />
+		<img :src="getIcons().bg" alt="logo" loading="lazy" decoding="async"
+			class="fixed z-[-1] hidden h-full w-[80%] admin-md:block">
 		<div class="absolute right-5 top-3 flex">
 			<!-- 主题 -->
 			<LaySwitch />

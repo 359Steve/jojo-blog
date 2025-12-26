@@ -24,14 +24,8 @@ const toBlogMd = (id: string) => {
 	<div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 		<div v-for="post in posts" :key="post.id" class="card overflow-hidden rounded-md border shadow-sm"
 			@click="toBlogMd(post.id)">
-			<NuxtImg 
-				:src="post.meta.cover as string" 
-				loading="lazy" 
-				decoding="async" 
-				:alt="post.title"
-				preset="thumbnail"
-				sizes="sm:400px md:400px lg:400px"
-				class="h-40 w-full object-cover" />
+			<img :src="post.meta.cover as string" loading="lazy" decoding="async" :alt="post.title"
+				class="h-40 w-full object-cover">
 			<div class="p-4">
 				<h2 class="mb-2 text-lg font-bold">{{ post.title }}</h2>
 				<p class="mb-2 text-gray-600">{{ post.description }}</p>
