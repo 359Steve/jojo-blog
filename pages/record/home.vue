@@ -93,7 +93,7 @@ onMounted(() => {
 						</div>
 						<Starport :id="`record-image-my-id${phase?.id}`" :port="`my-id${phase?.id}`"
 							class="relative flex h-[280px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-base object-cover">
-							<RecordDetailImage :img_url="phase.images[0] || ''" :img_alt="phase.image_alt || ''"
+							<RecordDetailImage :img_url="phase.images[0].url || ''" :img_alt="phase.image_alt || ''"
 								class="duration-1200 transition-all" />
 						</Starport>
 					</CardsstackCardSticky>
