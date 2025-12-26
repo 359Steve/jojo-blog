@@ -250,7 +250,16 @@ export class GroupRepository {
 						.map((item) => {
 							return {
 								...item,
-								images: item.images.map((img) => img.url).filter(Boolean),
+								images: item.images
+									.map((img) => {
+										const url = img.url;
+										const metadata = imagesMetadata[url];
+										return {
+											...img,
+											blurhash: metadata,
+										};
+									})
+									.filter(Boolean),
 							};
 						})
 						.filter(Boolean),
