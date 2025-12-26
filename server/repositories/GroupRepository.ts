@@ -238,6 +238,12 @@ export class GroupRepository {
 					},
 				});
 
+				// 收集所有图片URL
+				const allImageUrls = currentRecord.details.flatMap((detail) =>
+					detail.images.map((img) => img.url).filter(Boolean),
+				);
+				// 批量读取所有图片的元数据
+				const imagesMetadata = await getImagesMetadata(allImageUrls);
 				return {
 					...currentRecord,
 					details: currentRecord.details
