@@ -2,10 +2,10 @@ import type { PrismaClient } from '@prisma/client';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import fs from 'node:fs';
+import process from 'node:process';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
-import { getPublicDir } from '../utils/index';
 import { prisma } from '../core/prisma';
 
 export class UserRepository {
@@ -106,8 +106,7 @@ export class UserRepository {
 			}
 
 			const fileName = file.filename || 'avatar.png';
-			const publicDir = getPublicDir();
-			const dirPath = join(publicDir, 'avatar');
+			const dirPath = join(process.cwd(), 'file-system', 'avatar');
 			const filePath = join(dirPath, fileName);
 
 			// 判断当前文件是否已经存在

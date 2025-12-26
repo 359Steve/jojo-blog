@@ -5,11 +5,11 @@ import { StatusCode } from '~/types/com-types';
 import { writeFile } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import process from 'node:process';
 import fs from 'node:fs';
 import { redis } from '../core/redis';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
-import { getPublicDir } from '../utils/index';
 
 export class BlogRepository {
 	constructor(
@@ -111,8 +111,7 @@ export class BlogRepository {
 				const frontcover = currentDelete.front_cover;
 				if (frontcover) {
 					const relativePath = frontcover.startsWith('/') ? frontcover.substring(1) : frontcover;
-					const publicDir = getPublicDir();
-					const frontcoverPath = join(publicDir, relativePath);
+					const frontcoverPath = join(process.cwd(), 'file-system', relativePath);
 					if (fs.existsSync(frontcoverPath)) {
 						fs.unlinkSync(frontcoverPath);
 					}
@@ -120,8 +119,7 @@ export class BlogRepository {
 
 				// 删除文章里的所有图片
 				const datePath = currentDelete.date_path;
-				const publicDir = getPublicDir();
-				const uploadDir = join(publicDir, 'mdfile', datePath);
+				const uploadDir = join(process.cwd(), 'file-system', 'mdfile', datePath);
 
 				if (fs.existsSync(uploadDir)) {
 					fs.rmSync(uploadDir, { recursive: true, force: true });
@@ -178,8 +176,7 @@ export class BlogRepository {
 						const relativePath = oldBlog.front_cover.startsWith('/')
 							? oldBlog.front_cover.substring(1)
 							: oldBlog.front_cover;
-						const publicDir = getPublicDir();
-						const oldCoverPath = join(publicDir, relativePath);
+						const oldCoverPath = join(process.cwd(), 'file-system', relativePath);
 						if (fs.existsSync(oldCoverPath)) {
 							fs.unlinkSync(oldCoverPath);
 						}
@@ -270,8 +267,7 @@ export class BlogRepository {
 			const safeFileName = `frontcover_${timestamp}_${uuid}${fileExtension}`;
 
 			// 确保目录存在
-			const publicDir = getPublicDir();
-			const uploadDir = join(publicDir, 'frontcover');
+			const uploadDir = join(process.cwd(), 'file-system', 'frontcover');
 			if (!fs.existsSync(uploadDir)) {
 				fs.mkdirSync(uploadDir, { recursive: true });
 			}
