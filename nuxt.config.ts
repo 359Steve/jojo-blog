@@ -230,7 +230,6 @@ export default defineNuxtConfig({
 		'@nuxt/eslint',
 		'@nuxtjs/sitemap',
 		'@nuxt/content',
-		'@nuxt/image',
 	],
 
 	content: {
@@ -254,34 +253,6 @@ export default defineNuxtConfig({
 			anchorLinks: {
 				h2: true,
 				h3: true,
-			},
-		},
-	},
-
-	image: {
-		provider: 'ipx',
-		quality: 80,
-		ipx: {
-			maxAge: 31536000,
-		},
-		screens: {
-			xs: 320,
-			sm: 640,
-			md: 768,
-			lg: 1024,
-			xl: 1280,
-			xxl: 1536,
-			'2xl': 1536,
-		},
-		// 预设常用尺寸，减少实时计算和重复处理
-		presets: {
-			thumbnail: {
-				modifiers: {
-					format: 'webp',
-					width: 400,
-					height: 160,
-					quality: 75,
-				},
 			},
 		},
 	},
