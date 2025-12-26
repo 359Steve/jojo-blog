@@ -6,13 +6,23 @@ useHead({
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
-	findRecordPictures<string[]>({
+	findRecordPictures<
+		{
+			url: string;
+			blurhash: string;
+		}[]
+	>({
 		pageNumber: pageNumber.value,
 		pageSize: pageSize.value,
 	}),
 );
 
-const photoList = computed<string[]>(() => data.value?.data ?? []);
+const photoList = computed<
+	{
+		url: string;
+		blurhash: string;
+	}[]
+>(() => data.value?.data ?? []);
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 const translate = ref<boolean>(false);
