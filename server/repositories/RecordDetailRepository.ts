@@ -4,12 +4,13 @@ import { prisma } from '../core/prisma';
 import { returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
-import { writeFile } from 'fs/promises';
 import fs from 'fs';
+import process from 'node:process';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
 import { redis } from '../core/redis';
-import { getPublicDir } from '../utils/index';
+import { processUploadedImage } from '../utils/image-process';
+import { getImagesMetadata } from '../utils/image-metadata';
 
 export class RecordDetailRepository {
 	constructor(
@@ -44,7 +45,27 @@ export class RecordDetailRepository {
 				return returnData(StatusCode.SUCCESS, '记录列表到底了', null);
 			}
 
-			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records, total });
+			// 收集所有图片 URL
+			const allImageUrls = records.flatMap((item) => item.images.map((img) => img.url).filter(Boolean));
+			// 批量读取所有图片的元数据
+			const imagesMetadata = await getImagesMetadata(allImageUrls);
+
+			// 处理记录，添加 blurhash
+			const recordsWithMetadata = records.map((item) => {
+				return {
+					...item,
+					images: item.images.map((img) => {
+						const url = img.url;
+						const metadata = imagesMetadata[url];
+						return {
+							...img,
+							blurhash: metadata,
+						};
+					}),
+				};
+			});
+
+			return returnData(StatusCode.SUCCESS, '记录列表查询成功', { records: recordsWithMetadata, total });
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '记录列表查询失败', null);
 		}
@@ -122,10 +143,13 @@ export class RecordDetailRepository {
 						toDelete.forEach((img) => {
 							if (img) {
 								const relativePath = img.startsWith('/') ? img.substring(1) : img;
-								const publicDir = getPublicDir();
-								const imagePath = join(publicDir, relativePath);
+								const imagePath = join(process.cwd(), relativePath);
+								const jsonPath = imagePath.replace(/\.\w+$/, '.json');
 								if (fs.existsSync(imagePath)) {
 									fs.unlinkSync(imagePath);
+								}
+								if (fs.existsSync(jsonPath)) {
+									fs.unlinkSync(jsonPath);
 								}
 							}
 						});
@@ -152,8 +176,7 @@ export class RecordDetailRepository {
 				});
 
 				const datePath = currentDelete.date_path;
-				const publicDir = getPublicDir();
-				const uploadDir = join(publicDir, 'recorddetail', datePath);
+				const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
 
 				if (fs.existsSync(uploadDir)) {
 					fs.rmSync(uploadDir, { recursive: true, force: true });
@@ -177,12 +200,20 @@ export class RecordDetailRepository {
 		}
 
 		try {
-			const uploadResults = [];
+			const uploadResults: Awaited<ReturnType<typeof processUploadedImage>>[] = [];
 
 			// 定义允许的图片类型和扩展名
 			const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 			const maxFileSize = 10 * 1024 * 1024; // 10MB
+
+			// 确保文件夹存在
+			const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
+			if (!fs.existsSync(uploadDir)) {
+				fs.mkdirSync(uploadDir, { recursive: true });
+			}
+
+			const baseUrl = `/recorddetail/${datePath}`;
 
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
@@ -207,31 +238,26 @@ export class RecordDetailRepository {
 					continue;
 				}
 
-				// 生成安全的文件名
-				const timestamp = Date.now();
-				const randomStr = Math.random().toString(36).substring(2, 8);
-				const safeFileName = `recorddetail_${timestamp}_${randomStr}.${fileExtension}`;
+				try {
+					// 使用图片处理函数：压缩、提取EXIF、基于日期重命名
+					const processed = await processUploadedImage(
+						Buffer.from(file.data),
+						file.filename,
+						uploadDir,
+						baseUrl,
+					);
 
-				// 确保文件夹存在
-				const publicDir = getPublicDir();
-				const uploadDir = join(publicDir, 'recorddetail', datePath);
-				if (!fs.existsSync(uploadDir)) {
-					fs.mkdirSync(uploadDir, { recursive: true });
+					uploadResults.push({
+						originalName: processed.originalName,
+						fileName: processed.fileName,
+						url: processed.url,
+						size: processed.size,
+						originalSize: processed.originalSize,
+						type: processed.type,
+					});
+				} catch (error) {
+					continue;
 				}
-
-				const filePath = join(uploadDir, safeFileName);
-
-				// 写入文件
-				await writeFile(filePath, file.data);
-
-				// 添加到结果数组
-				uploadResults.push({
-					originalName: file.filename,
-					fileName: safeFileName,
-					url: `/recorddetail/${datePath}/${safeFileName}`,
-					size: file.data.length,
-					type: file.type || `image/${fileExtension}`,
-				});
 			}
 
 			if (uploadResults.length === 0) {
@@ -307,14 +333,41 @@ export class RecordDetailRepository {
 					return null;
 				}
 
+				// 收集所有图片 URL
+				const allImageUrls = [
+					...currentDetail.images.map((item) => item.url).filter(Boolean),
+					...imageAll.flatMap((item) => item.images.map((img) => img.url).filter(Boolean)),
+				];
+
+				// 批量读取所有图片的元数据
+				const imagesMetadata = await getImagesMetadata(allImageUrls);
+
 				return {
 					...currentDetail,
-					images: currentDetail.images.map((item) => item.url).filter(Boolean),
+					images: currentDetail.images
+						.map((item) => {
+							const url = item.url;
+							const metadata = imagesMetadata[url];
+							return {
+								url,
+								blurhash: metadata,
+							};
+						})
+						.filter((item) => item.url),
 					imageAll: imageAll
 						.map((item) => {
 							return {
 								...item,
-								images: item.images.map((img) => img.url).filter(Boolean),
+								images: item.images
+									.map((img) => {
+										const url = img.url;
+										const metadata = imagesMetadata[url];
+										return {
+											url,
+											blurhash: metadata,
+										};
+									})
+									.filter((img) => img.url),
 							};
 						})
 						.filter(Boolean),
@@ -341,6 +394,11 @@ export class RecordDetailRepository {
 				const randomImages: RecordDetailImages[] = await this.prismaClient
 					.$queryRaw`SELECT * FROM record_images WHERE url != '' ORDER BY RAND() LIMIT 4`;
 
+				// 收集所有图片 URL
+				const imageUrls = randomImages.map((item) => item.url).filter(Boolean);
+				// 批量读取所有图片的元数据
+				const imagesMetadata = await getImagesMetadata(imageUrls);
+
 				const randomImagesWithGroup = await Promise.all(
 					randomImages
 						.map(async (item) => {
@@ -351,9 +409,12 @@ export class RecordDetailRepository {
 								where: { id: item.record_detail_id },
 							});
 
+							const metadata = imagesMetadata[item.url];
+
 							return {
 								...item,
 								group_id: record?.group_id || null,
+								blurhash: metadata,
 							};
 						})
 						.filter(Boolean),
@@ -373,13 +434,25 @@ export class RecordDetailRepository {
 					},
 				});
 
-				return records
-					? returnData(
-						StatusCode.SUCCESS,
-						'照片列表查询成功',
-						records.map((item) => item.url).filter(Boolean),
-					)
-					: returnData(StatusCode.FAIL, '照片列表查询失败', null);
+				if (!records) {
+					return returnData(StatusCode.FAIL, '照片列表查询失败', null);
+				}
+
+				// 收集所有图片 URL
+				const imageUrls = records.map((item) => item.url).filter(Boolean);
+				// 批量读取所有图片的元数据
+				const imagesMetadata = await getImagesMetadata(imageUrls);
+
+				// 返回包含 blurhash 的图片信息
+				const imagesWithMetadata = imageUrls.map((url) => {
+					const metadata = imagesMetadata[url];
+					return {
+						url,
+						blurhash: metadata,
+					};
+				});
+
+				return returnData(StatusCode.SUCCESS, '照片列表查询成功', imagesWithMetadata);
 			}
 		} catch (error) {
 			return returnData(StatusCode.FAIL, '照片列表查询失败', null);
@@ -412,12 +485,26 @@ export class RecordDetailRepository {
 				return returnData(StatusCode.SUCCESS, '记录列表到底了', null);
 			}
 
+			// 收集所有图片 URL
+			const allImageUrls = records.flatMap((item) => item.images.map((img) => img.url).filter(Boolean));
+			// 批量读取所有图片的元数据
+			const imagesMetadata = await getImagesMetadata(allImageUrls);
+
 			return returnData(StatusCode.SUCCESS, '记录列表查询成功', {
 				records: records
 					.map((item) => {
 						return {
 							...item,
-							images: item.images.map((img) => img.url).filter(Boolean),
+							images: item.images
+								.map((img) => {
+									const url = img.url;
+									const metadata = imagesMetadata[url];
+									return {
+										url,
+										blurhash: metadata,
+									};
+								})
+								.filter((img) => img.url),
 						};
 					})
 					.filter(Boolean),
