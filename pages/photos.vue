@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { blurhashToGradientCssObject } from '@unpic/placeholder';
+
 useHead({
 	title: '照片墙',
 });
