@@ -5,7 +5,7 @@ import { returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
 import fs from 'fs';
-import { getPublicDir } from '../utils/index';
+import process from 'node:process';
 
 export class GroupRepository {
 	constructor(private prismaClient: PrismaClient = prisma) { }
@@ -107,8 +107,7 @@ export class GroupRepository {
 
 			relatedDetails.forEach((currentDelete) => {
 				if (currentDelete.date_path) {
-					const publicDir = getPublicDir();
-					const uploadDir = join(publicDir, 'recorddetail', currentDelete.date_path);
+					const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', currentDelete.date_path);
 
 					if (fs.existsSync(uploadDir)) {
 						fs.rmSync(uploadDir, { recursive: true, force: true });
