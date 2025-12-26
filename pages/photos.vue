@@ -28,24 +28,10 @@ const photoList = computed<
 const previewSrc = ref<string>('');
 const isPreviewVisible = ref<boolean>(false);
 const translate = ref<boolean>(false);
-const animating = ref(false);
 
 const preview = (src: string) => {
 	previewSrc.value = src;
 	isPreviewVisible.value = true;
-};
-
-const toggleLayout = () => {
-	if (animating.value) return;
-
-	animating.value = true;
-	requestAnimationFrame(() => {
-		translate.value = !translate.value;
-
-		requestAnimationFrame(() => {
-			animating.value = false;
-		});
-	});
 };
 </script>
 
@@ -56,13 +42,14 @@ const toggleLayout = () => {
 
 		<div class="fixed top-14 flex items-center justify-center py-2">
 			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
-				class="cursor-pointer text-gray-300" @click="toggleLayout" />
+				class="cursor-pointer text-gray-300" @click="translate = !translate" />
 		</div>
-		<div class="grid w-full grid-cols-1 gap-4 pt-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-			<div v-for="(item, index) in photoList" :key="item" class="aspect-square">
-				<NuxtImg :src="item" :data-photo-index="index" class="h-full w-full cursor-pointer"
-					:class="translate ? 'object-cover' : 'object-contain'" loading="lazy" decoding="async"
-					@click="preview(item)" />
+		<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div v-for="(photo, idx) in photoList" :key="idx" class="cursor-pointer" @click="preview(photo.url)">
+				<img :src="photo.url" alt="照片"
+					:style="photo.blurhash && translate ? (blurhashToGradientCssObject(photo.blurhash) as any) : ''"
+					:data-photo-index="idx" loading="lazy" w-full
+					:class="translate ? 'object-contain sm:aspect-square' : 'aspect-square object-cover'">
 			</div>
 		</div>
 	</div>
