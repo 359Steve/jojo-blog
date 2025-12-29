@@ -49,7 +49,7 @@ const preview = (src: string) => {
 				<img :src="photo.url" alt="照片"
 					:style="photo.blurhash && translate ? (blurhashToGradientCssObject(photo.blurhash) as any) : ''"
 					:data-photo-index="idx" loading="lazy" w-full
-					:class="translate ? 'object-contain sm:aspect-square' : 'aspect-square object-cover'">
+					:class="translate ? 'object-cover sm:aspect-square' : 'aspect-square object-contain'">
 			</div>
 		</div>
 	</div>
