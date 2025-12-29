@@ -3,8 +3,14 @@ title: '我的第一篇博客'
 cover: '/images/home1.png'
 description: '这是我的第一篇博客的简介……'
 tags:
-    - Nuxt
-    - Vue
+    - name: Nuxt2
+      icon: simple-icons:nuxtdotjs
+      color: '#00DC82'
+      url: 'https://nuxtjs.org/'
+    - name: Vue
+      icon: simple-icons:vuedotjs
+      color: '#42B883'
+      url: 'https://vuejs.org/'
 date: 2025-12-15
 ---
 
@@ -16,13 +22,21 @@ date: 2025-12-15
 点击这里，深入了解 Nuxt Content 的强大功能和使用方法。
 ::
 
+
 ::ContentImage
-![示例图片](/images/home1.png)
-![示例图片](/images/home2.png)
-![示例图片](/images/home3.png)
-![示例图片](/images/home4.png)
-![示例图片](/images/home1.png)
-![示例图片](/images/home2.png)
-![示例图片](/images/home3.png)
-![示例图片](/images/home4.png)
+---
+
+images:
+
+- /images/home1.png
+- /images/home2.png
+- /images/home3.png
+- /images/home4.png
+- /images/home1.png
+- /images/home2.png
+- /images/home3.png
+- /images/home4.png
+
+---
+
 ::
