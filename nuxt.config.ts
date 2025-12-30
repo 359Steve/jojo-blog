@@ -242,10 +242,10 @@ export default defineNuxtConfig({
 				contentHeading: true,
 				highlight: {
 					theme: {
-						default: 'github-light',
-						dark: 'github-dark',
-						sepia: 'monokai',
+						default: 'vitesse-light',
+						dark: 'vitesse-dark',
 					},
+					preload: ['javascript', 'typescript', 'vue', 'html', 'css', 'json', 'bash', 'shell', 'markdown'],
 				},
 			},
 		},
