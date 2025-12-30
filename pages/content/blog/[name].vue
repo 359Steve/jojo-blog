@@ -17,6 +17,10 @@ const { data: page, error } = await useAsyncData(route.path, async () => {
 	return data;
 });
 
+const isMenu = computed(() => {
+	return page.value?.body.toc?.links && page.value.body.toc.links.length > 0;
+});
+
 if (error.value) {
 	throw createError({
 		statusCode: error.value.statusCode || 404,
@@ -32,7 +36,21 @@ useSeoMeta({
 
 <template>
 	<div class="w-full">
-		<ContentRenderer v-if="page" :value="page" />
+		<div v-if="isMenu" class="hidden xl:block fixed top-20 group left-6">
+			<div class="cursor-pointer group mb-2">
+				<Icon icon="ri:menu-2-fill"
+					class="text-2xl text-gray-300 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-300" />
+			</div>
+			<ul class="hidden group-hover:block">
+				<li v-for="(nav, index) in page?.body.toc?.links || []" :key="index">
+					<a :href="`#${nav.id}`"
+						class="text-[16px] text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors border-b border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400">
+						{{ nav.text }}
+					</a>
+				</li>
+			</ul>
+		</div>
+		<ContentRenderer v-if="page" :value="page" class="prose" />
 	</div>
 </template>
 
