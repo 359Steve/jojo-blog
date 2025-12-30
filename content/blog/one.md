@@ -15,28 +15,41 @@ date: 2025-12-15
 ---
 
 ::TextTitle
-欢迎来到 Nuxt Content 的世界！在这里，你可以用 Markdown 编写内容，再通过 Vue 组件灵活展示1。
+## 标题一
 ::
 
-::LinkBox{title="了解更多关于 Nuxt Content"}
-点击这里，深入了解 Nuxt Content 的强大功能和使用方法。
+::LinkBox
+---
+title: 了解更多关于 Nuxt Content
+---
+::TextTitle
+## 标题二
+::
 ::
 
 
 ::ContentImage
 ---
-
 images:
-
-- /images/home1.png
-- /images/home2.png
-- /images/home3.png
-- /images/home4.png
-- /images/home1.png
-- /images/home2.png
-- /images/home3.png
-- /images/home4.png
-
+      - /images/home1.png
+      - /images/home2.png
+      - /images/home3.png
+      - /images/home4.png
+      - /images/home1.png
+      - /images/home2.png
+      - /images/home3.png
+      - /images/home4.png
 ---
-
+::TextTitle
+## 标题三
 ::
+::
+
+```javascript
+export default defineAppConfig({
+	title: 'Nuxt App',
+	info: {
+		id: 1,
+	},
+});
+```
