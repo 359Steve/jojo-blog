@@ -5,7 +5,7 @@ export default defineContentConfig({
 	collections: {
 		blog: defineCollection({
 			type: 'page',
-			source: '**/*.md',
+			source: 'blog/*.md',
 			schema: z.object({
 				date: z.date(),
 				cover: z.string().optional(),
