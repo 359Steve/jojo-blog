@@ -1,16 +1,67 @@
 <script lang="ts" setup>
-const { data, error } = await useAsyncData('blog-posts', () => {
-	return queryCollection('blog')
-		.order('date', 'DESC')
-		.all();
+import type { BlogCollectionItem } from '@nuxt/content';
+
+const search = ref<string>('');
+const pageNumber = ref<number>(1);
+const pageSize = ref<number>(20);
+
+const debouncedSearch = useDebounce(search, 300);
+
+watch(debouncedSearch, () => {
+	pageNumber.value = 1;
 });
 
-const posts = computed(() => data.value || []);
-const search = ref<string>('');
+const { data, error } = await useAsyncData('blog-posts', async () => {
+	const content = await queryCollection('blog')
+		.select('cover', 'date', 'path', 'tags', 'title', 'id', 'description', 'navigation')
+		.orWhere(query => query.where('title', 'LIKE', `%${debouncedSearch.value}%`).where('description', 'LIKE', `%${debouncedSearch.value}%`))
+		.skip((pageNumber.value - 1) * pageSize.value)
+		.limit(pageSize.value)
+		.order('date', 'DESC')
+		.all();
+	const count = await queryCollection('blog').count();
+	return { data: content, total: count };
+}, {
+	watch: [pageNumber, debouncedSearch],
+});
+
+const posts = ref<Pick<BlogCollectionItem, "cover" | "date" | "tags" | "path" | "title" | "description" | "navigation" | "id">[]>(data.value?.data || [])
+const total = ref<number>(data.value?.total || 0)
 
 const toBlogMd = (path: string) => {
 	navigateTo(`/content${path}`);
 };
+
+const debouncedLoadMore = useDebounceFn(async () => {
+	pageNumber.value += 1;
+}, 300);
+
+watch(data, (newData) => {
+	if (newData?.data) {
+		if (pageNumber.value === 1) {
+			posts.value = newData.data;
+			total.value = newData.total || 0;
+		} else {
+			posts.value = posts.value.concat(newData.data);
+		}
+	}
+});
+
+onMounted(() => {
+	nextTick(() => {
+		const { y } = useWindowScroll();
+
+		watch(y, () => {
+			const scrollTop = y.value;
+			const windowHeight = window.innerHeight;
+			const documentHeight = document.documentElement.scrollHeight;
+
+			if (scrollTop + windowHeight >= documentHeight - 200 && total.value > posts.value.length) {
+				debouncedLoadMore();
+			}
+		});
+	});
+});
 </script>
 
 <template>
@@ -34,7 +85,7 @@ const toBlogMd = (path: string) => {
 	</div>
 	<div v-else class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 		<div v-for="item in posts" :key="item.path"
-			class="group glass flex cursor-pointer flex-col space-y-4 rounded-base border bg-white/40 p-2 shadow-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
+			class="group glass flex cursor-pointer flex-col space-y-4 rounded-md border bg-white/40 p-2 shadow-md transition-all dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_10px_rgba(255,255,255,0.08)] sm:flex-row sm:space-x-4 sm:space-y-0"
 			@click="toBlogMd(item.path)">
 			<img :src="item.cover" alt="博客封面" loading="lazy" decoding="async"
 				class="aspect-video max-h-[160px] w-full flex-shrink-0 rounded-base object-cover sm:h-[200px] sm:max-h-none sm:w-[200px]">
