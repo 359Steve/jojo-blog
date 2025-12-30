@@ -6,15 +6,8 @@ const { title } = defineProps<{
 
 <template>
 	<div class="w-full">
-		<h3 :id="title" class="mb-2 font-[600] text-inherit">
-			{{ title }}
-			<a :href="`#${title}`" aria-hidden="true" />
-		</h3>
-		<div>
-			<span>
-				<slot mdc-unwrap="p" />
-			</span>
-		</div>
+		<slot mdc-unwrap="p" />
+		<span>{{ title }}</span>
 	</div>
 </template>
 
