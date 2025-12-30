@@ -2,9 +2,9 @@
 import type { CreateBlogDto } from '~/server/dto/CreateBlogDto';
 import type { CreateTagDto } from '~/server/dto/CreateTagDto';
 
-const search = ref('');
-const pageNumber = ref(1);
-const pageSize = ref(20);
+const search = ref<string>('');
+const pageNumber = ref<number>(1);
+const pageSize = ref<number>(20);
 
 const debouncedSearch = useDebounce(search, 300);
 
