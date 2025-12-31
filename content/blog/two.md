@@ -13,3 +13,16 @@ tags:
       url: 'https://vuejs.org/'
 date: 2025-12-15
 ---
+
+```javascript vscode-icons:file-type-js-official
+import { defineNuxtModule } from '@nuxt/kit';
+//示例插件，不存在
+import customVitePlugin from 'custom-vite-plugin';
+export default defineNuxtModule({
+	setup(options, nuxt) {
+		nuxt.hook('vite:extendConfig', (viteConfig) => {
+			viteConfig.plugins.push(customVitePlugin());
+		});
+	}
+});
+```
