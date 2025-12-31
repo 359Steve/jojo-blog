@@ -28,6 +28,14 @@ if (error.value) {
 	});
 }
 
+const getDate = computed(() => {
+	if (page.value?.date) {
+		const date = new Date(page.value.date);
+		return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+	}
+	return '';
+});
+
 useSeoMeta({
 	title: page.value?.title || '博客页面',
 	description: page.value?.description || '博客页面描述',
@@ -35,7 +43,7 @@ useSeoMeta({
 </script>
 
 <template>
-	<div class="w-full">
+	<div class="w-full py-10">
 		<div v-if="isMenu" class="hidden xl:block fixed top-20 group left-6">
 			<div class="cursor-pointer group mb-2">
 				<Icon icon="ri:menu-2-fill"
@@ -50,6 +58,10 @@ useSeoMeta({
 				</li>
 			</ul>
 		</div>
+		<h1 class="text-3xl font-bold">{{ page?.title }}</h1>
+		<p class="text-gray-300 dark:text-gray-500 my-2">
+			发布于 {{ getDate }}
+		</p>
 		<ContentRenderer v-if="page" :value="page" class="prose" />
 	</div>
 </template>
