@@ -55,6 +55,7 @@ useSeoMeta({
 		<p class="text-gray-300 dark:text-gray-500 my-2">
 			发布于 {{ getDate }}
 		</p>
+		<ProseHr class="border-none" />
 		<ContentRenderer v-if="page" :value="page" class="prose" />
 	</div>
 </template>
