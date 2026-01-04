@@ -31,8 +31,8 @@ const copyed = async () => {
 				</div>
 			</div>
 		</div>
-		<pre class="group font-mono text-sm/6 px-4 py-3 bg-[#F8FAFC] dark:bg-[#0F172C]"
-			v-bind="useAttrs"><code><slot/></code></pre>
+		<pre class="group font-mono text-sm/6 overflow-x-auto px-4 py-3 bg-[#F8FAFC] dark:bg-[#0F172C]"
+			v-bind="$attrs"><code><slot/></code></pre>
 	</div>
 </template>
 

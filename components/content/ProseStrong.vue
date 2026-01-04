@@ -3,7 +3,7 @@
 </script>
 
 <template>
-	<strong v-bind="useAttrs" class="
+	<strong v-bind="$attrs" class="
       font-semibold
       text-gray-800
       dark:text-gray-200

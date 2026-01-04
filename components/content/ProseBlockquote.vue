@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<blockquote v-bind="useAttrs" class="px-4 py-2 my-4 text-gray-400 dark:text-gray-600 italic">
+	<blockquote v-bind="$attrs" class="px-4 py-2 my-4 text-gray-400 dark:text-gray-600 italic">
 		<slot mdc-unwrap="p" />
 	</blockquote>
 </template>

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<hr v-bind="useAttrs">
+	<hr v-bind="$attrs">
 </template>
 
 <style lang="postcss" scoped>

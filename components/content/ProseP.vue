@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<p v-bind="useAttrs" class="
+	<p v-bind="$attrs" class="
 			my-3
 			leading-7
 			text-gray-600
