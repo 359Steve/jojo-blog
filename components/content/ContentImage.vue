@@ -2,9 +2,19 @@
 const { images } = defineProps<{
 	images: string[];
 }>();
+
+const previewSrc = ref<string>('')
+const isPreviewVisible = ref<boolean>(false);
+
+const preview = (src: string) => {
+	previewSrc.value = src;
+	isPreviewVisible.value = true;
+};
 </script>
 
 <template>
+	<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" alt="预览照片"
+		@click="isPreviewVisible = false" />
 	<div class="w-full">
 		<div class="w-full">
 			<slot mdc-unwrap="p" />
