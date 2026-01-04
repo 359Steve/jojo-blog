@@ -17,7 +17,7 @@ const copyed = async () => {
 </script>
 
 <template>
-	<div class="my-5 rounded-md border dark:border-[#314158] overflow-hidden">
+	<div class="my-5 rounded-md border dark:border-[#314158]">
 		<div class="group relative flex items-center justify-between bg-white dark:bg-[#020618] gap-1.5 border-b dark:border-[#314158] px-4 py-2"
 			@mouseleave="isCopy = false">
 			<div class="flex items-center gap-2">
