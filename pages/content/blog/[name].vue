@@ -43,7 +43,7 @@ useSeoMeta({
 </script>
 
 <template>
-	<div class="w-full py-10">
+	<div class="w-full pt-10">
 		<div v-if="isMenu" class="hidden xl:block fixed top-20 group left-6">
 			<div class="cursor-pointer group mb-2">
 				<Icon icon="ri:menu-2-fill"
