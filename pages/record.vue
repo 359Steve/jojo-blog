@@ -3,10 +3,6 @@ useHead({
 	title: '记录',
 });
 
-definePageMeta({
-	middleware: ['record'],
-});
-
 onMounted(() => {
 	useVueStarport().setIsRound(true);
 });
