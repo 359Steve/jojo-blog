@@ -16,6 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
+	<PreviewImageMask />
 	<div ref="jojoMain" class="relative h-full w-full">
 		<ClientOnly>
 			<!-- <SeasonFloatDown v-if="windWidth > 640" /> -->
