@@ -87,7 +87,7 @@ onMounted(() => {
 		<div class="mb-6 flex w-full items-center justify-between">
 			<button
 				class="hover:text-primary flex items-center gap-1 text-sm text-gray-600 transition-colors duration-200 focus:outline-none"
-				@click="navigateTo('/record/home')">
+				@click="useRouter().back()">
 				<Icon icon="ri:arrow-left-s-line" width="24" />
 				<span>CD ..</span>
 			</button>

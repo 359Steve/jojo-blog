@@ -57,7 +57,7 @@ useSeoMeta({
 		</p>
 		<ProseHr class="border-none" />
 		<ContentRenderer v-if="page" :value="page" class="prose" />
-		<div class="w-fit mt-10 flex items-center gap-1 text-gray-400" @click="navigateTo('/content/blog')">
+		<div class="w-fit mt-10 flex items-center gap-1 text-gray-400" @click="useRouter().back()">
 			<Icon icon="mdi:chevron-right" class="text-[1.5rem]" /><span
 				class="border-b cursor-pointer border-gray-400">cd . .</span>
 		</div>
