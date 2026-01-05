@@ -299,6 +299,7 @@ export default defineNuxtConfig({
 		'~/plugins/iconify.ts',
 		'~/plugins/mdEditor.ts',
 		'~/plugins/vueStarport.ts',
+		'~/plugins/previewImg.ts',
 		'~/plugins/preventDefault.client.ts',
 	],
 
