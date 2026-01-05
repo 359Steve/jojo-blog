@@ -21,8 +21,6 @@ definePageMeta({
 const route = useRoute();
 const parentId = computed<string>(() => (route.params as { parentId?: string }).parentId || '');
 const id = computed<string>(() => (route.params as { id?: string }).id || '');
-const previewSrc = ref<string>('');
-const isPreviewVisible = ref<boolean>(false);
 
 const { data, error } = await useAsyncData(
 	() => `recordDetailQuery-${parentId.value}-${id.value}`,
@@ -62,12 +60,6 @@ const getById = async (recordId: number) => {
 	await navigateTo({ path: `/record/detail/${parentId.value}/${recordId}` }, { replace: true });
 };
 
-// 预览图片
-const preview = (src: string) => {
-	previewSrc.value = src;
-	isPreviewVisible.value = true;
-};
-
 watch(photoWallMode, () => {
 	mark.value = 4;
 });
@@ -81,7 +73,6 @@ onMounted(() => {
 </script>
 
 <template>
-	<PreviewImageMask v-model:preview="isPreviewVisible" :src="previewSrc" :alt="currentData?.image_alt || ''" />
 	<div class="w-full">
 		<RecordHeader class="sm:mb-20" />
 		<div class="mb-6 flex w-full items-center justify-between">
@@ -140,8 +131,11 @@ onMounted(() => {
 					<div v-for="(item, index) in currentDisplayImages"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
 						class="relative aspect-square w-36 flex-shrink-0 overflow-hidden rounded-base sm:w-48 md:w-full">
-						<img :src="item.url" :alt="currentData?.image_alt" loading="lazy" decoding="async"
-							class="aspect-square w-full cursor-pointer object-cover" @click="preview(item.url)">
+						<img v-preview-img="{
+							src: item.url,
+							alt: currentData?.image_alt,
+						}" :src="item.url" :alt="currentData?.image_alt" loading="lazy" decoding="async"
+							class="aspect-square w-full cursor-pointer object-cover" />
 
 						<div v-if="index === 3 && count.length > currentDisplayImages.length"
 							class="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center bg-black bg-opacity-50 text-white"
