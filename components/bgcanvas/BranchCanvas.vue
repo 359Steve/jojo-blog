@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { CSSProperties } from 'vue';
+
 interface Point {
 	x: number;
 	y: number;
@@ -19,11 +21,21 @@ const pendingTasks = ref<TaskFn[]>([]);
 const frameCount = ref<number>(0);
 const ctx = ref<CanvasRenderingContext2D | null>(null);
 let randomSeed = 12345;
+
 const seededRandom = () => {
 	randomSeed = (randomSeed * 9301 + 49297) % 233280;
 	return randomSeed / 233280;
 };
 
+const branchCss = computed<CSSProperties>(() => {
+	return {
+		zIndex: '-1',
+		maskImage: 'radial-gradient(circle, transparent, black)',
+		'--webkit-mask-image': 'radial-gradient(circle, transparent, black)',
+	};
+});
+
+// 计算结束点
 const getEndPoint = (b: BranchLine): Point => {
 	return {
 		x: b.start.x + b.lenght * Math.cos(b.theta),
@@ -33,7 +45,7 @@ const getEndPoint = (b: BranchLine): Point => {
 
 // 绘制直线
 const lineTo = (p1: Point, p2: Point) => {
-	ctx.value!.lineWidth = 0.2;
+	ctx.value!.lineWidth = 0.4;
 	ctx.value!.beginPath();
 	ctx.value!.moveTo(p1.x, p1.y);
 	ctx.value!.lineTo(p2.x, p2.y);
@@ -140,7 +152,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="fixed inset-0 z-[-1]">
+	<div class="fixed inset-0 z-[-1]" :style="branchCss">
 		<canvas ref="canvasEl" class="h-full w-full" />
 	</div>
 </template>
