@@ -8,7 +8,10 @@ const { src, alt, title } = defineProps<{
 
 <template>
 	<figure class="flex flex-col items-center">
-		<img v-bind="$attrs" :src="src" :alt="alt" :title="title" loading="lazy" decoding="async" class="
+		<img v-preview-img="{
+			src,
+			alt
+		}" v-bind="$attrs" :src="src" :alt="alt" :title="title" loading="lazy" decoding="async" class="
 				w-full
 				rounded
 				aspect-video
