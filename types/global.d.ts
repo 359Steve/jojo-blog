@@ -16,6 +16,10 @@ declare global {
 			isUnauthorized: boolean;
 		};
 	}
+
+	interface HTMLElement {
+		__previewHandler__?: () => void;
+	}
 }
 
 export { };
