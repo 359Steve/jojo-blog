@@ -5,8 +5,8 @@
 	<p v-bind="$attrs" class="
 			my-3
 			leading-7
-			text-gray-600
-			dark:text-gray-300
+			text-[#555]
+			dark:text-[#bbb]
 		">
 		<slot mdc-unwrap="p" />
 	</p>
