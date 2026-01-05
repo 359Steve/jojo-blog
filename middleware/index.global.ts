@@ -4,12 +4,12 @@ let scrollWatcher: ReturnType<typeof watch> | null = null;
 export default defineNuxtRouteMiddleware((to, from) => {
 	const { menuList, menuId } = storeToRefs(useJojoHeader());
 
-	if (to.path === '/record/home') {
+	if (to.path === '/record') {
 		if (scrollWatcher) {
 			scrollWatcher();
 			scrollWatcher = null;
 		}
-	} else if (from?.path === '/record/home' && !to.path.startsWith('/admin')) {
+	} else if (from?.path === '/record' && !to.path.startsWith('/admin')) {
 		if (!scrollWatcher) {
 			const { y } = useWindowScroll();
 			scrollWatcher = watch(
@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 				{ immediate: true },
 			);
 		}
-	} else if (!to.path.startsWith('/admin') && to.path !== '/record/home') {
+	} else if (!to.path.startsWith('/admin') && to.path !== '/record') {
 		if (!scrollWatcherCreated && !scrollWatcher) {
 			const { y } = useWindowScroll();
 			scrollWatcher = watch(
