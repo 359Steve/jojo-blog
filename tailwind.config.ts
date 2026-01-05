@@ -44,6 +44,7 @@ export default {
 		'./layouts/**/*.{vue,js,ts}',
 		'./app.vue',
 		'./nuxt.config.ts',
+		'./content/**/*.{md,mdx}',
 	],
 	theme: {
 		extend: {
