@@ -22,7 +22,7 @@ const computedRel = computed(() => {
 
 <template>
 	<a :href="props.href" :title="props.title" :target="isExternal" :rel="computedRel" v-bind="$attrs"
-		class="font-bold border-b border-gray-300 dark:border-gray-500 hover:border-gray-500 dark:hover:border-gray-300 transition-all">
+		class="font-bold text-[#222] dark:text-[#ddd] border-b border-gray-300 dark:border-gray-500 hover:border-gray-500 dark:hover:border-gray-300 transition-all">
 		<slot mdc-unwrap="p" />
 	</a>
 </template>
