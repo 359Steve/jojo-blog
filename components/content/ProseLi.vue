@@ -8,6 +8,6 @@
 
 <style scoped lang="postcss">
 .prose-li {
-	@apply leading-7;
+	@apply list-disc leading-7 text-[#555] dark:text-[#bbb];
 }
 </style>
