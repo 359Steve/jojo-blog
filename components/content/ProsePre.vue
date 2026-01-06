@@ -18,7 +18,7 @@ const copyed = async () => {
 
 <template>
 	<div class="my-5 rounded-md border dark:border-[#314158]">
-		<div class="group relative flex items-center justify-between bg-white dark:bg-[#020618] gap-1.5 border-b dark:border-[#314158] px-4 py-2"
+		<div class="group rounded-t-md relative flex items-center justify-between bg-white dark:bg-[#020618] gap-1.5 border-b dark:border-[#314158] px-4 py-2"
 			@mouseleave="isCopy = false">
 			<div class="flex items-center gap-2">
 				<Icon :icon="props.meta" class="size-4 shrink-0" aria-hidden="true" />
@@ -31,7 +31,7 @@ const copyed = async () => {
 				</div>
 			</div>
 		</div>
-		<pre class="group font-mono text-sm/6 overflow-x-auto px-4 py-3 bg-[#F8FAFC] dark:bg-[#0F172C]"
+		<pre class="group rounded-b-md font-mono text-sm/6 overflow-x-auto px-4 py-3 bg-[#F8FAFC] dark:bg-[#0F172C]"
 			v-bind="$attrs"><code><slot/></code></pre>
 	</div>
 </template>
