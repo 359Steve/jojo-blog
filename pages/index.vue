@@ -42,10 +42,6 @@ const userInfo = computed(() => {
 	);
 });
 
-const toRecord = () => {
-	navigateTo('/record/home');
-};
-
 const toRecordDetail = (item: HomePicResponse<RecordDetailImages>) => {
 	if (!item.record_detail_id || !item.group_id) return;
 	navigateTo({ path: `/record/detail/${item.group_id}/${item.record_detail_id}` });
@@ -80,7 +76,7 @@ onMounted(() => {
 			<div class="opacity-100 backdrop-blur-0">
 				<button
 					class="ring-offset-background focus-visible:ring-ring text-primary-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-rose-500 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-					@click="toRecord">
+					@click="navigateTo('/record')">
 					欢迎浏览
 				</button>
 			</div>
