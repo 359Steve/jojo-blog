@@ -3,9 +3,7 @@ const route = useRoute();
 const name = computed(() => (route.params as { name: string }).name);
 
 const { data: page, error } = await useAsyncData(route.path, async () => {
-	const data = await queryCollection('blog')
-		.path(`/blog/${name.value}`)
-		.first();
+	const data = await queryCollection('blog').path(`/blog/${name.value}`).first();
 
 	if (!data) {
 		throw createError({
