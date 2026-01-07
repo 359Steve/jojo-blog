@@ -1,3 +1,8 @@
+:root {
+	--prose-width: 90ch;
+	--prose-margin: calc(calc(calc(100vw - min(var(--prose-width), 100%)) / 2) - 8px)
+}
+
 * {
 	padding: 0;
 	margin: 0;
