@@ -17,6 +17,7 @@ onMounted(() => {
 		},
 		{ passive: false }
 	)
+})
 </script>
 
 <template>
