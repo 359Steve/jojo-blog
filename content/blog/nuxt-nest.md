@@ -135,7 +135,7 @@ Gatsby 最初于 2015 年被概念化为 React Web 应用程序静态站点生�
 
 这是 Gatsby 404 页面的样子：
 
-```javascript vscode-icons:file-type-js-official
+```javascript vscode-icons:file-type-js-official;true
 import * as React from 'react';
 import { Link } from 'gatsby';
 import { StaticImage } from 'gatsby-plugin-image';
@@ -197,7 +197,7 @@ Next.js 框架最初于 2016 年发布，在许多方面与 Gatsby 相似，只�
 
 Next.js 中的主页：
 
-```javascript vscode-icons:file-type-js-official
+```javascript vscode-icons:file-type-js-official;true
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
