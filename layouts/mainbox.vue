@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div class="m-auto box-border h-auto w-full px-4 py-2 mobile-pad:max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl">
+	<div class="m-auto box-border max-w-[var(--prose-width)] px-6 py-2">
 		<slot name="childPage" />
 	</div>
 </template>
