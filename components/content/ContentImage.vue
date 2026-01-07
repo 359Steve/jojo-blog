@@ -2,6 +2,21 @@
 const { images } = defineProps<{
 	images: string[];
 }>();
+
+const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
+
+onMounted(() => {
+	if (!containerRef.value) return
+
+	useEventListener(
+		containerRef,
+		'wheel',
+		(event: WheelEvent) => {
+			event.preventDefault()
+			containerRef.value!.scrollLeft += event.deltaY
+		},
+		{ passive: false }
+	)
 </script>
 
 <template>
