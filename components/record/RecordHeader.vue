@@ -24,7 +24,7 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 						{{ userInfo?.pet_name }}
 					</h1>
 				</div>
-				<div class="text-secondary mt-4 flex items-center text-[15px] font-normal lg:text-base">
+				<div class="text-secondary mt-4 flex items-center font-normal">
 					<span>{{ userInfo?.sign }}</span>
 				</div>
 				<div class="mt-4 flex w-full items-center gap-2">

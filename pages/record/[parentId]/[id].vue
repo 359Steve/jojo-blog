@@ -93,7 +93,7 @@ onMounted(() => {
 			<div class="mb-4 text-center text-lg font-semibold text-black dark:text-white sm:mb-6">
 				{{ currentData?.title }}
 			</div>
-			<div class="text-gray-500">
+			<div class="leading-7 text-[#555] dark:text-[#bbb]">
 				<p v-for="(line, index) in currentData?.summary.split('\n')" :key="index" class="mb-2 indent-8">
 					{{ line }}
 				</p>

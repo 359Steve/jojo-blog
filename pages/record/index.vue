@@ -49,7 +49,7 @@ onMounted(() => {
 							<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
 								{{ summaryList?.title }}
 							</h2>
-							<p class="max-w-prose indent-7 text-sm sm:indent-0">
+							<p class="max-w-prose indent-7 leading-7 text-[#555] dark:text-[#bbb] sm:indent-0">
 								{{ summaryList?.summary }}
 							</p>
 
