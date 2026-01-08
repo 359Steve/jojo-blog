@@ -14,12 +14,12 @@ const toPath = async (item: (typeof menuList.value)[number]) => {
 			<li v-for="item in menuList" :key="item.id" :class="[
 				`mb-4 rounded-base px-4 leading-[3rem] shadow-sm hover:cursor-pointer sm:mb-0 sm:h-full sm:rounded-none sm:px-0 sm:shadow-none`,
 				item.id === menuId
-					? 'bg-black shadow-none dark:bg-[white] sm:bg-inherit sm:dark:bg-inherit'
-					: 'hover:bg-[#DBDBDB] hover:text-blog-primary sm:hover:bg-transparent',
+					? 'bg-blog-primary shadow-none sm:bg-inherit sm:dark:bg-inherit'
+					: 'hover:text-blog-primary sm:hover:bg-transparent',
 			]" @click="toPath(item)">
 				<span :class="[
 					menuId === item.id
-						? 'font-bold text-white dark:text-blog-primary sm:text-blog-primary'
+						? 'text-blog-base-color sm:text-blog-primary font-bold'
 						: 'text-blog-secondary',
 				]">
 					{{ item.title }}

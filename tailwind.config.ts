@@ -83,6 +83,13 @@ export default {
 				'admin-dropdown-menu-bg': 'var(--jojo-admin-dropdown-menu-bg)',
 
 				'blog-base-color': 'var(--jojo-blog-base-color)',
+				'blog-primary': 'var(--jojo-text-primary)',
+				'blog-body': 'var(--jojo-text-body)',
+				'blog-emphasis': 'var(--jojo-text-emphasis)',
+				'blog-secondary': 'var(--jojo-text-secondary)',
+				'blog-tertiary': 'var(--jojo-text-tertiary)',
+				'blog-muted': 'var(--jojo-text-muted)',
+				'blog-accent': 'var(--jojo-text-accent)',
 			},
 			textColor: {
 				'admin-tag-text': 'var(--jojo-admin-menu-text)',
@@ -92,6 +99,7 @@ export default {
 				'admin-menu-title-hover': 'var(--jojo-admin-menu-title-hover)',
 				'admin-menu-disabled-text': 'var(--jojo-admin-text-color-disabled)',
 
+				'blog-base-color': 'var(--jojo-blog-base-color)',
 				'blog-primary': 'var(--jojo-text-primary)',
 				'blog-body': 'var(--jojo-text-body)',
 				'blog-emphasis': 'var(--jojo-text-emphasis)',
