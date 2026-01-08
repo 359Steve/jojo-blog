@@ -41,7 +41,7 @@ const sendEmail = async () => {
 							class="from-primary to-secondary mb-2 bg-gradient-to-r bg-clip-text text-base font-black md:text-xl lg:text-4xl">
 							{{ errorData }}
 						</h1>
-						<p class="text-secondary mb-10 text-sm font-normal text-gray-500/50 lg:text-base">
+						<p class="text-secondary mb-10 text-sm font-normal text-blog-secondary/50 lg:text-base">
 							如果是系统问题,请通过电子邮件或填写此问题表格。我会在最短的时间内解决问题。
 						</p>
 						<form class="form">

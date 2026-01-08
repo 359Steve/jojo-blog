@@ -16,7 +16,7 @@ date: 2023-04-06
 
 > 此文章发表于 2023 年 4 月 6 日，现根据最新信息进行了部分修改和补充。
 
-> 感谢作者 [WhaleFE](https://juejin.cn/user/1767670426376023/posts){.text-black.dark:text-white} 允许转载，原文链接：[Next,Nuxt,Nest,Nust傻傻分不清](https://juejin.cn/post/7218739623245774885){.text-black.dark:text-white}
+> 感谢作者 [WhaleFE](https://juejin.cn/user/1767670426376023/posts){.text-blog-primary} 允许转载，原文链接：[Next,Nuxt,Nest,Nust傻傻分不清](https://juejin.cn/post/7218739623245774885){.text-blog-primary}
 
 ---
 

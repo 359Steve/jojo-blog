@@ -9,7 +9,7 @@ const props = defineProps<{
 		<slot />
 
 		<a v-if="$attrs.id" :href="`#${$attrs.id}`" aria-hidden="true"
-			class="absolute left-0 -ml-6 opacity-0 transition-opacity text-gray-400 xl:group-hover:opacity-100">
+			class="absolute left-0 -ml-6 opacity-0 transition-opacity text-blog-tertiary xl:group-hover:opacity-100">
 			#
 		</a>
 	</component>

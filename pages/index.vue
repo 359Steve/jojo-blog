@@ -44,7 +44,7 @@ const userInfo = computed(() => {
 
 const toRecordDetail = (item: HomePicResponse<RecordDetailImages>) => {
 	if (!item.record_detail_id || !item.group_id) return;
-	navigateTo({ path: `/record/detail/${item.group_id}/${item.record_detail_id}` });
+	navigateTo({ path: `/record/${item.group_id}/${item.record_detail_id}` });
 };
 
 onMounted(() => {
@@ -63,14 +63,14 @@ onMounted(() => {
 <template>
 	<div class="grid w-full grid-cols-1 items-center gap-8 pt-8 md:grid-cols-2 md:pt-0">
 		<div>
-			<div class="mb-4 block text-xs font-medium text-rose-500 opacity-100 backdrop-blur-0 md:text-sm">
+			<div class="mb-4 block text-xs font-medium text-blog-accent opacity-100 backdrop-blur-0 md:text-sm">
 				{{ userInfo.pet_name }}
 			</div>
 			<div class="text-4xl font-semibold tracking-tight opacity-100 backdrop-blur-0 md:text-[2.4rem]">
 				{{ userInfo.sign }}
 			</div>
 			<div
-				class="my-4 line-clamp-5 indent-8 text-base text-slate-700 opacity-100 backdrop-blur-0 dark:text-slate-50 md:my-6 md:text-lg">
+				class="my-4 line-clamp-5 indent-8 text-base text-blog-body opacity-100 backdrop-blur-0 md:my-6 md:text-lg">
 				{{ userInfo.describe }}
 			</div>
 			<div class="opacity-100 backdrop-blur-0">

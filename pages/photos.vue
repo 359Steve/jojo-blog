@@ -31,9 +31,9 @@ const translate = ref<boolean>(false);
 
 <template>
 	<div v-if="photoList && photoList.length > 0" class="w-full">
-		<div class="fixed top-14 flex items-center justify-center py-2">
+		<div class="fixed top-14 flex items-center justify-center py-10">
 			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
-				class="cursor-pointer text-gray-300" @click="translate = !translate" />
+				class="cursor-pointer text-blog-tertiary" @click="translate = !translate" />
 		</div>
 		<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			<div v-for="(photo, idx) in photoList" :key="idx" class="cursor-pointer">
@@ -43,7 +43,7 @@ const translate = ref<boolean>(false);
 				}" :src="photo.url" alt="照片"
 					:style="photo.blurhash && translate ? (blurhashToGradientCssObject(photo.blurhash) as any) : ''"
 					:data-photo-index="idx" loading="lazy" w-full
-					:class="translate ? 'object-cover sm:aspect-square' : 'aspect-square object-contain'" />
+					:class="translate ? 'object-cover sm:aspect-square' : 'aspect-square object-contain'">
 			</div>
 		</div>
 	</div>

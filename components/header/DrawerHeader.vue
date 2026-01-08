@@ -6,7 +6,7 @@ const { drawer } = storeToRefs(useJojoHeader());
 	<Teleport to="body">
 		<div class="jojo-drawer relative">
 			<ElDrawer v-model="drawer" size="70%" direction="ltr">
-				<div class="absolute right-0 top-0 flex h-8 w-8 items-center justify-center text-[#8a8a8a] hover:cursor-pointer hover:text-black"
+				<div class="absolute right-0 top-0 flex h-8 w-8 items-center justify-center text-blog-tertiary hover:cursor-pointer hover:text-blog-primary"
 					@click="drawer = false">
 					<Icon icon="ri:close-fill" class="text-2xl" />
 				</div>

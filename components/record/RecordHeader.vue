@@ -20,7 +20,7 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 			<div class="grid">
 				<div>
 					<h1
-						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-[16px] font-black text-rose-500 sm:text-xl md:text-2xl lg:text-3xl">
+						class="from-primary to-secondary w-full bg-gradient-to-r bg-clip-text text-[16px] font-black text-blog-accent sm:text-xl md:text-2xl lg:text-3xl">
 						{{ userInfo?.pet_name }}
 					</h1>
 				</div>
@@ -31,7 +31,7 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 					<div v-for="item in userInfo?.tags" :key="item.tag_id" class="w-fit">
 						<a :href="item.tag.url" target="_blank" rel="noopener noreferrer" class="button">
 							<ElButton size="default"
-								class="!text-black hover:!border-gray-300 dark:!text-white dark:hover:!border-white">
+								class="!text-blog-primary hover:!border-gray-300 dark:hover:!border-white">
 								<template #icon>
 									<div class="text-[20px]">
 										<Icon :icon="item.tag.icon" />
@@ -49,6 +49,6 @@ const { userInfo } = storeToRefs(useBlogUserInfo());
 
 <style lang="postcss" scoped>
 :deep(.el-button) {
-	@apply text-gray-400 hover:bg-gray-400/20 hover:text-black dark:hover:text-white;
+	@apply text-blog-tertiary hover:bg-gray-400/20 hover:text-blog-primary;
 }
 </style>

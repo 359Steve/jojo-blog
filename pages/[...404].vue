@@ -20,6 +20,6 @@
 
 <style lang="postcss" scoped>
 :deep(.el-button) {
-	@apply bg-black text-white dark:bg-[white] dark:text-black;
+	@apply bg-black text-white dark:bg-[white] dark:text-blog-primary;
 }
 </style>

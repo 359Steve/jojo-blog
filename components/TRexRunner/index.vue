@@ -288,15 +288,15 @@ onBeforeUnmount(() => {
 	<div ref="DinoBox" class="relative mt-12 h-[400px] w-full">
 		<div class="relative flex h-1/2 w-full items-center justify-center p-4">
 			<div
-				class="glass absolute right-4 top-4 z-10 rounded bg-white/70 px-3 py-1 text-sm font-medium text-gray-800 shadow-md dark:bg-gray-800/70 dark:text-gray-200">
+				class="glass absolute right-4 top-4 z-10 rounded bg-white/70 px-3 py-1 text-sm font-medium text-blog-primary shadow-md dark:bg-gray-800/70 dark:text-blog-primary">
 				分数: {{ Math.floor(gameState.score) }}
 			</div>
 			<div>
-				<p v-if="!gameState.playing" class="text-center text-[16px] text-gray-300">暂无内容</p>
-				<p v-if="!gameState.playing" class="hidden text-center text-[16px] text-gray-300 md:block">
+				<p v-if="!gameState.playing" class="text-center text-[16px] text-blog-tertiary">暂无内容</p>
+				<p v-if="!gameState.playing" class="hidden text-center text-[16px] text-blog-tertiary md:block">
 					按任意键开始游戏
 				</p>
-				<p v-if="!gameState.playing" class="block text-center text-[16px] text-gray-300 md:hidden">
+				<p v-if="!gameState.playing" class="block text-center text-[16px] text-blog-tertiary md:hidden">
 					点击屏幕开始游戏
 				</p>
 			</div>

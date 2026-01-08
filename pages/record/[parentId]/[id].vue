@@ -23,7 +23,7 @@ const parentId = computed<string>(() => (route.params as { parentId?: string }).
 const id = computed<string>(() => (route.params as { id?: string }).id || '');
 
 const { data, error } = await useAsyncData(
-	'recordDetailQuery',
+	() => `recordDetailQuery-${parentId.value}-${id.value}`,
 	() => recordDetailQuery(Number(parentId.value), Number(id.value)),
 	{
 		watch: [parentId, id],
@@ -43,9 +43,15 @@ const mark = ref<number>(4);
 const srcList = computed(() => currentData.value?.images.map((i) => i).filter(Boolean) ?? []);
 const srcListAll = computed(() => currentData.value?.imageAll?.flatMap((i) => i.images).filter(Boolean) ?? []);
 
-const date = computed(() =>
-	currentData.value?.created_at ? new Date(currentData.value.created_at).toLocaleDateString() : '',
-);
+const date = computed(() => {
+	if (!currentData.value?.created_at) return '';
+	const d = new Date(currentData.value.created_at);
+
+	const year = d.getFullYear();
+	const month = String(d.getMonth() + 1).padStart(2, '0');
+	const day = String(d.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`;
+});
 
 // 照片墙切换状态
 const photoWallMode = ref<'current' | 'all'>('current');
@@ -76,25 +82,23 @@ onMounted(() => {
 	<div class="w-full">
 		<RecordHeader class="sm:mb-20" />
 		<div class="mb-6 flex w-full items-center justify-between">
-			<button
-				class="hover:text-primary flex items-center gap-1 text-sm text-gray-600 transition-colors duration-200 focus:outline-none"
-				@click="useRouter().back()">
-				<Icon icon="ri:arrow-left-s-line" width="24" />
-				<span>CD ..</span>
-			</button>
-			<span class="text-sm text-gray-600">{{ date }}</span>
+			<div class="flex w-fit items-center gap-1 text-blog-tertiary" @click="useRouter().back()">
+				<Icon icon="mdi:chevron-right" class="text-[1.5rem]" />
+				<span class="cursor-pointer border-b border-gray-400">cd . .</span>
+			</div>
+			<span class="text-sm text-blog-tertiary">{{ date }}</span>
 		</div>
-		<Starport :id="`record-image-my-id${id}`" :port="`my-id${id}`"
+		<div :id="`record-image-my-id${id}`" :port="`my-id${id}`"
 			class="relative flex h-[10rem] cursor-pointer items-center justify-center overflow-hidden rounded-base sm:h-[12rem] md:h-[14rem] lg:h-[16rem] xl:h-[16rem] 2xl:h-[16rem]">
-			<RecordDetailImage :img_url="currentData?.images[0].url || ''" :img_alt="currentData?.image_alt"
+			<RecordDetailImage :img_url="currentData?.images?.[0]?.url || ''" :img_alt="currentData?.image_alt"
 				class="duration-1200 transition-all" />
-		</Starport>
+		</div>
 		<div class="w-full py-4 sm:py-8">
-			<div class="mb-4 text-center text-lg font-semibold text-black dark:text-white sm:mb-6">
+			<div class="mb-4 text-center text-lg font-semibold text-blog-primary sm:mb-6">
 				{{ currentData?.title }}
 			</div>
-			<div class="leading-7 text-[#555] dark:text-[#bbb]">
-				<p v-for="(line, index) in currentData?.summary.split('\n')" :key="index" class="mb-2 indent-8">
+			<div class="leading-7 text-blog-body">
+				<p v-for="(line, index) in currentData?.summary?.split('\n') || []" :key="index" class="mb-2 indent-8">
 					{{ line }}
 				</p>
 			</div>
@@ -106,7 +110,7 @@ onMounted(() => {
 					:class="[
 						photoWallMode === 'current'
 							? 'scale-105 transform bg-rose-500 text-white shadow-lg'
-							: 'border border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
+							: 'border border-gray-300 bg-white text-blog-secondary hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
 					]" @click="photoWallMode = 'current'">
 					<Icon :icon="photoWallMode === 'current' ? 'ri:image-fill' : 'ri:image-line'"
 						class="mr-1 text-sm sm:mr-2 sm:text-base" />
@@ -116,7 +120,7 @@ onMounted(() => {
 					:class="[
 						photoWallMode === 'all'
 							? 'scale-105 transform bg-rose-500 text-white shadow-lg'
-							: 'border border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
+							: 'border border-gray-300 bg-white text-blog-secondary hover:border-gray-400 hover:bg-gray-50 hover:shadow-md',
 					]" @click="photoWallMode = 'all'">
 					<Icon :icon="photoWallMode === 'all' ? 'ri:gallery-fill' : 'ri:gallery-line'"
 						class="mr-1 text-sm sm:mr-2 sm:text-base" />
@@ -150,7 +154,7 @@ onMounted(() => {
 			</ElScrollbar>
 
 			<div v-else class="mt-8 flex min-h-[200px] items-center justify-center">
-				<div class="text-center text-gray-500">
+				<div class="text-center text-blog-secondary">
 					<Icon icon="ri:image-ai-fill" width="64" height="64" />
 					<div class="text-sm">暂无照片</div>
 				</div>
@@ -159,14 +163,14 @@ onMounted(() => {
 
 		<div v-if="currentData?.prev || currentData?.next" class="flex w-full items-center"
 			:class="[currentData?.prev ? (currentData?.next ? 'justify-between' : 'justify-start') : 'justify-end']">
-			<ElButton v-if="currentData?.prev" link class="!font-semibold !text-black"
+			<ElButton v-if="currentData?.prev" link class="!font-semibold !text-blog-primary"
 				@click="getById(currentData?.prev.id)">
 				<Icon icon="ri:arrow-left-s-line" width="24" height="24" class="k mr-2" />
-				<span class="font-semibold text-black">上一篇</span>
+				<span class="font-semibold text-blog-primary">上一篇</span>
 			</ElButton>
-			<ElButton v-if="currentData?.next" link class="!font-semibold !text-black"
+			<ElButton v-if="currentData?.next" link class="!font-semibold !text-blog-primary"
 				@click="getById(currentData?.next.id)">
-				<span class="font-semibold text-black">下一篇</span>
+				<span class="font-semibold text-blog-primary">下一篇</span>
 				<Icon icon="ri:arrow-right-s-line" width="24" height="24" class="ml-2" />
 			</ElButton>
 		</div>

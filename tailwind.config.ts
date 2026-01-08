@@ -91,6 +91,14 @@ export default {
 				'admin-menu-text': 'var(--jojo-admin-menu-text)',
 				'admin-menu-title-hover': 'var(--jojo-admin-menu-title-hover)',
 				'admin-menu-disabled-text': 'var(--jojo-admin-text-color-disabled)',
+
+				'blog-primary': 'var(--jojo-text-primary)',
+				'blog-body': 'var(--jojo-text-body)',
+				'blog-emphasis': 'var(--jojo-text-emphasis)',
+				'blog-secondary': 'var(--jojo-text-secondary)',
+				'blog-tertiary': 'var(--jojo-text-tertiary)',
+				'blog-muted': 'var(--jojo-text-muted)',
+				'blog-accent': 'var(--jojo-text-accent)',
 			},
 			borderColor: {
 				'admin-menu-border': 'var(--jojo-admin-border-color)',

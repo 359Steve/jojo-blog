@@ -49,7 +49,7 @@ onMounted(() => {
 							<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
 								{{ summaryList?.title }}
 							</h2>
-							<p class="max-w-prose indent-7 leading-7 text-[#555] dark:text-[#bbb] sm:indent-0">
+							<p class="max-w-prose indent-7 leading-7 text-blog-body sm:indent-0">
 								{{ summaryList?.summary }}
 							</p>
 
@@ -62,14 +62,14 @@ onMounted(() => {
 										: 'justify-end',
 								]">
 								<button v-if="summaryList?.prev"
-									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
+									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.prev.id">
 									<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
 									<span>上一篇</span>
 								</button>
 
 								<button v-if="summaryList?.next"
-									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-black transition-colors duration-200 dark:text-white"
+									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.next.id">
 									<span>下一篇</span>
 									<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
@@ -91,11 +91,11 @@ onMounted(() => {
 						<div class="mb-4 flex items-center justify-between gap-4">
 							<h2 class="flex-1 text-xl font-bold tracking-tighter">{{ phase.time_range }}</h2>
 						</div>
-						<Starport :id="`record-image-my-id${phase?.id}`" :port="`my-id${phase?.id}`"
+						<div :id="`record-image-my-id${phase?.id}`" :port="`my-id${phase?.id}`"
 							class="relative flex h-[280px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-base object-cover">
 							<RecordDetailImage :img_url="phase.images[0].url || ''" :img_alt="phase.image_alt || ''"
 								class="duration-1200 transition-all" />
-						</Starport>
+						</div>
 					</CardsstackCardSticky>
 				</CardsstackContainerScroll>
 			</div>

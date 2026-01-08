@@ -45,15 +45,15 @@ useSeoMeta({
 		<div v-if="isMenu" class="group fixed left-6 top-20 hidden xl:block">
 			<div class="group mb-2 cursor-pointer">
 				<Icon icon="ri:menu-2-fill"
-					class="text-2xl text-gray-300 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300" />
+					class="text-2xl text-blog-tertiary group-hover:text-blog-secondary dark:text-blog-tertiary dark:group-hover:text-blog-secondary" />
 			</div>
 			<ContentMenu :menu-list="page?.body.toc?.links || []" />
 		</div>
 		<h1 class="text-3xl font-bold">{{ page?.title }}</h1>
-		<p class="my-2 text-gray-300 dark:text-gray-500">发布于 {{ getDate }}</p>
+		<p class="my-2 text-blog-tertiary">发布于 {{ getDate }}</p>
 		<ProseHr class="border-none" />
 		<ContentRenderer v-if="page" :key="page.id" :value="page" />
-		<div class="mt-10 flex w-fit items-center gap-1 text-gray-400" @click="useRouter().back()">
+		<div class="mt-10 flex w-fit items-center gap-1 text-blog-tertiary" @click="useRouter().back()">
 			<Icon icon="mdi:chevron-right" class="text-[1.5rem]" />
 			<span class="cursor-pointer border-b border-gray-400">cd . .</span>
 		</div>

@@ -48,6 +48,6 @@ onMounted(() => {
 
 <style lang="postcss" scoped>
 :deep(.el-backtop) {
-	@apply hidden items-center justify-center text-black dark:text-white sm:flex;
+	@apply hidden items-center justify-center text-blog-primary sm:flex;
 }
 </style>

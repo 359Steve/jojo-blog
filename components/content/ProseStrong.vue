@@ -5,8 +5,7 @@
 <template>
 	<strong v-bind="$attrs" class="
       font-semibold
-      text-[#222]
-      dark:text-[#ddd]
+      text-blog-emphasis
     ">
 		<slot mdc-unwrap="strong" />
 	</strong>

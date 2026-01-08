@@ -15,12 +15,12 @@ const toPath = async (item: (typeof menuList.value)[number]) => {
 				`mb-4 rounded-base px-4 leading-[3rem] shadow-sm hover:cursor-pointer sm:mb-0 sm:h-full sm:rounded-none sm:px-0 sm:shadow-none`,
 				item.id === menuId
 					? 'bg-black shadow-none dark:bg-[white] sm:bg-inherit sm:dark:bg-inherit'
-					: 'hover:bg-[#DBDBDB] hover:text-black sm:hover:bg-transparent sm:dark:text-white',
+					: 'hover:bg-[#DBDBDB] hover:text-blog-primary sm:hover:bg-transparent',
 			]" @click="toPath(item)">
 				<span :class="[
 					menuId === item.id
-						? 'font-bold text-white dark:text-black sm:text-black sm:dark:text-white'
-						: 'text-gray-500',
+						? 'font-bold text-white dark:text-blog-primary sm:text-blog-primary'
+						: 'text-blog-secondary',
 				]">
 					{{ item.title }}
 				</span>

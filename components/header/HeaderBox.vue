@@ -67,21 +67,21 @@ onMounted(() => {
 			<HeaderMenuList />
 		</div>
 		<div class="flex h-full w-fit items-center justify-between gap-x-2">
-			<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black"
+			<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-blog-primary"
 				@click="navigateTo('/photos')">
 				<a rel="noopener noreferrer">
 					<Icon icon="ri:camera-3-fill" />
 				</a>
 			</div>
 			<div
-				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
+				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-blog-primary sm:flex">
 				<a href="https://www.facebook.com/profile.php?id=61565513711985" target="_blank"
 					rel="noopener noreferrer">
 					<Icon icon="ri:facebook-circle-fill" />
 				</a>
 			</div>
 			<div
-				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:flex">
+				class="hidden h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-blog-primary sm:flex">
 				<a href="https://github.com/359Steve" target="_blank" rel="noopener noreferrer">
 					<Icon icon="ri:github-fill" />
 				</a>
@@ -89,9 +89,9 @@ onMounted(() => {
 			<div class="flex items-center justify-between gap-x-2">
 				<div class="flex h-8 w-8 items-center justify-center rounded-md bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB]"
 					@click="changeTheme($event)">
-					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-black" />
+					<Icon :icon="selectTheme ? 'ri:sun-fill' : 'ri:moon-clear-fill'" class="dark:text-blog-primary" />
 				</div>
-				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-black sm:hidden"
+				<div class="h-8 w-8 rounded-base bg-[white] p-2 shadow-md hover:cursor-pointer hover:bg-[#DBDBDB] dark:text-blog-primary sm:hidden"
 					@click="drawer = !drawer">
 					<Icon icon="ri:menu-fold-4-fill" />
 				</div>
