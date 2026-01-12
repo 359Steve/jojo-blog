@@ -45,7 +45,7 @@ onMounted(() => {
 					<div class="sticky top-[5rem] w-full sm:top-[6rem]">
 						<RecordHeader :sm="false" :space="false" />
 						<div v-if="summaryList?.id" class="w-full">
-							<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
+							<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.role }}</h5>
 							<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
 								{{ summaryList?.title }}
 							</h2>
