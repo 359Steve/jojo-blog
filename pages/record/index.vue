@@ -45,7 +45,7 @@ onMounted(() => {
 					<div class="sticky top-[5rem] w-full sm:top-[6rem]">
 						<RecordHeader :sm="false" :space="false" />
 						<div v-if="summaryList?.id" class="w-full">
-							<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.role }}</h5>
+							<h5 class="text-sm uppercase tracking-wide">{{ summaryList?.time_range }}</h5>
 							<h2 class="mb-6 mt-4 text-xl font-bold tracking-tight">
 								{{ summaryList?.title }}
 							</h2>
@@ -62,14 +62,14 @@ onMounted(() => {
 										: 'justify-end',
 								]">
 								<button v-if="summaryList?.prev"
-									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
+									class="flex items-center rounded-md py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.prev.id">
 									<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
 									<span>上一篇</span>
 								</button>
 
 								<button v-if="summaryList?.next"
-									class="flex items-center rounded-md px-4 py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
+									class="flex items-center rounded-md py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.next.id">
 									<span>下一篇</span>
 									<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
