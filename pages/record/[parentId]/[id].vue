@@ -134,7 +134,7 @@ onMounted(() => {
 					class="scroll-wrap mt-4 flex flex-row gap-2 sm:mt-8 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 					<div v-for="(item, index) in currentDisplayImages"
 						:key="`img-${index}-${parentId}-${photoWallMode}`"
-						class="relative aspect-square w-36 flex-shrink-0 overflow-hidden rounded-base sm:w-48 md:w-full">
+						class="relative aspect-square w-48 flex-shrink-0 overflow-hidden rounded-base sm:w-56 md:w-full">
 						<img v-preview-img="{
 							src: item.url,
 							alt: currentData?.image_alt,
