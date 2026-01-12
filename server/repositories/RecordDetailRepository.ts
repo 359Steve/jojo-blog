@@ -138,21 +138,26 @@ export class RecordDetailRepository {
 									url: { in: toDelete },
 								},
 							});
-						}
 
-						toDelete.forEach((img) => {
-							if (img) {
-								const relativePath = img.startsWith('/') ? img.substring(1) : img;
-								const imagePath = join(process.cwd(), relativePath);
-								const jsonPath = imagePath.replace(/\.\w+$/, '.json');
-								if (fs.existsSync(imagePath)) {
-									fs.unlinkSync(imagePath);
+							toDelete.forEach((img) => {
+								if (img) {
+									try {
+										const relativePath = img.startsWith('/') ? img.substring(1) : img;
+										const imagePath = join(process.cwd(), 'file-system', relativePath);
+										const jsonPath = imagePath.replace(/\.\w+$/, '.json');
+
+										if (fs.existsSync(imagePath)) {
+											fs.unlinkSync(imagePath);
+										}
+										if (fs.existsSync(jsonPath)) {
+											fs.unlinkSync(jsonPath);
+										}
+									} catch (error) {
+										console.error(`删除文件失败: ${img}`, error);
+									}
 								}
-								if (fs.existsSync(jsonPath)) {
-									fs.unlinkSync(jsonPath);
-								}
-							}
-						});
+							});
+						}
 					}
 				}
 
