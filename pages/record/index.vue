@@ -62,14 +62,14 @@ onMounted(() => {
 										: 'justify-end',
 								]">
 								<button v-if="summaryList?.prev"
-									class="flex items-center rounded-md py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
+									class="flex items-center rounded-md py-1 font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.prev.id">
 									<Icon icon="ri:arrow-left-s-line" width="24" height="24" />
 									<span>上一篇</span>
 								</button>
 
 								<button v-if="summaryList?.next"
-									class="flex items-center rounded-md py-1 text-[16px] font-semibold text-blog-primary transition-colors duration-200"
+									class="flex items-center rounded-md py-1 font-semibold text-blog-primary transition-colors duration-200"
 									@click="groupId = summaryList.next.id">
 									<span>下一篇</span>
 									<Icon icon="ri:arrow-right-s-line" width="24" height="24" />
