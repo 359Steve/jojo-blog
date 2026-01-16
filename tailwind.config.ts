@@ -90,6 +90,8 @@ export default {
 				'blog-tertiary': 'var(--jojo-text-tertiary)',
 				'blog-muted': 'var(--jojo-text-muted)',
 				'blog-accent': 'var(--jojo-text-accent)',
+
+				'blog-ui-bg-muted': 'var(--jojo-bg-muted)',
 			},
 			textColor: {
 				'admin-tag-text': 'var(--jojo-admin-menu-text)',
@@ -110,6 +112,8 @@ export default {
 			},
 			borderColor: {
 				'admin-menu-border': 'var(--jojo-admin-border-color)',
+
+				'blog-ui-border-muted': 'var(--jojo-border-muted)',
 			},
 			keyframes: {
 				...generateSlideAnimations(),
