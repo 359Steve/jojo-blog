@@ -27,6 +27,9 @@
 		--jojo-text-tertiary: #9ca3af;
 		--jojo-text-muted: #d1d5db;
 		--jojo-text-accent: #f43f5e;
+
+		--jojo-border-muted: #e2e8f0;
+		--jojo-bg-muted: #fcf9fa;
 	}
 
 	.dark {
@@ -53,5 +56,8 @@
 		--jojo-text-tertiary: #6b7280;
 		--jojo-text-muted: #4b5563;
 		--jojo-text-accent: #f43f5e;
+
+		--jojo-border-muted: #314158;
+		--jojo-bg-muted: #1d293d;
 	}
 }
