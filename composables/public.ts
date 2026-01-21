@@ -143,3 +143,10 @@ export const getFileStem = (nameOrUrl?: string): string | null => {
 	if (lastDot <= 0) return null;
 	return lastSegment.slice(0, lastDot);
 };
+
+// 从 URL 中提取文件名（含扩展名）
+export const getFileName = (url: string): string => {
+	const withoutQuery = url.split('?')[0];
+	const fileName = withoutQuery.split('/').pop();
+	return fileName || url;
+};
