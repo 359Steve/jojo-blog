@@ -73,6 +73,21 @@ export const extractExifDate = async (buffer: Buffer): Promise<Date> => {
 		return new Date();
 	}
 };
+
+/**
+ * 转换 HEIC 为 PNG（使用 heic-convert 库）
+ * @param heicBuffer HEIC 图片的 Buffer
+ * @returns PNG Buffer
+ */
+const convertHeicToPngBuffer = async (heicBuffer: Buffer): Promise<Buffer> => {
+	const outputBuffer = await convert({
+		buffer: heicBuffer,
+		format: 'PNG',
+		quality: 1, // 最高质量
+	});
+	return Buffer.from(outputBuffer);
+};
+
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
