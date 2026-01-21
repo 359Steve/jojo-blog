@@ -1,7 +1,6 @@
 import ExifReader from 'exifreader';
 import sharp from 'sharp';
 import { compressSharp } from './img-compress';
-import { existsSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'pathe';
 import { encode as blurhashEncode } from 'blurhash';
