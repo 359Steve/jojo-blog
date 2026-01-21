@@ -115,7 +115,15 @@ const handleBeforeRemove = (uploadFile: UploadFile) => {
 // 上传成功
 const handleImageSuccess = (uploadFile: UploadFile) => {
 	// 验证文件类型
-	const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+	const allowedTypes = [
+		'image/jpeg',
+		'image/jpg',
+		'image/png',
+		'image/gif',
+		'image/webp',
+		'image/heic',
+		'video/quicktime',
+	];
 	const maxSize = 10 * 1024 * 1024; // 10MB
 
 	if (!uploadFile.raw) {
