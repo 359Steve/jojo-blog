@@ -99,6 +99,8 @@ const handleBeforeRemove = (uploadFile: UploadFile) => {
 		const itemStem = getFileStem(item.name) || getFileStem(item.url);
 		return itemStem !== stem;
 	});
+
+	formData.images = formData.images.filter((url) => getFileStem(url) !== stem);
 };
 
 // 上传成功
