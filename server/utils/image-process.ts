@@ -7,6 +7,13 @@ import { join } from 'pathe';
 import { encode as blurhashEncode } from 'blurhash';
 import convert from 'heic-convert';
 
+// 存储图片
+const saveImage = async (baseName: string, uploadDir: string, imgBuffer: Buffer<ArrayBufferLike>): Promise<string> => {
+	const pngFileName = `${baseName}.png`;
+	const pngFilePath = join(uploadDir, pngFileName);
+	await writeFile(pngFilePath, imgBuffer);
+	return pngFilePath;
+};
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
