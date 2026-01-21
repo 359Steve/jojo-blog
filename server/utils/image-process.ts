@@ -123,6 +123,35 @@ export const processLivePhoto = async (
 	};
 };
 
+/**
+ * 处理单独的 HEIC 文件，转换为 PNG（带压缩）
+ * @param heicBuffer HEIC 图片的 Buffer
+ * @param uploadDir 上传目录（子目录 base/）
+ * @param baseUrl 基础URL路径
+ * @param baseName 文件名（如 p-2025-01-21T15-30-45-123-）
+ * @returns 处理后的 PNG URL
+ */
+export const processHeicToPng = async (
+	heicBuffer: Buffer,
+	uploadDir: string,
+	baseUrl: string,
+	baseName: string,
+): Promise<string> => {
+	// 转换HEIC为PNG
+	const pngBuffer = await convertHeicToPngBuffer(heicBuffer);
+
+	// 压缩PNG
+	const compressedPngBuffer = await zipImage(pngBuffer, join(uploadDir, 'temp.png'), 'converted.png');
+
+	// 保存图片
+	const pngFileName = await saveImage(baseName, uploadDir, compressedPngBuffer);
+
+	// 保存json
+	await saveJson(baseName, uploadDir, pngBuffer);
+
+	return `${baseUrl}/${pngFileName}`;
+};
+
  * @param buffer 图片的 Buffer 数据
  * @param originalFilename 原始文件名
  * @param uploadDir 上传目录
