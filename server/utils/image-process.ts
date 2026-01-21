@@ -89,7 +89,40 @@ const convertHeicToPngBuffer = async (heicBuffer: Buffer): Promise<Buffer> => {
 };
 
 /**
- * 处理上传的图片：压缩、提取EXIF、基于日期重命名
+ * 处理实况图片（HEIC + MOV）
+ * 注意：实况图片的 HEIC 转 PNG 不压缩，保持原始质量
+ * @param heicBuffer HEIC 图片的 Buffer
+ * @param movBuffer MOV 视频的 Buffer
+ * @param uploadDir 上传目录（子目录 base/）
+ * @param baseUrl 基础URL路径
+ * @param baseName 文件名（如 p-2025-01-21T15-30-45-123-）
+ * @returns 处理后的 PNG 和 MOV 的 URL
+ */
+export const processLivePhoto = async (
+	heicBuffer: Buffer,
+	movBuffer: Buffer,
+	uploadDir: string,
+	baseUrl: string,
+	baseName: string,
+): Promise<{ pngUrl: string; movUrl: string }> => {
+	// 转换HEIC为PNG
+	const pngBuffer = await convertHeicToPngBuffer(heicBuffer);
+
+	// 保存图片
+	const pngFileName = await saveImage(baseName, uploadDir, pngBuffer);
+
+	// 保存json
+	await saveJson(baseName, uploadDir, pngBuffer);
+
+	// 保存mov
+	const movFileName = await saveMov(baseName, uploadDir, movBuffer);
+
+	return {
+		pngUrl: `${baseUrl}/${pngFileName}`,
+		movUrl: `${baseUrl}/${movFileName}`,
+	};
+};
+
  * @param buffer 图片的 Buffer 数据
  * @param originalFilename 原始文件名
  * @param uploadDir 上传目录
