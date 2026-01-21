@@ -256,6 +256,7 @@ const handleCancel = () => {
 const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>) => {
 	const { group, ...rest } = row;
 	isEdit.value = true;
+
 	// 复制数据到表单
 	Object.assign(formData, {
 		...rest,
@@ -267,10 +268,10 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 	imageFile.value = new FormData();
 
 	if (row.images && row.images.length > 0) {
-		imageFile.value = new FormData();
 		fileList.value = row.images.map((imageUrl: RecordDetailImages, index: number) => {
+			const fileName = getFileName(imageUrl.url);
 			return {
-				name: `图片-${index + 1}`,
+				name: fileName,
 				url: imageUrl.url,
 				uid: Date.now() + index,
 				status: 'success' as const,
