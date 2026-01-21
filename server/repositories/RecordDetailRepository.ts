@@ -145,15 +145,9 @@ export class RecordDetailRepository {
 								if (img) {
 									try {
 										const relativePath = img.startsWith('/') ? img.substring(1) : img;
-										const imagePath = join(process.cwd(), 'file-system', relativePath);
-										const jsonPath = imagePath.replace(/\.\w+$/, '.json');
-
-										if (fs.existsSync(imagePath)) {
-											fs.unlinkSync(imagePath);
-										}
-										if (fs.existsSync(jsonPath)) {
-											fs.unlinkSync(jsonPath);
-										}
+										const fullPath = join(process.cwd(), 'file-system', relativePath);
+										const dirPath = join(fullPath, '..');
+										dirsToDelete.add(dirPath);
 									} catch (error) {
 										console.error(`删除文件失败: ${img}`, error);
 									}
