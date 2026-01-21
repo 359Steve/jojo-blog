@@ -89,32 +89,8 @@ const updateUserRules = reactive<FormRules>({
 	],
 });
 const isEdit = ref<boolean>(false);
-const fileList = ref<UploadUserFile[]>([]);
 
-// 移除当前图片
-const handleRemove = (uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
-	if (isEdit.value) {
-		fileList.value = fileList.value.filter((file) => file.uid !== uploadFile.uid);
-		if (uploadFile.url) {
-			formData.images = formData.images.filter((url) => url !== uploadFile.url);
-		}
-
-		ElMessage.success('图片已移除');
-	} else {
-		// 新增模式直接删除
-		fileList.value = fileList.value.filter((file) => file.uid !== uploadFile.uid);
-		formData.images = formData.images.filter((url) => url !== uploadFile.url);
-
-		// 重新构建 FormData
-		if (imageFile.value) {
-			imageFile.value = new FormData();
-			fileList.value.forEach((item) => {
-				if (item.raw) {
-					imageFile.value?.append('files', item.raw);
-				}
-			});
-		}
-	}
+const handleBeforeRemove = (uploadFile: UploadFile) => {
 };
 
 // 上传成功
