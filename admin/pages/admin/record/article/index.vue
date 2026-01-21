@@ -37,6 +37,14 @@ const ruleFormRef = useTemplateRef('ruleFormRef');
 const upload = useTemplateRef('upload');
 const imageFile = ref<FormData | null>(new FormData());
 const fileList = ref<UploadUserFile[]>([]);
+
+const validateImages = (_rule: any, _value: any, callback: (error?: Error) => void) => {
+	if (fileList.value.length > 0) {
+		callback();
+		return;
+	}
+	callback(new Error('请上传照片'));
+};
 const updateUserRules = reactive<FormRules>({
 	group_id: [
 		{
