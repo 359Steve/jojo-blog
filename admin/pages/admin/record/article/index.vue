@@ -94,6 +94,11 @@ const handleBeforeRemove = (uploadFile: UploadFile) => {
 	const stem = getFileStem(uploadFile.name) || getFileStem(uploadFile.url);
 
 	if (!stem) return true;
+
+	fileList.value = fileList.value.filter((item) => {
+		const itemStem = getFileStem(item.name) || getFileStem(item.url);
+		return itemStem !== stem;
+	});
 };
 
 // 上传成功
