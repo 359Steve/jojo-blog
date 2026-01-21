@@ -232,7 +232,7 @@ export class RecordDetailRepository {
 				fs.mkdirSync(baseUploadDir, { recursive: true });
 			}
 
-			const baseUrl = `/recorddetail/${datePath}`;
+			const fileGroups = new Map<string, FileGroup>();
 
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
