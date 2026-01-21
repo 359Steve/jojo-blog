@@ -36,6 +36,7 @@ const formData = reactive<CreateRecordDetailDto>({
 const ruleFormRef = useTemplateRef('ruleFormRef');
 const upload = useTemplateRef('upload');
 const imageFile = ref<FormData | null>(new FormData());
+const fileList = ref<UploadUserFile[]>([]);
 const updateUserRules = reactive<FormRules>({
 	group_id: [
 		{
