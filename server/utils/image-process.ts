@@ -5,16 +5,7 @@ import { existsSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'pathe';
 import { encode as blurhashEncode } from 'blurhash';
-
-export interface ProcessedImageResult {
-	originalName: string;
-	fileName: string;
-	url: string;
-	size: number;
-	originalSize: number;
-	type: string;
-	date?: Date;
-}
+import convert from 'heic-convert';
 
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
