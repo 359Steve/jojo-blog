@@ -92,6 +92,8 @@ const isEdit = ref<boolean>(false);
 
 const handleBeforeRemove = (uploadFile: UploadFile) => {
 	const stem = getFileStem(uploadFile.name) || getFileStem(uploadFile.url);
+
+	if (!stem) return true;
 };
 
 // 上传成功
