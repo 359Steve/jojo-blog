@@ -55,9 +55,8 @@ const updateUserRules = reactive<FormRules>({
 	],
 	images: [
 		{
-			required: true,
-			message: '请上传照片',
-			trigger: 'blur',
+			validator: validateImages,
+			trigger: ['change', 'blur'],
 		},
 	],
 	title: [
