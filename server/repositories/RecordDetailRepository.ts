@@ -214,8 +214,16 @@ export class RecordDetailRepository {
 			const uploadResults: string[] = [];
 
 			// 定义允许的图片类型和扩展名
-			const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+			const allowedMimeTypes = [
+				'image/jpeg',
+				'image/jpg',
+				'image/png',
+				'image/gif',
+				'image/webp',
+				'image/heic',
+				'video/quicktime',
+			];
+			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'mov'];
 			const maxFileSize = 10 * 1024 * 1024; // 10MB
 
 			// 确保文件夹存在
