@@ -149,7 +149,7 @@ export class RecordDetailRepository {
 										const dirPath = join(fullPath, '..');
 										dirsToDelete.add(dirPath);
 									} catch (error) {
-										console.error(`删除文件失败: ${img}`, error);
+										console.error(`提取目录路径失败: ${img}`, error);
 									}
 								}
 							});
