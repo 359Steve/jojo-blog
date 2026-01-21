@@ -327,7 +327,7 @@ export class RecordDetailRepository {
 			}
 
 			if (uploadResults.length === 0) {
-				throw new Error('没有有效的图片文件上传！请确保文件为图片格式且小于10MB');
+				throw new Error('没有有效的文件上传！请确保文件格式正确且小于10MB');
 			}
 
 			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
