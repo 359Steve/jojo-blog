@@ -259,6 +259,70 @@ export class RecordDetailRepository {
 					extension: fileExtension,
 				});
 			}
+
+			// 处理每个文件组
+			for (const group of fileGroups.values()) {
+				// 检查是否是实况图片（包含 heic + mov）
+				const heicFile = group.files.find((f) => f.extension === 'heic');
+				const movFile = group.files.find((f) => f.extension === 'mov');
+				const isLivePhoto = !!heicFile && !!movFile;
+
+				// 提取日期（优先从图片文件提取）
+				let groupDate = new Date();
+				const imageFile = group.files.find((f) =>
+					['heic', 'jpg', 'jpeg', 'png', 'gif', 'webp'].includes(f.extension),
+				);
+				if (imageFile) {
+					groupDate = await extractExifDate(imageFile.data);
+				}
+
+				// 生成基于日期的基础文件名（不含扩展名）
+				const base = `p-${groupDate.toISOString().replace(/[:.a-z]+/gi, '-')}`;
+
+				// 为每组文件创建一个子目录（使用 base 作为目录名）
+				const groupUploadDir = join(baseUploadDir, base);
+				if (!fs.existsSync(groupUploadDir)) {
+					fs.mkdirSync(groupUploadDir, { recursive: true });
+				}
+
+				const baseUrl = `/recorddetail/${datePath}/${base}`;
+
+				// 处理文件
+				if (isLivePhoto) {
+					try {
+						const { pngUrl, movUrl } = await processLivePhoto(
+							heicFile.data,
+							movFile.data,
+							groupUploadDir,
+							baseUrl,
+							base,
+						);
+						uploadResults.push(pngUrl, movUrl);
+					} catch (error) {
+						continue;
+					}
+				} else {
+					// 非实况图片
+					for (const file of group.files) {
+						try {
+							if (file.extension === 'heic') {
+								// 单独的 HEIC 文件转为 PNG（带压缩）
+								const pngUrl = await processHeicToPng(file.data, groupUploadDir, baseUrl, base);
+								uploadResults.push(pngUrl);
+							} else {
+								const processed = await processImageInSubDir(
+									file.data,
+									file.filename,
+									groupUploadDir,
+									baseUrl,
+									base,
+								);
+								uploadResults.push(processed);
+							}
+						} catch (error) {
+							continue;
+						}
+					}
 				}
 			}
 
