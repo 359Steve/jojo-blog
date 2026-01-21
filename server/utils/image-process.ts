@@ -14,6 +14,20 @@ const saveImage = async (baseName: string, uploadDir: string, imgBuffer: Buffer<
 	await writeFile(pngFilePath, imgBuffer);
 	return pngFilePath;
 };
+
+// 生成blurhash并存储json
+const saveJson = async (baseName: string, uploadDir: string, imgBuffer: Buffer<ArrayBufferLike>) => {
+	const blurhashImg = sharp(imgBuffer);
+	const { data, info } = await blurhashImg
+		.raw()
+		.ensureAlpha()
+		.resize(32, 32, { fit: 'cover' })
+		.toBuffer({ resolveWithObject: true });
+	const blurhash = blurhashEncode(new Uint8ClampedArray(data), info?.width || 32, info?.height || 32, 4, 4);
+
+	const jsonFilePath = join(uploadDir, `${baseName}.json`);
+	await writeFile(jsonFilePath, JSON.stringify({ blurhash }, null, 2));
+};
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
