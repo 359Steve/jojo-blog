@@ -49,6 +49,30 @@ const zipImage = async (
 
 	return outBuffer;
 };
+
+/**
+ * 从 Buffer 提取 EXIF 日期
+ * @param buffer 图片的 Buffer 数据
+ * @returns 提取的日期或当前日期
+ */
+export const extractExifDate = async (buffer: Buffer): Promise<Date> => {
+	try {
+		const exif = await ExifReader.load(buffer);
+		let dateRaw = exif.DateTimeOriginal?.value || exif.DateTime?.value || exif.DateCreated?.value;
+		if (Array.isArray(dateRaw)) dateRaw = dateRaw[0] as string;
+		dateRaw = String(dateRaw || new Date().toISOString());
+
+		const date = new Date(
+			dateRaw.replace(/:/g, (x, idx) => {
+				if (idx < 10) return '-';
+				return x;
+			}),
+		);
+		return Number.isNaN(+date) ? new Date() : date;
+	} catch (error) {
+		return new Date();
+	}
+};
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
