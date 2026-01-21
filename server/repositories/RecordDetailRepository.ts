@@ -211,7 +211,7 @@ export class RecordDetailRepository {
 		}
 
 		try {
-			const uploadResults: Awaited<ReturnType<typeof processUploadedImage>>[] = [];
+			const uploadResults: string[] = [];
 
 			// 定义允许的图片类型和扩展名
 			const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
