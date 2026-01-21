@@ -101,6 +101,11 @@ const handleBeforeRemove = (uploadFile: UploadFile) => {
 	});
 
 	formData.images = formData.images.filter((url) => getFileStem(url) !== stem);
+
+	imageFile.value = new FormData();
+	fileList.value.forEach((item) => {
+		if (item.raw) imageFile.value!.append('files', item.raw);
+	});
 };
 
 // 上传成功
