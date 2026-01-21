@@ -14,3 +14,14 @@ interface H3Error<T> {
 }
 
 type NewResponse<T> = NitroResponse<T> & H3Error<T>;
+
+// 按文件基名分组
+interface FileGroup {
+	stem: string;
+	files: Array<{
+		data: Buffer;
+		filename: string;
+		type: string;
+		extension: string;
+	}>;
+}
