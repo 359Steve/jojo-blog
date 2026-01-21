@@ -263,6 +263,9 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 	});
 	groupId.value = row.group_id;
 
+	// 重置上传相关状态
+	imageFile.value = new FormData();
+
 	if (row.images && row.images.length > 0) {
 		imageFile.value = new FormData();
 		fileList.value = row.images.map((imageUrl: RecordDetailImages, index: number) => {
