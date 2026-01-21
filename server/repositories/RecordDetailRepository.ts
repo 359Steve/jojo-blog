@@ -226,10 +226,10 @@ export class RecordDetailRepository {
 			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'mov'];
 			const maxFileSize = 10 * 1024 * 1024; // 10MB
 
-			// 确保文件夹存在
-			const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
-			if (!fs.existsSync(uploadDir)) {
-				fs.mkdirSync(uploadDir, { recursive: true });
+			// 确保基础文件夹存在
+			const baseUploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
+			if (!fs.existsSync(baseUploadDir)) {
+				fs.mkdirSync(baseUploadDir, { recursive: true });
 			}
 
 			const baseUrl = `/recorddetail/${datePath}`;
