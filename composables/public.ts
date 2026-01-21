@@ -133,3 +133,13 @@ export const monthArrData = (year: number = new Date().getFullYear()) => {
 
 	return monthArr;
 };
+
+// 从文件名或 URL 中提取基名（不含扩展名）
+export const getFileStem = (nameOrUrl?: string): string | null => {
+	if (!nameOrUrl) return null;
+	const withoutQuery = nameOrUrl.split('?')[0] || nameOrUrl;
+	const lastSegment = withoutQuery.split('/').pop() || withoutQuery;
+	const lastDot = lastSegment.lastIndexOf('.');
+	if (lastDot <= 0) return null;
+	return lastSegment.slice(0, lastDot);
+};
