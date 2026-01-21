@@ -139,6 +139,8 @@ export class RecordDetailRepository {
 								},
 							});
 
+							const dirsToDelete = new Set<string>();
+
 							toDelete.forEach((img) => {
 								if (img) {
 									try {
