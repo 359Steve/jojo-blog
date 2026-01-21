@@ -133,7 +133,7 @@ const handleImageSuccess = (uploadFile: UploadFile) => {
 
 	// 验证文件类型
 	if (!allowedTypes.includes(uploadFile.raw.type)) {
-		ElMessage.error('只能上传 JPG、PNG、GIF、WebP 格式的图片');
+		ElMessage.error('只能上传 JPG、PNG、GIF、WebP、MOV 格式的图片');
 		return;
 	}
 
