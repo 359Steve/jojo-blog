@@ -37,6 +37,18 @@ const saveMov = async (baseName: string, uploadDir: string, movBuffer: Buffer<Ar
 
 	return movFileName;
 };
+
+// 压缩图片
+const zipImage = async (
+	pngBuffer: Buffer<ArrayBufferLike>,
+	filePath: string,
+	fileName: string,
+): Promise<Buffer<ArrayBufferLike>> => {
+	const pngImg = sharp(pngBuffer);
+	const { outBuffer } = await compressSharp(pngImg, pngBuffer, fileName, filePath);
+
+	return outBuffer;
+};
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
