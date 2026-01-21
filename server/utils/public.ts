@@ -31,3 +31,9 @@ export const setRedisWithExpire = async (redisClient: Redis, key: string, value:
 
 	await redisClient.set(key, value, 'EX', secondsUntilEndOfToday);
 };
+
+// 辅助函数：提取文件基名（不含扩展名）
+export const getFileStem = (filename: string): string => {
+	const lastDot = filename.lastIndexOf('.');
+	return lastDot > 0 ? filename.slice(0, lastDot) : filename;
+};
