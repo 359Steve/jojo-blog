@@ -38,6 +38,7 @@
 		"echarts": "^6.0.0",
 		"eslint": "^9.27.0",
 		"exifreader": "^4.33.1",
+		"heic-convert": "^2.1.0",
 		"inversify": "^7.5.2",
 		"ioredis": "^5.8.2",
 		"js-yaml": "^4.1.1",
