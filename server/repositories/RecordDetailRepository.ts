@@ -9,7 +9,7 @@ import process from 'node:process';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
 import { redis } from '../core/redis';
-import { processUploadedImage } from '../utils/image-process';
+import { extractExifDate, processLivePhoto, processHeicToPng, processImageInSubDir } from '../utils/image-process';
 import { getImagesMetadata } from '../utils/image-metadata';
 
 export class RecordDetailRepository {
