@@ -28,6 +28,15 @@ const saveJson = async (baseName: string, uploadDir: string, imgBuffer: Buffer<A
 	const jsonFilePath = join(uploadDir, `${baseName}.json`);
 	await writeFile(jsonFilePath, JSON.stringify({ blurhash }, null, 2));
 };
+
+// 保存mov
+const saveMov = async (baseName: string, uploadDir: string, movBuffer: Buffer<ArrayBufferLike>): Promise<string> => {
+	const movFileName = `${baseName}.mov`;
+	const movFilePath = join(uploadDir, movFileName);
+	await writeFile(movFilePath, movBuffer);
+
+	return movFileName;
+};
 /**
  * 处理上传的图片：压缩、提取EXIF、基于日期重命名
  * @param buffer 图片的 Buffer 数据
