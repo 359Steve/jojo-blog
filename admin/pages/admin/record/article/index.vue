@@ -106,6 +106,10 @@ const handleBeforeRemove = (uploadFile: UploadFile) => {
 	fileList.value.forEach((item) => {
 		if (item.raw) imageFile.value!.append('files', item.raw);
 	});
+
+	ruleFormRef.value?.validateField?.('images');
+
+	return false;
 };
 
 // 上传成功
