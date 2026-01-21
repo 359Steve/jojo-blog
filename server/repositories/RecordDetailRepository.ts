@@ -234,48 +234,31 @@ export class RecordDetailRepository {
 
 			const fileGroups = new Map<string, FileGroup>();
 
-			for (let i = 0; i < files.length; i++) {
-				const file = files[i];
-
-				if (!file.data || !file.filename) {
-					continue;
-				}
+			for (const file of files) {
+				if (!file.data || !file.filename) continue;
 
 				// 验证文件大小
-				if (file.data.length > maxFileSize) {
-					continue;
-				}
+				if (file.data.length > maxFileSize) continue;
 
 				// 验证文件扩展名
 				const fileExtension = file.filename.split('.').pop()?.toLowerCase();
-				if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
-					continue;
-				}
+				if (!fileExtension || !allowedExtensions.includes(fileExtension)) continue;
 
 				// 验证MIME类型
-				if (file.type && !allowedMimeTypes.includes(file.type.toLowerCase())) {
-					continue;
+				if (file.type && !allowedMimeTypes.includes(file.type.toLowerCase())) continue;
+
+				const stem = getFileStem(file.filename);
+				if (!fileGroups.has(stem)) {
+					fileGroups.set(stem, { stem, files: [] });
 				}
 
-				try {
-					// 使用图片处理函数：压缩、提取EXIF、基于日期重命名
-					const processed = await processUploadedImage(
-						Buffer.from(file.data),
-						file.filename,
-						uploadDir,
-						baseUrl,
-					);
-
-					uploadResults.push({
-						originalName: processed.originalName,
-						fileName: processed.fileName,
-						url: processed.url,
-						size: processed.size,
-						originalSize: processed.originalSize,
-						type: processed.type,
-					});
-				} catch (error) {
-					continue;
+				fileGroups.get(stem)!.files.push({
+					data: Buffer.from(file.data),
+					filename: file.filename,
+					type: file.type || '',
+					extension: fileExtension,
+				});
+			}
 				}
 			}
 
