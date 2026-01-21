@@ -91,6 +91,7 @@ const updateUserRules = reactive<FormRules>({
 const isEdit = ref<boolean>(false);
 
 const handleBeforeRemove = (uploadFile: UploadFile) => {
+	const stem = getFileStem(uploadFile.name) || getFileStem(uploadFile.url);
 };
 
 // 上传成功
