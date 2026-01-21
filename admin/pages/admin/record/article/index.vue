@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
-import type { FormInstance, FormRules, UploadFile, UploadFiles, UploadUserFile } from 'element-plus';
+import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus';
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
 const selectData = computed<{ id: number; time_range: string }[]>(() => data.value?.data || []);
