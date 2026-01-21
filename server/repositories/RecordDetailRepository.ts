@@ -330,8 +330,8 @@ export class RecordDetailRepository {
 				throw new Error('没有有效的文件上传！请确保文件格式正确且小于10MB');
 			}
 
-			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个图片文件`, {
-				urls: uploadResults.map((item) => item.url).filter(Boolean),
+			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个文件`, {
+				urls: uploadResults.filter(Boolean),
 			});
 		} catch (error) {
 			return returnData(StatusCode.FAIL, (error as Error).message, null);
