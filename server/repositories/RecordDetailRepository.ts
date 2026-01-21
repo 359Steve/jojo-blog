@@ -153,6 +153,16 @@ export class RecordDetailRepository {
 									}
 								}
 							});
+
+							dirsToDelete.forEach((dir) => {
+								try {
+									if (fs.existsSync(dir)) {
+										fs.rmSync(dir, { recursive: true, force: true });
+									}
+								} catch (error) {
+									console.error(`删除目录失败: ${dir}`, error);
+								}
+							});
 						}
 					}
 				}
