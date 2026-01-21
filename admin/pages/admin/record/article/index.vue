@@ -143,7 +143,6 @@ const handleImageSuccess = (uploadFile: UploadFile) => {
 		return;
 	}
 
-	formData.images.push('');
 	imageFile.value!.append('files', uploadFile.raw);
 	ruleFormRef.value?.validateField?.('images');
 };
