@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import type { CreateRecordDetailDto } from '../dto/CreateArticleDto';
 import { prisma } from '../core/prisma';
-import { returnData } from '../utils/public';
+import { getFileStem, returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
 import fs from 'fs';
