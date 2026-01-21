@@ -145,6 +145,7 @@ const handleImageSuccess = (uploadFile: UploadFile) => {
 
 	formData.images.push('');
 	imageFile.value!.append('files', uploadFile.raw);
+	ruleFormRef.value?.validateField?.('images');
 };
 
 // 保存
