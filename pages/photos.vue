@@ -5,6 +5,12 @@ useHead({
 	title: '照片墙',
 });
 
+interface Photos {
+	url: string;
+	blurhash: string;
+	is_live: boolean;
+}
+
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
