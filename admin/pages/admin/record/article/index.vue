@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateRecordDetailDto } from '~/server/dto/CreateArticleDto';
-import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus';
+import type { FormInstance, FormRules, UploadFile, UploadFiles, UploadUserFile } from 'element-plus';
 
 const { data } = await useAsyncData('groupTimeRanges', () => queryGroupTimeRanges());
 const selectData = computed<{ id: number; time_range: string }[]>(() => data.value?.data || []);
@@ -90,26 +90,24 @@ const updateUserRules = reactive<FormRules>({
 });
 const isEdit = ref<boolean>(false);
 
-const handleBeforeRemove = (uploadFile: UploadFile) => {
-	const stem = getFileStem(uploadFile.name) || getFileStem(uploadFile.url);
+// 移除图片
+const handleRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+	// 更新文件列表
+	fileList.value = uploadFiles as UploadUserFile[];
 
-	if (!stem) return true;
-
-	fileList.value = fileList.value.filter((item) => {
-		const itemStem = getFileStem(item.name) || getFileStem(item.url);
-		return itemStem !== stem;
-	});
-
-	formData.images = formData.images.filter((url) => getFileStem(url) !== stem);
+	if (uploadFile.url) {
+		formData.images = formData.images.filter((item) => item.url !== uploadFile.url);
+	}
 
 	imageFile.value = new FormData();
 	fileList.value.forEach((item) => {
-		if (item.raw) imageFile.value!.append('files', item.raw);
+		if (item.raw) {
+			imageFile.value!.append('files', item.raw);
+		}
 	});
 
+	// 触发表单校验
 	ruleFormRef.value?.validateField?.('images');
-
-	return false;
 };
 
 // 上传成功
