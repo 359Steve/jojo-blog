@@ -291,7 +291,7 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 			<ElFormItem prop="images" class="choose-pic !mx-0 !w-full" label="照片：">
 				<ElUpload ref="upload" v-model:file-list="fileList" :auto-upload="false" :multiple="true"
 					class="relative w-full" accept=".jpg,.jpeg,.png,.heic,.mov" action="#"
-					:on-change="handleImageSuccess" :before-remove="handleBeforeRemove" list-type="text">
+					:on-change="handleImageSuccess" :on-remove="handleRemove" list-type="text">
 					<el-button type="primary">上传照片</el-button>
 				</ElUpload>
 			</ElFormItem>
