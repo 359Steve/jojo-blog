@@ -29,7 +29,7 @@ const translate = ref<boolean>(false);
 	<div v-if="photoList && photoList.length > 0" class="w-full">
 		<div class="fixed top-14 flex items-center justify-center py-2">
 			<Icon :icon="translate ? 'ri-grid-line' : 'ri-layout-masonry-line'" width="26"
-				class="text-blog-tertiary cursor-pointer" @click="translate = !translate" />
+				class="cursor-pointer text-blog-tertiary" @click="translate = !translate" />
 		</div>
 		<div class="grid w-full grid-cols-1 gap-4 py-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			<div v-for="(photo, idx) in photoList" :key="idx" class="cursor-pointer">
