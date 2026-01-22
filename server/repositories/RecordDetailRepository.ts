@@ -111,21 +111,22 @@ export class RecordDetailRepository {
 						});
 						const dbUrls = dbImages.map((item) => item.url).filter(Boolean);
 
-						const toAdd = images.filter((url) => !dbUrls.includes(url));
-						const toDelete = dbUrls.filter((url) => !images.includes(url));
+						const toAdd = images.filter((item) => !dbUrls.includes(item.url));
+						const toDelete = dbUrls.filter((url) => !images.map((item) => item.url).includes(url));
 
 						if (toAdd.length > 0) {
 							await tx.record_images.createMany({
 								data: toAdd
-									.map((url) => ({
+									.map((item) => ({
 										record_detail_id: Number(id),
-										url,
+										...item,
 									}))
 									.filter(Boolean),
 							});
 						}
 
 						if (toDelete.length > 0) {
+							// 从数据库删除图片记录
 							await tx.record_images.deleteMany({
 								where: {
 									record_detail_id: Number(id),
@@ -133,22 +134,35 @@ export class RecordDetailRepository {
 								},
 							});
 
+							// 收集需要删除的目录
 							const dirsToDelete = new Set<string>();
 
-							toDelete.forEach((img) => {
-								if (img) {
-									try {
-										const relativePath = img.startsWith('/') ? img.substring(1) : img;
-										const fullPath = join(process.cwd(), 'file-system', relativePath);
-										const dirPath = join(fullPath, '..');
-										dirsToDelete.add(dirPath);
-									} catch (error) {
-										console.error(`提取目录路径失败: ${img}`, error);
+							toDelete.forEach((imageUrl) => {
+								try {
+									const match = imageUrl.match(/\/recorddetail\/[^/]+\/(p-[^/]+)\//);
+
+									if (match) {
+										const datePath = imageUrl.match(/\/recorddetail\/([^/]+)\//)?.[1];
+										const pDir = match[1];
+
+										if (datePath && pDir) {
+											const dirPath = join(
+												process.cwd(),
+												'file-system',
+												'recorddetail',
+												datePath,
+												pDir,
+											);
+											dirsToDelete.add(dirPath);
+										}
 									}
+								} catch (error) {
+									console.error(`提取目录路径失败: ${imageUrl}`, error);
 								}
 							});
 
-							dirsToDelete.forEach((dir) => {
+							// 删除所有收集到的目录
+							for (const dir of dirsToDelete) {
 								try {
 									if (fs.existsSync(dir)) {
 										fs.rmSync(dir, { recursive: true, force: true });
@@ -156,7 +170,7 @@ export class RecordDetailRepository {
 								} catch (error) {
 									console.error(`删除目录失败: ${dir}`, error);
 								}
-							});
+							}
 						}
 					}
 				}
@@ -205,7 +219,7 @@ export class RecordDetailRepository {
 		}
 
 		try {
-			const uploadResults: string[] = [];
+			const uploadResults: LiveImage[] = [];
 
 			// 定义允许的图片类型和扩展名
 			const allowedMimeTypes = [
@@ -284,14 +298,18 @@ export class RecordDetailRepository {
 				// 处理文件
 				if (isLivePhoto) {
 					try {
-						const { pngUrl, movUrl } = await processLivePhoto(
+						const pngUrl = await processLivePhoto(
 							heicFile.data,
 							movFile.data,
 							groupUploadDir,
 							baseUrl,
 							base,
 						);
-						uploadResults.push(pngUrl, movUrl);
+
+						uploadResults.push({
+							url: pngUrl,
+							is_live: true,
+						});
 					} catch (error) {
 						continue;
 					}
@@ -302,7 +320,10 @@ export class RecordDetailRepository {
 							if (file.extension === 'heic') {
 								// 单独的 HEIC 文件转为 PNG（带压缩）
 								const pngUrl = await processHeicToPng(file.data, groupUploadDir, baseUrl, base);
-								uploadResults.push(pngUrl);
+								uploadResults.push({
+									url: pngUrl,
+									is_live: false,
+								});
 							} else {
 								const processed = await processImageInSubDir(
 									file.data,
@@ -311,7 +332,10 @@ export class RecordDetailRepository {
 									baseUrl,
 									base,
 								);
-								uploadResults.push(processed);
+								uploadResults.push({
+									url: processed,
+									is_live: false,
+								});
 							}
 						} catch (error) {
 							continue;
@@ -321,12 +345,14 @@ export class RecordDetailRepository {
 			}
 
 			if (uploadResults.length === 0) {
-				throw new Error('没有有效的文件上传！请确保文件格式正确且小于10MB');
+				throw new Error('没有有效的图片上传！请确保文件格式正确且小于10MB');
 			}
 
-			return returnData(StatusCode.SUCCESS, `成功上传 ${uploadResults.length} 个文件`, {
-				urls: uploadResults.filter(Boolean),
-			});
+			return returnData(
+				StatusCode.SUCCESS,
+				`成功上传 ${uploadResults.length} 张图片`,
+				uploadResults.filter(Boolean),
+			);
 		} catch (error) {
 			return returnData(StatusCode.FAIL, (error as Error).message, null);
 		}
@@ -411,6 +437,7 @@ export class RecordDetailRepository {
 							return {
 								url,
 								blurhash: metadata,
+								is_live: item.is_live,
 							};
 						})
 						.filter((item) => item.url),
@@ -425,6 +452,7 @@ export class RecordDetailRepository {
 										return {
 											url,
 											blurhash: metadata,
+											is_live: img.is_live,
 										};
 									})
 									.filter((img) => img.url),
@@ -504,10 +532,11 @@ export class RecordDetailRepository {
 				const imagesMetadata = await getImagesMetadata(imageUrls);
 
 				// 返回包含 blurhash 的图片信息
-				const imagesWithMetadata = imageUrls.map((url) => {
-					const metadata = imagesMetadata[url];
+				const imagesWithMetadata = records.map((item) => {
+					const metadata = imagesMetadata[item.url];
 					return {
-						url,
+						url: item.url,
+						is_live: item.is_live,
 						blurhash: metadata,
 					};
 				});
@@ -558,9 +587,11 @@ export class RecordDetailRepository {
 							images: item.images
 								.map((img) => {
 									const url = img.url;
+									const is_live = img.is_live;
 									const metadata = imagesMetadata[url];
 									return {
 										url,
+										is_live,
 										blurhash: metadata,
 									};
 								})
