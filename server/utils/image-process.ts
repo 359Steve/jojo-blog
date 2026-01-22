@@ -11,7 +11,7 @@ const saveImage = async (baseName: string, uploadDir: string, imgBuffer: Buffer<
 	const pngFileName = `${baseName}.png`;
 	const pngFilePath = join(uploadDir, pngFileName);
 	await writeFile(pngFilePath, imgBuffer);
-	return pngFilePath;
+	return pngFileName;
 };
 
 // 生成blurhash并存储json
@@ -103,7 +103,7 @@ export const processLivePhoto = async (
 	uploadDir: string,
 	baseUrl: string,
 	baseName: string,
-): Promise<{ pngUrl: string; movUrl: string }> => {
+): Promise<string> => {
 	// 转换HEIC为PNG
 	const pngBuffer = await convertHeicToPngBuffer(heicBuffer);
 
@@ -114,12 +114,9 @@ export const processLivePhoto = async (
 	await saveJson(baseName, uploadDir, pngBuffer);
 
 	// 保存mov
-	const movFileName = await saveMov(baseName, uploadDir, movBuffer);
+	await saveMov(baseName, uploadDir, movBuffer);
 
-	return {
-		pngUrl: `${baseUrl}/${pngFileName}`,
-		movUrl: `${baseUrl}/${movFileName}`,
-	};
+	return `${baseUrl}/${pngFileName}`;
 };
 
 /**
