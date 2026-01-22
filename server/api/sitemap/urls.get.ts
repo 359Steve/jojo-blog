@@ -5,7 +5,7 @@ import { BLOG_SERVICE } from '~/server/services/BlogService';
 import type { RecordDetailService } from '~/server/services/RecordDetailService';
 import { RECORD_DETAIL_SERVICE } from '~/server/services/RecordDetailService';
 
-export default defineSitemapEventHandler(async (e) => {
+export default defineSitemapEventHandler(async () => {
 	const routes = [
 		asSitemapUrl({ loc: '/', changefreq: 'daily', priority: 1, lastmod: new Date() }),
 		asSitemapUrl({ loc: '/blog', changefreq: 'daily', priority: 0.9, lastmod: new Date() }),
