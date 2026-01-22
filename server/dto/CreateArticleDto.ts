@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+const imageSchema = z.object({
+	url: z.string().min(1, '图片地址不能为空'),
+	is_live: z.boolean(),
+	blurhash: z.string().optional(),
+});
+
 export const CreateRecordDetailSchema = z.object({
 	id: z.number().optional(),
 	group_id: z
