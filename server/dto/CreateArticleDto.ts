@@ -27,7 +27,7 @@ export const CreateRecordDetailSchema = z.object({
 		.trim()
 		.refine((val) => typeof val === 'string', { message: '时间范围必须为字符串' })
 		.min(1, '时间范围不能为空'),
-	images: z.array(z.string().min(1, '图片地址不能为空')).optional().default([]),
+	images: z.array(imageSchema).optional().default([]),
 	date_path: z
 		.string()
 		.trim()
