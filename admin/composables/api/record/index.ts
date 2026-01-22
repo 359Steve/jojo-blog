@@ -121,7 +121,7 @@ export const queryRecordDetailById = async (id: number) => {
 // 上传记录详情图片
 export const uploadRecordDetailImage = async (formData: FormData) => {
 	const res = await jojoLoadingIndicator(() =>
-		fetchPostApi<FormData, { urls: string[] }>('/record/detail/detailUpload', {
+		fetchPostApi<FormData, LiveImage[]>('/record/detail/detailUpload', {
 			body: formData,
 		}),
 	);
