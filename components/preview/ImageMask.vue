@@ -13,7 +13,7 @@ const { getPreviewSrc, getPreviewVisible, getAlt, setPreviewVisible } = usePrevi
 	</Transition>
 </template>
 
-<style lang="scss" scoped>
+<style lang="postcss" scoped>
 .fade-enter-active,
 .fade-leave-active {
 	transition:
