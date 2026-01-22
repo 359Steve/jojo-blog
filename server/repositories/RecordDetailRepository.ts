@@ -78,13 +78,7 @@ export class RecordDetailRepository {
 				data: {
 					...data,
 					images: {
-						create: data.images
-							.map((item) => {
-								return {
-									url: item,
-								};
-							})
-							.filter(Boolean),
+						create: data.images,
 					},
 				},
 			});
