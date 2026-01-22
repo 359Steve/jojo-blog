@@ -14,23 +14,13 @@ interface Photos {
 const pageNumber = ref<number>(1);
 const pageSize = ref<number>(-1);
 const { data } = await useAsyncData('photosRecordPictures', () =>
-	findRecordPictures<
-		{
-			url: string;
-			blurhash: string;
-		}[]
-	>({
+	findRecordPictures<Photos[]>({
 		pageNumber: pageNumber.value,
 		pageSize: pageSize.value,
 	}),
 );
 
-const photoList = computed<
-	{
-		url: string;
-		blurhash: string;
-	}[]
->(() => data.value?.data ?? []);
+const photoList = computed<Photos[]>(() => data.value?.data ?? []);
 
 const translate = ref<boolean>(false);
 </script>
