@@ -36,6 +36,7 @@ const translate = ref<boolean>(false);
 				<img v-preview-img="{
 					src: photo.url,
 					alt: '照片墙',
+					is_live: photo.is_live,
 				}" :src="photo.url" alt="照片"
 					:style="photo.blurhash && translate ? (blurhashToGradientCssObject(photo.blurhash) as any) : ''"
 					:data-photo-index="idx" loading="lazy" w-full
