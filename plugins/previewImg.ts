@@ -1,3 +1,7 @@
+const getMovPath = (imagePath: string) => {
+	return imagePath.replace(/\.\w+$/, '.mov');
+};
+
 export default defineNuxtPlugin({
 	name: 'previewImg',
 	parallel: true,
@@ -8,11 +12,13 @@ export default defineNuxtPlugin({
 			},
 			mounted(el: HTMLElement, binding) {
 				const handler = () => {
-					const { setPreviewSrc, setAlt, setPreviewVisible } = usePreviewImg();
+					const { setPreviewSrc, setAlt, setPreviewVisible, setIsLive } = usePreviewImg();
 					if (binding.value) {
-						const data = binding.value as { src: string; alt: string };
+						const data = binding.value as { src: string; alt: string; is_live: boolean };
+
 						setPreviewSrc(data.src);
 						setAlt(data.alt);
+						setIsLive(data.is_live ? getMovPath(data.src) : '');
 						setPreviewVisible(true);
 					}
 				};
