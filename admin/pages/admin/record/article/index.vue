@@ -257,7 +257,10 @@ const handleEdit = (row: GroupWithDetail<Omit<CreateRecordDetailDto, 'images'>>)
 	// 复制数据到表单
 	Object.assign(formData, {
 		...rest,
-		images: row.images.map((item) => item.url),
+		images: row.images.map((item) => ({
+			url: item.url,
+			is_live: item.is_live ?? false,
+		})),
 	});
 	groupId.value = row.group_id;
 
