@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { blurhashToGradientCssObject } from '@unpic/placeholder';
 useHead({
 	title: '记录详情',
 });
@@ -138,7 +139,9 @@ onMounted(() => {
 						<img v-preview-img="{
 							src: item.url,
 							alt: currentData?.image_alt,
-						}" :src="item.url" :alt="currentData?.image_alt" loading="lazy" decoding="async"
+							is_live: item.is_live,
+						}" :style="item.blurhash && (blurhashToGradientCssObject(item.blurhash) as any)" :src="item.url"
+							:alt="currentData?.image_alt" loading="lazy" decoding="async"
 							class="aspect-square w-full cursor-pointer object-cover">
 
 						<div v-if="index === 3 && count.length > currentDisplayImages.length"
