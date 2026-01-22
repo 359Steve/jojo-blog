@@ -1,15 +1,11 @@
-import type { PrismaClient } from '@prisma/client';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import fs from 'node:fs';
 import process from 'node:process';
-import { prisma } from '../core/prisma';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
 
 export class MdRepository {
-	constructor(private prismaClient: PrismaClient = prisma) { }
-
 	// 上传图片
 	async uploadImage(files: ReturnFunction<typeof readMultipartFormData>, datePath: string) {
 		if (!files || files.length === 0) {
