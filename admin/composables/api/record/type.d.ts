@@ -11,3 +11,8 @@ type GroupWithDetail<T> = T & {
 	};
 	images: RecordDetailImages[];
 };
+
+interface LiveImage {
+	url: string;
+	is_live: boolean;
+}
