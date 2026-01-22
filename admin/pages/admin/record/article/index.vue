@@ -161,7 +161,7 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 						return;
 					}
 
-					formData.images = isEdit.value ? [...formData.images, ...data.urls] : data.urls;
+					formData.images = isEdit.value ? [...formData.images, ...data] : data;
 					formData.date_path = date_path;
 				}
 
@@ -170,13 +170,13 @@ const saveArticle = async (formEl: FormInstance | undefined): Promise<void> => {
 					// 修改
 					res = await updateRecordDetail({
 						...formData,
-						images: formData.images.filter((url) => url !== ''),
+						images: formData.images,
 					});
 				} else {
 					// 新增
 					res = await createRecordDetail({
 						...formData,
-						images: formData.images.filter((url) => url !== ''),
+						images: formData.images,
 					});
 				}
 
