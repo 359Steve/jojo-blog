@@ -219,8 +219,6 @@ export class RecordDetailRepository {
 		}
 
 		try {
-			const uploadResults: LiveImage[] = [];
-
 			// 定义允许的图片类型和扩展名
 			const allowedMimeTypes = [
 				'image/jpeg',
@@ -233,6 +231,12 @@ export class RecordDetailRepository {
 			];
 			const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'mov'];
 			const maxFileSize = 10 * 1024 * 1024; // 10MB
+			const maxFiles = 20; // 限制单次上传最大文件数
+
+			// 限制文件数量
+			if (files.length > maxFiles) {
+				throw new Error(`单次最多上传 ${maxFiles} 个文件，请分批上传`);
+			}
 
 			// 确保基础文件夹存在
 			const baseUploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
@@ -268,36 +272,36 @@ export class RecordDetailRepository {
 				});
 			}
 
-			// 处理每个文件组
-			for (const group of fileGroups.values()) {
-				// 检查是否是实况图片（包含 heic + mov）
-				const heicFile = group.files.find((f) => f.extension === 'heic');
-				const movFile = group.files.find((f) => f.extension === 'mov');
-				const isLivePhoto = !!heicFile && !!movFile;
+			// 并行处理每个文件组
+			const processPromises = Array.from(fileGroups.values()).map(async (group) => {
+				try {
+					// 检查是否是实况图片（包含 heic + mov）
+					const heicFile = group.files.find((f) => f.extension === 'heic');
+					const movFile = group.files.find((f) => f.extension === 'mov');
+					const isLivePhoto = !!heicFile && !!movFile;
 
-				// 提取日期（优先从图片文件提取）
-				let groupDate = new Date();
-				const imageFile = group.files.find((f) =>
-					['heic', 'jpg', 'jpeg', 'png', 'gif', 'webp'].includes(f.extension),
-				);
-				if (imageFile) {
-					groupDate = await extractExifDate(imageFile.data);
-				}
+					// 提取日期（优先从图片文件提取）
+					let groupDate = new Date();
+					const imageFile = group.files.find((f) =>
+						['heic', 'jpg', 'jpeg', 'png', 'gif', 'webp'].includes(f.extension),
+					);
+					if (imageFile) {
+						groupDate = await extractExifDate(imageFile.data);
+					}
 
-				// 生成基于日期的基础文件名（不含扩展名）
-				const base = `p-${groupDate.toISOString().replace(/[:.a-z]+/gi, '-')}`;
+					// 生成基于日期的基础文件名（不含扩展名）
+					const base = `p-${groupDate.toISOString().replace(/[:.a-z]+/gi, '-')}`;
 
-				// 为每组文件创建一个子目录（使用 base 作为目录名）
-				const groupUploadDir = join(baseUploadDir, base);
-				if (!fs.existsSync(groupUploadDir)) {
-					fs.mkdirSync(groupUploadDir, { recursive: true });
-				}
+					// 为每组文件创建一个子目录（使用 base 作为目录名）
+					const groupUploadDir = join(baseUploadDir, base);
+					if (!fs.existsSync(groupUploadDir)) {
+						fs.mkdirSync(groupUploadDir, { recursive: true });
+					}
 
-				const baseUrl = `/recorddetail/${datePath}/${base}`;
+					const baseUrl = `/recorddetail/${datePath}/${base}`;
 
-				// 处理文件
-				if (isLivePhoto) {
-					try {
+					// 处理文件
+					if (isLivePhoto) {
 						const pngUrl = await processLivePhoto(
 							heicFile.data,
 							movFile.data,
@@ -306,24 +310,20 @@ export class RecordDetailRepository {
 							base,
 						);
 
-						uploadResults.push({
+						return {
 							url: pngUrl,
 							is_live: true,
-						});
-					} catch (error) {
-						continue;
-					}
-				} else {
-					// 非实况图片
-					for (const file of group.files) {
-						try {
+						};
+					} else {
+						// 非实况图片 - 并行处理同组内的多个文件
+						const filePromises = group.files.map(async (file) => {
 							if (file.extension === 'heic') {
 								// 单独的 HEIC 文件转为 PNG（带压缩）
 								const pngUrl = await processHeicToPng(file.data, groupUploadDir, baseUrl, base);
-								uploadResults.push({
+								return {
 									url: pngUrl,
 									is_live: false,
-								});
+								};
 							} else {
 								const processed = await processImageInSubDir(
 									file.data,
@@ -332,17 +332,34 @@ export class RecordDetailRepository {
 									baseUrl,
 									base,
 								);
-								uploadResults.push({
+								return {
 									url: processed,
 									is_live: false,
-								});
+								};
 							}
-						} catch (error) {
-							continue;
-						}
+						});
+
+						const results = await Promise.allSettled(filePromises);
+						return results
+							.filter((r) => r.status === 'fulfilled')
+							.map((r) => (r as PromiseFulfilledResult<LiveImage>).value);
 					}
+				} catch (error) {
+					console.error('处理文件组失败:', error);
+					return null;
 				}
-			}
+			});
+
+			// 等待所有文件组处理完成
+			const results = await Promise.allSettled(processPromises);
+			const uploadResults: LiveImage[] = results
+				.filter((r) => r.status === 'fulfilled')
+				.flatMap((r) => {
+					const value = (r as PromiseFulfilledResult<LiveImage | LiveImage[] | null>).value;
+					if (!value) return [];
+					return Array.isArray(value) ? value : [value];
+				})
+				.filter(Boolean);
 
 			if (uploadResults.length === 0) {
 				throw new Error('没有有效的图片上传！请确保文件格式正确且小于10MB');
