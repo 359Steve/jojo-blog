@@ -275,8 +275,8 @@ export default defineNuxtConfig({
 	},
 
 	experimental: {
-		payloadExtraction: false,
-		viewTransition: true,
+		payloadExtraction: true,
+		viewTransition: false,
 		componentIslands: false,
 		typedPages: true,
 		asyncContext: true,
