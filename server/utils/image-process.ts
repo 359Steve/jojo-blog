@@ -6,6 +6,20 @@ import { join } from 'pathe';
 import { encode as blurhashEncode } from 'blurhash';
 import convert from 'heic-convert';
 
+// 获取文件详细地址
+const getFilePath = (uploadDir: string, originalFilename: string, baseName: string) => {
+	const fileExtension = originalFilename.split('.').pop()?.toLowerCase() || 'jpg';
+	const ext = fileExtension === 'jpeg' ? '.jpg' : `.${fileExtension}`;
+
+	const fileName = `${baseName}${ext}`;
+	const filePath = join(uploadDir, fileName);
+
+	return {
+		fileName,
+		filePath,
+	};
+};
+
 // 存储图片
 const saveImage = async (baseName: string, uploadDir: string, imgBuffer: Buffer<ArrayBufferLike>): Promise<string> => {
 	const pngFileName = `${baseName}.png`;
@@ -107,11 +121,14 @@ export const processLivePhoto = async (
 	// 转换HEIC为PNG
 	const pngBuffer = await convertHeicToPngBuffer(heicBuffer);
 
+	// 压缩图片
+	const compressedPngBuffer = await zipImage(pngBuffer, join(uploadDir, 'temp.png'), 'converted.png');
+
 	// 保存图片
-	const pngFileName = await saveImage(baseName, uploadDir, pngBuffer);
+	const pngFileName = await saveImage(baseName, uploadDir, compressedPngBuffer);
 
 	// 保存json
-	await saveJson(baseName, uploadDir, pngBuffer);
+	await saveJson(baseName, uploadDir, compressedPngBuffer);
 
 	// 保存mov
 	await saveMov(baseName, uploadDir, movBuffer);
@@ -122,6 +139,7 @@ export const processLivePhoto = async (
 /**
  * 处理单独的 HEIC 文件，转换为 PNG（带压缩）
  * @param heicBuffer HEIC 图片的 Buffer
+ * @param originalFilename 原始文件名
  * @param uploadDir 上传目录（子目录 base/）
  * @param baseUrl 基础URL路径
  * @param baseName 文件名（如 p-2025-01-21T15-30-45-123-）
@@ -136,7 +154,6 @@ export const processHeicToPng = async (
 	// 转换HEIC为PNG
 	const pngBuffer = await convertHeicToPngBuffer(heicBuffer);
 
-	// 压缩PNG
 	const compressedPngBuffer = await zipImage(pngBuffer, join(uploadDir, 'temp.png'), 'converted.png');
 
 	// 保存图片
@@ -165,14 +182,9 @@ export const processImageInSubDir = async (
 	baseName: string,
 ): Promise<string> => {
 	// 获取文件扩展名
-	const fileExtension = originalFilename.split('.').pop()?.toLowerCase() || 'jpg';
-	const ext = fileExtension === 'jpeg' ? '.jpg' : `.${fileExtension}`;
-
-	const fileName = `${baseName}${ext}`;
-	const filePath = join(uploadDir, fileName);
-
+	const { fileName, filePath } = getFilePath(uploadDir, originalFilename, baseName);
 	// 压缩图片
-	const outBuffer = await zipImage(buffer, filePath, originalFilename);
+	const outBuffer = await zipImage(buffer, filePath, fileName);
 
 	// 写入压缩后的文件
 	await writeFile(filePath, outBuffer);
