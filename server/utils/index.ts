@@ -1,15 +1,20 @@
 import type { ZodObject } from 'zod';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import fs from 'node:fs';
+import fs from 'fs/promises';
 
-const findOutputPublicDir = (startDir: string): string => {
+const findOutputPublicDir = async (startDir: string): Promise<string> => {
 	let dir = startDir;
 
 	while (dir !== '/') {
 		const candidate = join(dir, '.output/public');
-		if (fs.existsSync(candidate)) {
-			return candidate;
+		try {
+			await fs.access(candidate);
+		} catch (err: any) {
+			if (err.code === 'ENOENT') {
+				return candidate;
+			}
+			throw err;
 		}
 		dir = dirname(dir);
 	}
@@ -32,14 +37,14 @@ export const validateData = <T>(schema: ZodObject, data: T, onError: (value: str
 	return result.data as T; // 校验通过的数据
 };
 
-export const getPublicDir = (): string => {
+export const getPublicDir = async (): Promise<string> => {
 	// 当前执行文件所在目录
 	const __filename = fileURLToPath(import.meta.url);
 	const __dirname = dirname(__filename);
 
 	// 生产环境
 	if (process.env.NODE_ENV === 'production') {
-		return findOutputPublicDir(__dirname);
+		return await findOutputPublicDir(__dirname);
 	}
 
 	// 开发环境

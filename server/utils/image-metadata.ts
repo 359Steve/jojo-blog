@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 import { join } from 'pathe';
 
@@ -22,8 +22,13 @@ export async function getImageMetadata(imageUrl: string): Promise<ImageMetadata 
 		const jsonPath = imagePath.replace(/\.\w+$/, '.json');
 
 		// 检查JSON文件是否存在
-		if (!existsSync(jsonPath)) {
-			return null;
+		try {
+			await fs.access(jsonPath);
+		} catch (err: any) {
+			if (err.code === 'ENOENT') {
+				return null;
+			}
+			throw err;
 		}
 
 		// 读取并解析JSON文件

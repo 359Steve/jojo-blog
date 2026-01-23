@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import fs from 'node:fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 import { StatusCode } from '~/types/com-types';
 import { returnData } from '../utils/public';
@@ -50,9 +50,7 @@ export class MdRepository {
 
 				// 确保文件夹存在
 				const uploadDir = join(process.cwd(), 'file-system', 'mdfile', datePath);
-				if (!fs.existsSync(uploadDir)) {
-					fs.mkdirSync(uploadDir, { recursive: true });
-				}
+				await fs.mkdir(uploadDir, { recursive: true });
 
 				const filePath = join(uploadDir, safeFileName);
 
@@ -86,8 +84,13 @@ export class MdRepository {
 		try {
 			const fullDirPath = join(process.cwd(), 'file-system', 'mdfile', picPath);
 
-			if (!fs.existsSync(fullDirPath)) {
-				return returnData(StatusCode.FAIL, '指定目录不存在', null);
+			try {
+				await fs.access(fullDirPath);
+			} catch (err: any) {
+				if (err.code === 'ENOENT') {
+					return returnData(StatusCode.FAIL, '指定目录不存在', null);
+				}
+				throw err;
 			}
 
 			if (!Array.isArray(fileNames)) {
@@ -99,16 +102,21 @@ export class MdRepository {
 
 			for (const fileName of fileNames) {
 				const filePath = join(fullDirPath, fileName);
-				if (fs.existsSync(filePath)) {
-					const stats = fs.statSync(filePath);
-					if (stats.isFile()) {
-						fs.unlinkSync(filePath);
+				try {
+					const stat = await fs.stat(filePath);
+
+					if (stat.isFile()) {
+						await fs.unlink(filePath);
 						deletedFiles.push(fileName);
 					} else {
 						notFoundFiles.push(fileName);
 					}
-				} else {
-					notFoundFiles.push(fileName);
+				} catch (err: any) {
+					if (err.code === 'ENOENT') {
+						notFoundFiles.push(fileName);
+					} else {
+						throw err;
+					}
 				}
 			}
 

@@ -4,7 +4,7 @@ import { prisma } from '../core/prisma';
 import { returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
-import fs from 'fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 
 export class GroupRepository {
@@ -105,13 +105,11 @@ export class GroupRepository {
 				select: { date_path: true },
 			});
 
-			relatedDetails.forEach((currentDelete) => {
+			relatedDetails.forEach(async (currentDelete) => {
 				if (currentDelete.date_path) {
 					const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', currentDelete.date_path);
 
-					if (fs.existsSync(uploadDir)) {
-						fs.rmSync(uploadDir, { recursive: true, force: true });
-					}
+					await fs.rm(uploadDir, { recursive: true, force: true });
 				}
 			});
 			const res = await this.prismaClient.record_groups.delete({

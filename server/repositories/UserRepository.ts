@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import fs from 'node:fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 import type { CreateUserDto } from '../dto/CreateUserDto';
 import { StatusCode } from '~/types/com-types';
@@ -110,14 +110,10 @@ export class UserRepository {
 			const filePath = join(dirPath, fileName);
 
 			// 判断当前文件是否已经存在
-			if (fs.existsSync(filePath)) {
-				fs.unlinkSync(filePath); // 删除旧文件，准备覆盖
-			}
+			fs.unlink(filePath);
 
 			// 确保目录存在
-			if (!fs.existsSync(dirPath)) {
-				fs.mkdirSync(dirPath, { recursive: true });
-			}
+			await fs.mkdir(dirPath, { recursive: true });
 
 			if (!file.data) {
 				throw new Error('文件数据无效');

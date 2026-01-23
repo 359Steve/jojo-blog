@@ -6,7 +6,7 @@ import { writeFile } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import process from 'node:process';
-import fs from 'node:fs';
+import fs from 'fs/promises';
 import { redis } from '../core/redis';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
@@ -112,18 +112,14 @@ export class BlogRepository {
 				if (frontcover) {
 					const relativePath = frontcover.startsWith('/') ? frontcover.substring(1) : frontcover;
 					const frontcoverPath = join(process.cwd(), 'file-system', relativePath);
-					if (fs.existsSync(frontcoverPath)) {
-						fs.unlinkSync(frontcoverPath);
-					}
+					await fs.unlink(frontcoverPath);
 				}
 
 				// 删除文章里的所有图片
 				const datePath = currentDelete.date_path;
 				const uploadDir = join(process.cwd(), 'file-system', 'mdfile', datePath);
 
-				if (fs.existsSync(uploadDir)) {
-					fs.rmSync(uploadDir, { recursive: true, force: true });
-				}
+				await fs.rm(uploadDir, { recursive: true, force: true });
 
 				return currentDelete;
 			});
@@ -177,9 +173,7 @@ export class BlogRepository {
 							? oldBlog.front_cover.substring(1)
 							: oldBlog.front_cover;
 						const oldCoverPath = join(process.cwd(), 'file-system', relativePath);
-						if (fs.existsSync(oldCoverPath)) {
-							fs.unlinkSync(oldCoverPath);
-						}
+						fs.unlink(oldCoverPath);
 					}
 				}
 
@@ -268,9 +262,7 @@ export class BlogRepository {
 
 			// 确保目录存在
 			const uploadDir = join(process.cwd(), 'file-system', 'frontcover');
-			if (!fs.existsSync(uploadDir)) {
-				fs.mkdirSync(uploadDir, { recursive: true });
-			}
+			await fs.mkdir(uploadDir, { recursive: true });
 
 			const savePath = join(uploadDir, safeFileName);
 
