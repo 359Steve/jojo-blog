@@ -18,11 +18,11 @@ const changeTheme = async (_e: MouseEvent): Promise<boolean> => {
 
 	transition.ready.then(() => {
 		const isDark = useJojoColorMode().getDarkMode().preference === 'dark';
-		const clientX = innerWidth / 2;
-		const clientY = innerHeight / 2;
+		const clientX = window.innerWidth / 2;
+		const clientY = window.innerHeight / 2;
 
 		// 计算最大半径
-		const radius = Math.hypot(Math.max(clientX, innerWidth - clientX), Math.max(clientY, innerHeight - clientY));
+		const radius = Math.hypot(Math.max(clientX, window.innerWidth - clientX), Math.max(clientY, window.innerHeight - clientY));
 
 		// 开始动画
 		const clipPath = [

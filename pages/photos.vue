@@ -44,7 +44,9 @@ const translate = ref<boolean>(false);
 			</div>
 		</div>
 	</div>
-	<TRexRunner v-else />
+	<ClientOnly v-else>
+		<TRexRunner />
+	</ClientOnly>
 </template>
 
 <style lang="postcss" scoped></style>

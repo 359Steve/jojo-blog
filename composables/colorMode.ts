@@ -9,7 +9,9 @@ export const useJojoColorMode = defineStore(
 			unknown: boolean;
 			forced: boolean;
 		}
-		const darkMode = ref<ColorModeInstance>(useColorMode() as ColorModeInstance);
+
+		const colorMode = useColorMode();
+		const darkMode = ref<ColorModeInstance>(colorMode as ColorModeInstance);
 
 		const getDarkMode = () => {
 			return darkMode.value;
@@ -22,10 +24,10 @@ export const useJojoColorMode = defineStore(
 		return {
 			darkMode,
 			getDarkMode,
-			setDarkMode
+			setDarkMode,
 		};
 	},
 	{
-		persist: true
-	}
+		persist: true,
+	},
 );
