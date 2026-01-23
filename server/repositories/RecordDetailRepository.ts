@@ -4,14 +4,12 @@ import { prisma } from '../core/prisma';
 import { getFileStem, returnData } from '../utils/public';
 import { StatusCode } from '~/types/com-types';
 import { join } from 'path';
-import fs from 'fs';
+import fs from 'fs/promises';
 import process from 'node:process';
 import crypto from 'crypto';
 import type Redis from 'ioredis';
 import { redis } from '../core/redis';
-import { extractExifDate, processLivePhoto, processHeicToPng, processImageInSubDir } from '../utils/image-process';
 import { getImagesMetadata } from '../utils/image-metadata';
-
 export class RecordDetailRepository {
 	constructor(
 		private prismaClient: PrismaClient = prisma,
@@ -96,92 +94,55 @@ export class RecordDetailRepository {
 		try {
 			const { id, images, ...updateData } = data;
 
-			const res = await this.prismaClient.$transaction(async (tx) => {
-				const updatedRecord = await tx.record_details.update({
+			let dirsToDelete: string[] = [];
+
+			const updatedRecord = await this.prismaClient.$transaction(async (tx) => {
+				const record = await tx.record_details.update({
 					where: { id: Number(id) },
 					data: updateData,
 				});
 
-				if (updatedRecord) {
-					// 处理图片更新
-					if (images) {
-						const dbImages = await tx.record_images.findMany({
-							where: { record_detail_id: Number(id) },
-							select: { url: true },
-						});
-						const dbUrls = dbImages.map((item) => item.url).filter(Boolean);
+				if (!images) return record;
 
-						const toAdd = images.filter((item) => !dbUrls.includes(item.url));
-						const toDelete = dbUrls.filter((url) => !images.map((item) => item.url).includes(url));
+				const dbImages = await tx.record_images.findMany({
+					where: { record_detail_id: Number(id) },
+					select: { url: true },
+				});
 
-						if (toAdd.length > 0) {
-							await tx.record_images.createMany({
-								data: toAdd
-									.map((item) => ({
-										record_detail_id: Number(id),
-										...item,
-									}))
-									.filter(Boolean),
-							});
-						}
+				const dbUrls = dbImages.map((i) => i.url);
+				const newUrls = images.map((i) => i.url);
 
-						if (toDelete.length > 0) {
-							// 从数据库删除图片记录
-							await tx.record_images.deleteMany({
-								where: {
-									record_detail_id: Number(id),
-									url: { in: toDelete },
-								},
-							});
+				const toAdd = images.filter((i) => !dbUrls.includes(i.url));
+				const toDelete = dbUrls.filter((url) => !newUrls.includes(url));
 
-							// 收集需要删除的目录
-							const dirsToDelete = new Set<string>();
-
-							toDelete.forEach((imageUrl) => {
-								try {
-									const match = imageUrl.match(/\/recorddetail\/[^/]+\/(p-[^/]+)\//);
-
-									if (match) {
-										const datePath = imageUrl.match(/\/recorddetail\/([^/]+)\//)?.[1];
-										const pDir = match[1];
-
-										if (datePath && pDir) {
-											const dirPath = join(
-												process.cwd(),
-												'file-system',
-												'recorddetail',
-												datePath,
-												pDir,
-											);
-											dirsToDelete.add(dirPath);
-										}
-									}
-								} catch (error) {
-									console.error(`提取目录路径失败: ${imageUrl}`, error);
-								}
-							});
-
-							// 删除所有收集到的目录
-							for (const dir of dirsToDelete) {
-								try {
-									if (fs.existsSync(dir)) {
-										fs.rmSync(dir, { recursive: true, force: true });
-									}
-								} catch (error) {
-									console.error(`删除目录失败: ${dir}`, error);
-								}
-							}
-						}
-					}
+				if (toAdd.length) {
+					await tx.record_images.createMany({
+						data: toAdd.map((item) => ({
+							record_detail_id: Number(id),
+							...item,
+						})),
+					});
 				}
 
-				return updatedRecord;
+				if (toDelete.length) {
+					await tx.record_images.deleteMany({
+						where: {
+							record_detail_id: Number(id),
+							url: { in: toDelete },
+						},
+					});
+
+					dirsToDelete = collectDirsFromUrls(toDelete);
+				}
+
+				return record;
 			});
 
-			return res
-				? returnData(StatusCode.SUCCESS, '记录更新成功', res)
-				: returnData(StatusCode.FAIL, '记录更新失败', null);
+			deleteDirsAsync(dirsToDelete);
+
+			return returnData(StatusCode.SUCCESS, '记录更新成功', updatedRecord);
 		} catch (error) {
+			console.error(error);
 			return returnData(StatusCode.FAIL, '记录更新失败', null);
 		}
 	}
@@ -197,9 +158,7 @@ export class RecordDetailRepository {
 				const datePath = currentDelete.date_path;
 				const uploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
 
-				if (fs.existsSync(uploadDir)) {
-					fs.rmSync(uploadDir, { recursive: true, force: true });
-				}
+				await fs.rm(uploadDir, { recursive: true, force: true });
 
 				return currentDelete;
 			});
@@ -240,9 +199,7 @@ export class RecordDetailRepository {
 
 			// 确保基础文件夹存在
 			const baseUploadDir = join(process.cwd(), 'file-system', 'recorddetail', datePath);
-			if (!fs.existsSync(baseUploadDir)) {
-				fs.mkdirSync(baseUploadDir, { recursive: true });
-			}
+			await fs.mkdir(baseUploadDir, { recursive: true });
 
 			const fileGroups = new Map<string, FileGroup>();
 
@@ -272,83 +229,9 @@ export class RecordDetailRepository {
 				});
 			}
 
-			// 并行处理每个文件组
-			const processPromises = Array.from(fileGroups.values()).map(async (group) => {
-				try {
-					// 检查是否是实况图片（包含 heic + mov）
-					const heicFile = group.files.find((f) => f.extension === 'heic');
-					const movFile = group.files.find((f) => f.extension === 'mov');
-					const isLivePhoto = !!heicFile && !!movFile;
-
-					// 提取日期（优先从图片文件提取）
-					let groupDate = new Date();
-					const imageFile = group.files.find((f) =>
-						['heic', 'jpg', 'jpeg', 'png', 'gif', 'webp'].includes(f.extension),
-					);
-					if (imageFile) {
-						groupDate = await extractExifDate(imageFile.data);
-					}
-
-					// 生成基于日期的基础文件名（不含扩展名）
-					const base = `p-${groupDate.toISOString().replace(/[:.a-z]+/gi, '-')}`;
-
-					// 为每组文件创建一个子目录（使用 base 作为目录名）
-					const groupUploadDir = join(baseUploadDir, base);
-					if (!fs.existsSync(groupUploadDir)) {
-						fs.mkdirSync(groupUploadDir, { recursive: true });
-					}
-
-					const baseUrl = `/recorddetail/${datePath}/${base}`;
-
-					// 处理文件
-					if (isLivePhoto) {
-						const pngUrl = await processLivePhoto(
-							heicFile.data,
-							movFile.data,
-							groupUploadDir,
-							baseUrl,
-							base,
-						);
-
-						return {
-							url: pngUrl,
-							is_live: true,
-						};
-					} else {
-						// 非实况图片 - 并行处理同组内的多个文件
-						const filePromises = group.files.map(async (file) => {
-							if (file.extension === 'heic') {
-								// 单独的 HEIC 文件转为 PNG（带压缩）
-								const pngUrl = await processHeicToPng(file.data, groupUploadDir, baseUrl, base);
-								return {
-									url: pngUrl,
-									is_live: false,
-								};
-							} else {
-								const processed = await processImageInSubDir(
-									file.data,
-									file.filename,
-									groupUploadDir,
-									baseUrl,
-									base,
-								);
-								return {
-									url: processed,
-									is_live: false,
-								};
-							}
-						});
-
-						const results = await Promise.allSettled(filePromises);
-						return results
-							.filter((r) => r.status === 'fulfilled')
-							.map((r) => (r as PromiseFulfilledResult<LiveImage>).value);
-					}
-				} catch (error) {
-					console.error('处理文件组失败:', error);
-					return null;
-				}
-			});
+			const processPromises = Array.from(fileGroups.values()).map((group) =>
+				limit(() => processGroup(group, baseUploadDir, datePath)),
+			);
 
 			// 等待所有文件组处理完成
 			const results = await Promise.allSettled(processPromises);
