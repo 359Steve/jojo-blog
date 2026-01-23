@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { augmentElementAsPlayer } from 'livephotoskit';
+import * as livephotoskit from 'livephotoskit';
+const { augmentElementAsPlayer } = livephotoskit;
 
 const { getPreviewSrc, getPreviewVisible, setPreviewVisible, getIsLive, getAlt } = usePreviewImg();
 const livePhotoRef = useTemplateRef<HTMLDivElement>('livePhotoRef');
