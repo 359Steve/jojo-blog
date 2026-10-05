@@ -1,70 +1,70 @@
-name: Deploy to Aliyun Server
+# name: Deploy to Aliyun Server
 
-on:
-    push:
-        branches: [main, master]
-    workflow_dispatch:
+# on:
+#     push:
+#         branches: [main, master]
+#     workflow_dispatch:
 
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
+# jobs:
+#     deploy:
+#         runs-on: ubuntu-latest
 
-        steps:
-            - name: 检出代码
-              uses: actions/checkout@v4
+#         steps:
+#             - name: 检出代码
+#               uses: actions/checkout@v4
 
-            - name: 设置 Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '24.x'
-                  cache: 'npm'
+#             - name: 设置 Node.js
+#               uses: actions/setup-node@v4
+#               with:
+#                   node-version: '24.x'
+#                   cache: 'npm'
 
-            - name: 安装依赖
-              run: |
-                  npm config set registry https://registry.npmmirror.com
-                  npm ci
+#             - name: 安装依赖
+#               run: |
+#                   npm config set registry https://registry.npmmirror.com
+#                   npm ci
 
-            - name: 构建项目
-              run: npm run build
+#             - name: 构建项目
+#               run: npm run build
 
-            - name: 安装生产依赖（预编译原生模块）
-              run: |
-                  rm -rf node_modules
-                  npm ci --omit=dev
+#             - name: 安装生产依赖（预编译原生模块）
+#               run: |
+#                   rm -rf node_modules
+#                   npm ci --omit=dev
 
-            - name: 打包部署文件
-              run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.cjs package*.json
+#             - name: 打包部署文件
+#               run: tar -czf deploy.tar.gz .output node_modules ecosystem.config.cjs package*.json
 
-            - name: 上传部署文件到服务器
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.ALIYUN_HOST }}
-                  username: ${{ secrets.ALIYUN_USER }}
-                  key: ${{ secrets.ALIYUN_SSH_KEY }}
-                  port: ${{ secrets.ALIYUN_PORT || 22 }}
-                  source: 'deploy.tar.gz'
-                  target: '/tmp/'
+#             - name: 上传部署文件到服务器
+#               uses: appleboy/scp-action@v0.1.7
+#               with:
+#                   host: ${{ secrets.ALIYUN_HOST }}
+#                   username: ${{ secrets.ALIYUN_USER }}
+#                   key: ${{ secrets.ALIYUN_SSH_KEY }}
+#                   port: ${{ secrets.ALIYUN_PORT || 22 }}
+#                   source: 'deploy.tar.gz'
+#                   target: '/tmp/'
 
-            - name: 部署到阿里云服务器
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                  host: ${{ secrets.ALIYUN_HOST }}
-                  username: ${{ secrets.ALIYUN_USER }}
-                  key: ${{ secrets.ALIYUN_SSH_KEY }}
-                  port: ${{ secrets.ALIYUN_PORT || 22 }}
-                  script: |
-                      cd ${{ secrets.DEPLOY_PATH }}
-                      echo "🧹 清理旧文件..."
-                      rm -rf .output node_modules
-                      echo "📦 解压构建文件..."
-                      tar -xzf /tmp/deploy.tar.gz
-                      rm /tmp/deploy.tar.gz
-                      echo "🔄 重启应用..."
-                      if pm2 describe nuxt-app > /dev/null 2>&1; then
-                        pm2 reload nuxt-app --update-env
-                      else
-                        pm2 start ecosystem.config.cjs
-                      fi
-                      pm2 save
-                      echo "✅ 部署完成！"
-                      pm2 status
+#             - name: 部署到阿里云服务器
+#               uses: appleboy/ssh-action@v1.0.3
+#               with:
+#                   host: ${{ secrets.ALIYUN_HOST }}
+#                   username: ${{ secrets.ALIYUN_USER }}
+#                   key: ${{ secrets.ALIYUN_SSH_KEY }}
+#                   port: ${{ secrets.ALIYUN_PORT || 22 }}
+#                   script: |
+#                       cd ${{ secrets.DEPLOY_PATH }}
+#                       echo "🧹 清理旧文件..."
+#                       rm -rf .output node_modules
+#                       echo "📦 解压构建文件..."
+#                       tar -xzf /tmp/deploy.tar.gz
+#                       rm /tmp/deploy.tar.gz
+#                       echo "🔄 重启应用..."
+#                       if pm2 describe nuxt-app > /dev/null 2>&1; then
+#                         pm2 reload nuxt-app --update-env
+#                       else
+#                         pm2 start ecosystem.config.cjs
+#                       fi
+#                       pm2 save
+#                       echo "✅ 部署完成！"
+#                       pm2 status
