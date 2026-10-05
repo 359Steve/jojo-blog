@@ -150,7 +150,7 @@ router.push({ path: '/user/123' });
 
 // 该方法客户端和服务端都可用
 if (import.meta.server) {
-	navigateTo('/user/2075313210');
+	navigateTo('/user/xxxx');
 }
 ```
 
